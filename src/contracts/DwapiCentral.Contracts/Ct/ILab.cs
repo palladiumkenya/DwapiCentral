@@ -1,10 +1,18 @@
+using DwapiCentral.Contracts.Common;
 using System;
 
-namespace Dwapi.Contracts.Ct
+namespace DwapiCentral.Contracts.Ct
 {
-    public interface ILab
+     public interface ILab : IEntity
     {
-        DateTime? DateSampleTaken { get; set; }
-        string SampleType { get; set; }
+          int? VisitId { get; set; }
+          DateTime? OrderedByDate { get; set; }
+          DateTime? ReportedByDate { get; set; }
+          string TestName { get; set; }
+          int? EnrollmentTest { get; set; }
+          string TestResult { get; set; }
+          Guid PatientId { get; set; }
+          DateTime? DateSampleTaken { get; set; }
+          string SampleType { get; set; }
     }
 }

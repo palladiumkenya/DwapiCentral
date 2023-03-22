@@ -1,9 +1,9 @@
+using DwapiCentral.Contracts.Common;
 using System;
 
-namespace Dwapi.Contracts.Ct
+namespace DwapiCentral.Contracts.Ct
 {
-    public
-        interface IDepressionScreening
+    public interface IDepressionScreening : IEntity
     {
         string FacilityName { get; set; }
         int? VisitID { get; set; }
@@ -19,7 +19,6 @@ namespace Dwapi.Contracts.Ct
         string PHQ9_9 { get; set; }
         string PHQ_9_rating { get; set; }
         int? DepressionAssesmentScore { get; set; }
-        DateTime? Date_Created { get; set; }
-        DateTime? Date_Last_Modified { get; set; }
+        Guid PatientId { get; set; }
     }
 }
