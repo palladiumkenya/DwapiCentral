@@ -1,18 +1,18 @@
+using DwapiCentral.Contracts.Common;
 using System;
 
-namespace Dwapi.Contracts.Ct
+namespace DwapiCentral.Contracts.Ct
 {
-    public interface IGbvScreening
+    public  interface IGbvScreening : IEntity
     {
-        string FacilityName { get; set; }
-        int? VisitID { get; set; }
-        DateTime? VisitDate { get; set; }
-        string IPV { get; set; }
-        string PhysicalIPV { get; set; }
-        string EmotionalIPV { get; set; }
-        string SexualIPV { get; set; }
-        string IPVRelationship { get; set; }
-        DateTime? Date_Created { get; set; }
-        DateTime? Date_Last_Modified { get; set; }
+          string FacilityName { get; set; }
+          int? VisitID { get; set; }
+          DateTime? VisitDate { get; set; }
+          string IPV { get; set; }
+          string PhysicalIPV { get; set; }
+          string EmotionalIPV { get; set; }
+          string SexualIPV { get; set; }
+          string IPVRelationship { get; set; }
+          Guid PatientId { get; set; }
     }
 }

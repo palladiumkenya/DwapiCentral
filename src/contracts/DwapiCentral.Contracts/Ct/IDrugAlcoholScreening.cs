@@ -1,16 +1,16 @@
+using DwapiCentral.Contracts.Common;
 using System;
 
-namespace Dwapi.Contracts.Ct
+namespace DwapiCentral.Contracts.Ct
 {
-    public interface IDrugAlcoholScreening
+     public interface IDrugAlcoholScreening : IEntity
     {
-        string FacilityName { get; set; }
-        int? VisitID { get; set; }
-        DateTime? VisitDate { get; set; }
-        string DrinkingAlcohol { get; set; }
-        string Smoking { get; set; }
-        string DrugUse { get; set; }
-        DateTime? Date_Created { get; set; }
-        DateTime? Date_Last_Modified { get; set; }
+          string FacilityName { get; set; }
+          int? VisitID { get; set; }
+          DateTime? VisitDate { get; set; }
+          string DrinkingAlcohol { get; set; }
+          string Smoking { get; set; }
+          string DrugUse { get; set; }
+          Guid PatientId { get; set; }
     }
 }

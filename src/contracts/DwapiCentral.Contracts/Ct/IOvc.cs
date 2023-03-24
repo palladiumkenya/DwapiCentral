@@ -1,20 +1,20 @@
+using DwapiCentral.Contracts.Common;
 using System;
 
-namespace Dwapi.Contracts.Ct
+namespace DwapiCentral.Contracts.Ct
 {
-    public interface IOvc
+     public interface IOvc : IEntity
     {
-        string FacilityName { get; set; }
-        int? VisitID { get; set; }
-        DateTime? VisitDate { get; set; }
-        DateTime? OVCEnrollmentDate { get; set; }
-        string RelationshipToClient { get; set; }
-        string EnrolledinCPIMS { get; set; }
-        string CPIMSUniqueIdentifier { get; set; }
-        string PartnerOfferingOVCServices { get; set; }
-        string OVCExitReason { get; set; }
-        DateTime? ExitDate { get; set; }
-        DateTime? Date_Created { get; set; }
-        DateTime? Date_Last_Modified { get; set; }
+          string FacilityName { get; set; }
+          int? VisitID { get; set; }
+          DateTime? VisitDate { get; set; }
+          DateTime? OVCEnrollmentDate { get; set; }
+          string RelationshipToClient { get; set; }
+          string EnrolledinCPIMS { get; set; }
+          string CPIMSUniqueIdentifier { get; set; }
+          string PartnerOfferingOVCServices { get; set; }
+          string OVCExitReason { get; set; }
+          DateTime? ExitDate { get; set; }
+          Guid PatientId { get; set; }
     }
 }
