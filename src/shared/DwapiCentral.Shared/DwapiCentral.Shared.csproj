@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Domain\Entities\" />
+    <Folder Include="Domain\Enums\" />
+    <Folder Include="Domain\Events\" />
+    <Folder Include="Domain\Exceptions\" />
+    <Folder Include="Domain\Model\Crs\" />
+    <Folder Include="Domain\Model\Prep\" />
+    <Folder Include="Domain\Model\Hts\" />
+    <Folder Include="Domain\Model\Mnch\" />
+    <Folder Include="Infrastructure\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\contracts\DwapiCentral.Contracts\DwapiCentral.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -3,37 +3,45 @@ using System;
 
 namespace DwapiCentral.Contracts.Mnch
 {
-    public interface ICwcVisit : IEntity
+     public interface ICwcVisit : IEntity
     {
-        string FacilityName { get; set; }
-        string PatientMnchID { get; set; }
-        DateTime? VisitDate { get; set; }
-        int? VisitID { get; set; }
-        decimal? Height { get; set; }
-        decimal? Weight { get; set; }
-        decimal? Temp { get; set; }
-        int? PulseRate { get; set; }
-        int? RespiratoryRate { get; set; }
-        decimal? OxygenSaturation { get; set; }
-        int? MUAC { get; set; }
-        string WeightCategory { get; set; }
-        string Stunted { get; set; }
-        string InfantFeeding { get; set; }
-        string MedicationGiven { get; set; }
-        string TBAssessment { get; set; }
-        string MNPsSupplementation { get; set; }
-        string Immunization { get; set; }
-        string DangerSigns { get; set; }
-        string Milestones { get; set; }
-        string VitaminA { get; set; }
-        string Disability { get; set; }
-        string ReceivedMosquitoNet { get; set; }
-        string Dewormed { get; set; }
-        string ReferredFrom { get; set; }
-        string ReferredTo { get; set; }
-        string ReferralReasons { get; set; }
-        string FollowUP { get; set; }
-        DateTime? NextAppointment { get; set; }
+
+          bool? Processed { get; set; }
+          string QueueId { get; set; }
+          string Status { get; set; }
+          DateTime? StatusDate { get; set; }
+          DateTime? DateExtracted { get; set; }
+          Guid FacilityId { get; set; }
+          string FacilityName { get; set; }
+          string PatientMnchID { get; set; }
+          DateTime? VisitDate { get; set; }
+          int? VisitID { get; set; }
+          decimal? Height { get; set; }
+          decimal? Weight { get; set; }
+          decimal? Temp { get; set; }
+          int? PulseRate { get; set; }
+          int? RespiratoryRate { get; set; }
+          decimal? OxygenSaturation { get; set; }
+          int? MUAC { get; set; }
+          string WeightCategory { get; set; }
+          string Stunted { get; set; }
+          string InfantFeeding { get; set; }
+          string MedicationGiven { get; set; }
+          string TBAssessment { get; set; }
+          string MNPsSupplementation { get; set; }
+          string Immunization { get; set; }
+          string DangerSigns { get; set; }
+          string Milestones { get; set; }
+          string VitaminA { get; set; }
+          string Disability { get; set; }
+          string ReceivedMosquitoNet { get; set; }
+          string Dewormed { get; set; }
+          string ReferredFrom { get; set; }
+          string ReferredTo { get; set; }
+          string ReferralReasons { get; set; }
+          string FollowUP { get; set; }
+          DateTime? NextAppointment { get; set; }
+
 
     }
 }
