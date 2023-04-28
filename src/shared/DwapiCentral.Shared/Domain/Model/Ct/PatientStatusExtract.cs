@@ -4,7 +4,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientStatusExtract : IStatus
+    public class PatientStatusExtract
     {
         public string ExitDescription { get; set; }
         public DateTime? ExitDate { get; set; }

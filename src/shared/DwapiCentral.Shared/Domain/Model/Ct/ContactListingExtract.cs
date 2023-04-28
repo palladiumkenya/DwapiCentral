@@ -4,7 +4,7 @@ using System;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class ContactListingExtract : IContactListing
+    public class ContactListingExtract 
     {
         public string FacilityName { get; set; }
         public int? PartnerPersonID { get; set; }

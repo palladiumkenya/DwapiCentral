@@ -2,7 +2,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class EnhancedAdherenceCounsellingExtract : IEnhancedAdherenceCounselling
+    public class EnhancedAdherenceCounsellingExtract 
     {
 
         public string FacilityName { get; set; }

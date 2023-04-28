@@ -4,7 +4,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class IptExtract : IIpt
+    public class IptExtract 
     {
         public string FacilityName { get; set; }
         public int? VisitID { get; set; }

@@ -4,7 +4,7 @@ using DwapiCentral.Contracts.Ct;
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
 
-    public class PatientExtract : IPatient
+    public class PatientExtract 
     {
 
         public int PatientPID { get; set; }

@@ -7,15 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Entities\" />
-    <Folder Include="Domain\Enums\" />
+    <Folder Include="Application\Behaviours\" />
+    <Folder Include="Application\Exceptions\" />
+    <Folder Include="Application\Interfaces\Hts\" />
+    <Folder Include="Application\Interfaces\Mnch\" />
+    <Folder Include="Application\Interfaces\Crs\" />
+    <Folder Include="Application\Interfaces\Prep\" />
+    <Folder Include="Application\Mappings\" />
+    <Folder Include="Application\Models\" />
     <Folder Include="Domain\Events\" />
     <Folder Include="Domain\Exceptions\" />
-    <Folder Include="Domain\Model\Crs\" />
-    <Folder Include="Domain\Model\Prep\" />
-    <Folder Include="Domain\Model\Hts\" />
-    <Folder Include="Domain\Model\Mnch\" />
-    <Folder Include="Infrastructure\" />
   </ItemGroup>
 
   <ItemGroup>

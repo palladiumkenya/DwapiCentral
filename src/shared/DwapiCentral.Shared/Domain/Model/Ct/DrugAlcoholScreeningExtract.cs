@@ -2,7 +2,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class DrugAlcoholScreeningExtract : IDrugAlcoholScreening
+    public class DrugAlcoholScreeningExtract 
     {
         public string FacilityName { get; set; }
         public int? VisitID { get; set; }

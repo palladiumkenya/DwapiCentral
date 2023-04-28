@@ -3,7 +3,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class OvcExtract : IOvc
+    public class OvcExtract 
     {
         public string FacilityName { get; set; }
         public int? VisitID { get; set; }

@@ -2,7 +2,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class CovidExtract : ICovid
+    public class CovidExtract 
     {
         public string FacilityName { get; set; }
         public int? VisitID { get; set; }

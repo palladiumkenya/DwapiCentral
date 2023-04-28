@@ -3,7 +3,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientArtExtract : IArt
+    public class PatientArtExtract 
     {
         public DateTime? DOB { get; set; }
         public decimal? AgeEnrollment { get; set; }

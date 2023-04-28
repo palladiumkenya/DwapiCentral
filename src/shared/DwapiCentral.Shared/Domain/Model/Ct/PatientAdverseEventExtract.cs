@@ -4,7 +4,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientAdverseEventExtract : IPatientAdverse
+    public class PatientAdverseEventExtract 
     {
         public string AdverseEvent { get; set; }
         public DateTime? AdverseEventStartDate { get; set; }

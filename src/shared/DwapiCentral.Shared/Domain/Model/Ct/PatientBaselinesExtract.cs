@@ -3,7 +3,7 @@ using DwapiCentral.Contracts.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientBaselinesExtract : IPatientBaselines
+    public class PatientBaselinesExtract 
     {
         public int? bCD4 { get; set; }
         public DateTime? bCD4Date { get; set; }
