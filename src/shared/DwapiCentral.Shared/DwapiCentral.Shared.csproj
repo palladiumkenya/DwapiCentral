@@ -9,10 +9,6 @@
   <ItemGroup>
     <Folder Include="Application\Behaviours\" />
     <Folder Include="Application\Exceptions\" />
-    <Folder Include="Application\Interfaces\Hts\" />
-    <Folder Include="Application\Interfaces\Mnch\" />
-    <Folder Include="Application\Interfaces\Crs\" />
-    <Folder Include="Application\Interfaces\Prep\" />
     <Folder Include="Application\Mappings\" />
     <Folder Include="Application\Models\" />
     <Folder Include="Domain\Events\" />
