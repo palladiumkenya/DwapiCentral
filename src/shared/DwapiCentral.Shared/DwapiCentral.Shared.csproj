@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Application\Behaviours\" />
+    <Folder Include="Application\DTOs\Source\" />
     <Folder Include="Application\Exceptions\" />
     <Folder Include="Application\Mappings\" />
     <Folder Include="Application\Models\" />
