@@ -1,10 +1,11 @@
 using System;
 using DwapiCentral.Contracts.Ct;
-
+using DwapiCentral.Shared.Domain.Entities.Ct;
+using PalladiumDwh.Shared.Interfaces.Extracts;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientAdverseEventExtract 
+    public class PatientAdverseEventExtract : Entity, IAdverseEventExtract
     {
         public string AdverseEvent { get; set; }
         public DateTime? AdverseEventStartDate { get; set; }

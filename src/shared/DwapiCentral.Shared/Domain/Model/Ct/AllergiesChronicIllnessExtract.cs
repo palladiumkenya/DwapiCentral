@@ -1,8 +1,11 @@
-using DwapiCentral.Contracts.Ct;
+
+using DwapiCentral.Shared.Application.Interfaces.Ct;
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class AllergiesChronicIllnessExtract 
+    public class AllergiesChronicIllnessExtract : Entity , IAllergiesChronicIllnessExtract
     {
         public string FacilityName { get; set; }
         public int? VisitID { get; set; }
@@ -29,12 +32,10 @@ namespace DwapiCentral.Shared.Domain.Model.Ct
 
         public Guid Id { get; set ; }
         public int PatientPk { get; set; }
-        public int SiteCode { get; set; }
-        public string Emr { get  ; set  ; }
-        public string Project { get  ; set  ; }
-        public bool Voided { get  ; set  ; }
+        public int SiteCode { get; set; }     
         public DateTime? Updated { get  ; set  ; }
         public DateTime? Extracted { get  ; set  ; }
+       
 
         public AllergiesChronicIllnessExtract()
         {

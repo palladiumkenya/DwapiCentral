@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DwapiCentral.Shared.Domain.Model.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Common
 {
@@ -13,7 +14,7 @@ namespace DwapiCentral.Shared.Domain.Model.Common
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override int Id { get; set; }
-
+        public int Code { get; set; }
         [MaxLength(120)]
         public string Name { get; set; }
         [MaxLength(120)]
@@ -22,7 +23,7 @@ namespace DwapiCentral.Shared.Domain.Model.Common
         public int? SnapshotSiteCode { get; set; }
         public int? SnapshotVersion { get; set; }
 
-        //public ICollection<Facility> Mentions { get; set; } = new List<Facility>();
+        public ICollection<Facility> Mentions { get; set; } = new List<Facility>();
 
         public MasterFacility()
         {

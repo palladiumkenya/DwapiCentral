@@ -1,9 +1,11 @@
 
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientBaselinesExtract 
+    public class PatientBaselinesExtract : Entity, IPatientBaselinesExtract
     {
         public int? bCD4 { get; set; }
         public DateTime? bCD4Date { get; set; }

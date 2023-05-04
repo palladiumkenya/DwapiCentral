@@ -1,10 +1,12 @@
 
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
 
-    public class PatientExtract 
+    public class PatientExtract : Entity, IPatientExtract
     {
 
         public int PatientPID { get; set; }

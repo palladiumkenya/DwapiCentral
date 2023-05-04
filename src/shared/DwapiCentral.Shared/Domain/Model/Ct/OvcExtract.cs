@@ -1,9 +1,12 @@
 
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class OvcExtract 
+    public class OvcExtract : Entity, IOvcExtract
     {
         public string FacilityName { get; set; }
         public int? VisitID { get; set; }

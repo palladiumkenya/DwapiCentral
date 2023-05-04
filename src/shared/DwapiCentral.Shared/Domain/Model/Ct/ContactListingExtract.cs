@@ -1,10 +1,12 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 using System;
 
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class ContactListingExtract 
+    public class ContactListingExtract : Entity , IContactListingExtract
     {
         public string FacilityName { get; set; }
         public int? PartnerPersonID { get; set; }

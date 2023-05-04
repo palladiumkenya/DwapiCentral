@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PalladiumDwh.Shared.Interfaces
+namespace DwapiCentral.Shared.Application.Interfaces.Ct
 {
     public interface IPatient
     {
@@ -37,12 +37,12 @@ namespace PalladiumDwh.Shared.Interfaces
         string PatientResidentWard { get; set; }
         string PatientResidentVillage { get; set; }
         DateTime? TransferInDate { get; set; }
-        DateTime? Date_Created { get; set; } 
+        DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
         string Pkv { get; set; }
         string Occupation { get; set; }
         string NUPI { get; set; }
-       
+
     }
 }
 

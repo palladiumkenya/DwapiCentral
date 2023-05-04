@@ -1,9 +1,10 @@
 using DwapiCentral.Contracts.Ct;
-
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientArtExtract 
+    public class PatientArtExtract :Entity, IPatientArtExtract
     {
         public DateTime? DOB { get; set; }
         public decimal? AgeEnrollment { get; set; }

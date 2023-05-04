@@ -1,4 +1,4 @@
-using PalladiumDwh.Shared.Interfaces;
+using DwapiCentral.Shared.Application.Interfaces.Ct;
 using System;
 
 namespace DwapiCentral.Shared.Application.Interfaces.Ct

@@ -1,10 +1,11 @@
 using System;
 using DwapiCentral.Contracts.Ct;
-
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientStatusExtract
+    public class PatientStatusExtract : Entity, IPatientStatusExtract
     {
         public string ExitDescription { get; set; }
         public DateTime? ExitDate { get; set; }

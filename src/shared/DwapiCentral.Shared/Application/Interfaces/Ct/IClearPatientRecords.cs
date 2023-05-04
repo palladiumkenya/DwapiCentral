@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PalladiumDwh.Shared.Interfaces
+namespace DwapiCentral.Shared.Application.Interfaces.Ct
 {
     public interface IClearPatientRecords
     {

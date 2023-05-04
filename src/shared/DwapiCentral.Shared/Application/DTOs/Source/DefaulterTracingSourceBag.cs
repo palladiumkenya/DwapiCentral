@@ -1,7 +1,6 @@
-using DwapiCentral.Shared.Application.DTOs.Source;
-using PalladiumDwh.Core.Application.Extracts.Source.Dto;
 
-namespace PalladiumDwh.Core.Application.Extracts.Source
+
+namespace DwapiCentral.Shared.Application.DTOs.Source
 {
-    public class DefaulterTracingSourceBag : SourceBag<DefaulterTracingSourceDto>{}
+    public class DefaulterTracingSourceBag : SourceBag<DefaulterTracingSourceDto> { }
 }

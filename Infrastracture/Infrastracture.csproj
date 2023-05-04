@@ -7,10 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="Files\" />
     <Folder Include="Services\" />
     <Folder Include="Persistence\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\contracts\DwapiCentral.Contracts\DwapiCentral.Contracts.csproj" />
+    <ProjectReference Include="..\src\shared\DwapiCentral.Shared\DwapiCentral.Shared.csproj" />
   </ItemGroup>
 
 </Project>

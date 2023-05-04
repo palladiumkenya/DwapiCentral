@@ -1,10 +1,11 @@
 using System;
 using DwapiCentral.Contracts.Ct;
-
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientVisitExtract 
+    public class PatientVisitExtract :Entity, IPatientVisitExtract
     {
         public int? VisitId { get; set; }
         public DateTime? VisitDate { get; set; }

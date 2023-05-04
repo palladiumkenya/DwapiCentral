@@ -1,5 +1,5 @@
 using System;
-using PalladiumDwh.Shared.Interfaces;
+using DwapiCentral.Shared.Application.Interfaces.Ct;
 
 namespace DwapiCentral.Shared.Application.DTOs
 {

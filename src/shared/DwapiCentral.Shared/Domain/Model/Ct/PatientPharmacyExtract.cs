@@ -1,10 +1,11 @@
 using System;
 using DwapiCentral.Contracts.Ct;
-
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class PatientPharmacyExtract 
+    public class PatientPharmacyExtract : Entity, IPatientPharmacyExtract
     {
         public int? VisitID { get; set; }
         public string Drug { get; set; }

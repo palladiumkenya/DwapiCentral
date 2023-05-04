@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DwapiCentral.Shared.Domain.Entities.Ct;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using PalladiumDwh.Shared.Model;
 
-namespace PalladiumDwh.Shared.Interfaces
+
+namespace DwapiCentral.Shared.Application.Interfaces.Ct
 {
     public interface IRepository<TEntity> where TEntity : Entity
     {

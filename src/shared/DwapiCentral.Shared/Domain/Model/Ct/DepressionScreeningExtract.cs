@@ -1,8 +1,10 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Shared.Application.Interfaces.Ct.Extracts;
+using DwapiCentral.Shared.Domain.Entities.Ct;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct
 {
-    public class DepressionScreeningExtract 
+    public class DepressionScreeningExtract :Entity, IDepressionScreeningExtract
     {
         public string FacilityName { get; set; }
         public int? VisitID { get; set; }
