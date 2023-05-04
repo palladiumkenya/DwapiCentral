@@ -10,8 +10,7 @@ namespace DwapiCentral.Contracts.Hts
     public  interface IHtsClientLinkage : IEntity
     {
             string FacilityName { get; set; }
-            int SiteCode { get; set; }
-            int PatientPk { get; set; }
+            
             string HtsNumber { get; set; }
             
             bool? Processed { get; set; }

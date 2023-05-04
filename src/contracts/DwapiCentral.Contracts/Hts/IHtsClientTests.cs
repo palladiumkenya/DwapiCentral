@@ -9,11 +9,8 @@ namespace DwapiCentral.Contracts.Hts
 {
     public  interface IHtsClientTests : IEntity
     {
-          string FacilityName { get; set; }
-          int SiteCode { get; set; }
-          int PatientPk { get; set; }
-          string HtsNumber { get; set; }
-       
+          string FacilityName { get; set; }         
+          string HtsNumber { get; set; }      
        
           bool? Processed { get; set; }
           string QueueId { get; set; }

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Application\Behaviours\" />
+    <Folder Include="Application\DTOs\Source\" />
+    <Folder Include="Application\Exceptions\" />
+    <Folder Include="Application\Interfaces\Ct\DTOs\" />
+    <Folder Include="Application\Interfaces\Ct\Extracts\" />
+    <Folder Include="Application\Interfaces\Ct\Stages\" />
+    <Folder Include="Application\Interfaces\Ct\Profiles\" />
+    <Folder Include="Application\Mappings\" />
+    <Folder Include="Application\Models\" />
+    <Folder Include="Domain\Events\" />
+    <Folder Include="Domain\Exceptions\" />
+    <Folder Include="Domain\Model\Ct\DTOs\" />
+    <Folder Include="Domain\Model\Ct\Profiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\contracts\DwapiCentral.Contracts\DwapiCentral.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

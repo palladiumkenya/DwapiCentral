@@ -10,8 +10,7 @@ namespace DwapiCentral.Contracts.Hts
     public interface IHtsClientPartner : IEntity
     {
           string FacilityName { get; set; }
-          int SiteCode { get; set; }
-          int PatientPk { get; set; }
+          
           string HtsNumber { get; set; }
 
 

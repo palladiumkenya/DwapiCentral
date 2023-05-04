@@ -17,12 +17,9 @@ namespace DwapiCentral.Contracts.Hts
           int SiteCode { get; set; }
           string FacilityName { get; set; }
           string Serial { get; set; }
-          DateTime DateExtracted { get; set; }
-          bool? Processed { get; set; }
-          string QueueId { get; set; }
-          string Status { get; set; }
+         
           DateTime? StatusDate { get; set; }
-          DateTime DateCreated { get; set; } 
+          
 
           int? EncounterId { get; set; }
           DateTime? VisitDate { get; set; }
