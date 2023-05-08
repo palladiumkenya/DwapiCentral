@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <Folder Include="Files\" />
+    <Folder Include="Persistence\Repository\" />
     <Folder Include="Services\" />
-    <Folder Include="Persistence\" />
   </ItemGroup>
 
   <ItemGroup>
