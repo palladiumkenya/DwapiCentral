@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DwapiCentral.Shared.Application.Interfaces.Ct.DTOs;
-using DwapiCentral.Shared.Domain.Model.Ct;
 
 
-namespace DwapiCentral.CT.Domain.Models.DTOs
+namespace DwapiCentral.Shared.Domain.Model.Ct.DTOs
 {
     public class AllergiesChronicIllnessExtractDTO : IAllergiesChronicIllnessExtractDTO
     {

@@ -1,7 +1,6 @@
 ﻿using DwapiCentral.Shared.Domain.Model.Ct;
 using DwapiCentral.Shared.Application.Interfaces.Ct.Profiles;
 using DwapiCentral.Shared.Domain.Model.Ct.DTOs;
-using DwapiCentral.CT.Domain.Models.DTOs;
 
 namespace DwapiCentral.Shared.Domain.Model.Ct.Profiles
 {
