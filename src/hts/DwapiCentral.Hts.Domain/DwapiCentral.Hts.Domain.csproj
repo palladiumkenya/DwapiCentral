@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\contracts\DwapiCentral.Contracts\DwapiCentral.Contracts.csproj" />
+      <ProjectReference Include="..\..\shared\DwapiCentral.Shared\DwapiCentral.Shared.csproj" />
+    </ItemGroup>
+
 </Project>
