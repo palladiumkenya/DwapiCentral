@@ -21,6 +21,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CT", "CT", "{AEF6A6A9-C4FB-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.CT", "DwapiCentral.CT\DwapiCentral.CT.csproj", "{0461015F-161F-4E81-8B58-C23C9011F78F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hts", "hts", "{1D0E4CA5-229E-4508-9C5A-B5FC7717FF43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Hts.Domain", "src\hts\DwapiCentral.Hts.Domain\DwapiCentral.Hts.Domain.csproj", "{55649801-0268-46E4-9165-F2C55E6EB17D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Hts.Application", "src\hts\DwapiCentral.Hts.Application\DwapiCentral.Hts.Application.csproj", "{145052EF-40BD-474A-A5C5-DA210949515F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Hts.Infrastructure", "src\hts\DwapiCentral.Hts.Infrastructure\DwapiCentral.Hts.Infrastructure.csproj", "{737764A7-54B1-4A39-A0D7-CF595AAE6848}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Hts", "DwapiCentral.Hts\DwapiCentral.Hts.csproj", "{4AECF707-A1AA-455F-ACF3-32A17A2806A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
