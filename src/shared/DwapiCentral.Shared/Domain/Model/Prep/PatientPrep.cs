@@ -1,6 +1,5 @@
 ﻿using DwapiCentral.Contracts.Prep;
 using DwapiCentral.Shared.Domain.Entities;
-using DwapiCentral.Shared.Domain.Model.Ct;
 using System;
 using System.Collections.Generic;
 using System.Linq;
