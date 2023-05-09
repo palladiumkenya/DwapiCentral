@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Dwapi.Central.Ct.Application\DwapiCentral.Ct.Application.csproj" />
-  </ItemGroup>
-
 </Project>

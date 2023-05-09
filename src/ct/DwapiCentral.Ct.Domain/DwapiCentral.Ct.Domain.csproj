@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DwapiCentral.Ct.Domain\DwapiCentral.Ct.Domain.csproj" />
-    <ProjectReference Include="..\src\shared\DwapiCentral.Shared\DwapiCentral.Shared.csproj" />
+    <ProjectReference Include="..\..\contracts\DwapiCentral.Contracts\DwapiCentral.Contracts.csproj" />
+    <ProjectReference Include="..\..\shared\DwapiCentral.Shared\DwapiCentral.Shared.csproj" />
   </ItemGroup>
 
 </Project>
