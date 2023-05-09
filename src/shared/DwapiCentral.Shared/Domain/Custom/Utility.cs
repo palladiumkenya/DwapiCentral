@@ -1,6 +1,4 @@
-﻿using DwapiCentral.Ct.Domain.Models;
-using DwapiCentral.Ct.Domain.Models.Extracts;
-using DwapiCentral.Shared.Domain.Model.Common;
+﻿using DwapiCentral.Shared.Domain.Model.Common;
 using log4net;
 using Newtonsoft.Json;
 using System;
@@ -210,33 +208,33 @@ namespace DwapiCentral.Ct.Domain.Custom
             return finalString;
         }
 
-        public static void ReportStatus(this IProgress<DProgress> progress, string status, decimal? count = null,
-            decimal? total = null, object valueObject = null)
-        {
-            var dp = DProgress.Report(status);
-            if (count.HasValue && total.HasValue)
-            {
-                decimal percentage = decimal.Divide(count.Value, total.Value) * 100;
-                dp = DProgress.Report(status, (int)percentage);
-            }
+        //public static void ReportStatus(this IProgress<DProgress> progress, string status, decimal? count = null,
+        //    decimal? total = null, object valueObject = null)
+        //{
+        //    var dp = DProgress.Report(status);
+        //    if (count.HasValue && total.HasValue)
+        //    {
+        //        decimal percentage = decimal.Divide(count.Value, total.Value) * 100;
+        //        dp = DProgress.Report(status, (int)percentage);
+        //    }
 
-            dp.ValueObject = valueObject;
-            progress.Report(dp);
-        }
+        //    dp.ValueObject = valueObject;
+        //    progress.Report(dp);
+        //}
 
-        public static void AttachValueObjectReportStatus(this IProgress<DProgress> progress, string status,
-            decimal? count = null, decimal? total = null)
-        {
-            var dp = DProgress.Report(status);
+        //public static void AttachValueObjectReportStatus(this IProgress<DProgress> progress, string status,
+        //    decimal? count = null, decimal? total = null)
+        //{
+        //    var dp = DProgress.Report(status);
 
-            if (count.HasValue && total.HasValue)
-            {
-                decimal percentage = decimal.Divide(count.Value, total.Value) * 100;
-                dp = DProgress.Report(status, (int)percentage);
-            }
+        //    if (count.HasValue && total.HasValue)
+        //    {
+        //        decimal percentage = decimal.Divide(count.Value, total.Value) * 100;
+        //        dp = DProgress.Report(status, (int)percentage);
+        //    }
 
-            progress.Report(dp);
-        }
+        //    progress.Report(dp);
+        //}
 
         public static int GetPercentage(decimal count, decimal total)
         {
@@ -413,27 +411,27 @@ namespace DwapiCentral.Ct.Domain.Custom
                         property.SetValue(obj, val.ToString().Truncate(maxLength));
                 }
 
-                string[] ignoreDates = { nameof(PatientStatusExtract.Date_Created), nameof(PatientStatusExtract.Date_Last_Modified) };
+                //string[] ignoreDates = { nameof(PatientStatusExtract.Date_Created), nameof(PatientStatusExtract.Date_Last_Modified) };
 
-                if (property.PropertyType == typeof(DateTime))
-                {
-                    if (!ignoreDates.Contains(property.Name))
-                    {
-                        var val = (DateTime)property.GetValue(obj, null);
-                        property.SetValue(obj, val.StandardizeDate());
-                    }
+                //if (property.PropertyType == typeof(DateTime))
+                //{
+                //    if (!ignoreDates.Contains(property.Name))
+                //    {
+                //        var val = (DateTime)property.GetValue(obj, null);
+                //        property.SetValue(obj, val.StandardizeDate());
+                //    }
 
-                }
+                //}
 
-                if (property.PropertyType == typeof(DateTime?))
-                {
-                    if (!ignoreDates.Contains(property.Name))
-                    {
-                        var val = (DateTime?)property.GetValue(obj, null);
-                        property.SetValue(obj, val.StandardizeDate());
-                    }
+                //if (property.PropertyType == typeof(DateTime?))
+                //{
+                //    if (!ignoreDates.Contains(property.Name))
+                //    {
+                //        var val = (DateTime?)property.GetValue(obj, null);
+                //        property.SetValue(obj, val.StandardizeDate());
+                //    }
 
-                }
+                //}
             }
         }
     }

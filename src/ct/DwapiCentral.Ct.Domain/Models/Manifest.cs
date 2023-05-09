@@ -1,4 +1,5 @@
-﻿using DwapiCentral.Ct.Domain.Custom;
+﻿using DwapiCentral.Contracts.Manifest;
+using DwapiCentral.Ct.Domain.Custom;
 using DwapiCentral.Shared.Domain.Enums;
 using Infrastracture.Custom;
 using System;
@@ -9,26 +10,28 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Domain.Models.Extracts
 {
-    public class Manifest
+    public class Manifest : IManifest
     {
-        public Guid? Id { get; set; }
+       
         public int SiteCode { get; set; }
-        public string Name { get; set; }
-        public Guid? EmrId { get; set; }
+        public string Name { get; set; }        
         public string EmrName { get; set; }
         public EmrSetup EmrSetup { get; set; }
         public List<int> PatientPKs { get; set; } = new List<int>();
         public string Metrics { get; set; }
-        public List<FacMetric> FacMetrics { get; set; } = new List<FacMetric>();
+        public List<Metric> FacMetrics { get; set; } = new List<Metric>();
         public int PatientCount => PatientPKs.Count;
         public UploadMode UploadMode { get; set; }
 
-        public Guid? Session { get; set; }
-        public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
         public string Tag { get; set; }
 
         public string Items => string.Join(",", PatientPKs);
+
+        public Guid Id { get; set; }
+        public Guid EmrId { get; set; }
+        public Guid Session { get; set; }
+        public DateTime Start { get; set; }
 
         public Manifest()
         {
@@ -113,7 +116,7 @@ WHERE
         public EmrSetup EmrSetup { get; set; }
         public List<int> PatientPKs { get; set; } = new List<int>();
         public string Metrics { get; set; }
-        public List<FacMetric> FacMetrics { get; set; } = new List<FacMetric>();
+        public List<Metric> FacMetrics { get; set; } = new List<Metric>();
         public int PatientCount => PatientPKs.Count;
         public UploadMode UploadMode { get; set; }
 

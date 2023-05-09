@@ -1,4 +1,5 @@
-﻿using DwapiCentral.Ct.Domain.Custom;
+﻿using DwapiCentral.Contracts.Manifest;
+using DwapiCentral.Ct.Domain.Custom;
 using DwapiCentral.Shared.Domain.Entities;
 using DwapiCentral.Shared.Domain.Entities.Ct;
 using DwapiCentral.Shared.Domain.Model.Common;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Domain.Models.Extracts
 {
-    public class Facility : Entity, IEquatable<Facility>
+    public class Facility : Entity, IEquatable<Facility>,IFacility
     {
         public int Code { get; set; }
         public string Name { get; set; }
