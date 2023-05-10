@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Contracts.Manifest;
 
 namespace DwapiCentral.Ct.Domain.Models
 {
-    public class MasterFacility : Entity<int>
+    public class MasterFacility : Entity<int>,IMasterFacility
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public override int Id { get; set; }

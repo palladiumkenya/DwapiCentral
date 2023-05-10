@@ -18,7 +18,7 @@ namespace DwapiCentral.Ct.Application.Interfaces.Repository
         Guid? GetPatientByIds(Guid facilityId, int patientPID);
         Guid? Sync(PatientExtract patient);
         Guid? SyncNew(PatientExtract patient);
-        void SaveManifest(FacilityManifest facilityManifest);
+        
         Task ClearManifest(Manifest manifest);
         Task RemoveDuplicates(int siteCode);
         Task InitializeManifest(Manifest manifest);
