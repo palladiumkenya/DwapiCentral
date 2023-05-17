@@ -1,26 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using DwapiCentral.Ct.Application.DTOs.Extract;
-using DwapiCentral.Ct.Application.Interfaces.Repository.Base;
-using DwapiCentral.Ct.Domain.Models.Extracts;
-using DwapiCentral.Shared.Domain.Model.Common;
+﻿using DwapiCentral.Ct.Domain.Models;
 
-namespace DwapiCentral.Shared.Application.Interfaces.Repository.Ct
+namespace DwapiCentral.Ct.Application.Interfaces.Repository
 {
-    public interface IFacilityRepository : IRepository<Facility>
+    public interface IFacilityRepository 
     {
-        Guid? GetFacilityIdByCode(int code);
-        Guid? SyncNew(Facility facility);
-
-        Guid? GetFacilityIdBCode(int code);
-        MasterFacility GetFacilityByCode(int code);
-        Guid? Sync(Facility facility);
-
-       // IEnumerable<StatsDto> GetFacStats(IEnumerable<Guid> facilityIds);
-        //StatsDto GetFacStats(Guid facilityId);
-        void Enroll(MasterFacility masterFacility, string emr, bool allowSnapshot);
-        void EndSession(Guid session);
-        //IEnumerable<HandshakeDto> GetSessionHandshakes(Guid session);
-        List<FacilityCacheDto> ReadFacilityCache();
+        Task<Facility> GetByCode(int code);
+        Task Save(Facility facility);
     }
 }
+

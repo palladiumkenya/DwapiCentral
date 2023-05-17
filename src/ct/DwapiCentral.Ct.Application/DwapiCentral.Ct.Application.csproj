@@ -12,4 +12,10 @@
     <ProjectReference Include="..\DwapiCentral.Ct.Domain\DwapiCentral.Ct.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.39.0" />
+    <PackageReference Include="MediatR" Version="12.0.1" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
+  </ItemGroup>
+
 </Project>

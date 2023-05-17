@@ -1,10 +1,6 @@
 ﻿using DwapiCentral.Ct.Application.Interfaces.Repository.Base;
 using DwapiCentral.Ct.Domain.Models.Extracts;
-using DwapiCentral.Shared.Domain.Model.Common;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Manifest = DwapiCentral.Ct.Domain.Models.Extracts.Manifest;
+using Manifest = DwapiCentral.Ct.Domain.Models.Manifest;
 
 namespace DwapiCentral.Ct.Application.Interfaces.Repository
 {
@@ -22,6 +18,5 @@ namespace DwapiCentral.Ct.Application.Interfaces.Repository
         Task ClearManifest(Manifest manifest);
         Task RemoveDuplicates(int siteCode);
         Task InitializeManifest(Manifest manifest);
-        Task<MasterFacility> VerifyFacility(int siteCode);
     }
 }

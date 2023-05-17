@@ -1,5 +1,4 @@
-﻿using DwapiCentral.Shared.Domain.Model.Common;
-using log4net;
+﻿using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
