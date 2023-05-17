@@ -21,7 +21,7 @@ namespace DwapiCentral.Ct.Domain.Models
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
         public string Status { get; set; } = "InProgress";
-        public DateTime StatusDate { get; set; }
+        public DateTime StatusDate { get; set; } = DateTime.Now;
         public DateTime Created { get; set; } = DateTime.Now;
         public string? Tag { get; set; }
         public ICollection<Metric> Metrics { get; set; } = new List<Metric>();

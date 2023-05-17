@@ -3,6 +3,7 @@ using DwapiCentral.Ct.Application.Interfaces.Repository;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Exceptions;
 using DwapiCentral.Ct.Domain.Models;
+using DwapiCentral.Ct.Domain.Repository;
 using MediatR;
 using Serilog;
 
@@ -37,15 +38,22 @@ public class ValidateSiteCommandHandler : IRequestHandler<ValidateSiteCommand, R
     {
         try
         {
-            var masterSite = await _masterFacilityRepository.GetByCode(request.SiteCode);
-            if (null == masterSite)
-                throw new SiteNotFoundException(request.SiteCode);
+            // check if in Master facility list
             
-            var site= await _facilityRepository.GetByCode(request.SiteCode);
-            if (null == site)
+            var masterFacility = await _masterFacilityRepository.GetByCode(request.SiteCode);
+            if (null == masterFacility)
+                throw new SiteNotFoundInMflException(request.SiteCode);
+            
+            // check if Enrolled
+            
+            var facility= await _facilityRepository.GetByCode(request.SiteCode);
+            if (null == facility)
             {
-                var facility = new Facility(request.SiteCode, request.SiteName);
-                await _facilityRepository.Save(facility);
+                var newFacility = new Facility(request.SiteCode, request.SiteName);
+                await _facilityRepository.Save(newFacility);
+                
+                // publish Event...
+                
                 await _mediator.Publish(new SiteEnrolledEvent(request.SiteCode, request.SiteName), cancellationToken);
             }
 
@@ -56,7 +64,6 @@ public class ValidateSiteCommandHandler : IRequestHandler<ValidateSiteCommand, R
             Log.Error(e,"validate site error");
             return Result.Failure(e.Message);
         }
-
     }
 }
 

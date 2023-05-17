@@ -14,8 +14,16 @@ namespace DwapiCentral.Ct.Domain.Models
     public class MasterFacility :IMasterFacility
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Code { get; set; }
         public string Name { get; set; }
         public string County { get; set; }
+
+        public MasterFacility(int code, string name, string county)
+        {
+            Code = code;
+            Name = name;
+            County = county;
+        }
     }
 }

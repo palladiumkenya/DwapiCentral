@@ -19,25 +19,23 @@ public class GetMasterFacilityQuery:IRequest<Result<MasterFacility>>
 
 public class GetMasterFacilityQueryHandler:IRequestHandler<GetMasterFacilityQuery,Result<MasterFacility>>
 {
-    private readonly IMediator _mediator;
-    private readonly IMasterFacilityRepository _repository;
+    private readonly IMasterFacilityRepository _masterFacilityRepository;
 
-    public GetMasterFacilityQueryHandler(IMediator mediator, IMasterFacilityRepository repository)
+    public GetMasterFacilityQueryHandler(IMasterFacilityRepository masterFacilityRepository)
     {
-        _mediator = mediator;
-        _repository = repository;
+        _masterFacilityRepository = masterFacilityRepository;
     }
 
     public async Task<Result<MasterFacility>> Handle(GetMasterFacilityQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var fac = await _repository.GetByCode(request.Code);
+            var masterFacility = await _masterFacilityRepository.GetByCode(request.Code);
             
-            if (null == fac)
-                throw new SiteNotFoundException(request.Code);
+            if (null == masterFacility)
+                throw new SiteNotFoundInMflException(request.Code);
             
-            return Result.Success(fac);
+            return Result.Success(masterFacility);
         }
         catch (Exception e)
         {

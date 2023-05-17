@@ -26,7 +26,9 @@ namespace DwapiCentral.Contracts.Manifest
           Guid Session { get; set; }
           DateTime Start { get; set; }
           DateTime? End { get; set; }
-          string Status { get; set; }    
+          string Status { get; set; }
+          DateTime StatusDate { get; set; }
           string? Tag { get; set; }
+          DateTime Created { get; set; }
     }
 }

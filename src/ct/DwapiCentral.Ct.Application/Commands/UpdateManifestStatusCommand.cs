@@ -35,14 +35,20 @@ public class UpdateManifestStatusCommandHandler : IRequestHandler<UpdateManifest
     {
         try
         {
+            // check if manifest exists 
+            
             var manifest = await _manifestRepository.GetById(request.Id);
             if (null == manifest)
                 throw new ManifestNotFoundException(request.Id);
 
+            // update status  e.g Incomplete, Stagged 
+            
             manifest.UpdateStatus(request.Status);
             
             await _manifestRepository.Update(manifest);
 
+            // publish event...
+            
             await _mediator.Publish(new ManifestStatusUpdatedEvent(request.Id, request.Status), cancellationToken);
             
             return Result.Success();

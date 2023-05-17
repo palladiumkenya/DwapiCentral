@@ -3,6 +3,7 @@ using DwapiCentral.Ct.Application.Interfaces.Repository;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Exceptions;
 using DwapiCentral.Ct.Domain.Models;
+using DwapiCentral.Ct.Domain.Repository;
 using MediatR;
 using Serilog;
 

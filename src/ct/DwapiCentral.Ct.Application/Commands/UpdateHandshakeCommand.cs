@@ -37,14 +37,20 @@ public class UpdateHandshakeCommandHandler : IRequestHandler<UpdateHandshakeComm
     {
         try
         {
+            // check if manifest exists 
+            
             var manifest = await _manifestRepository.GetById(request.Id);
             if (null == manifest)
                 throw new ManifestNotFoundException(request.Id);
 
+            // update handshake 
+            
             manifest.SetHandshake();
             
             await _manifestRepository.Update(manifest);
 
+            // Publish event...
+            
             await _mediator.Publish(new HandshakeReceivedEvent(request.Id, request.SiteCode), cancellationToken);
             
             return Result.Success();
