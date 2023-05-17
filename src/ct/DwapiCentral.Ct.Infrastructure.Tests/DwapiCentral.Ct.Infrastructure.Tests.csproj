@@ -34,6 +34,13 @@
       <None Update="appsettings.Test.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="TestArtifacts\Database\CentralDwapiTest.sqlite">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="TestArtifacts\Database\" />
     </ItemGroup>
 
 </Project>

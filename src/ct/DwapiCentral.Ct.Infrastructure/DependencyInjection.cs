@@ -11,14 +11,17 @@ namespace DwapiCentral.Ct.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services,IConfiguration configuration,bool isSqlite=false)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services,IConfiguration configuration,bool isSqlite=false,string dynamicConnectionString="")
     {
         var connectionString = configuration.GetConnectionString("LiveConnection");
         if (isSqlite)
         {
-                var connection = new SqliteConnection(connectionString);
-                connection.Open();
-                services.AddDbContext<CtDbContext>(x => x.UseSqlite(connection));
+            if (!string.IsNullOrWhiteSpace(dynamicConnectionString))
+                connectionString = dynamicConnectionString;
+
+            var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            services.AddDbContext<CtDbContext>(x => x.UseSqlite(connection));
         }
         else
         {

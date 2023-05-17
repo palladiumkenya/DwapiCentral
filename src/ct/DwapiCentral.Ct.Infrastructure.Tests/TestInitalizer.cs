@@ -1,4 +1,5 @@
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Shared.Custom;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,7 +24,7 @@ public class TestInitializer
             .Build();
 
         var services = new ServiceCollection();
-        services.AddInfrastructure(config, true);
+        services.AddInfrastructure(config, true,GenerateDynamicConnection());
         ServiceProvider = services.BuildServiceProvider();
     }
 
@@ -32,5 +33,29 @@ public class TestInitializer
         var dbs = ServiceProvider.GetService<CtDbContext>();
         dbs.Database.EnsureCreated();
         dbs.EnsureSeeded();
+    }
+    
+    private string GenerateDynamicConnection()
+    {
+        RemoveTestsFilesDbs();
+        var dir = $"{TestContext.CurrentContext.TestDirectory.HasToEndWith(@"/")}";
+        var cn = $"DataSource={dir}TestArtifacts/Database/CentralDwapiTest.sqlite".Replace(".sqlite", $"{DateTime.Now.Ticks}.sqlite");
+        return cn.ToOsStyle();
+    }
+        
+    private void RemoveTestsFilesDbs()
+    {
+        string[] keyFiles = { "CentralDwapiTest.sqlite" };
+        string[] keyDirs = { @"TestArtifacts/Database".ToOsStyle()};
+
+        foreach (var keyDir in keyDirs)
+        {
+            DirectoryInfo di = new DirectoryInfo(keyDir);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                if (!keyFiles.Contains(file.Name))
+                    file.Delete();
+            }
+        }
     }
 }

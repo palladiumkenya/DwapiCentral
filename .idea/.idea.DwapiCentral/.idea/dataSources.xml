@@ -8,5 +8,12 @@
       <jdbc-url>Server=localhost\KOSKE19</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="CentralDwapiTest.sqlite" uuid="f57ae2ac-a5d2-4f7f-b756-8e9b55283040">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:F:\Palladium\dwh\dwapi-central\src\ct\DwapiCentral.Ct.Infrastructure.Tests\TestArtifacts\Database\CentralDwapiTest.sqlite</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
