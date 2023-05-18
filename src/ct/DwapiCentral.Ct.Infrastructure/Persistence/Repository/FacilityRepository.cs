@@ -1,6 +1,7 @@
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository;
 
@@ -15,11 +16,14 @@ public class FacilityRepository:IFacilityRepository
 
     public Task<Facility?> GetByCode(int code)
     {
-        throw new NotImplementedException();
+        return _context.Facilities
+           .AsTracking()
+           .FirstOrDefaultAsync(x => x.Code == code);
     }
 
-    public Task Save(Facility facility)
+    public async Task Save(Facility facility)
     {
-        throw new NotImplementedException();
+        await _context.Facilities.AddAsync(facility);
+        await _context.SaveChangesAsync();
     }
 }

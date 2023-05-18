@@ -17,7 +17,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<Manifest> Manifests { get; set; }
         public DbSet<Metric> Metrics { get; set; }
 
-        // public DbSet<PatientExtract> PatientExtracts { get; set; }  
+        public DbSet<PatientExtract> PatientExtracts { get; set; }  
         // public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
         // public DbSet<ContactListingExtract> contactListingExtracts { get; set; }
         // public DbSet<CovidExtract> CovidExtracts { get; set; }
@@ -43,17 +43,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.Entity<PatientExtract>()
-            // .HasIndex(p => new { p.PatientPID, p.SiteCode, p.FacilityId })
-            // .IsUnique(true);
-            //
-            // modelBuilder.Entity<PatientLaboratoryExtract>()
-            //     .HasIndex(p => new {p.Id })
-            //     .IsUnique(true);
-            //
-            // modelBuilder.Entity<PatientVisitExtract>()
-            //     .HasIndex(p => new { p.VisitId, p.VisitDate, p.PatientId })
-            //     .IsUnique(true);
+            modelBuilder.Entity<PatientExtract>()
+            .HasIndex(p => new { p.PatientPID, p.SiteCode })
+            .IsUnique(true);
+
 
             base.OnModelCreating(modelBuilder);
         }

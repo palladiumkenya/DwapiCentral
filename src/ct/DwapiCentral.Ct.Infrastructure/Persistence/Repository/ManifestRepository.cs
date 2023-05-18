@@ -1,22 +1,35 @@
 using DwapiCentral.Ct.Application.Interfaces.Repository;
 using DwapiCentral.Ct.Domain.Models;
+using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository;
 
 public class ManifestRepository:IManifestRepository
 {
-    public Task<Manifest> GetById(Guid id)
+    private readonly CtDbContext _context;
+
+    public ManifestRepository(CtDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+    }
+    
+
+    public async Task<Manifest> GetById(Guid id)
+    {
+       return await _context.Manifests
+            .AsTracking().FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public Task Save(Manifest manifest)
+    public async Task Save(Manifest manifest)
     {
-        throw new NotImplementedException();
+        await _context.Manifests.AddAsync(manifest);
+        await _context.SaveChangesAsync();
     }
 
-    public Task Update(Manifest manifest)
+    public async Task Update(Manifest manifest)
     {
-        throw new NotImplementedException();
+        _context.Manifests.Update(manifest);
+        await _context.SaveChangesAsync();
     }
 }

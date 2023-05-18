@@ -151,68 +151,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
             Date_Last_Modified = date_Last_Modified;
         }
 
-        public void AddPatientArtExtracts(IEnumerable<PatientArtExtract> extracts)
-        {
-            foreach (var e in extracts)
-            {
-                e.PatientId = Id;
-                PatientArtExtracts.Add(e);
-            }
-        }
-        public void AddPatientBaselinesExtracts(IEnumerable<PatientBaselinesExtract> extracts)
-        {
-            foreach (var e in extracts)
-            {
-                e.PatientId = Id;
-                PatientBaselinesExtracts.Add(e);
-            }
-        }
-        public void AddPatientLaboratoryExtracts(IEnumerable<PatientLaboratoryExtract> extracts)
-        {
-            foreach (var e in extracts)
-            {
-                e.PatientId = Id;
-                PatientLaboratoryExtracts.Add(e);
-            }
-        }
-        public void AddPatientPharmacyExtracts(IEnumerable<PatientPharmacyExtract> extracts)
-        {
-            foreach (var e in extracts)
-            {
-                e.PatientId = Id;
-                PatientPharmacyExtracts.Add(e);
-            }
-        }
-        public void AddPatientStatusExtracts(IEnumerable<PatientStatusExtract> extracts)
-        {
-            foreach (var e in extracts)
-            {
-                e.PatientId = Id;
-                PatientStatusExtracts.Add(e);
-            }
-        }
-        public void AddPatientVisitExtracts(IEnumerable<PatientVisitExtract> extracts)
-        {
-            foreach (var e in extracts)
-            {
-                e.PatientId = Id;
-                PatientVisitExtracts.Add(e);
-            }
-        }
-
-        public void AddPatientAdverseEventExtracts(IEnumerable<PatientAdverseEventExtract> extracts)
-        {
-            foreach (var e in extracts)
-            {
-                e.PatientId = Id;
-                PatientAdverseEventExtracts.Add(e);
-            }
-        }
-
-        public bool IsInitialized()
-        {
-            return string.IsNullOrWhiteSpace(Gender);
-        }
+        
 
 
     }
