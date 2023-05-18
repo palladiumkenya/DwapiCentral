@@ -1,202 +1,41 @@
-﻿using DwapiCentral.Contracts.Manifest;
-using DwapiCentral.Ct.Domain.Custom;
-using DwapiCentral.Shared.Domain.Enums;
-using Infrastracture.Custom;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using DwapiCentral.Contracts.Manifest;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
     public class Manifest : IManifest
     {
-       
-        public int SiteCode { get; set; }
-        public string Name { get; set; }        
-        public string EmrName { get; set; }
-        public EmrSetup EmrSetup { get; set; }
-        public List<int> PatientPKs { get; set; } = new List<int>();
-        public string Metrics { get; set; }
-        public List<Metric> FacMetrics { get; set; } = new List<Metric>();
-        public int PatientCount => PatientPKs.Count;
-        public UploadMode UploadMode { get; set; }
-
-        public DateTime? End { get; set; }
-        public string Tag { get; set; }
-
-        public string Items => string.Join(",", PatientPKs);
-
+        [Key]
         public Guid Id { get; set; }
-        public Guid EmrId { get; set; }
-        public Guid Session { get; set; }
-        public DateTime Start { get; set; }
-
-        public Manifest()
-        {
-        }
-
-        public Manifest(int siteCode)
-        {
-            SiteCode = siteCode;
-        }
-
-        public string GetInitExtracts(Guid facilityId)
-        {
-            StringBuilder sb = new StringBuilder();
-            int count = 0;
-            int total = PatientPKs.Count;
-
-            foreach (var patientPk in PatientPKs)
-            {
-                count++;
-                sb.AppendLine($"SELECT '{Guid.NewGuid()}' as Id,{patientPk} as PatientPID,'{facilityId}' as FacilityID {(count == total ? "" : "UNION")}");
-            }
-
-            var sql = $@"
-INSERT INTO PatientExtract(Id,PatientPID,FacilityID,Voided,Processed,Created)
-SELECT 
-	e.Id, e.PatientPID,e.FacilityID,0,0,GETDATE()
-FROM            
-	(
-    {sb}
-    ) AS e LEFT OUTER JOIN PatientExtract AS p ON e.PatientPID = p.PatientPID AND e.FacilityID=p.FacilityID
-WHERE        
-	(p.Id IS NULL)
-";
-            return sql;
-        }
-        public bool IsValid()
-        {
-            return SiteCode > 0 && PatientPKs.Count > 0;
-        }
-        public void AddPatientPk(int pk)
-        {
-            if (!PatientPKs.Contains(pk))
-                PatientPKs.Add(pk);
-        }
-        public string GetPatientPKsJoined()
-        {
-            return string.Join(",", PatientPKs);
-        }
-
-        public List<string> GetBatchPatientPKsJoined(int batchCount)
-        {
-            var list = new List<string>();
-            var batches = PatientPKs.Split(batchCount).ToList();
-            foreach (var batch in batches)
-            {
-                list.Add(string.Join(",", batch));
-            }
-            return list;
-        }
-
-        public void Validate()
-        {
-            if (!IsValid())
-                throw new Exception($"Invalid Manifest,Please ensure the SiteCode [{SiteCode}] is valid and there exists at least one (1) Patient record");
-        }
-
-        public string Info(string action) => $"{SiteCode}-{Name} [{PatientCount}] {action} Manifest";
-
-        public override string ToString()
-        {
-            return $"{SiteCode} AllowedToSend ({PatientPKs.Count})";
-        }
-    }
-
-    public class XManifest
-    {
-        public Guid? Id { get; set; }
+        public string Docket { get; set; }
         public int SiteCode { get; set; }
         public string Name { get; set; }
-        public Guid? EmrId { get; set; }
+        public string Project { get; set; }
+        public string UploadMode { get; set; }
+        public string DwapiVersion { get; set; }
+        public string EmrSetup { get; set; }
+        public Guid EmrId { get; set; }
         public string EmrName { get; set; }
-        public EmrSetup EmrSetup { get; set; }
-        public List<int> PatientPKs { get; set; } = new List<int>();
-        public string Metrics { get; set; }
-        public List<Metric> FacMetrics { get; set; } = new List<Metric>();
-        public int PatientCount => PatientPKs.Count;
-        public UploadMode UploadMode { get; set; }
-
-        public Guid? Session { get; set; }
-        public DateTime? Start { get; set; }
+        public string EmrVersion { get; set; }
+        public Guid Session { get; set; }
+        public DateTime Start { get; set; }
         public DateTime? End { get; set; }
-        public string Tag { get; set; }
+        public string Status { get; set; } = "InProgress";
+        public DateTime StatusDate { get; set; } = DateTime.Now;
+        public DateTime Created { get; set; } = DateTime.Now;
+        public string? Tag { get; set; }
+        public ICollection<Metric> Metrics { get; set; } = new List<Metric>();
 
-        public string Items => string.Join(",", PatientPKs);
-
-        public XManifest()
+        public void SetHandshake()
         {
+            End = DateTime.Now;
+            UpdateStatus("Queued");
         }
 
-        public XManifest(int siteCode)
+        public void UpdateStatus(string status)
         {
-            SiteCode = siteCode;
-        }
-
-        public string GetInitExtracts(Guid facilityId)
-        {
-            StringBuilder sb = new StringBuilder();
-            int count = 0;
-            int total = PatientPKs.Count;
-
-            foreach (var patientPk in PatientPKs)
-            {
-                count++;
-                sb.AppendLine($"SELECT '{LiveGuid.NewGuid()}' as Id,{patientPk} as PatientPID,'{facilityId}' as FacilityID {(count == total ? "" : "UNION")}");
-            }
-
-            var sql = $@"
-INSERT INTO PatientExtract(Id,PatientPID,FacilityID,Voided,Processed,Created)
-SELECT 
-	e.Id, e.PatientPID,e.FacilityID,0,0,GETDATE()
-FROM            
-	(
-    {sb}
-    ) AS e LEFT OUTER JOIN PatientExtract AS p ON e.PatientPID = p.PatientPID AND e.FacilityID=p.FacilityID
-WHERE        
-	(p.Id IS NULL)
-";
-            return sql;
-        }
-        public bool IsValid()
-        {
-            return SiteCode > 0 && PatientPKs.Count > 0;
-        }
-        public void AddPatientPk(int pk)
-        {
-            if (!PatientPKs.Contains(pk))
-                PatientPKs.Add(pk);
-        }
-        public string GetPatientPKsJoined()
-        {
-            return string.Join(",", PatientPKs);
-        }
-
-        public List<string> GetBatchPatientPKsJoined(int batchCount)
-        {
-            var list = new List<string>();
-            var batches = PatientPKs.Split(batchCount).ToList();
-            foreach (var batch in batches)
-            {
-                list.Add(string.Join(",", batch));
-            }
-            return list;
-        }
-
-        public void Validate()
-        {
-            if (!IsValid())
-                throw new Exception($"Invalid Manifest,Please ensure the SiteCode [{SiteCode}] is valid and there exists at least one (1) Patient record");
-        }
-
-        public string Info(string action) => $"{SiteCode}-{Name} [{PatientCount}] {action} Manifest";
-
-        public override string ToString()
-        {
-            return $"{SiteCode} AllowedToSend ({PatientPKs.Count})";
+            Status = status;
+            StatusDate=DateTime.Now;
         }
     }
 }

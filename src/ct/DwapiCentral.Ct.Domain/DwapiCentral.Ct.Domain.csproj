@@ -11,4 +11,8 @@
     <ProjectReference Include="..\..\shared\DwapiCentral.Shared\DwapiCentral.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.0.1" />
+  </ItemGroup>
+
 </Project>
