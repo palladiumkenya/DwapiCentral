@@ -15,7 +15,7 @@ namespace DwapiCentral.Ct.Infrastructure
         {
             return x.PatientPk == y.PatientPk && x.SiteCode== y.SiteCode;
         }
-
+      
         public int GetHashCode([DisallowNull] PatientExtract obj)
         {
             var hashString= $"{obj.PatientPk}{obj.SiteCode}";

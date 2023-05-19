@@ -3,6 +3,7 @@ using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
 using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,12 +28,12 @@ public class PatientExtractRepositoryTests
     {
         //Arrange
         var newPatients = TestHelper.GetTestPatientExtractsNew();
-        
+       
         // Act
         await _patientExtractRepository.MergeAsync(newPatients);
         
         // Assert
-        var savedPatient = _context.PatientExtracts.Find(1, -10000);
+        var savedPatient = _context.PatientExtracts.Find(3, -10000);
         Assert.NotNull(savedPatient);
     }
     
@@ -41,7 +42,9 @@ public class PatientExtractRepositoryTests
     {
         //Arrange
         var existingPatients = TestHelper.GetTestPatientExtractsUpdates();
-        
+
+        // Ensure _patientExtractRepository is initialized
+      
         // Act
         await _patientExtractRepository.MergeAsync(existingPatients);
         
