@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Z.Dapper.Plus;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
 {
@@ -44,6 +45,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            DapperPlusManager.Entity<PatientExtract>()
+                .Key(x => new {x.PatientPk,x.SiteCode})
+                .Table($"{nameof(PatientExtracts)}");
+            
+            DapperPlusManager.Entity<PatientVisitExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(PatientVisitExtracts)}");
         }
         
         public virtual void EnsureSeeded()
