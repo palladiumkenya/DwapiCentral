@@ -17,7 +17,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<Manifest> Manifests { get; set; }
         public DbSet<Metric> Metrics { get; set; }
 
-        public DbSet<PatientExtract> PatientExtracts { get; set; }  
+        public DbSet<PatientExtract> PatientExtracts { get; set; }
+        public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
         // public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
         // public DbSet<ContactListingExtract> contactListingExtracts { get; set; }
         // public DbSet<CovidExtract> CovidExtracts { get; set; }
@@ -35,8 +36,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         // public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }
         // public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
         // public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
-        // public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
-        
+
+
         public CtDbContext(DbContextOptions<CtDbContext> options) : base(options)
         {
         }
@@ -46,6 +47,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             modelBuilder.Entity<PatientExtract>()
             .HasIndex(p => new { p.PatientPID, p.SiteCode })
             .IsUnique(true);
+
+            modelBuilder.Entity<PatientVisitExtract>()
+                .HasOne(p => p.Patient)
+                .WithMany(p => p.PatientVisitExtracts)
+                .HasForeignKey(p => p.PatientId);
+
+            modelBuilder.Entity<PatientVisitExtract>()
+                .HasIndex(p => new { p.SiteCode, p.PatientPk, p.VisitId })
+                .IsUnique(true);
 
 
             base.OnModelCreating(modelBuilder);
