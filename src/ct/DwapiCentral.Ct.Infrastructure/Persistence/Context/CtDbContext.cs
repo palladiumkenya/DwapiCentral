@@ -49,6 +49,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             modelBuilder.Entity<PatientExtract>()               
                  .HasKey(m => new { m.PatientPk, m.SiteCode });
 
+            modelBuilder.Entity<PatientVisitExtract>()
+                 .HasOne(p => p.Patients)
+                 .WithMany(p => p.PatientVisitExtracts)
+                 .HasForeignKey(p => new { p.PatientPk, p.SiteCode });
+
 
             DapperPlusManager.Entity<PatientExtract>()
                 .Key(x => new {x.PatientPk,x.SiteCode})
@@ -91,8 +96,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             {
                 PatientVisitExtracts.AddRange(new List<PatientVisitExtract>
                 {
-                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
-                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA3-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000}
+                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
+                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000}
                 });
             }
 

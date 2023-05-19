@@ -58,6 +58,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
 
-     
+        public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
+
     }
 }

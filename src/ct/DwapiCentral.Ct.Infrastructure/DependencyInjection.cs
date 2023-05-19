@@ -36,8 +36,10 @@ public static class DependencyInjection
         services.AddScoped<IMasterFacilityRepository, MasterFacilityRepository>();
         services.AddScoped<IFacilityRepository, FacilityRepository>();
         services.AddScoped<IManifestRepository, ManifestRepository>();
-        
-        
+        services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
+        services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>(); 
+
+
         try
         {
             DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "218460a6-02d0-c26b-9add-e6b8d13ccbf4");
@@ -52,7 +54,7 @@ public static class DependencyInjection
             throw;
         }
         
-        services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
+        
 
         return services;
     }
