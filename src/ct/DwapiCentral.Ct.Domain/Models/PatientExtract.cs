@@ -8,9 +8,9 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
 
     public class PatientExtract : IPatient
     {
-        [Key,Column(Order = 0)]
+        
         public int PatientPk { get; set; }
-        [Key,Column(Order = 1)]
+        
         public int SiteCode { get; set; }
         
         public string CccNumber { get; set; }
@@ -57,5 +57,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+     
     }
 }

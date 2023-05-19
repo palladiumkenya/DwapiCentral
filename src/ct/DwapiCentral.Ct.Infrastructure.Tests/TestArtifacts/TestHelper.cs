@@ -8,8 +8,8 @@ public class TestHelper
     {
         return new List<PatientExtract>()
         {
-            new PatientExtract() { PatientPk = 3, SiteCode = -10000, CccNumber = "C03" },
-            new PatientExtract() { PatientPk = 4, SiteCode = -10000, CccNumber = "C04" }
+            new PatientExtract() { PatientPk = 3, SiteCode = -10000, CccNumber = "C03", Gender="F" },
+            new PatientExtract() { PatientPk = 4, SiteCode = -10000, CccNumber = "C04", Gender = "M" }
         };
     }
     
@@ -17,8 +17,8 @@ public class TestHelper
     {
         return new List<PatientExtract>()
         {
-            new PatientExtract() { PatientPk = 1, SiteCode = -10000, CccNumber = "xC01",Nupi = "N01"},
-            new PatientExtract() { PatientPk = 2, SiteCode = -10000, CccNumber = "xC02",Nupi = "N01" }
+            new PatientExtract() { PatientPk = 1, SiteCode = -10000,Gender="F", CccNumber = "xC01",Nupi = "N01"},
+            new PatientExtract() { PatientPk = 2, SiteCode = -10000,Gender="M" ,CccNumber = "xC02",Nupi = "N02" }
         };
     }
     

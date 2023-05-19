@@ -45,6 +45,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PatientExtract>()               
+                 .HasKey(m => new { m.PatientPk, m.SiteCode });
+
+
             DapperPlusManager.Entity<PatientExtract>()
                 .Key(x => new {x.PatientPk,x.SiteCode})
                 .Table($"{nameof(PatientExtracts)}");
@@ -77,8 +82,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             {
                 PatientExtracts.AddRange(new List<PatientExtract>
                 {
-                    new PatientExtract() { PatientPk = 1, SiteCode = -10000, CccNumber = "C01" },
-                    new PatientExtract() { PatientPk = 2, SiteCode = -10000, CccNumber = "C02" }
+                    new PatientExtract() { PatientPk = 1, SiteCode = -10000, CccNumber = "C01" ,Gender="F"},
+                    new PatientExtract() { PatientPk = 2, SiteCode = -10000, CccNumber = "C02" ,Gender="M" }
                 });
             }
 
