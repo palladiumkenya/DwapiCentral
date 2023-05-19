@@ -27,8 +27,8 @@ public class TestHelper
     {
         return new List<PatientVisitExtract>()
         {
-            new PatientVisitExtract() { PatientPk = 3, SiteCode = -10000 },
-            new PatientVisitExtract() { PatientPk = 4, SiteCode = -10000 }
+            new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"),  PatientPk = 3, SiteCode = -10000 },
+            new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA3-C680C13AC8E8"), PatientPk = 4, SiteCode = -10000 }
         };
     }
     
@@ -36,8 +36,8 @@ public class TestHelper
     {
         return new List<PatientVisitExtract>()
         {
-            new PatientVisitExtract() { PatientPk = 1, SiteCode = -10000},
-            new PatientVisitExtract() { PatientPk = 2, SiteCode = -10000}
+            new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
+            new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA3-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000}
         };
     }
 
