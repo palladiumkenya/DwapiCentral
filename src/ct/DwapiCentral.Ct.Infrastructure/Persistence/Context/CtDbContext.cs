@@ -86,6 +86,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                     new PatientExtract() { PatientPk = 2, SiteCode = -10000, CccNumber = "C02" ,Gender="M" }
                 });
             }
+            
+            if (!PatientVisitExtracts.Any())
+            {
+                PatientVisitExtracts.AddRange(new List<PatientVisitExtract>
+                {
+                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
+                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA3-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000}
+                });
+            }
 
             SaveChanges();
         }
