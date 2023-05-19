@@ -6,6 +6,8 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Z.Dapper.Plus;
 
 namespace DwapiCentral.Ct.Infrastructure;
 
@@ -34,6 +36,21 @@ public static class DependencyInjection
         services.AddScoped<IMasterFacilityRepository, MasterFacilityRepository>();
         services.AddScoped<IFacilityRepository, FacilityRepository>();
         services.AddScoped<IManifestRepository, ManifestRepository>();
+        
+        
+        try
+        {
+            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "218460a6-02d0-c26b-9add-e6b8d13ccbf4");
+            if (!DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
+            {
+                throw new Exception(licenseErrorMessage);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Debug($"{e}");
+            throw;
+        }
         
         return services;
     }
