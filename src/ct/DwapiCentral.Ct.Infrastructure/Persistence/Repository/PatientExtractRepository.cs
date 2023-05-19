@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Z.Dapper.Plus;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
 {
@@ -25,7 +26,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
         {
             _context = context;
             _connectionString = connectionString;
-            this.patientHashes= new HashSet<string>();
+            this.patientHashes = new HashSet<string>();
+        }
+
+        public Task MergeAsync(IEnumerable<PatientExtract> patientExtracts)
+        {
+            _context.Database.GetDbConnection()
+                .BulkMerge(patientExtracts);
+            
+            return Task.CompletedTask;
         }
 
         public async Task AddAsync(PatientExtract patientExtract)
@@ -36,9 +45,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                 throw new InvalidOperationException("Duplicate patient detected.");
             }
 
-           // await _connectionString.BulkInsertAsync(patientExtract);
-            
-
+            // await _connectionString.BulkInsertAsync(patientExtract);
         }
 
 
@@ -48,30 +55,21 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task MergeAsync(IEnumerable<PatientExtract> patientExtract)
-        {
-            
-        }
 
         private string GetPatientHash(PatientExtract patientExtract)
         {
             using (var shaAlgorithm = SHA256.Create())
             {
-                var data = Encoding.UTF8.GetBytes($"{patientExtract.PatientPID}_{patientExtract.PatientPID}");
+                var data = Encoding.UTF8.GetBytes($"{patientExtract.PatientPk}_{patientExtract.SiteCode}");
                 var hashBytes = shaAlgorithm.ComputeHash(data);
                 var hashStringBuilder = new StringBuilder();
                 for (int i = 0; i < hashBytes.Length; i++)
                 {
                     hashStringBuilder.Append(hashBytes[i].ToString("X2"));
                 }
+
                 return hashStringBuilder.ToString();
             }
-
-
         }
-
-
-
-
     }
 }
