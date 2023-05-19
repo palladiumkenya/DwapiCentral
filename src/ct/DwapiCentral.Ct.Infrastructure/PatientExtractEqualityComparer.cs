@@ -13,12 +13,12 @@ namespace DwapiCentral.Ct.Infrastructure
     {
         public bool Equals(PatientExtract? x, PatientExtract? y)
         {
-            return x.PatientPID == y.PatientPID && x.SiteCode== y.SiteCode;
+            return x.PatientPk == y.PatientPk && x.SiteCode== y.SiteCode;
         }
 
         public int GetHashCode([DisallowNull] PatientExtract obj)
         {
-            var hashString= $"{obj.PatientPID}{obj.SiteCode}";
+            var hashString= $"{obj.PatientPk}{obj.SiteCode}";
 
             using(var sha = SHA256.Create())
             {

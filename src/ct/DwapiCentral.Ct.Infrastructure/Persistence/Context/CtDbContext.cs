@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Z.Dapper.Plus;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
 {
@@ -16,8 +17,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<Facility> Facilities { get; set; }
         public DbSet<Manifest> Manifests { get; set; }
         public DbSet<Metric> Metrics { get; set; }
-
         public DbSet<PatientExtract> PatientExtracts { get; set; }  
+        public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
+        
         // public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
         // public DbSet<ContactListingExtract> contactListingExtracts { get; set; }
         // public DbSet<CovidExtract> CovidExtracts { get; set; }
@@ -35,20 +37,21 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         // public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }
         // public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
         // public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
-        // public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
-        
+
         public CtDbContext(DbContextOptions<CtDbContext> options) : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<PatientExtract>()
-            .HasIndex(p => new { p.PatientPID, p.SiteCode })
-            .IsUnique(true);
-
-
             base.OnModelCreating(modelBuilder);
+            DapperPlusManager.Entity<PatientExtract>()
+                .Key(x => new {x.PatientPk,x.SiteCode})
+                .Table($"{nameof(PatientExtracts)}");
+            
+            DapperPlusManager.Entity<PatientVisitExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(PatientVisitExtracts)}");
         }
         
         public virtual void EnsureSeeded()
@@ -67,6 +70,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 Facilities.AddRange(new List<Facility>
                 {
                     new Facility(-10000,"Demo")
+                });
+            }
+
+            if (!PatientExtracts.Any())
+            {
+                PatientExtracts.AddRange(new List<PatientExtract>
+                {
+                    new PatientExtract() { PatientPk = 1, SiteCode = -10000, CccNumber = "C01" },
+                    new PatientExtract() { PatientPk = 2, SiteCode = -10000, CccNumber = "C02" }
                 });
             }
 

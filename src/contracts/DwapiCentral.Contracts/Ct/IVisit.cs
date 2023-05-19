@@ -3,8 +3,9 @@ using System;
 
 namespace DwapiCentral.Contracts.Ct
 {
-    public interface IVisit : IEntity
+    public interface IVisit : IExtract
     {
+        Guid Id { get; set; }
         int? VisitId { get; set; }
         DateTime? VisitDate { get; set; }
         string Service { get; set; }
