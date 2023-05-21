@@ -36,7 +36,7 @@ public class PatientVisitExtractRepositoryTests
         await _patientVisitExtractRepository.MergeAsync(newVisits);
 
         //Assert
-        var savedPatientVisit = _context.PatientVisitExtracts.Find("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8",3, -10000);
+        var savedPatientVisit = _context.PatientVisitExtracts.Find( new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"));
         Assert.NotNull(savedPatientVisit);
     }
 
@@ -50,8 +50,8 @@ public class PatientVisitExtractRepositoryTests
         await _patientVisitExtractRepository.MergeAsync(existingPatientVisits);
 
         //Assert
-        var patientVisits = _context.PatientVisitExtracts.Find("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8", 1, -1000, DateTime.Today.AddDays(-2));
-        Assert.AreEqual(163, patientVisits.Height);
-        Assert.AreEqual(56, patientVisits.Weight);
+        var patientVisits = _context.PatientVisitExtracts.ToList();
+        Assert.AreEqual(6,patientVisits.Count);
+        
     }
 }

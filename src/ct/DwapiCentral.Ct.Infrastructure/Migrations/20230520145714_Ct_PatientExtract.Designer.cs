@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230519205141_Ct_PatientVisitsExtract")]
-    partial class Ct_PatientVisitsExtract
+    [Migration("20230520145714_Ct_PatientExtract")]
+    partial class Ct_PatientExtract
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -175,50 +175,39 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Abdomen")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Adherence")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AdherenceCategory")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BP")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Breastfeeding")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CNS")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CTXAdherence")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CVS")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Chest")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClinicalNotes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CurrentRegimen")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateCreated")
@@ -231,55 +220,45 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DifferentiatedCare")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("EDD")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ENT")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EverHadMenses")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Eyes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FamilyPlanningMethod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GeneralExamination")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Genitourinary")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("GestationAge")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("HCWConcern")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Height")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("KeyPopulationType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LMP")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Menopausal")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Muac")
@@ -289,15 +268,12 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NoFPReason")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NutritionalStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OI")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("OIDate")
@@ -313,22 +289,18 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PopulationType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Pregnant")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProphylaxisUsed")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PulseRate")
                         .HasColumnType("int");
 
                     b.Property<string>("PwP")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("RefillDate")
@@ -341,44 +313,36 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecondlineRegimenChangeReason")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Service")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
                     b.Property<string>("Skin")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StabilityAssessment")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("SubstitutionFirstlineRegimenDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SubstitutionFirstlineRegimenReason")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("SubstitutionSecondlineRegimenDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SubstitutionSecondlineRegimenReason")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SystemExamination")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TCAReason")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Temp")
@@ -388,7 +352,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("VisitBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("VisitDate")
@@ -398,14 +361,12 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("VisitType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.Property<string>("WABStage")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("WHOStage")
@@ -415,6 +376,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PatientVisitExtracts");
                 });
@@ -553,6 +516,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("Metrics");
                 });
 
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientVisitExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", "Patients")
+                        .WithMany("PatientVisitExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patients");
+                });
+
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Metric", b =>
                 {
                     b.HasOne("DwapiCentral.Ct.Domain.Models.Manifest", null)
@@ -560,6 +534,11 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasForeignKey("ManifestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", b =>
+                {
+                    b.Navigation("PatientVisitExtracts");
                 });
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Manifest", b =>

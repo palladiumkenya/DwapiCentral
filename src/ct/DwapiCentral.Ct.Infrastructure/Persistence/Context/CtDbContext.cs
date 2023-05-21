@@ -52,13 +52,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             modelBuilder.Entity<PatientVisitExtract>()
                  .HasOne(p => p.Patients)
                  .WithMany(p => p.PatientVisitExtracts)
-                 .HasForeignKey(p => new { p.PatientPk, p.SiteCode });
+                 .HasForeignKey(pv => new { pv.PatientPk, pv.SiteCode });
+
+            modelBuilder.Entity<PatientVisitExtract>()
+                 .HasIndex(p => new { p.PatientPk, p.SiteCode, p.VisitDate })
+                 .IsUnique(true);
 
 
             DapperPlusManager.Entity<PatientExtract>()
-                .Key(x => new {x.PatientPk,x.SiteCode})
+                .Key(x => new { x.PatientPk, x.SiteCode })
                 .Table($"{nameof(PatientExtracts)}");
-            
+
             DapperPlusManager.Entity<PatientVisitExtract>()
                 .Key(x => x.Id)
                 .Table($"{nameof(PatientVisitExtracts)}");
