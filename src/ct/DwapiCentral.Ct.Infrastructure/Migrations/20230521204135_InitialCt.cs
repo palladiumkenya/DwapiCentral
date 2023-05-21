@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
-    public partial class Ct_PatientExtract : Migration
+    public partial class InitialCt : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -146,8 +146,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    VisitId = table.Column<int>(type: "int", nullable: true),
-                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    VisitId = table.Column<int>(type: "int", nullable: false),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Service = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VisitType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WHOStage = table.Column<int>(type: "int", nullable: true),
@@ -210,14 +210,16 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    PatientsPatientPk = table.Column<int>(type: "int", nullable: false),
+                    PatientsSiteCode = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PatientVisitExtracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientVisitExtracts_PatientExtracts_PatientPk_SiteCode",
-                        columns: x => new { x.PatientPk, x.SiteCode },
+                        name: "FK_PatientVisitExtracts_PatientExtracts_PatientsPatientPk_PatientsSiteCode",
+                        columns: x => new { x.PatientsPatientPk, x.PatientsSiteCode },
                         principalTable: "PatientExtracts",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
@@ -229,9 +231,15 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 column: "ManifestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientVisitExtracts_PatientPk_SiteCode",
+                name: "IX_PatientVisitExtracts_PatientPk_SiteCode_VisitId_VisitDate",
                 table: "PatientVisitExtracts",
-                columns: new[] { "PatientPk", "SiteCode" });
+                columns: new[] { "PatientPk", "SiteCode", "VisitId", "VisitDate" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PatientVisitExtracts_PatientsPatientPk_PatientsSiteCode",
+                table: "PatientVisitExtracts",
+                columns: new[] { "PatientsPatientPk", "PatientsSiteCode" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

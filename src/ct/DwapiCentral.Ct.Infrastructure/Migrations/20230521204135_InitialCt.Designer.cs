@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230520145714_Ct_PatientExtract")]
-    partial class Ct_PatientExtract
+    [Migration("20230521204135_InitialCt")]
+    partial class InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -288,6 +288,12 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
+                    b.Property<int>("PatientsPatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientsSiteCode")
+                        .HasColumnType("int");
+
                     b.Property<string>("PopulationType")
                         .HasColumnType("nvarchar(max)");
 
@@ -354,10 +360,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("VisitBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("VisitDate")
+                    b.Property<DateTime>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("VisitId")
+                    b.Property<int>("VisitId")
                         .HasColumnType("int");
 
                     b.Property<string>("VisitType")
@@ -377,7 +383,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode");
+                    b.HasIndex("PatientsPatientPk", "PatientsSiteCode");
+
+                    b.HasIndex("PatientPk", "SiteCode", "VisitId", "VisitDate")
+                        .IsUnique();
 
                     b.ToTable("PatientVisitExtracts");
                 });
@@ -520,7 +529,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", "Patients")
                         .WithMany("PatientVisitExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
+                        .HasForeignKey("PatientsPatientPk", "PatientsSiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
