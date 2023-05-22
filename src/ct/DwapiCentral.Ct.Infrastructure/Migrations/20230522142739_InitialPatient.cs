@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -140,6 +141,47 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PatientPharmacyExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: false),
+                    DispenseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Drug = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Duration = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    ExpectedReturn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TreatmentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RegimenLine = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PeriodTaken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProphylaxisType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RegimenChangedSwitched = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RegimenChangeSwitchReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StopRegimenReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StopRegimenDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PatientPharmacyExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PatientPharmacyExtracts_PatientExtracts_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+            
+
+            migrationBuilder.CreateTable(
                 name: "PatientVisitExtracts",
                 columns: table => new
                 {
@@ -229,6 +271,11 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 column: "ManifestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PatientPharmacyExtracts_PatientPk_SiteCode",
+                table: "PatientPharmacyExtracts",
+                columns: new[] { "PatientPk", "SiteCode" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PatientVisitExtracts_PatientPk_SiteCode",
                 table: "PatientVisitExtracts",
                 columns: new[] { "PatientPk", "SiteCode" });
@@ -244,6 +291,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Metrics");
+
+            migrationBuilder.DropTable(
+                name: "PatientPharmacyExtracts");
 
             migrationBuilder.DropTable(
                 name: "PatientVisitExtracts");
