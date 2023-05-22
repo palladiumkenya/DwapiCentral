@@ -286,12 +286,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
-                    b.Property<int>("PatientsPatientPk")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PatientsSiteCode")
-                        .HasColumnType("int");
-
                     b.Property<string>("PopulationType")
                         .HasColumnType("nvarchar(max)");
 
@@ -381,10 +375,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientsPatientPk", "PatientsSiteCode");
-
-                    b.HasIndex("PatientPk", "SiteCode", "VisitId", "VisitDate")
-                        .IsUnique();
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PatientVisitExtracts");
                 });
@@ -525,13 +516,11 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientVisitExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", "Patients")
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
                         .WithMany("PatientVisitExtracts")
-                        .HasForeignKey("PatientsPatientPk", "PatientsSiteCode")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Patients");
                 });
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Metric", b =>

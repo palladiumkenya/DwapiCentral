@@ -48,18 +48,24 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
 
             modelBuilder.Entity<PatientExtract>()               
                  .HasKey(m => new { m.PatientPk, m.SiteCode });
+            
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientVisitExtracts)
+                .WithOne()
+                .HasForeignKey(f =>new {f.PatientPk,f.SiteCode})
+                .IsRequired();
 
-         
 
-            modelBuilder.Entity<PatientVisitExtract>()
-                 .HasIndex(p => new { p.PatientPk, p.SiteCode, p.VisitId,p.VisitDate })
-                 .IsUnique(true);
+            DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
 
-
+            DapperPlusManager.Entity<Facility>().Key(x => x.Code).Table($"{nameof(Facilities)}");
+            
+            DapperPlusManager.Entity<Metric>().Key(x => x.Id).Table($"{nameof(Metrics)}");
+            
             DapperPlusManager.Entity<PatientExtract>()
                 .Key(x => new { x.PatientPk, x.SiteCode })
                 .Table($"{nameof(PatientExtracts)}");
-
+            
             DapperPlusManager.Entity<PatientVisitExtract>()
                 .Key(x => x.Id)
                 .Table($"{nameof(PatientVisitExtracts)}");
@@ -98,7 +104,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 PatientVisitExtracts.AddRange(new List<PatientVisitExtract>
                 {
                     new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitId=001,VisitDate=DateTime.Today.AddDays(-9)},
-                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=002,VisitDate=DateTime.Today.AddDays(-9)}
+                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=002,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
