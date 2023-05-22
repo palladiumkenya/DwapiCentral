@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
-    public partial class InitialCt : Migration
+    public partial class InitialPatient : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -210,16 +210,14 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true),
-                    PatientsPatientPk = table.Column<int>(type: "int", nullable: false),
-                    PatientsSiteCode = table.Column<int>(type: "int", nullable: false)
+                    Voided = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PatientVisitExtracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientVisitExtracts_PatientExtracts_PatientsPatientPk_PatientsSiteCode",
-                        columns: x => new { x.PatientsPatientPk, x.PatientsSiteCode },
+                        name: "FK_PatientVisitExtracts_PatientExtracts_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PatientExtracts",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
@@ -231,15 +229,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 column: "ManifestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientVisitExtracts_PatientPk_SiteCode_VisitId_VisitDate",
+                name: "IX_PatientVisitExtracts_PatientPk_SiteCode",
                 table: "PatientVisitExtracts",
-                columns: new[] { "PatientPk", "SiteCode", "VisitId", "VisitDate" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PatientVisitExtracts_PatientsPatientPk_PatientsSiteCode",
-                table: "PatientVisitExtracts",
-                columns: new[] { "PatientsPatientPk", "PatientsSiteCode" });
+                columns: new[] { "PatientPk", "SiteCode" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
