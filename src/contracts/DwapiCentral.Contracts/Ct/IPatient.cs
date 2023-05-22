@@ -1,47 +1,45 @@
 using DwapiCentral.Contracts.Common;
-using System;
 
 namespace DwapiCentral.Contracts.Ct
 {
-    public interface IPatient : IEntity
+    public interface IPatient : IExtract
     {
-        public int PatientPID { get; set; }
-        public string PatientCccNumber { get; set; }
-        public string Gender { get; set; }
-        public DateTime? DOB { get; set; }
-        public DateTime? RegistrationDate { get; set; }
-        public DateTime? RegistrationAtCCC { get; set; }
-        public DateTime? RegistrationATPMTCT { get; set; }
-        public DateTime? RegistrationAtTBClinic { get; set; }
-        public string PatientSource { get; set; }
-        public string Region { get; set; }
-        public string District { get; set; }
-        public string Village { get; set; }
-        public string ContactRelation { get; set; }
-        public DateTime? LastVisit { get; set; }
-        public string MaritalStatus { get; set; }
-        public string EducationLevel { get; set; }
-        public DateTime? DateConfirmedHIVPositive { get; set; }
-        public string PreviousARTExposure { get; set; }
-        public DateTime? PreviousARTStartDate { get; set; }
-        public string StatusAtCCC { get; set; }
-        public string StatusAtPMTCT { get; set; }
-        public string StatusAtTBClinic { get; set; }
-        public string Orphan { get; set; }
-        public string Inschool { get; set; }
-        public string PatientType { get; set; }
-        public string PopulationType { get; set; }
-        public string KeyPopulationType { get; set; }
-        public string PatientResidentCounty { get; set; }
-        public string PatientResidentSubCounty { get; set; }
-        public string PatientResidentLocation { get; set; }
-        public string PatientResidentSubLocation { get; set; }
-        public string PatientResidentWard { get; set; }
-        public string PatientResidentVillage { get; set; }
-        public DateTime? TransferInDate { get; set; }
-        public Guid FacilityId { get; set; }
-        public string Pkv { get; set; }
-        public string Occupation { get; set; }        
-        public string NUPI { get; set; }
+        string CccNumber { get; set; }
+        string? Nupi { get; set; }
+        string? MpiId { get; set; }
+        string? Pkv { get; set; }
+        string Gender { get; set; }
+        DateTime DOB { get; set; }
+        DateTime? RegistrationDate { get; set; }
+        DateTime? RegistrationAtCCC { get; set; }
+        DateTime? RegistrationATPMTCT { get; set; }
+        DateTime? RegistrationAtTBClinic { get; set; }
+        string? PatientSource { get; set; }
+        string? Region { get; set; }
+        string? District { get; set; }
+        string? Village { get; set; }
+        string? ContactRelation { get; set; }
+        DateTime? LastVisit { get; set; }
+        string? MaritalStatus { get; set; }
+        string? EducationLevel { get; set; }
+        DateTime? DateConfirmedHIVPositive { get; set; }
+        string? PreviousARTExposure { get; set; }
+        DateTime? PreviousARTStartDate { get; set; }
+        string? StatusAtCCC { get; set; }
+        string? StatusAtPMTCT { get; set; }
+        string? StatusAtTBClinic { get; set; }
+        string? Orphan { get; set; }
+        string? Inschool { get; set; }
+        string? PatientType { get; set; }
+        string? PopulationType { get; set; }
+        string? KeyPopulationType { get; set; }
+        string? PatientResidentCounty { get; set; }
+        string? PatientResidentSubCounty { get; set; }
+        string? PatientResidentLocation { get; set; }
+        string? PatientResidentSubLocation { get; set; }
+        string? PatientResidentWard { get; set; }
+        string? PatientResidentVillage { get; set; }
+        DateTime? TransferInDate { get; set; }
+        string? Occupation { get; set; }
     }
 }

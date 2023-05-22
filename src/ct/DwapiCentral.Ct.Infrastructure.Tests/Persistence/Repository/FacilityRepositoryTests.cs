@@ -29,16 +29,16 @@ public class FacilityRepositoryTests
     {
      
         // Arrange
-        var facility = new Facility(1222, "Test");
+        var facility = new Facility(17788, "Test1");
         
         // Act
         await _facilityRepository.Save(facility);
         
         // Assert
-        var savedFaclity = _context.Facilities.Find(1222);
+        var savedFaclity = _context.Facilities.Find(17788);
         
-        Assert.AreEqual(1222,savedFaclity.Code);
-        Assert.AreEqual("Test",savedFaclity.Name);
+        Assert.AreEqual(17788, savedFaclity.Code);
+        Assert.AreEqual("Test1", savedFaclity.Name);
         
     }
 }

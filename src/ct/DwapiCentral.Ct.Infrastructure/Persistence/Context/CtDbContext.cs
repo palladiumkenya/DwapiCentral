@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Z.Dapper.Plus;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
 {
@@ -16,8 +17,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<Facility> Facilities { get; set; }
         public DbSet<Manifest> Manifests { get; set; }
         public DbSet<Metric> Metrics { get; set; }
-
         public DbSet<PatientExtract> PatientExtracts { get; set; }  
+        public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
+        
         // public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
         // public DbSet<ContactListingExtract> contactListingExtracts { get; set; }
         // public DbSet<CovidExtract> CovidExtracts { get; set; }
@@ -35,20 +37,38 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         // public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }
         // public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
         // public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
-        // public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
-        
+
         public CtDbContext(DbContextOptions<CtDbContext> options) : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<PatientExtract>()
-            .HasIndex(p => new { p.PatientPID, p.SiteCode })
-            .IsUnique(true);
-
-
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PatientExtract>()               
+                 .HasKey(m => new { m.PatientPk, m.SiteCode });
+            
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientVisitExtracts)
+                .WithOne()
+                .HasForeignKey(f =>new {f.PatientPk,f.SiteCode})
+                .IsRequired();
+
+
+            DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
+
+            DapperPlusManager.Entity<Facility>().Key(x => x.Code).Table($"{nameof(Facilities)}");
+            
+            DapperPlusManager.Entity<Metric>().Key(x => x.Id).Table($"{nameof(Metrics)}");
+            
+            DapperPlusManager.Entity<PatientExtract>()
+                .Key(x => new { x.PatientPk, x.SiteCode })
+                .Table($"{nameof(PatientExtracts)}");
+            
+            DapperPlusManager.Entity<PatientVisitExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(PatientVisitExtracts)}");
         }
         
         public virtual void EnsureSeeded()
@@ -67,6 +87,24 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 Facilities.AddRange(new List<Facility>
                 {
                     new Facility(-10000,"Demo")
+                });
+            }
+
+            if (!PatientExtracts.Any())
+            {
+                PatientExtracts.AddRange(new List<PatientExtract>
+                {
+                    new PatientExtract() { PatientPk = 1, SiteCode = -10000, CccNumber = "C01" ,Gender="F"},
+                    new PatientExtract() { PatientPk = 2, SiteCode = -10000, CccNumber = "C02" ,Gender="M" }
+                });
+            }
+            
+            if (!PatientVisitExtracts.Any())
+            {
+                PatientVisitExtracts.AddRange(new List<PatientVisitExtract>
+                {
+                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitId=001,VisitDate=DateTime.Today.AddDays(-9)},
+                    new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=002,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
