@@ -19,7 +19,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<Metric> Metrics { get; set; }
         public DbSet<PatientExtract> PatientExtracts { get; set; }  
         public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
-        
+        public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
+
         // public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
         // public DbSet<ContactListingExtract> contactListingExtracts { get; set; }
         // public DbSet<CovidExtract> CovidExtracts { get; set; }
@@ -35,7 +36,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         // public DbSet<PatientArtExtract> PatientArtExtracts { get; set; }
         // public DbSet<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; }
         // public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }
-        // public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
+
         // public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
 
         public CtDbContext(DbContextOptions<CtDbContext> options) : base(options)
@@ -55,6 +56,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .HasForeignKey(f =>new {f.PatientPk,f.SiteCode})
                 .IsRequired();
 
+            modelBuilder.Entity<PatientExtract>()
+              .HasMany(c => c.PatientPharmacyExtracts)
+              .WithOne()
+              .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
+              .IsRequired();
+
+
+
 
             DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
 
@@ -69,6 +78,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<PatientVisitExtract>()
                 .Key(x => x.Id)
                 .Table($"{nameof(PatientVisitExtracts)}");
+
+            DapperPlusManager.Entity<PatientPharmacyExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(PatientPharmacyExtract)}");
         }
         
         public virtual void EnsureSeeded()
@@ -105,6 +118,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 {
                     new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitId=001,VisitDate=DateTime.Today.AddDays(-9)},
                     new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=002,VisitDate=DateTime.Today.AddDays(-8)}
+                });
+            }
+            if (!PatientPharmacyExtracts.Any())
+            {
+                PatientPharmacyExtracts.AddRange(new List<PatientPharmacyExtract>
+                {
+                    new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=001,DispenseDate=DateTime.Today.AddDays(-9)},
+                    new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=002,DispenseDate=DateTime.Today.AddDays(-8)}
                 });
             }
 

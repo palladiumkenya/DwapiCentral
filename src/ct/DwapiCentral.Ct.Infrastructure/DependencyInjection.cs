@@ -37,7 +37,8 @@ public static class DependencyInjection
         services.AddScoped<IFacilityRepository, FacilityRepository>();
         services.AddScoped<IManifestRepository, ManifestRepository>();
         services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
-        services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>(); 
+        services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
+        services.AddScoped<IPatientPharmacyRepository, PatientPharmacyRepository>();
 
 
         try

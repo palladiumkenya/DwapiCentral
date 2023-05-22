@@ -43,6 +43,26 @@ public class TestHelper
 
         };
     }
+    public static List<PatientPharmacyExtract> GetTestPatientPharmacyExtractsNew()
+    {
+        return new List<PatientPharmacyExtract>()
+        {
+            new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA3-C680C13AC8E8"),  PatientPk = 3, SiteCode = -10000 ,VisitID=003,DispenseDate=DateTime.Today.AddDays(-5)},
+            new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA4-C680C13AC8E8"),  PatientPk = 4, SiteCode = -10000 ,VisitID = 004,DispenseDate=DateTime.Today.AddDays(-6)}
+        };
+    }
 
-    
+    public static List<PatientPharmacyExtract> GetTestPatientPharmacyExtractsUpdates()
+    {
+        return new List<PatientPharmacyExtract>()
+        {
+            new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA5-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=001,DispenseDate=DateTime.Now,Drug="prophylaxis"},
+            new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA6-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=005,DispenseDate=DateTime.Now,Provider="xyz"},
+            new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA7-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=006,DispenseDate=DateTime.Today.AddDays(-2),Drug = "prop",Provider="mj"},
+            new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA8-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=007,DispenseDate = DateTime.Today.AddDays(-1),Provider="curry",Drug="ashy"}
+
+        };
+    }
+
+
 }

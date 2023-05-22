@@ -59,6 +59,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public bool? Voided { get; set; }
 
         public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
+        public virtual ICollection<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; } = new List<PatientPharmacyExtract>();
 
     }
 }

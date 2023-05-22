@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230522082211_InitialPatient")]
+    [Migration("20230522142739_InitialPatient")]
     partial class InitialPatient
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -166,6 +166,88 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.HasKey("PatientPk", "SiteCode");
 
                     b.ToTable("PatientExtracts");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientPharmacyExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DispenseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Drug")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Duration")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("ExpectedReturn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PeriodTaken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProphylaxisType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Provider")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegimenChangeSwitchReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegimenChangedSwitched")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegimenLine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StopRegimenDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StopRegimenReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientPk", "SiteCode");
+
+                    b.ToTable("PatientPharmacyExtracts");
                 });
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientVisitExtract", b =>
@@ -516,6 +598,15 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("Metrics");
                 });
 
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientPharmacyExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                        .WithMany("PatientPharmacyExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientVisitExtract", b =>
                 {
                     b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
@@ -536,6 +627,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", b =>
                 {
+                    b.Navigation("PatientPharmacyExtracts");
+
                     b.Navigation("PatientVisitExtracts");
                 });
 
