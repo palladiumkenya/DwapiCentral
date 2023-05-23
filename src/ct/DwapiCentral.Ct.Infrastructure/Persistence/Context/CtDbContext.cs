@@ -156,12 +156,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 });
             }
 
-            if (!PatientLaboratoryExtracts.Any())
+            if (!PatientArtExtracts.Any())
             {
-                PatientLaboratoryExtracts.AddRange(new List<PatientLaboratoryExtract>
+                PatientArtExtracts.AddRange(new List<PatientArtExtract>
                 {
-                    new PatientLaboratoryExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitId=101,OrderedByDate=DateTime.Today.AddDays(-9)},
-                    new PatientLaboratoryExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=102,OrderedByDate=DateTime.Today.AddDays(-8)}
+                    new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
+                    new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000}
                 });
             }
 

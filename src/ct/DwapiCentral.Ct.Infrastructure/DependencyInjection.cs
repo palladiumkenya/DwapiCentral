@@ -40,6 +40,7 @@ public static class DependencyInjection
         services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
         services.AddScoped<IPatientPharmacyRepository, PatientPharmacyRepository>();
         services.AddScoped<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>();
+        services.AddScoped<IPatientArtExtractRepositorycs, PatientArtExtractRepository>();
 
 
         try
