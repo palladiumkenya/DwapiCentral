@@ -20,7 +20,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<PatientExtract> PatientExtracts { get; set; }  
         public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
         public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
-
+        public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }
+        public DbSet<PatientArtExtract> PatientArtExtracts { get; set; }
         // public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
         // public DbSet<ContactListingExtract> contactListingExtracts { get; set; }
         // public DbSet<CovidExtract> CovidExtracts { get; set; }
@@ -33,9 +34,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         // public DbSet<OvcExtract> OvcExtracts { get; set; }
         // public DbSet<OtzExtract> OtzExtracts { get; set; }
         // public DbSet<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; }  
-        // public DbSet<PatientArtExtract> PatientArtExtracts { get; set; }
+
         // public DbSet<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; }
-        // public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }
+
 
         // public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
 
@@ -62,7 +63,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
               .IsRequired();
 
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(p => p.PatientLaboratoryExtracts)
+                .WithOne()
+                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .IsRequired();
 
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(p => p.PatientArtExtracts)
+                .WithOne()
+                .HasForeignKey(p => new {p.PatientId,p.SiteCode })
+                .IsRequired();
 
 
             DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
@@ -82,6 +93,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<PatientPharmacyExtract>()
                 .Key(x => x.Id)
                 .Table($"{nameof(PatientPharmacyExtract)}");
+
+            DapperPlusManager.Entity<PatientLaboratoryExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(PatientLaboratoryExtract)}");
+
+            DapperPlusManager.Entity<PatientArtExtract>()
+                .Key(x => x.Id)
+                .Table($"{typeof(PatientArtExtract)}");
         }
         
         public virtual void EnsureSeeded()
@@ -126,6 +145,23 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 {
                     new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=001,DispenseDate=DateTime.Today.AddDays(-9)},
                     new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=002,DispenseDate=DateTime.Today.AddDays(-8)}
+                });
+            }
+            if (!PatientLaboratoryExtracts.Any())
+            {
+                PatientLaboratoryExtracts.AddRange(new List<PatientLaboratoryExtract>
+                {
+                    new PatientLaboratoryExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitId=101,OrderedByDate=DateTime.Today.AddDays(-9)},
+                    new PatientLaboratoryExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=102,OrderedByDate=DateTime.Today.AddDays(-8)}
+                });
+            }
+
+            if (!PatientLaboratoryExtracts.Any())
+            {
+                PatientLaboratoryExtracts.AddRange(new List<PatientLaboratoryExtract>
+                {
+                    new PatientLaboratoryExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitId=101,OrderedByDate=DateTime.Today.AddDays(-9)},
+                    new PatientLaboratoryExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=102,OrderedByDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
