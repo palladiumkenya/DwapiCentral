@@ -60,6 +60,14 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
 
         public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
         public virtual ICollection<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; } = new List<PatientPharmacyExtract>();
+        public virtual ICollection<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; } = new List<PatientLaboratoryExtract>();
+        public virtual ICollection<PatientArtExtract> PatientArtExtracts { get;set; }= new List<PatientArtExtract>();
+        public virtual ICollection<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; } = new List<AllergiesChronicIllnessExtract>();
+        public virtual ICollection<ContactListingExtract> ContactListingExtracts { get; set; } = new List<ContactListingExtract>();
+        public virtual ICollection<CovidExtract> CovidExtracts { get; set; } = new List<CovidExtract>();
+        public virtual ICollection<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtract>();
+        public virtual ICollection<DepressionScreeningExtract> DepressionScreeningExtracts { get; set; } = new List<DepressionScreeningExtract>();
+        public virtual ICollection<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; } = new List<DrugAlcoholScreeningExtract>();
 
     }
 }
