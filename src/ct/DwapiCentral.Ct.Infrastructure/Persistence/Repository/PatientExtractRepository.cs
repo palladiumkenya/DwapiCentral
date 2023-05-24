@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using DwapiCentral.Contracts.Ct;
-using DwapiCentral.Ct.Application.DTOs.Extract;
+
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;

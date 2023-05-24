@@ -8,22 +8,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository;
-
 [TestFixture]
-public class PatientLaboratoryExtractRepositoryTests
+public class CovidRepositoryTests
 {
     private CtDbContext _context;
-    private IPatientLaboratoryExtractRepository _PatientLaboratoryExtractRepository;
+    private ICovidRepository _covidRepository;
 
     [SetUp]
     public void Setup()
     {
         _context = TestInitializer.ServiceProvider.GetService<CtDbContext>();
-        _PatientLaboratoryExtractRepository = TestInitializer.ServiceProvider.GetService<IPatientLaboratoryExtractRepository>();
+        _covidRepository = TestInitializer.ServiceProvider.GetService<ICovidRepository>();
     }
 
     [Test]
-    public async Task should_Merge_NewpatientLabs()
+    public async Task should_Merge_NewCovidExtracts()
     {
         //Arrange
 
@@ -33,3 +32,5 @@ public class PatientLaboratoryExtractRepositoryTests
 
     }
 }
+
+

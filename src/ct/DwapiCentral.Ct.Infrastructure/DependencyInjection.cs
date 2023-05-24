@@ -2,6 +2,7 @@ using DwapiCentral.Ct.Application.Interfaces.Repository;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
 using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
+using DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +42,12 @@ public static class DependencyInjection
         services.AddScoped<IPatientPharmacyRepository, PatientPharmacyRepository>();
         services.AddScoped<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>();
         services.AddScoped<IPatientArtExtractRepositorycs, PatientArtExtractRepository>();
+        services.AddScoped<IAllergiesChronicIllnessRepository,AllergiesChronicIllnessRepository>();
+        services.AddScoped<IContactListingRepository, ContactListingRepository>();
+        services.AddScoped<ICovidRepository, CovidRepository>();
+        services.AddScoped<IDefaulterTracingRepository, DefaulterTracingRepository>();
+        services.AddScoped<IDepressionScreeningRepository, DepressionScreeningRepository>();
+        services.AddScoped<IDrugAlcoholScreeningRepository, DrugAlcoholScreeningRepository>();
 
 
         try
