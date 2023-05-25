@@ -3,16 +3,19 @@ using System;
 
 namespace DwapiCentral.Contracts.Ct
 {
-    public  interface IGbvScreening : IEntity
+    public  interface IGbvScreening : IExtract
     {
-          string FacilityName { get; set; }
-          int? VisitID { get; set; }
-          DateTime? VisitDate { get; set; }
-          string IPV { get; set; }
-          string PhysicalIPV { get; set; }
-          string EmotionalIPV { get; set; }
-          string SexualIPV { get; set; }
-          string IPVRelationship { get; set; }
-          Guid PatientId { get; set; }
+          Guid Id { get; set; }
+          int VisitID { get; set; }
+          DateTime VisitDate { get; set; }
+          string? FacilityName { get; set; }         
+          string? IPV { get; set; }
+          string? PhysicalIPV { get; set; }
+          string? EmotionalIPV { get; set; }
+          string? SexualIPV { get; set; }
+          string? IPVRelationship { get; set; }
+          Guid? PatientId { get; set; }
+
+
     }
 }

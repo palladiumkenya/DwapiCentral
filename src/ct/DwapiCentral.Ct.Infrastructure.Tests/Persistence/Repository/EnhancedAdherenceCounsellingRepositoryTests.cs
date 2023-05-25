@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 namespace DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository;
 
 [TestFixture]
-public class DrugAlcoholScreeningRepositoryTest
+public class EnhancedAdherenceCounsellingRepositoryTests
 {
     private CtDbContext _context;
-    private IDrugAlcoholScreeningRepository _drugAlcoholScreening;
+    private IEnhancedAdherenceCounsellingRepository _enhancedAdheranceCouncellingRepository;
 
     [SetUp]
     public void Setup()
     {
         _context = TestInitializer.ServiceProvider.GetService<CtDbContext>();
-        _drugAlcoholScreening = TestInitializer.ServiceProvider.GetService<IDrugAlcoholScreeningRepository>();
+        _enhancedAdheranceCouncellingRepository = TestInitializer.ServiceProvider.GetService<IEnhancedAdherenceCounsellingRepository>();
     }
 
     [Test]
-    public async Task should_Merge_NewDrugAlcoholExtracts()
+    public async Task should_Merge_NewEnhancedAdherance()
     {
         //Arrange
 
