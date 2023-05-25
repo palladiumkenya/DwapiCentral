@@ -8,22 +8,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository;
-
 [TestFixture]
-public class DrugAlcoholScreeningRepositoryTest
+public class OvcRepositoryTests
 {
     private CtDbContext _context;
-    private IDrugAlcoholScreeningRepository _drugAlcoholScreening;
+    private IOvcRepository _ovcRepository;
 
     [SetUp]
     public void Setup()
     {
         _context = TestInitializer.ServiceProvider.GetService<CtDbContext>();
-        _drugAlcoholScreening = TestInitializer.ServiceProvider.GetService<IDrugAlcoholScreeningRepository>();
+        _ovcRepository = TestInitializer.ServiceProvider.GetService<IOvcRepository>();
     }
 
     [Test]
-    public async Task should_Merge_NewDrugAlcoholExtracts()
+    public async Task should_Merge_NewEnhancedAdherance()
     {
         //Arrange
 

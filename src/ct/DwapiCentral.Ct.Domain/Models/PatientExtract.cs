@@ -68,6 +68,13 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public virtual ICollection<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtract>();
         public virtual ICollection<DepressionScreeningExtract> DepressionScreeningExtracts { get; set; } = new List<DepressionScreeningExtract>();
         public virtual ICollection<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; } = new List<DrugAlcoholScreeningExtract>();
-
+        public virtual ICollection<EnhancedAdherenceCounsellingExtract> EnhancedAdherenceCounsellingExtracts { get; set; } = new List<EnhancedAdherenceCounsellingExtract>();
+        public virtual ICollection<GbvScreeningExtract> GbvScreeningExtracts { get; set; } = new List<GbvScreeningExtract>();
+        public virtual ICollection<IptExtract> IptExtracts { get; set; } = new List<IptExtract>();
+        public virtual ICollection<OvcExtract> OvcExtracts { get; set; } = new List<OvcExtract>();
+        public virtual ICollection<OtzExtract> OtzExtracts { get; set; } = new List<OtzExtract>();
+        public virtual ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();
+        public virtual ICollection<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventExtract>();
+        public virtual ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
     }
 }

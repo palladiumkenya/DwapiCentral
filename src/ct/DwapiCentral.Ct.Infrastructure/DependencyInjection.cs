@@ -48,6 +48,10 @@ public static class DependencyInjection
         services.AddScoped<IDefaulterTracingRepository, DefaulterTracingRepository>();
         services.AddScoped<IDepressionScreeningRepository, DepressionScreeningRepository>();
         services.AddScoped<IDrugAlcoholScreeningRepository, DrugAlcoholScreeningRepository>();
+        services.AddScoped<IEnhancedAdherenceCounsellingRepository, EnhancedAdherenceCounsellingRepository>();
+        services.AddScoped<IGbvScreeningRepository, GbvScreeningRepository>();
+        services.AddScoped<IIptRepository, IptRepository>();
+        services.AddScoped<OvcRepository, OvcRepository>();
 
 
         try
