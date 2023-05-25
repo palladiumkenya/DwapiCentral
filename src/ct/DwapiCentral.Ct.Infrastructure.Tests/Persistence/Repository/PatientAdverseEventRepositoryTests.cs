@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository;
 [TestFixture]
-public class OvcRepositoryTests
+public class PatientAdverseEventRepositoryTests
 {
     private CtDbContext _context;
-    private IOvcRepository _ovcRepository;
+    private IPatientAdverseEventRepository _patientAdverseRepository;
 
     [SetUp]
     public void Setup()
     {
         _context = TestInitializer.ServiceProvider.GetService<CtDbContext>();
-        _ovcRepository = TestInitializer.ServiceProvider.GetService<IOvcRepository>();
+        _patientAdverseRepository = TestInitializer.ServiceProvider.GetService<IPatientAdverseEventRepository>();
     }
 
     [Test]
-    public async Task should_Merge_New_OvcExtracts()
+    public async Task should_Merge_New_PatientAdverseEvent()
     {
         //Arrange
 
