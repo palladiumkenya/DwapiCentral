@@ -1,5 +1,6 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,19 @@ public class PatientArtExtractRepositoryTests
     }
 
     [Test]
-    public async Task Should_Merge_NewArtExtracts()
+    public async Task Should_Merge_ArtExtracts()
     {
         //Arrange
+        var patientArt = TestHelper.GetTestPatientArtUpdates();
 
-        
+
 
         //Act
+        await _patientArtRepository.MergPatientArt(patientArt);
 
 
         //Assert
+        var savedPatientArtExtracts  = _context.PatientArtExtracts.ToList();
+        Assert.IsNotNull(savedPatientArtExtracts);
     }
 }

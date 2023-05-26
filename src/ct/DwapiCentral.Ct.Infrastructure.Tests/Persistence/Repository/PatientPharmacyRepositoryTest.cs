@@ -23,15 +23,17 @@ public class PatientPharmacyRepositoryTest
     }
 
     [Test]
-    public async Task Should_addNewPharmacyExtracts()
+    public async Task Should_UpdatePharmacyExtracts()
     {
         //arrange 
 
-        var patientPharmacy =  TestHelper.GetTestPatientPharmacyExtractsNew();
+        var patientPharmacy =  TestHelper.GetTestPatientPharmacyExtractsUpdates();
 
         //act
 
         await _patientPharmacyRepository.MergePharmacyExtractsAsync(patientPharmacy);
+
+        
 
 
 

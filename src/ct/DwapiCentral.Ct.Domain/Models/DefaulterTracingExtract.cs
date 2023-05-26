@@ -8,6 +8,8 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
     {
         [Key]
         public Guid Id { get; set; }
+        public int PatientPk { get; set; }
+        public int SiteCode { get; set; }
         public int VisitID { get; set; }
         public DateTime VisitDate { get; set; }
         public string? FacilityName { get; set; }
@@ -20,13 +22,11 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? CauseOfDeath { get; set; }
         public string? Comments { get; set; }
         public DateTime? BookingDate { get; set; }
-        public Guid? PatientId { get; set; }
-        public int PatientPk { get; set; }
-        public int SiteCode { get; set; }
+        public Guid? PatientId { get; set; }       
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
-        public DateTime? Created { get; set; }
+        public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
     }

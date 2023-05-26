@@ -60,8 +60,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                 }
             }
 
-            // Add new patients to the context
-            _context.PatientExtracts.AddRangeAsync(newPatients);
+            // Add new patients to the context           
+            _context.Database.GetDbConnection().BulkMerge(newPatients);
 
             // Update existing patients in the context
             foreach (var patientToUpdate in patientsToUpdate)

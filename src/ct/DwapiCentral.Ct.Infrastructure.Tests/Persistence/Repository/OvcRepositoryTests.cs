@@ -1,5 +1,6 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -22,13 +23,21 @@ public class OvcRepositoryTests
     }
 
     [Test]
-    public async Task should_Merge_New_OvcExtracts()
+    public async Task should_Merge_OvcExtracts()
     {
-        //Arrange
 
-        //act
+        //Arrange
+        var ovcExtracts = TestHelper.GetTestPatientOvcExtracts();
+
+
+
+        //Act
+        await _ovcRepository.MergeAsync(ovcExtracts);
+
 
         //Assert
+        var savedPatientOvcExtracts = _context.OvcExtracts.ToList();
+        Assert.IsNotNull(savedPatientOvcExtracts);
 
     }
 }

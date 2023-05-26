@@ -1,5 +1,7 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,10 +27,17 @@ public class DefaulterTracingRepositoryTests
     public async Task should_Merge_NewDefaulterTracing()
     {
         //Arrange
+        var defaulterTracing = TestHelper.GetTestPatientDefaulterTracing();
 
-        //act
+
+
+        //Act
+        await _defaulterTracingRepository.MergeAsync(defaulterTracing);
+
 
         //Assert
+        var savedDefaulterTracingExtracts = _context.DefaulterTracingExtracts.ToList();
+        Assert.IsNotNull(savedDefaulterTracingExtracts);
 
     }
 }

@@ -63,97 +63,97 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.PatientLaboratoryExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.PatientArtExtracts)
                 .WithOne()
-                .HasForeignKey(p => new {p.PatientId,p.SiteCode })
+                .HasForeignKey(p => new {p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.AllergiesChronicIllnessExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.ContactListingExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.CovidExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.DefaulterTracingExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                .HasMany(p => p.DepressionScreeningExtracts)
                .WithOne()
-               .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+               .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
               .HasMany(p => p.DrugAlcoholScreeningExtracts)
               .WithOne()
-              .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+              .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
               .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
               .HasMany(p => p.EnhancedAdherenceCounsellingExtracts)
               .WithOne()
-              .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+              .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
               .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
               .HasMany(p => p.GbvScreeningExtracts)
               .WithOne()
-              .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+              .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
               .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.IptExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.OvcExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.OtzExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.PatientAdverseEventExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.PatientBaselinesExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(p => p.PatientStatusExtracts)
                 .WithOne()
-                .HasForeignKey(p => new { p.PatientId, p.SiteCode })
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
             DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
@@ -172,71 +172,71 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
 
             DapperPlusManager.Entity<PatientPharmacyExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(PatientPharmacyExtract)}");
+                .Table($"{nameof(PatientPharmacyExtracts)}");
 
             DapperPlusManager.Entity<PatientLaboratoryExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(PatientLaboratoryExtract)}");
+                .Table($"{nameof(PatientLaboratoryExtracts)}");
 
             DapperPlusManager.Entity<PatientArtExtract>()
                 .Key(x => x.Id)
-                .Table($"{typeof(PatientArtExtract)}");
+                .Table($"{nameof(PatientArtExtracts)}");
 
             DapperPlusManager.Entity<AllergiesChronicIllnessExtract>()
                 .Key(x => x.Id)
-                .Table($"{typeof(AllergiesChronicIllnessExtract)}");
+                .Table($"{nameof(AllergiesChronicIllnessExtracts)}");
 
             DapperPlusManager.Entity<ContactListingExtract>()
                 .Key(x => x.Id)
-                .Table($"{typeof(ContactListingExtract)}");
+                .Table($"{nameof(contactListingExtracts)}");
 
             DapperPlusManager.Entity<CovidExtract>()
                 .Key(x => x.Id)
-                .Table($"{typeof(CovidExtract)}");
+                .Table($"{nameof(CovidExtracts)}");
 
             DapperPlusManager.Entity<DefaulterTracingExtract>()
                 .Key(x => x.Id)
-                .Table($"{typeof(DefaulterTracingExtract)}");
+                .Table($"{nameof(DefaulterTracingExtracts)}");
 
             DapperPlusManager.Entity<DepressionScreeningExtract>()
                 .Key(x => x.Id)
-                .Table($"{typeof(DepressionScreeningExtract)}");
+                .Table($"{nameof(DepressionScreeningExtracts)}");
 
             DapperPlusManager.Entity<DrugAlcoholScreeningExtract>()
                 .Key(x => x.Id)
-                .Table($"{typeof(DrugAlcoholScreeningExtract)}");
+                .Table($"{nameof(DrugAlcoholScreeningExtracts)}");
 
             DapperPlusManager.Entity<EnhancedAdherenceCounsellingExtract>()
                .Key(x => x.Id)
-               .Table($"{typeof(EnhancedAdherenceCounsellingExtract)}");
+               .Table($"{nameof(EnhancedAdherenceCounsellingExtracts)}");
 
             DapperPlusManager.Entity<GbvScreeningExtract>()
                .Key(x => x.Id)
-               .Table($"{typeof(GbvScreeningExtract)}");
+               .Table($"{nameof(GbvScreeningExtracts)}");
 
             DapperPlusManager.Entity<IptExtract>()
                .Key(x => x.Id)
-               .Table($"{typeof(IptExtract)}");
+               .Table($"{nameof(IptExtracts)}");
 
             DapperPlusManager.Entity<OvcExtract>()
               .Key(x => x.Id)
-              .Table($"{typeof(OvcExtract)}");
+              .Table($"{nameof(OvcExtracts)}");
 
             DapperPlusManager.Entity<OtzExtract>()
               .Key(x => x.Id)
-              .Table($"{typeof(OtzExtract)}");
+              .Table($"{nameof(OtzExtracts)}");
 
             DapperPlusManager.Entity<PatientAdverseEventExtract>()
               .Key(x => x.Id)
-              .Table($"{typeof(PatientAdverseEventExtract)}");
+              .Table($"{nameof(PatientAdverseEventExtracts)}");
 
             DapperPlusManager.Entity<PatientBaselinesExtract>()
               .Key(x => x.Id)
-              .Table($"{typeof(PatientBaselinesExtract)}");
+              .Table($"{nameof(PatientBaselinesExtracts)}");
 
             DapperPlusManager.Entity<PatientStatusExtract>()
               .Key(x => x.Id)
-              .Table($"{typeof(PatientStatusExtract)}");
+              .Table($"{nameof(PatientStatusExtracts)}");
         }
         
         public virtual void EnsureSeeded()

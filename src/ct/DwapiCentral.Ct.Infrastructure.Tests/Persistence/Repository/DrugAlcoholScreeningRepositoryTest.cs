@@ -1,5 +1,6 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,17 @@ public class DrugAlcoholScreeningRepositoryTest
     public async Task should_Merge_NewDrugAlcoholExtracts()
     {
         //Arrange
+        var drugAlcoholScreening = TestHelper.GetTestPatientDrugAlcoholScreening();
 
-        //act
+
+
+        //Act
+        await _drugAlcoholScreening.MergeAsync(drugAlcoholScreening);
+
 
         //Assert
+        var savedPatientDrugAlcoholExtracts = _context.DrugAlcoholScreeningExtracts.ToList();
+        Assert.IsNotNull(savedPatientDrugAlcoholExtracts);
 
     }
 }

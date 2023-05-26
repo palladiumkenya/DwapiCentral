@@ -1,4 +1,5 @@
-﻿using DwapiCentral.Contracts.Ct;
+﻿using Dapper;
+using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -22,8 +23,23 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
         }
         public Task MergeAsync(IEnumerable<ContactListingExtract> contactListingExtracts)
         {
-            _context.Database.GetDbConnection().BulkMerge(contactListingExtracts);
-            _context.SaveChanges();
+            var distinctExtracts = contactListingExtracts
+               .GroupBy(e => new { e.PatientPk, e.SiteCode, e.DateCreated })
+               .Select(g => g.OrderByDescending(e => e.Id).First());
+
+            _context.Database.GetDbConnection().BulkMerge(distinctExtracts);
+
+            var extractIdsToKeep = distinctExtracts.Select(e => e.Id).ToList();
+            var deleteQuery = $@"
+                    DELETE FROM ContactListingExtract
+                    WHERE Id NOT IN ({string.Join(",", extractIdsToKeep)})
+                ";
+
+            _context.Database.GetDbConnection().ExecuteAsync(deleteQuery);
+
+
+
+            _context.SaveChangesAsync();
             return Task.CompletedTask;
         }
     }

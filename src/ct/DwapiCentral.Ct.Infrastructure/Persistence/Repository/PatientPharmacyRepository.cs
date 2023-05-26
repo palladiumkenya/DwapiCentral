@@ -1,4 +1,5 @@
-﻿using DwapiCentral.Ct.Domain.Models.Extracts;
+﻿using Dapper;
+using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
 using Microsoft.Data.SqlClient;
@@ -45,8 +46,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
             {
                
                 _context.Database.GetDbConnection().BulkInsert(uniquePharmacyExtracts);
+               
             }
-        
+
+            
+
+           
+
             _context.SaveChangesAsync();
             return Task.CompletedTask;
         }

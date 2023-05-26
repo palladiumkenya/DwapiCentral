@@ -1,5 +1,6 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,16 @@ public class ContactListingRepositoryTests
     public async Task should_Merge_NewContactListings()
     {
         //Arrange
+        var contactListing = TestHelper.GetTestPatientContactListing();
 
-        //act
+
+
+        //Act
+        await _contactListingRepository.MergeAsync(contactListing);
+
 
         //Assert
-
+        var savedContactListingExtracts = _context.contactListingExtracts.ToList();
+        Assert.IsNotNull(savedContactListingExtracts);
     }
 }
