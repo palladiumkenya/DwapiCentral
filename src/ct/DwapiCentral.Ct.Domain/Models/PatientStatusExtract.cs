@@ -11,12 +11,12 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public Guid Id { get ; set ; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public string? ExitDescription { get ; set ; }
-        public DateTime? ExitDate { get ; set ; }
+        public DateTime ExitDate { get; set; }
+        public DateTime? TOVerifiedDate { get; set; }
+        public string? ExitDescription { get ; set ; }        
         public string? ExitReason { get ; set ; }
-        public Guid PatientId { get ; set ; }
-        public string? TOVerified { get ; set ; }
-        public DateTime? TOVerifiedDate { get ; set ; }
+        public Guid? PatientId { get ; set ; }
+        public string? TOVerified { get ; set ; }        
         public DateTime? ReEnrollmentDate { get ; set ; }
         public string? ReasonForDeath { get ; set ; }
         public string? SpecificDeathReason { get ; set ; }
@@ -25,7 +25,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
-        public DateTime? Created { get ; set ; }
+        public DateTime? Created { get ; set ; } = DateTime.Now;
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
     }

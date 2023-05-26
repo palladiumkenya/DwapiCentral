@@ -1,5 +1,7 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,10 +27,17 @@ public class CovidRepositoryTests
     public async Task should_Merge_NewCovidExtracts()
     {
         //Arrange
+        var covidExtract = TestHelper.GetTestPatientCovid();
 
-        //act
+
+
+        //Act
+        await _covidRepository.MergeAsync(covidExtract);
+
 
         //Assert
+        var savedCovidExtracts = _context.CovidExtracts.ToList();
+        Assert.IsNotNull(savedCovidExtracts);
 
     }
 }

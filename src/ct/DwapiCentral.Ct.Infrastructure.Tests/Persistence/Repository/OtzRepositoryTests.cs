@@ -1,5 +1,7 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -23,13 +25,20 @@ public class OtzRepositoryTests
     }
 
     [Test]
-    public async Task should_Merge_NewOtzExtracts()
-    {
+    public async Task should_Merge_OtzExtracts()
+    { 
         //Arrange
+        var otcExtracts = TestHelper.GetTestPatientOtzExtracts();
 
-        //act
+
+
+        //Act
+        await _otzRepository.MergeAsync(otcExtracts);
+
 
         //Assert
+        var savedPatientOtcExtracts = _context.OtzExtracts.ToList();
+        Assert.IsNotNull(savedPatientOtcExtracts);
 
     }
 }

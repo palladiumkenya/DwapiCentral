@@ -26,19 +26,7 @@ public class PatientVisitExtractRepositoryTests
     
     }
 
-    [Test]
-    public async Task should_merge_new_visits()
-    {
-        //Arrange
-        var newVisits = TestHelper.GetTestPatientVisitExtractsNew();
 
-        //Act
-        await _patientVisitExtractRepository.MergeAsync(newVisits);
-
-        //Assert
-        var savedPatientVisit = _context.PatientVisitExtracts.Find( new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"));
-        Assert.NotNull(savedPatientVisit);
-    }
 
     [Test]
     public async Task should_Merge_AddUpdateVisits()

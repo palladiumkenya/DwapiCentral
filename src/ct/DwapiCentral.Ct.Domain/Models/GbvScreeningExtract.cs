@@ -1,10 +1,12 @@
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Shared.Domain.Entities.Ct;
+using System.ComponentModel.DataAnnotations;
 
 namespace DwapiCentral.Ct.Domain.Models.Extracts
 {
     public class GbvScreeningExtract : IGbvScreening
     {
+        [Key]
         public Guid Id { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }

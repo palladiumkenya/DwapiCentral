@@ -1,5 +1,7 @@
-﻿using DwapiCentral.Ct.Domain.Repository;
+﻿using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -22,13 +24,20 @@ public class DepressionScreeningRepositoryTests
     }
 
     [Test]
-    public async Task should_Merge_NewDefaulterTracing()
+    public async Task should_Merge_NewDepressionScreeningg()
     {
         //Arrange
+        var depressionScreening = TestHelper.GetTestPatientDepressionScreening();
 
-        //act
+
+
+        //Act
+        await _depressionScreeningRepository.MergeAsync(depressionScreening);
+
 
         //Assert
+        var savedPatientDepressionScreeningExtracts = _context.DepressionScreeningExtracts.ToList();
+        Assert.IsNotNull(savedPatientDepressionScreeningExtracts);
 
     }
 }

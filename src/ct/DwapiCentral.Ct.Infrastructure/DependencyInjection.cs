@@ -51,7 +51,11 @@ public static class DependencyInjection
         services.AddScoped<IEnhancedAdherenceCounsellingRepository, EnhancedAdherenceCounsellingRepository>();
         services.AddScoped<IGbvScreeningRepository, GbvScreeningRepository>();
         services.AddScoped<IIptRepository, IptRepository>();
-        services.AddScoped<OvcRepository, OvcRepository>();
+        services.AddScoped<IOvcRepository, OvcRepository>();
+        services.AddScoped<IOtzRepository, OtzRepository>();
+        services.AddScoped<IPatientAdverseEventRepository, PatientAdverseEventRepository>();
+        services.AddScoped<IPatientBaseLinesRepository, PatientBaseLinesRepository>();
+        services.AddScoped<IPatientStatusRepository, PatientStatusRepository>();
 
 
         try

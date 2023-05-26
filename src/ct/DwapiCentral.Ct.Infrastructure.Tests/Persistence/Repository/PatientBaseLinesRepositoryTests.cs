@@ -1,5 +1,7 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -22,13 +24,18 @@ public class PatientBaseLinesRepositoryTests
     }
 
     [Test]
-    public async Task should_Merge_New_PatientAdverse()
+    public async Task should_Merge_PatientBaselines()
     {
         //Arrange
+        var patientBaselines = TestHelper.GetTestPatientBaselinesExtractsUpdates();
 
         //act
 
+        await _patientBaselinesRepository.MergeAsync(patientBaselines);
+
         //Assert
+        var savedPatientBaselines = _context.PatientBaselinesExtracts.ToList();
+        Assert.IsNotNull(savedPatientBaselines);
 
     }
 }

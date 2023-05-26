@@ -1,5 +1,7 @@
 ﻿using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
+using DwapiCentral.Ct.Infrastructure.Tests.TestArtifacts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -23,13 +25,20 @@ public class GbvScreeningRepositoryTest
     }
 
     [Test]
-    public async Task should_Merge_NewEnhancedAdherance()
+    public async Task should_Merge_GbvScreening()
     {
         //Arrange
+        var gbvScreeningExtracts = TestHelper.GetTestPatientGbvExtracts();
 
-        //act
+
+
+        //Act
+        await _gbvScreeningRepository.MergeAsync(gbvScreeningExtracts);
+
 
         //Assert
+        var savedPatientGbvExtracts = _context.GbvScreeningExtracts.ToList();
+        Assert.IsNotNull(savedPatientGbvExtracts);
 
     }
 }

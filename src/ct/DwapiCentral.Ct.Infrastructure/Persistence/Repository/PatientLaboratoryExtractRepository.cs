@@ -33,29 +33,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                     continue;
                 }
 
-                var existingLabExtract =  _context.PatientLaboratoryExtracts
-                               .FirstOrDefaultAsync(p => p.PatientPk == labExtract.PatientPk
-                                   && p.SiteCode == labExtract.SiteCode
-                                   && p.VisitId == labExtract.VisitId
-                                   && p.OrderedByDate == labExtract.OrderedByDate);
-
-                if (existingLabExtract != null)
-                {
-                    // Update existing lab extract
-                    
-                }
-                else
-                {
+               
                     // Add new lab extract
-                     _context.PatientLaboratoryExtracts.AddAsync(labExtract);
-                }
+                     _context.Database.GetDbConnection().BulkMerge(patientLabs);
+                
 
-                uniqueLabExtracts.Add(labExtractKey);
+                
             }
 
              _context.SaveChangesAsync();
 
-           // _context.Database.GetDbConnection().BulkMerge(patientLabs);
+          
            
             return Task.CompletedTask;
         }

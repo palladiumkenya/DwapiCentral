@@ -10,9 +10,9 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public Guid Id { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public string? FacilityName { get ; set ; }
-        public int VisitID { get ; set ; }
-        public DateTime Covid19AssessmentDate { get ; set ; }
+        public int VisitID { get; set; }
+        public DateTime Covid19AssessmentDate { get; set; }
+        public string? FacilityName { get ; set ; }      
         public string? ReceivedCOVID19Vaccine { get ; set ; }
         public DateTime? DateGivenFirstDose { get ; set ; }
         public string? FirstDoseVaccineAdministered { get ; set ; }
@@ -47,7 +47,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
-        public DateTime? Created { get ; set ; }
+        public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
         
