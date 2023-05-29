@@ -11,7 +11,10 @@ public static class RegisterStartupMiddlewares
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(options =>
+            {
+                options.DefaultModelsExpandDepth(-1);
+            });
         }
 
         app.UseHttpsRedirection();

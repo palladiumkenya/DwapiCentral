@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DwapiCentral.Contracts.Manifest;
+using DwapiCentral.Shared.Domain.Enums;
 
 namespace DwapiCentral.Ct.Domain.Models
 {
@@ -7,16 +8,16 @@ namespace DwapiCentral.Ct.Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public string Docket { get; set; }
+        public string? Docket { get; set; }
         public int SiteCode { get; set; }
         public string Name { get; set; }
-        public string Project { get; set; }
-        public string UploadMode { get; set; }
-        public string DwapiVersion { get; set; }
-        public string EmrSetup { get; set; }
+        public string? Project { get; set; }
+        public UploadMode UploadMode { get; set; }
+        public string? DwapiVersion { get; set; }
+        public EmrSetup EmrSetup { get; set; }
         public Guid EmrId { get; set; }
         public string EmrName { get; set; }
-        public string EmrVersion { get; set; }
+        public string? EmrVersion { get; set; }
         public Guid Session { get; set; }
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
@@ -24,7 +25,7 @@ namespace DwapiCentral.Ct.Domain.Models
         public DateTime StatusDate { get; set; } = DateTime.Now;
         public DateTime Created { get; set; } = DateTime.Now;
         public string? Tag { get; set; }
-        public ICollection<Metric> Metrics { get; set; } = new List<Metric>();
+        public ICollection<Metric>? Metrics { get; set; } = new List<Metric>();
 
         public void SetHandshake()
         {

@@ -3,19 +3,20 @@ using System;
 
 namespace DwapiCentral.Contracts.Ct
 {
-     public interface IOtz : IEntity
+     public interface IOtz : IExtract
     {
-          string FacilityName { get; set; }
-          int? VisitID { get; set; }
-          DateTime? VisitDate { get; set; }
+          Guid Id { get; set; }
+          string? FacilityName { get; set; }
+          int VisitID { get; set; }
+          DateTime VisitDate { get; set; }
           DateTime? OTZEnrollmentDate { get; set; }
-          string TransferInStatus { get; set; }
-          string ModulesPreviouslyCovered { get; set; }
-          string ModulesCompletedToday { get; set; }
-          string SupportGroupInvolvement { get; set; }
-          string Remarks { get; set; }
-          string TransitionAttritionReason { get; set; }
+          string? TransferInStatus { get; set; }
+          string? ModulesPreviouslyCovered { get; set; }
+          string? ModulesCompletedToday { get; set; }
+          string? SupportGroupInvolvement { get; set; }
+          string? Remarks { get; set; }
+          string? TransitionAttritionReason { get; set; }
           DateTime? OutcomeDate { get; set; }
-          Guid PatientId { get; set; }
+         
     }
 }

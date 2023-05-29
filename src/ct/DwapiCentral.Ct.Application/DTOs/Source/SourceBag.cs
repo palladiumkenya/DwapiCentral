@@ -1,15 +1,14 @@
-using DwapiCentral.Ct.Application.DTOs.Extract;
-using DwapiCentral.Ct.Application.Interfaces.DTOs.Source;
+﻿using DwapiCentral.Ct.Application.Interfaces;
 using DwapiCentral.Shared.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Application.DTOs.Source
 {
-    public abstract class SourceBag<T> : ISourceBag<T>
+    public class SourceBag<T> : ISourceBag<T>
     {
         public string JobId { get; set; }
         public EmrSetup EmrSetup { get; set; }

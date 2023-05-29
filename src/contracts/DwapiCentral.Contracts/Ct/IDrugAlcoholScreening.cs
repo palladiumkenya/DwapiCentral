@@ -3,14 +3,16 @@ using System;
 
 namespace DwapiCentral.Contracts.Ct
 {
-     public interface IDrugAlcoholScreening : IEntity
+     public interface IDrugAlcoholScreening : IExtract
     {
-          string FacilityName { get; set; }
-          int? VisitID { get; set; }
-          DateTime? VisitDate { get; set; }
-          string DrinkingAlcohol { get; set; }
-          string Smoking { get; set; }
-          string DrugUse { get; set; }
-          Guid PatientId { get; set; }
+            Guid Id { get; set; }
+            int VisitID { get; set; }
+            DateTime VisitDate { get; set; }
+            string? FacilityName { get; set; }            
+            string? DrinkingAlcohol { get; set; }
+            string? Smoking { get; set; }
+            string? DrugUse { get; set; }
+           
+   
     }
 }

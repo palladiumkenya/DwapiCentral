@@ -29,6 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DwapiCentral.Ct.Infrastructure.Tests\DwapiCentral.Ct.Infrastructure.Tests.csproj" />
       <ProjectReference Include="..\DwapiCentral.Ct.Infrastructure\DwapiCentral.Ct.Infrastructure.csproj" />
     </ItemGroup>
 
