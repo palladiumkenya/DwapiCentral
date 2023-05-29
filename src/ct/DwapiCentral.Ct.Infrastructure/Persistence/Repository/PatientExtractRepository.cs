@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using DwapiCentral.Contracts.Ct;
 
 using DwapiCentral.Ct.Domain.Models.Extracts;

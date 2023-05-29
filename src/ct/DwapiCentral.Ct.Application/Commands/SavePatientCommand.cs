@@ -8,13 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace DwapiCentral.Ct.Application.Commands;
 
 public class SavePatientCommand : IRequest<Result>
 {
     public IEnumerable<PatientExtract> PatientExtract { get; set; }
 
-    public SavePatientCommand(IEnumerable<PatientExtract> patientExtract)
+    public SavePatientCommand(IEnumerable<PatientExtract> patientExtract
     {
         PatientExtract = patientExtract;
     }
@@ -32,6 +33,7 @@ public class SavePatientCommandHandler : IRequestHandler<SavePatientCommand, Res
     public async Task<Result> Handle(SavePatientCommand request, CancellationToken cancellationToken)
     {
         await _patientExtractRepository.MergeAsync(request.PatientExtract);
+
 
         return Result.Success();
     }

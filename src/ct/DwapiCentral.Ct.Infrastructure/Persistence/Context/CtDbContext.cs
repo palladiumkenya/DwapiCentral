@@ -1,4 +1,4 @@
-﻿using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using Microsoft.EntityFrameworkCore;
