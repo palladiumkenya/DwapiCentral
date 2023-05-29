@@ -1296,7 +1296,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CccNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactRelation")

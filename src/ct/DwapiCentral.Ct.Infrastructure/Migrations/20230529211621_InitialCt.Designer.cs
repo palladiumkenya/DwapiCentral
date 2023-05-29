@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230529192932_InitialCt")]
+    [Migration("20230529211621_InitialCt")]
     partial class InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1298,7 +1298,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CccNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactRelation")

@@ -69,7 +69,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 {
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    CccNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CccNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Nupi = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MpiId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Pkv = table.Column<string>(type: "nvarchar(max)", nullable: true),

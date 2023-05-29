@@ -41,22 +41,23 @@ namespace DwapiCentral.Ct.Controllers
                     List<PatientSourceDto> sourceDtos = sourceBag.Extracts;
                     IEnumerable<PatientExtract> patientExtracts = _mapper.Map<IEnumerable<PatientExtract>>(sourceDtos);
 
-                    
-                    if (sourceBag.HasJobId)
+
+                    var response = await _mediator.Send(new SavePatientCommand(patientExtracts));
+                    if (response.IsSuccess)
                     {
-                          await _mediator.Send(new SavePatientCommand(patientExtracts));
+
+
+                        var successMessage = new
+                        {
+
+                            BatchKey = new List<Guid>() { LiveGuid.NewGuid() }
+                        };
+                        return Ok(successMessage);
                     }
                     else
                     {
-                           await _mediator.Send(new SavePatientCommand(patientExtracts));
+                        return BadRequest(response.Error);
                     }
-
-                    var response = new
-                    {
-                        
-                        BatchKey = new List<Guid>() { LiveGuid.NewGuid() }
-                    };
-                    return Ok(response);
 
                   
                 }
