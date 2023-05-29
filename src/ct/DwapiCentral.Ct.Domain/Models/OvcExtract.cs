@@ -19,8 +19,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? CPIMSUniqueIdentifier { get; set; }
         public string? PartnerOfferingOVCServices { get; set; }
         public string? OVCExitReason { get; set; }
-        public DateTime? ExitDate { get; set; }
-        public Guid? PatientId { get; set; }        
+        public DateTime? ExitDate { get; set; }               
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }

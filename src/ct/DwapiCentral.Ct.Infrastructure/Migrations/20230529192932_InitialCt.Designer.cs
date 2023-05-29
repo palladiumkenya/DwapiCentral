@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230526090015_InitialCt")]
+    [Migration("20230529192932_InitialCt")]
     partial class InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,9 +83,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("Genitourinary")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -165,9 +162,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int?>("PartnerPersonID")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -281,9 +275,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("MissedAppointmentDueToCOVID19")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -375,9 +366,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("IsFinalTrace")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -466,9 +454,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("PHQ_9_rating")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -520,9 +505,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -693,9 +675,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("MMSAScore")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -756,9 +735,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("IPVRelationship")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -851,9 +827,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("OnTBDrugs")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -929,9 +902,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("OutcomeDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -1009,9 +979,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("PartnerOfferingOVCServices")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -1081,9 +1048,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateLastModified")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -1170,9 +1134,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime>("LastVisit")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -1242,9 +1203,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateLastModified")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -1502,9 +1460,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime>("OrderedByDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -1568,9 +1523,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ExpectedReturn")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -1645,7 +1597,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("EffectiveDiscontinuationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("ExitDate")
+                    b.Property<DateTime>("ExitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ExitDescription")
@@ -1653,9 +1605,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("ExitReason")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -1805,9 +1754,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<decimal?>("OxygenSaturation")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -1932,11 +1878,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Docket")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DwapiVersion")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("EmrId")
@@ -1946,12 +1890,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmrSetup")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EmrSetup")
+                        .HasColumnType("int");
 
                     b.Property<string>("EmrVersion")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("End")
@@ -1962,7 +1904,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("Session")
@@ -1984,9 +1925,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Tag")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UploadMode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UploadMode")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

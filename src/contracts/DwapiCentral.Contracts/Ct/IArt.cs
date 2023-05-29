@@ -27,8 +27,7 @@ namespace DwapiCentral.Contracts.Ct
         DateTime? ExpectedReturn { get; set; }
         string? Provider { get; set; }        
         string? ExitReason { get; set; }
-        DateTime? ExitDate { get; set; }
-        Guid? PatientId { get; set; }
+        DateTime? ExitDate { get; set; }        
         string? PreviousARTUse { get; set; }
         string? PreviousARTPurpose { get; set; }
         DateTime? DateLastUsed { get; set; }    

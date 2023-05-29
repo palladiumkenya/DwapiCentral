@@ -32,8 +32,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? TBScreening { get ; set ; }
         public string? IPTClientWorkUp { get ; set ; }
         public string? StartIPT { get ; set ; }
-        public string? IndicationForIPT { get ; set ; }
-        public Guid PatientId { get ; set ; }       
+        public string? IndicationForIPT { get ; set ; }           
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }

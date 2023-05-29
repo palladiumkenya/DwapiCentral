@@ -4,7 +4,7 @@ namespace DwapiCentral.Contracts.Ct
 {
     public interface IPatient : IExtract
     {
-        string CccNumber { get; set; }
+        string? CccNumber { get; set; }
         string? Nupi { get; set; }
         string? MpiId { get; set; }
         string? Pkv { get; set; }

@@ -17,7 +17,6 @@ namespace DwapiCentral.Contracts.Ct
           string? Remarks { get; set; }
           string? TransitionAttritionReason { get; set; }
           DateTime? OutcomeDate { get; set; }
-          Guid? PatientId { get; set; }
-
+         
     }
 }

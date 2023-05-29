@@ -14,8 +14,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime ExitDate { get; set; }
         public DateTime? TOVerifiedDate { get; set; }
         public string? ExitDescription { get ; set ; }        
-        public string? ExitReason { get ; set ; }
-        public Guid? PatientId { get ; set ; }
+        public string? ExitReason { get ; set ; }       
         public string? TOVerified { get ; set ; }        
         public DateTime? ReEnrollmentDate { get ; set ; }
         public string? ReasonForDeath { get ; set ; }

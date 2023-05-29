@@ -23,8 +23,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? CurrentlyLivingWithIndexClient { get; set; }
         public string? KnowledgeOfHivStatus { get; set; }
         public string? PnsApproach { get; set; }
-        public int? ContactPatientPK { get; set; }
-        public Guid? PatientId { get; set; }       
+        public int? ContactPatientPK { get; set; }              
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }

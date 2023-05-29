@@ -21,8 +21,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? AdverseEventActionTaken { get ; set ; }
         public bool? AdverseEventIsPregnant { get ; set ; }
         public string? AdverseEventRegimen { get ; set ; }
-        public string? AdverseEventCause { get ; set ; }
-        public Guid? PatientId { get ; set ; }        
+        public string? AdverseEventCause { get ; set ; }             
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }

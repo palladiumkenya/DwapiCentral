@@ -28,8 +28,6 @@ namespace DwapiCentral.Contracts.Ct
           string? IPTClientWorkUp { get; set; }
           string? StartIPT { get; set; }
           string? IndicationForIPT { get; set; }
-          Guid PatientId { get; set; }
-
-  
+          
     }
 }

@@ -15,8 +15,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? ReportedByDate { get; set; }
         public string? TestName { get; set; }
         public int? EnrollmentTest { get; set; }
-        public string? TestResult { get; set; }
-        public Guid? PatientId { get; set; }
+        public string? TestResult { get; set; }       
         public DateTime? DateSampleTaken { get; set; }
         public string? SampleType { get; set; }
         public DateTime? DateCreated { get; set; }

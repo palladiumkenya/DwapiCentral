@@ -41,7 +41,7 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
                 throw new SiteNotEnrolledException(request.manifest.SiteCode);
 
             var manifest = await _manifestRepository.GetById(request.manifest.Id);
-            if (null == manifest)
+            if (null != manifest)
                 throw new ManifestAlreadyExistsException(request.manifest.Id);
 
             await _manifestRepository.Save(request.manifest);

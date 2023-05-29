@@ -21,8 +21,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? TrueStatus { get; set; }
         public string? CauseOfDeath { get; set; }
         public string? Comments { get; set; }
-        public DateTime? BookingDate { get; set; }
-        public Guid? PatientId { get; set; }       
+        public DateTime? BookingDate { get; set; }          
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }

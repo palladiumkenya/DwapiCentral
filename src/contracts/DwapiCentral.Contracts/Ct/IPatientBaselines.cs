@@ -32,6 +32,6 @@ namespace DwapiCentral.Contracts.Ct
           DateTime? m12CD4Date { get; set; }
           int? m6CD4 { get; set; }
           DateTime? m6CD4Date { get; set; }
-          Guid? PatientId { get; set; }
+        
     }
 }

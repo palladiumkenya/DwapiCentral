@@ -51,9 +51,6 @@ namespace DwapiCentral.Contracts.Ct
           string? EACHomevisit { get; set; }
           string? EACAdherencePlan { get; set; }
           DateTime? EACFollowupDate { get; set; }
-          Guid? PatientId { get; set; }
-
-        
-    
+              
     }
 }

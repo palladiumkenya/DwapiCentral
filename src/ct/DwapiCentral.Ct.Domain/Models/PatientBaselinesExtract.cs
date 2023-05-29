@@ -31,8 +31,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public int? m12CD4 { get ; set ; }
         public DateTime? m12CD4Date { get ; set ; }
         public int? m6CD4 { get ; set ; }
-        public DateTime? m6CD4Date { get ; set ; }
-        public Guid? PatientId { get ; set ; }      
+        public DateTime? m6CD4Date { get ; set ; }       
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }

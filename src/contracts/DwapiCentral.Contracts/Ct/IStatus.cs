@@ -9,8 +9,7 @@ namespace DwapiCentral.Contracts.Ct
           Guid Id { get; set; }
           string? ExitDescription { get; set; }
           DateTime ExitDate { get; set; }
-          string? ExitReason { get; set; }
-          Guid? PatientId { get; set; }          
+          string? ExitReason { get; set; }                 
           string? TOVerified { get; set; }
           DateTime? TOVerifiedDate { get; set; }
           DateTime? ReEnrollmentDate { get; set; }

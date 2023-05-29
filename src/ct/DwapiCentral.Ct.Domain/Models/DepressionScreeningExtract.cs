@@ -23,8 +23,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? PHQ9_8 { get ; set ; }
         public string? PHQ9_9 { get ; set ; }
         public string? PHQ_9_rating { get ; set ; }
-        public int? DepressionAssesmentScore { get ; set ; }
-        public Guid? PatientId { get ; set ; }       
+        public int? DepressionAssesmentScore { get ; set ; }              
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }

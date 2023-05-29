@@ -14,8 +14,6 @@ namespace DwapiCentral.Contracts.Ct
           string? EmotionalIPV { get; set; }
           string? SexualIPV { get; set; }
           string? IPVRelationship { get; set; }
-          Guid? PatientId { get; set; }
-
-
+        
     }
 }

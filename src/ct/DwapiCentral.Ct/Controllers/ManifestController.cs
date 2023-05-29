@@ -4,11 +4,12 @@ using DwapiCentral.Ct.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace DwapiCentral.Ct.Controllers
 {
-    [Route("api/controller")]
+    
     [ApiController]
     public class ManifestController : Controller
     {
@@ -21,29 +22,48 @@ namespace DwapiCentral.Ct.Controllers
 
 
         [HttpPost]
-        public async Task<HttpResponseMessage> SaveManifest([FromBody] Manifest manifest)
+        [Route("api/v3/Spot")]
+        public async Task<IActionResult> PostManifest([FromBody] Manifest manifest)
         {
-           
-                if(manifest !=null)
+            
+
+            if (manifest !=null)
+                {
+                try
                 {
                     //validate site
-                    await _mediator.Send(new ValidateSiteCommand(manifest.SiteCode,manifest.Name));
+                    var validFacility = await _mediator.Send(new ValidateSiteCommand(manifest.SiteCode, manifest.Name));
 
-                   
-                    await _mediator.Send(new SaveManifestCommand(manifest));
-
-                    var response = new HttpResponseMessage(HttpStatusCode.OK)
+                    if (validFacility.IsSuccess)
                     {
-                        Content = new StringContent("Manifest saved successfully.")
-                    };
+                        var responce = await _mediator.Send(new SaveManifestCommand(manifest));
 
-                    return response;
+                        if (responce.IsSuccess)
+                        {
+                            var response = new HttpResponseMessage(HttpStatusCode.OK)
+                            {
+                                Content = new StringContent("Manifest saved successfully.")
+                            };
+
+                            
+                            return Ok(response);
+                        }
+                        else return BadRequest(responce);
+
+                        
+                    }
+                    else return BadRequest(validFacility.Error.ToString());
+                }
+
+                    catch(Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
 
                 }
-            return new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent($"The expected {new Manifest().GetType().Name} is null")
-            };
+            return BadRequest($"The expected {new Manifest().GetType().Name} is null");
+           
         }
+
     }
 }

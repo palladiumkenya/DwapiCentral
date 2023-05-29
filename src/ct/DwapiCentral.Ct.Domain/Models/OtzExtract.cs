@@ -20,9 +20,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? SupportGroupInvolvement { get ; set ; }
         public string? Remarks { get ; set ; }
         public string? TransitionAttritionReason { get ; set ; }
-        public DateTime? OutcomeDate { get ; set ; }
-        public Guid? PatientId { get ; set ; }
-    
+        public DateTime? OutcomeDate { get ; set ; }  
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }

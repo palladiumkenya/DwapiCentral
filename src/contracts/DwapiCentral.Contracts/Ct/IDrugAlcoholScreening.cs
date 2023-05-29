@@ -12,8 +12,7 @@ namespace DwapiCentral.Contracts.Ct
             string? DrinkingAlcohol { get; set; }
             string? Smoking { get; set; }
             string? DrugUse { get; set; }
-            Guid? PatientId { get; set; }
-
+           
    
     }
 }

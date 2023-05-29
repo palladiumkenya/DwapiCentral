@@ -15,8 +15,9 @@ public static class RegisterStartupServices
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            
-            builder.Services.RegisterCtApp(builder.Configuration);
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        builder.Services.RegisterCtApp(builder.Configuration);
             
             return builder;
         }

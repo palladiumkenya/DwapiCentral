@@ -39,7 +39,7 @@ namespace DwapiCentral.Contracts.Ct
           string? COVID19TestResult { get; set; }
           string? Sequence { get; set; }
           string? BoosterDoseVerified { get; set; }
-          Guid? PatientId { get; set; }
+         
 
     }
 }

@@ -28,7 +28,7 @@ namespace DwapiCentral.Contracts.Ct
         string? Abdomen { get; set; }
         string? CNS { get; set; }
         string? Genitourinary { get; set; }
-        Guid? PatientId { get; set; }
+        
 
     }
 }

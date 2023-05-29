@@ -35,10 +35,7 @@ namespace DwapiCentral.Contracts.Ct
         string? StabilityAssessment { get; set; }
         string? DifferentiatedCare { get; set; }
         string? PopulationType { get; set; }
-        string? KeyPopulationType { get; set; }
-        Guid PatientId { get; set; }
-        
-
+        string? KeyPopulationType { get; set; }        
         string? VisitBy { get; set; }
         decimal? Temp { get; set; }
         int? PulseRate { get; set; }

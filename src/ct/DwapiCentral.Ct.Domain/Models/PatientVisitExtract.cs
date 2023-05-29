@@ -38,8 +38,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? StabilityAssessment { get; set; }
         public string?  DifferentiatedCare { get; set; }
         public string? PopulationType { get; set; }
-        public string? KeyPopulationType { get; set; }
-        public Guid PatientId { get; set; }
+        public string? KeyPopulationType { get; set; }       
         public string? VisitBy { get; set; }
         public decimal? Temp { get; set; }
         public int? PulseRate { get; set; }

@@ -20,8 +20,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? TreatmentType { get; set; }
         public string? RegimenLine { get; set; }
         public string? PeriodTaken { get; set; }
-        public string? ProphylaxisType { get; set; }
-        public Guid PatientId { get; set; }
+        public string? ProphylaxisType { get; set; }        
         public string? RegimenChangedSwitched { get; set; }
         public string? RegimenChangeSwitchReason { get; set; }
         public string? StopRegimenReason { get; set; }

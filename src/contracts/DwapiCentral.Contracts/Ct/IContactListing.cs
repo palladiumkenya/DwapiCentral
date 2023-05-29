@@ -19,7 +19,7 @@ namespace DwapiCentral.Contracts.Ct
         string? KnowledgeOfHivStatus { get; set; }
         string? PnsApproach { get; set; }
         int? ContactPatientPK { get; set; }
-        Guid? PatientId { get; set; }
+       
 
     }
 }

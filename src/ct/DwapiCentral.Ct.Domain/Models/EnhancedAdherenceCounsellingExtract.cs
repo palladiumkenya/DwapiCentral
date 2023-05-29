@@ -54,8 +54,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? EACReferralExperience { get; set; }
         public string? EACHomevisit { get; set; }
         public string? EACAdherencePlan { get; set; }
-        public DateTime? EACFollowupDate { get; set; }
-        public Guid? PatientId { get; set; }        
+        public DateTime? EACFollowupDate { get; set; }               
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }

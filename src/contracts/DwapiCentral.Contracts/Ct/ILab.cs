@@ -11,12 +11,9 @@ namespace DwapiCentral.Contracts.Ct
         DateTime? ReportedByDate { get; set; }
         string? TestName { get; set; }
         int? EnrollmentTest { get; set; }
-        string? TestResult { get; set; }
-        Guid? PatientId { get; set; }
+        string? TestResult { get; set; }       
         DateTime? DateSampleTaken { get; set; }
         string? SampleType { get; set; }   
-        
-
       
     }
 }

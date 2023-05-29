@@ -20,8 +20,6 @@ namespace DwapiCentral.Contracts.Ct
         string? PHQ9_9 { get; set; }
         string? PHQ_9_rating { get; set; }
         int? DepressionAssesmentScore { get; set; }
-        Guid? PatientId { get; set; }
-
-
+       
     }
 }

@@ -27,8 +27,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? CVS { get; set; }
         public string? Abdomen { get; set; }
         public string? CNS { get; set; }
-        public string? Genitourinary { get; set; }
-        public Guid? PatientId { get; set; }       
+        public string? Genitourinary { get; set; }             
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }

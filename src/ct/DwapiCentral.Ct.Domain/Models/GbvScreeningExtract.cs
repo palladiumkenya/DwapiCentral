@@ -17,8 +17,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? PhysicalIPV { get; set; }
         public string? EmotionalIPV { get; set; }
         public string? SexualIPV { get; set; }
-        public string? IPVRelationship { get; set; }
-        public Guid? PatientId { get; set; }        
+        public string? IPVRelationship { get; set; }          
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }

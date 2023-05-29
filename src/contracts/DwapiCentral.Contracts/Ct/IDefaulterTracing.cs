@@ -18,7 +18,7 @@ namespace DwapiCentral.Contracts.Ct
         string? CauseOfDeath { get; set; }
         string? Comments { get; set; }
         DateTime? BookingDate { get; set; }
-        Guid? PatientId { get; set; }
+       
 
 
     }

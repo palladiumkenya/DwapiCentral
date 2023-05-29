@@ -17,10 +17,9 @@ namespace DwapiCentral.Contracts.Ct
           string? Severity { get; set; }
           string? AdverseEventClinicalOutcome { get; set; }
           string? AdverseEventActionTaken { get; set; }
-          bool? AdverseEventIsPregnant { get; set; }
-          
+          bool? AdverseEventIsPregnant { get; set; }          
           string? AdverseEventRegimen { get; set; }
           string? AdverseEventCause { get; set; }
-          Guid? PatientId { get; set; }
+         
     }
 }

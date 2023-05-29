@@ -14,9 +14,7 @@ namespace DwapiCentral.Contracts.Ct
           string? TreatmentType { get; set; }
           string? RegimenLine { get; set; }
           string? PeriodTaken { get; set; }
-          string? ProphylaxisType { get; set; }
-          Guid PatientId { get; set; }       
-
+          string? ProphylaxisType { get; set; }         
           string? RegimenChangedSwitched { get; set; }
           string? RegimenChangeSwitchReason { get; set; }
           string? StopRegimenReason { get; set; }

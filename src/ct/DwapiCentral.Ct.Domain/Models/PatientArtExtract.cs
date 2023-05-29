@@ -31,8 +31,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? ExpectedReturn { get ; set ; }
         public string? Provider { get ; set ; }
         public string? ExitReason { get ; set ; }
-        public DateTime? ExitDate { get ; set ; }
-        public Guid? PatientId { get ; set ; }
+        public DateTime? ExitDate { get ; set ; }        
         public string? PreviousARTUse { get ; set ; }
         public string? PreviousARTPurpose { get ; set ; }
         public DateTime? DateLastUsed { get ; set ; }       

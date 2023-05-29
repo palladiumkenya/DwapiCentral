@@ -16,9 +16,6 @@ namespace DwapiCentral.Contracts.Ct
           string? PartnerOfferingOVCServices { get; set; }
           string? OVCExitReason { get; set; }
           DateTime? ExitDate { get; set; }
-          Guid? PatientId { get; set; }
-
-     
-
+        
     }
 }
