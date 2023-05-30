@@ -12,9 +12,9 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class AddOrUpdatePatientPharmacyCommand : IRequest<Result>
 {
-    public PatientPharmacyExtract PatientPharmacy { get; set; } 
+    public IEnumerable<PatientPharmacyExtract> PatientPharmacy { get; set; } 
 
-    public AddOrUpdatePatientPharmacyCommand(PatientPharmacyExtract patientPharmacy)
+    public AddOrUpdatePatientPharmacyCommand(IEnumerable<PatientPharmacyExtract> patientPharmacy)
     {
         PatientPharmacy= patientPharmacy;
     }
@@ -32,18 +32,9 @@ public class AddOrUpdatePatientPharmacyCommandHandler : IRequestHandler<AddOrUpd
     public async Task<Result> Handle(AddOrUpdatePatientPharmacyCommand request, CancellationToken cancellationToken)
     {
 
-       var PatientPharmacy = new PatientPharmacyExtract
-       {
-           PatientPk = request.PatientPharmacy.PatientPk,
-           SiteCode = request.PatientPharmacy.SiteCode,
-           VisitID = request.PatientPharmacy.VisitID,
-           DispenseDate = request.PatientPharmacy.DispenseDate,
-           Drug = request.PatientPharmacy.Drug,
-           Duration = request.PatientPharmacy.Duration
+    
 
-       };
-
-        await _patientPharmacyRepository.MergePharmacyExtractsAsync((IEnumerable<PatientPharmacyExtract>)PatientPharmacy);
+        await _patientPharmacyRepository.MergePharmacyExtractsAsync(request.PatientPharmacy);
 
         return Result.Success();
     }
