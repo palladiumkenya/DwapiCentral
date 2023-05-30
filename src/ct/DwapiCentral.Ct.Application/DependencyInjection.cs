@@ -1,5 +1,6 @@
 using DwapiCentral.Ct.Application.Commands;
 using DwapiCentral.Ct.Application.Interfaces.Repository;
+using DwapiCentral.Ct.Application.Mappings;
 using DwapiCentral.Ct.Application.Queries;
 using DwapiCentral.Ct.Domain.Repository;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ public static class DependencyInjection
     {
         // add dependencies
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ValidateSiteCommand).Assembly));
+        services.AddAutoMapper(typeof(MappingProfile));
+        
         return services;
     }
 }

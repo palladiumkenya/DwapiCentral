@@ -1,17 +1,16 @@
-using DwapiCentral.Contracts.Ct;
-using DwapiCentral.Shared.Domain.Entities.Ct;
-using System.ComponentModel.DataAnnotations;
+﻿using DwapiCentral.Contracts.Ct;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Application.DTOs
 {
-    public class PatientArtExtract : IArt
+    public class PatientArtSourceDto : IArt
     {
-        [Key]
         public Guid Id { get ; set ; }
-        public int PatientPk { get ; set ; }
-        public int SiteCode { get ; set ; }
-        public DateTime LastARTDate { get; set; }
-        public DateTime? LastVisit { get ; set ; }
+        public DateTime LastARTDate { get; set; }        
         public DateTime? DOB { get ; set ; }
         public decimal? AgeEnrollment { get ; set ; }
         public decimal? AgeARTStart { get ; set ; }
@@ -24,22 +23,31 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? PreviousARTRegimen { get ; set ; }
         public DateTime? StartARTAtThisFacility { get ; set ; }
         public string? StartRegimen { get ; set ; }
-        public string? StartRegimenLine { get ; set ; }        
+        public string? StartRegimenLine { get ; set ; }
+        public DateTime? LastVisit { get; set; }
         public string? LastRegimen { get ; set ; }
         public string? LastRegimenLine { get ; set ; }
         public decimal? Duration { get ; set ; }
         public DateTime? ExpectedReturn { get ; set ; }
         public string? Provider { get ; set ; }
         public string? ExitReason { get ; set ; }
-        public DateTime? ExitDate { get ; set ; }        
+        public DateTime? ExitDate { get ; set ; }
         public string? PreviousARTUse { get ; set ; }
         public string? PreviousARTPurpose { get ; set ; }
-        public DateTime? DateLastUsed { get ; set ; }       
+        public DateTime? DateLastUsed { get ; set ; }
+        public int PatientPk { get ; set ; }
+        public int SiteCode { get ; set ; }
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
-        public DateTime? Created { get; set; } = DateTime.Now;
+        public DateTime? Created { get ; set ; }
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
+
+        public virtual bool IsValid()
+        {
+            return SiteCode > 0 &&
+                   PatientPk > 0;
+        }
     }
 }

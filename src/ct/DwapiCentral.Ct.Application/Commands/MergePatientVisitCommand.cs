@@ -13,9 +13,9 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class MergePatientVisitCommand : IRequest<Result>
 {
-    public PatientVisitExtract PatientVisits;
+    public IEnumerable<PatientVisitExtract> PatientVisits;
 
-    public MergePatientVisitCommand(PatientVisitExtract patientVisits)
+    public MergePatientVisitCommand(IEnumerable<PatientVisitExtract> patientVisits)
     {
         PatientVisits = patientVisits;
     }
@@ -34,37 +34,12 @@ public class MergePatientVisitCommandHandler : IRequestHandler<MergePatientVisit
 
     public async Task<Result> Handle(MergePatientVisitCommand request, CancellationToken cancellationToken)
     {
-        var patientVisit = await _patientVisitRepository
-            .GetByPatientDetails(request.PatientVisits.PatientPk, request.PatientVisits.SiteCode,request.PatientVisits.VisitId, request.PatientVisits.VisitDate);
+        
 
-        if (patientVisit != null)
-        {
-            //Update
-            patientVisit.VisitDate = DateTime.Now;
-            patientVisit.Weight= request.PatientVisits.Weight;
-            patientVisit.Height= request.PatientVisits.Height;
-
-            await _patientVisitRepository.MergeAsync((IEnumerable<PatientVisitExtract>)patientVisit);
-        }
-        else
-        {
-            //Add a new Visit
-            var newpatientVisit = new PatientVisitExtract
-            {
-                Id = Guid.NewGuid(),
-                Weight= request.PatientVisits.Weight,
-                Height= request.PatientVisits.Height,
-                PatientPk= request.PatientVisits.PatientPk,
-                SiteCode= request.PatientVisits.SiteCode,
-                VisitDate= request.PatientVisits.VisitDate
-                
-
-            };
-
-            await _patientVisitRepository.MergeAsync((IEnumerable<PatientVisitExtract>)newpatientVisit);
+        await _patientVisitRepository.MergeAsync(request.PatientVisits);
 
             
-        }
+        
         return Result.Success();
 
     }

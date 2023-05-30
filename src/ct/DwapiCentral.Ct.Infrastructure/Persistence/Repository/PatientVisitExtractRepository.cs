@@ -19,43 +19,28 @@ public class PatientVisitExtractRepository:IPatientVisitExtractRepository
         _context = context;
     }
 
-    public async Task<PatientVisitExtract> GetByPatientDetails(int patientPk, int siteCode, int visitId, DateTime visitDate)
-    {
-        //var query = @"
-        //    SELECT * 
-        //    FROM PatientVisitExtract
-        //    where PatientPK = @PatientPK
-        //    AND SiteCode = @SiteCode
-        //    AND VisitId = @VisitId
-        //    AND VisitDate = @VisitDate";
-
-        //var parameters = new
-        //{
-        //    PatientPk = patientPk,
-        //    SiteCode = siteCode,
-        //    VisitId = visitId,
-        //    visitDate = visitDate
-
-        //};
-
-        //var patientVisit = await _context.Database.GetDbConnection().QuerySingleOrDefaultAsync<PatientVisitExtract>(query, parameters);
-
-        var patientVisit = await _context.PatientVisitExtracts
-       .FirstOrDefaultAsync(p => p.PatientPk == patientPk && p.SiteCode == siteCode && p.VisitId == visitId && p.VisitDate == visitDate);
-
-        return patientVisit;
-    }
+   
 
     public Task MergeAsync(IEnumerable<PatientVisitExtract> patientVisitExtracts)
     {
-        
-        _context.Database.GetDbConnection().BulkMerge(patientVisitExtracts);
 
-        
+        var distinctExtracts = patientVisitExtracts
+                 .GroupBy(e => new { e.PatientPk, e.SiteCode,e.VisitId, e.VisitDate })
+                 .Select(g => g.OrderByDescending(e => e.Id).First());
 
-         _context.SaveChangesAsync();
+        _context.Database.GetDbConnection().BulkMerge(distinctExtracts);
+
+        var extractIdsToKeep = distinctExtracts.Select(e => e.Id).ToList();
+        var deleteQuery = $@"
+                    DELETE FROM PatientVisitExtracts
+                    WHERE Id NOT IN ({string.Join(",", extractIdsToKeep)})
+                ";
+
+        _context.Database.GetDbConnection().ExecuteAsync(deleteQuery);
 
 
+        _context.SaveChangesAsync();
         return Task.CompletedTask;
+
     }
 }

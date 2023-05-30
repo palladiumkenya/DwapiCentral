@@ -296,8 +296,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             {
                 PatientArtExtracts.AddRange(new List<PatientArtExtract>
                 {
-                    new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,LastVisit=DateTime.Today.AddDays(-9)},
-                    new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,LastVisit=DateTime.Today.AddDays(-8)}
+                    new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,LastARTDate=DateTime.Today.AddDays(-9)},
+                    new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,LastARTDate=DateTime.Today.AddDays(-8)}
                 });
             }
 

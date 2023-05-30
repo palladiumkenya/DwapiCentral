@@ -6,7 +6,8 @@ namespace DwapiCentral.Contracts.Ct
     public interface IArt : IExtract
     {
         public Guid Id { get; set; }
-        DateTime LastVisit { get; set; }
+        DateTime LastARTDate { get; set; }
+        DateTime? LastVisit { get; set; }
         DateTime? DOB { get; set; }
         decimal? AgeEnrollment { get; set; }
         decimal? AgeARTStart { get; set; }
@@ -19,8 +20,7 @@ namespace DwapiCentral.Contracts.Ct
         string? PreviousARTRegimen { get; set; }
         DateTime? StartARTAtThisFacility { get; set; }
         string? StartRegimen { get; set; }
-        string? StartRegimenLine { get; set; }
-        DateTime? LastARTDate { get; set; }
+        string? StartRegimenLine { get; set; }        
         string? LastRegimen { get; set; }
         string? LastRegimenLine { get; set; }
         decimal? Duration { get; set; }

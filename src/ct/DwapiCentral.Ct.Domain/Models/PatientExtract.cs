@@ -13,7 +13,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         
         public int SiteCode { get; set; }
         
-        public string CccNumber { get; set; }
+        public string? CccNumber { get; set; }
         public string? Nupi { get; set; }
         public string? MpiId { get; set; }
         public string? Pkv { get; set; }
