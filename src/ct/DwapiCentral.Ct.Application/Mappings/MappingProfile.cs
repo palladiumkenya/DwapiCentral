@@ -15,6 +15,10 @@ namespace DwapiCentral.Ct.Application.Mappings
         public MappingProfile()
         {
             CreateMap<PatientSourceDto, PatientExtract>();
+            CreateMap<PatientVisitSourceDto, PatientVisitExtract>();
+            CreateMap<PatientIptSourceDto,IptExtract>();
+            CreateMap<PatientArtSourceDto, PatientArtExtract>();
+            CreateMap<PatientBaselineSourceDto,PatientBaselinesExtract>();
             
         }
     }

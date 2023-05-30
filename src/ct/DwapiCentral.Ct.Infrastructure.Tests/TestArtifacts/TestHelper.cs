@@ -65,10 +65,10 @@ public class TestHelper
     {
         return new List<PatientArtExtract>()
         {
-            new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA5-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,LastVisit=DateTime.Now,PreviousARTPurpose="abc"},
-            new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA6-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,LastVisit=DateTime.Now,AgeEnrollment=54},
-            new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA7-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,LastVisit=DateTime.Today.AddDays(-2),PreviousARTPurpose = "prop",AgeEnrollment=34},
-            new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA8-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,LastVisit = DateTime.Today.AddDays(-1),AgeEnrollment=26,PreviousARTPurpose="ashy"}
+            new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA5-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,LastARTDate=DateTime.Now,PreviousARTPurpose="abc"},
+            new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA6-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,LastARTDate=DateTime.Now,AgeEnrollment=54},
+            new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA7-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,LastARTDate=DateTime.Today.AddDays(-2),PreviousARTPurpose = "prop",AgeEnrollment=34},
+            new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA8-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,LastARTDate = DateTime.Today.AddDays(-1),AgeEnrollment=26,PreviousARTPurpose="ashy"}
 
         };
     }

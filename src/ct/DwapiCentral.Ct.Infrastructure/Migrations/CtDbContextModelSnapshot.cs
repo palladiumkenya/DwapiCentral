@@ -1120,7 +1120,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("LastARTDate")
+                    b.Property<DateTime>("LastARTDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastRegimen")
@@ -1129,7 +1129,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("LastRegimenLine")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastVisit")
+                    b.Property<DateTime?>("LastVisit")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PatientPk")

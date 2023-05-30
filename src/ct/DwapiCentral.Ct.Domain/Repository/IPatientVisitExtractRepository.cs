@@ -6,5 +6,5 @@ public interface IPatientVisitExtractRepository
 {
     Task MergeAsync(IEnumerable<PatientVisitExtract> patientVisitExtracts);
 
-    Task<PatientVisitExtract> GetByPatientDetails(int patientPk, int siteCode, int visitId, DateTime visitDate);
+    
 }
