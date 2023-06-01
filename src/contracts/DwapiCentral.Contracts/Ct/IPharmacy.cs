@@ -5,7 +5,7 @@ namespace DwapiCentral.Contracts.Ct
 {
      public interface IPharmacy : IExtract
     {
-          int VisitID { get; set; }
+          int? VisitID { get; set; }
           string? Drug { get; set; }
           string? Provider { get; set; }
           DateTime DispenseDate { get; set; }

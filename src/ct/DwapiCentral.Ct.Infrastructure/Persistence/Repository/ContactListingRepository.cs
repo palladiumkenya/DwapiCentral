@@ -25,17 +25,25 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
         {
             var distinctExtracts = contactListingExtracts
                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.DateCreated })
-               .Select(g => g.OrderByDescending(e => e.Id).First());
+               .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();        
 
-            _context.Database.GetDbConnection().BulkMerge(distinctExtracts);
+            var existingExtracts = _context.contactListingExtracts
+                 .AsEnumerable()
+                 .Where(e => distinctExtracts.Any(d =>
+                     d.PatientPk == e.PatientPk &&
+                     d.SiteCode == e.SiteCode &&
+                     d.DateCreated == e.DateCreated 
+                    ))
+                 .ToList();
 
-            var extractIdsToKeep = distinctExtracts.Select(e => e.Id).ToList();
-            var deleteQuery = $@"
-                    DELETE FROM ContactListingExtract
-                    WHERE Id NOT IN ({string.Join(",", extractIdsToKeep)})
-                ";
+            var distinctToInsert = distinctExtracts
+                .Where(d => !existingExtracts.Any(e =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.DateCreated == e.DateCreated))
+                .ToList();
 
-            _context.Database.GetDbConnection().ExecuteAsync(deleteQuery);
+            _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
 
 
 

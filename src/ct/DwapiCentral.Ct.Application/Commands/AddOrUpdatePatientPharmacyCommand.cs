@@ -31,9 +31,6 @@ public class AddOrUpdatePatientPharmacyCommandHandler : IRequestHandler<AddOrUpd
 
     public async Task<Result> Handle(AddOrUpdatePatientPharmacyCommand request, CancellationToken cancellationToken)
     {
-
-    
-
         await _patientPharmacyRepository.MergePharmacyExtractsAsync(request.PatientPharmacy);
 
         return Result.Success();

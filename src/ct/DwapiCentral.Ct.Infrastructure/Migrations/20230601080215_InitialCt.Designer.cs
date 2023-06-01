@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230530084856_InitialCt")]
+    [Migration("20230601080215_InitialCt")]
     partial class InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -387,7 +387,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -1559,7 +1559,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")

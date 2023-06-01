@@ -52,29 +52,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
 
             _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
 
-            //Perform deduplication after insertion
-            var duplicateIds = _context.PatientStatusExtracts
-                .AsEnumerable()
-                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.ExitDate,e.ExitReason, e.TOVerifiedDate })
-                .Where(g => g.Count() > 1)
-                .SelectMany(g => g.Skip(1))
-                .Select(e => e.Id)
-                .ToList();
 
-            if (duplicateIds.Any())
-            {
+            _context.SaveChangesAsync();
 
-
-                var deleteQuery = $@"
-            DELETE FROM PatientVisitExtracts
-            WHERE Id IN ({string.Join(",", duplicateIds.Select(id => "'" + id.ToString() + "'"))})
-        ";
-
-
-                _context.Database.GetDbConnection().ExecuteAsync(deleteQuery);
-
-            }
-            
             return Task.CompletedTask;
 
            

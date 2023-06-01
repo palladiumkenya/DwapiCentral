@@ -7,7 +7,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class DefaulterTracingSourceDto : IDefaulterTracing
     {
         public Guid Id { get; set; }
-        public int VisitID { get; set; }
+        public int? VisitID { get; set; }
         public DateTime VisitDate { get; set; }
         public string? FacilityName { get; set; }
         public int? EncounterId { get; set; }
