@@ -10,14 +10,14 @@ namespace DwapiCentral.Ct.Controllers
     [Route("api/[controller]")]
     public class HandshakeController : Controller
     {
-        private readonly IMapper _mapper;
-        private readonly IMediator _mediator;
+        //private readonly IMapper _mapper;
+        //private readonly IMediator _mediator;
 
-        public HandshakeController(IMediator mediator, IMapper mapper)
-        {
-            _mediator = mediator;
-            _mapper = mapper;
-        }
+        //public HandshakeController(IMediator mediator, IMapper mapper)
+        //{
+        //    _mediator = mediator;
+        //    _mapper = mapper;
+        //}
 
        
 
