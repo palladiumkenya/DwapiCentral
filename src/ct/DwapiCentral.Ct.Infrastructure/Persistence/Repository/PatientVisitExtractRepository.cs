@@ -24,13 +24,14 @@ public class PatientVisitExtractRepository:IPatientVisitExtractRepository
 
     public Task MergeAsync(IEnumerable<PatientVisitExtract> patientVisitExtracts)
     {
+
         var distinctExtracts = patientVisitExtracts
-        .GroupBy(e => new { e.PatientPk, e.SiteCode, e.VisitId, e.VisitDate })
-        .Select(g => g.OrderByDescending(e => e.Id).First())
-        .ToList();
+         .GroupBy(e => new { e.PatientPk, e.SiteCode, e.VisitId, e.VisitDate })
+         .Select(g => g.OrderByDescending(e => e.Id).First())
+         .ToList();
 
         var existingExtracts = _context.PatientVisitExtracts
-            .AsEnumerable() 
+            .AsEnumerable()
             .Where(e => distinctExtracts.Any(d =>
                 d.PatientPk == e.PatientPk &&
                 d.SiteCode == e.SiteCode &&
@@ -38,17 +39,27 @@ public class PatientVisitExtractRepository:IPatientVisitExtractRepository
                 d.VisitDate == e.VisitDate))
             .ToList();
 
-        var distinctToInsert = distinctExtracts
-            .Where(d => !existingExtracts.Any(e =>
-                d.PatientPk == e.PatientPk &&
-                d.SiteCode == e.SiteCode &&
-                d.VisitId == e.VisitId &&
-                d.VisitDate == e.VisitDate))
-            .ToList();
+        //determine the visits records to be inserted,updated and deleted
+
+        var recordsToInsert = patientVisitExtracts.Except(existingExtracts, new PatientVisitEqualityComparer());
+        var recordsToUpdate = patientVisitExtracts.Intersect(existingExtracts, new PatientVisitEqualityComparer());
+        var recordsToDelete = patientVisitExtracts.Except(patientVisitExtracts, new PatientVisitEqualityComparer());
+
+        // Perform the necessary operations in the SQL Server
+         _context.Database.GetDbConnection().BulkInsert(recordsToInsert);
+         _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+         _context.Database.GetDbConnection().BulkDelete(recordsToDelete);
 
      
 
-           _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
+        // var distinctToInsert = distinctExtracts
+        //     .Where(d => !existingExtracts.Any(e =>
+        //         d.PatientPk == e.PatientPk &&
+        //         d.SiteCode == e.SiteCode &&
+        //         d.VisitId == e.VisitId &&
+        //         d.VisitDate == e.VisitDate))
+        //     .ToList();
+        // _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
 
         // Perform deduplication after insertion
         //var duplicateIds = _context.PatientVisitExtracts
@@ -70,6 +81,8 @@ public class PatientVisitExtractRepository:IPatientVisitExtractRepository
         //        connection.ExecuteAsync(deleteQuery);
         //    }
         //}
+
+
 
         _context.SaveChangesAsync();
         
