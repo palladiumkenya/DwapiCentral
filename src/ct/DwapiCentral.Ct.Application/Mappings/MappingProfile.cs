@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DwapiCentral.Ct.Application.DTOs;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,9 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<StatusSourceDto, PatientStatusExtract>();
             CreateMap<AllergiesChronicIllnessSourceDto,AllergiesChronicIllnessExtract>();
             CreateMap<AdverseEventSourceDto,PatientAdverseEventExtract>();
+
+            //
+            CreateMap<StagePatientExtract, PatientExtract>();
             
         }
     }

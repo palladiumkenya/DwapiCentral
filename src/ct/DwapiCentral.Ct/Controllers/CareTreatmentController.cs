@@ -36,11 +36,11 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<PatientSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<PatientExtract> patientExtracts = _mapper.Map<IEnumerable<PatientExtract>>(sourceDtos);
+                    //List<PatientSourceDto> sourceDtos = sourceBag.Extracts;
+                    //IEnumerable<PatientExtract> patientExtracts = _mapper.Map<IEnumerable<PatientExtract>>(sourceDtos);
 
 
-                    var response = await _mediator.Send(new SavePatientCommand(patientExtracts));
+                    var response = await _mediator.Send(new SavePatientCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 

@@ -1,18 +1,25 @@
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Z.Dapper.Plus;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
 {
     public class CtDbContext : DbContext
     {
+      
+
         public DbSet<MasterFacility> MasterFacilities { get; set; }
         public DbSet<Facility> Facilities { get; set; }
         public DbSet<Manifest> Manifests { get; set; }
@@ -36,6 +43,27 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } 
         public DbSet<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; }
         public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
+
+        public virtual DbSet<StagePatientExtract> StagePatientExtracts { get; set; }
+        public virtual DbSet<StageVisitExtract> StageVisitExtracts { get; set; }
+        public virtual DbSet<StageAdverseEventExtract> StageAdverseEventExtracts { get; set; }
+        public virtual DbSet<StageAllergiesChronicIllnessExtract> StageAllergiesChronicIllnessExtracts { get; set; }
+        public virtual DbSet<StageArtExtract> StageArtExtracts { get; set; }
+        public virtual DbSet<StageBaselineExtract> StageBaselineExtracts { get; set; }
+        public virtual DbSet<StageContactListingExtract> StageContactListingExtracts { get; set; }
+        public virtual DbSet<StageCovidExtract> StageCovidExtracts { get; set; }
+        public virtual DbSet<StageDefaulterTracingExtract> StageDefaulterTracingExtracts { get; set; }
+        public virtual DbSet<StageDepressionScreeningExtract> StageDepressionScreeningExtracts { get; set; }
+        public virtual DbSet<StageDrugAlcoholScreeningExtract> StageDrugAlcoholScreeningExtracts { get; set; }
+        public virtual DbSet<StageEnhancedAdherenceCounsellingExtract> StageEnhancedAdherenceCounsellingExtracts { get; set; }
+        public virtual DbSet<StageIptExtract> StageIptExtracts { get; set; }
+        public virtual DbSet<StageLaboratoryExtract> StageLaboratoryExtracts { get; set; }
+        public virtual DbSet<StageOtzExtract> StageOtzExtracts { get; set; }
+        public virtual DbSet<StageOvcExtract> StageOvcExtracts { get; set; }
+        public virtual DbSet<StagePharmacyExtract> StagePharmacyExtracts { get; set; }
+        public virtual DbSet<StageStatusExtract> StageStatusExtracts { get; set; }
+        public virtual DbSet<StageGbvScreeningExtract> StageGbvScreeningExtracts { get; set; }
+        //public virtual DbSet<SmartActionRegister> SmartActionRegisters { get; set; }
 
         public CtDbContext(DbContextOptions<CtDbContext> options) : base(options)
         {
@@ -237,8 +265,82 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<PatientStatusExtract>()
               .Key(x => x.Id)
               .Table($"{nameof(PatientStatusExtracts)}");
+
+            DapperPlusManager.Entity<StagePatientExtract>()
+                .Key(x => new { x.PatientPk, x.SiteCode })
+                .Table($"{nameof(StagePatientExtract)}");
+
+            DapperPlusManager.Entity<StageVisitExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageVisitExtract)}");
+
+            DapperPlusManager.Entity<StageAdverseEventExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageAdverseEventExtract)}");
+
+            DapperPlusManager.Entity<StageAllergiesChronicIllnessExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageAllergiesChronicIllnessExtract)}");
+
+            DapperPlusManager.Entity<StageArtExtract>()
+                .Key(x => x.Id).Table($"{nameof(StageArtExtract)}");
+
+            DapperPlusManager.Entity<StageBaselineExtract>()
+                .Key(x => x.Id).Table($"{nameof(StageBaselineExtract)}");
+
+            DapperPlusManager.Entity<StageContactListingExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageContactListingExtract)}");
+
+            DapperPlusManager.Entity<StageCovidExtract>()
+                .Key(x => x.Id).Table($"{nameof(StageCovidExtract)}");
+
+            DapperPlusManager.Entity<StageDefaulterTracingExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageDefaulterTracingExtract)}");
+
+            DapperPlusManager.Entity<StageDepressionScreeningExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageDepressionScreeningExtract)}");
+
+            DapperPlusManager.Entity<StageDrugAlcoholScreeningExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageDrugAlcoholScreeningExtract)}");
+
+            DapperPlusManager.Entity<StageEnhancedAdherenceCounsellingExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageEnhancedAdherenceCounsellingExtract)}");
+
+            DapperPlusManager.Entity<StageIptExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageIptExtract)}");
+            DapperPlusManager.Entity<StageLaboratoryExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageLaboratoryExtract)}");
+
+            DapperPlusManager.Entity<StageOtzExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageOtzExtract)}");
+
+            DapperPlusManager.Entity<StageOvcExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageOvcExtract)}");
+
+            DapperPlusManager.Entity<StagePharmacyExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StagePharmacyExtract)}");
+
+            DapperPlusManager.Entity<StageStatusExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageStatusExtract)}");
+
+            DapperPlusManager.Entity<StageGbvScreeningExtract>()
+                .Key(x => x.Id)
+                .Table($"{nameof(StageGbvScreeningExtract)}");
         }
+
         
+
         public virtual void EnsureSeeded()
         {
             // for seeding 

@@ -5,16 +5,20 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using Dapper;
+using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Events;
+using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Shared.Domain.Enums;
 using log4net;
-using PalladiumDwh.Core.Application.Extracts.Stage;
-using PalladiumDwh.Core.Application.Extracts.Stage.Repositories;
-using PalladiumDwh.Core.Model;
-using PalladiumDwh.Shared.Enum;
-using PalladiumDwh.Shared.Model.Extract;
+using MediatR;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Z.Dapper.Plus;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
@@ -23,324 +27,297 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly CtDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
-        public StagePatientExtractRepository(CtDbContext context)
+
+        public StagePatientExtractRepository(CtDbContext context,IMapper mapper,IMediator mediator)
         {
             _context = context;
+            _mapper= mapper;
+            _mediator= mediator;
         }
 
-        public Task ClearSite(Guid facilityId)
+
+
+        public async Task ClearSite(Guid facilityId)
         {
-            throw new NotImplementedException();
+
+            var cons = _context.Database.GetDbConnection();
+
+            var sql = @"
+
+        delete  from StageAdverseEventExtract WHERE  FacilityId = @facilityId;
+        delete  from StageAllergiesChronicIllnessExtract WHERE  FacilityId = @facilityId;
+        delete  from StageArtExtract WHERE  FacilityId = @facilityId;
+        delete  from StageBaselineExtract WHERE  FacilityId = @facilityId;
+        delete  from StageContactListingExtract WHERE  FacilityId = @facilityId;
+        delete  from StageCovidExtract WHERE  FacilityId = @facilityId;
+        delete  from StageDefaulterTracingExtract WHERE  FacilityId = @facilityId;
+        delete  from StageDepressionScreeningExtract WHERE  FacilityId = @facilityId;
+        delete  from StageDrugAlcoholScreeningExtract WHERE  FacilityId = @facilityId;
+        delete  from StageEnhancedAdherenceCounsellingExtract WHERE  FacilityId = @facilityId;
+        delete  from StageGbvScreeningExtract WHERE  FacilityId = @facilityId;
+        delete  from StageIptExtract WHERE  FacilityId = @facilityId;
+        delete  from StageLaboratoryExtract WHERE  FacilityId = @facilityId;
+        delete  from StageOtzExtract WHERE  FacilityId = @facilityId;
+        delete  from StageOvcExtract WHERE  FacilityId = @facilityId;
+        delete  from StagePatientExtract WHERE  FacilityId = @facilityId;
+        delete  from StagePharmacyExtract WHERE  FacilityId = @facilityId;
+        delete  from StageStatusExtract WHERE  FacilityId = @facilityId;
+        delete  from StageVisitExtract WHERE  FacilityId = @facilityId;
+
+        ";
+            try
+            {
+               
+                    if (cons.State != ConnectionState.Open)
+                        cons.Open();
+
+                    using (var transaction = cons.BeginTransaction())
+                    {
+                        await cons.ExecuteAsync($"{sql}", new { facilityId }, transaction, 0);
+                        transaction.Commit();
+                    }
+               
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
         }
 
-        public Task ClearSite(Guid facilityId, Guid manifestId)
+        public async Task ClearSite(Guid facilityId, Guid manifestId)
         {
-            throw new NotImplementedException();
+            var cons = _context.Database.GetDbConnection();
+
+            var sql = @"
+                            DELETE FROM StagePatientExtract 
+                            WHERE 
+                                    FacilityId = @facilityId AND
+                                    LiveSession != @manifestId";
+            try
+            {
+              
+                    if (cons.State != ConnectionState.Open)
+                        cons.Open();
+
+                    using (var transaction = cons.BeginTransaction())
+                    {
+                        await cons.ExecuteAsync($"{sql}", new { manifestId = manifestId, facilityId }, transaction, 0);
+                        transaction.Commit();
+                    }
+                
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
         }
 
-        public Task SyncStage(List<StagePatientExtract> extracts, Guid manifestId)
+        public async Task SyncStage(List<StagePatientExtract> extracts, Guid manifestId)
         {
-            throw new NotImplementedException();
+
+            try
+            {
+                //stage > Rest
+                _context.Database.GetDbConnection().BulkInsert(extracts);
+
+                var notification = new PatientExtractsEvent { patientPks = extracts.Count };
+                await _mediator.Publish(notification);
+
+                var pks = extracts.Select(x => new StagePatientExtract {PatientPk= x.PatientPk,SiteCode= x.SiteCode }).ToList();
+               
+                //update livestage var from rest to assigned
+                await AssignAll(manifestId, pks);
+
+                //create new patientrecords or update the existing patientRecords
+                await Merge(manifestId, pks);
+
+                
+                await UpdateLivestage(manifestId, pks);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
         }
 
-        //        public async Task ClearSite(Guid facilityId)
-        //        {
+        private async Task AssignAll(Guid manifestId, List<StagePatientExtract> pks)
+        {
+            var cons = _context.Database.GetConnectionString();
 
-        //            var cons = _context.Database.Connection.ConnectionString;
+            var sql = @"
+                            UPDATE 
+                                    StagePatientExtract
+                            SET 
+                                    LiveStage = @nextlivestage 
+                            WHERE 
+                                    LiveSession = @manifestId AND 
+                                    LiveStage = @livestage AND 
+                                    PatientPk = @patientPk AND 
+                                    SiteCode = @siteCode";
+            try
+            {
+                using (var connection = new SqlConnection(cons))
+                {
+                    if (connection.State != ConnectionState.Open)
+                        connection.Open();
 
-        //            var sql = @"
+                    
 
-        //delete  from StageAdverseEventExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageAllergiesChronicIllnessExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageArtExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageBaselineExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageContactListingExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageCovidExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageDefaulterTracingExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageDepressionScreeningExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageDrugAlcoholScreeningExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageEnhancedAdherenceCounsellingExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageGbvScreeningExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageIptExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageLaboratoryExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageOtzExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageOvcExtract WHERE  FacilityId = @facilityId;
-        //delete  from StagePatientExtract WHERE  FacilityId = @facilityId;
-        //delete  from StagePharmacyExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageStatusExtract WHERE  FacilityId = @facilityId;
-        //delete  from StageVisitExtract WHERE  FacilityId = @facilityId;
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        foreach (var pk in pks)
+                        {
+                            await connection.ExecuteAsync($"{sql}",
+                            new
+                            {
+                                manifestId,
+                                livestage = LiveStage.Rest,
+                                nextlivestage = LiveStage.Assigned,
+                                patientPk = pk.PatientPk,
+                                siteCode = pk.SiteCode
+                            }, transaction, 0);
+                        }
+                        transaction.Commit();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+        }
 
-        //";
-        //            try
-        //            {
-        //                using (var connection = new SqlConnection(cons))
-        //                {
-        //                    if(connection.State!=ConnectionState.Open)
-        //                        connection.Open();
+       
 
-        //                    using (var transaction = connection.BeginTransaction())
-        //                    {
-        //                        await connection.ExecuteAsync($"{sql}", new {  facilityId }, transaction, 0);
-        //                        transaction.Commit();
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Log.Error(e);
-        //                throw;
-        //            }
-        //        }
+        private Task Merge(Guid manifestId, List<StagePatientExtract> stagePatients)
+        {
+            var connectionString = _context.Database.GetConnectionString();
 
-        //        public async Task ClearSite(Guid facilityId, Guid manifestId)
-        //        {
-        //            var cons = _context.Database.Connection.ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
 
-        //            var sql = @"
-        //                    DELETE FROM StagePatientExtract 
-        //                    WHERE 
-        //                            FacilityId = @facilityId AND
-        //                            LiveSession != @manifestId";
-        //            try
-        //            {
-        //                // assign patientId
-        //                using (var connection = new SqlConnection(cons))
-        //                {
-        //                    if(connection.State!=ConnectionState.Open)
-        //                        connection.Open();
+                var selectQuery = @"
+                                SELECT 
+                                       *,GETDATE() Created FROM StagePatientExtract WITH (NOLOCK)
+                                WHERE 
+                                      LiveSession = @manifestId AND
+                                      LiveStage = @livestage AND
+                                      AND PatientPk = @patientPk
+                                      AND SiteCode = @siteCode";
 
-        //                    using (var transaction = connection.BeginTransaction())
-        //                    {
-        //                        await connection.ExecuteAsync($"{sql}", new {manifestId = manifestId, facilityId}, transaction, 0);
-        //                        transaction.Commit();
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Log.Error(e);
-        //                throw;
-        //            }
-        //        }
 
-        //        public async Task SyncStage(List<StagePatientExtract> extracts, Guid manifestId)
-        //        {
+                // Step 1: Retrieve data from the stage table
+                List<StagePatientExtract> stageData = connection.Query<StagePatientExtract>(selectQuery, new { manifestId, livestage = LiveStage.Assigned,patientPk = stagePatients.First().PatientPk,
+                siteCode = stagePatients.First().SiteCode }).AsList();
+              
+                // Step 2: Check if each record exists in the central table
+                List<PatientExtract> newRecords = new List<PatientExtract>();
 
-        //            try
-        //            {
-        //                //stage > Rest
-        //                _context.GetConnection().BulkInsert(extracts);
+                foreach (StagePatientExtract stageRecord in stageData)
+                {
+                    bool recordExists = CheckRecordExistence(connection, stageRecord);
 
-        //                var pks = extracts.Select(x => x.Id).ToList();
+                    if (recordExists)
+                    {
+                        // Update existing record in the central table
+                        UpdateRecordInCentral(connection, stageRecord);
+                    }
+                    else
+                    {
+                        // Insert new record into the central table
+                        InsertRecordIntoCentral(connection, stageRecord);
+                    }
+                }
+                
+                connection.Close();
+            }
 
-        //                //assign > Assigned update livestage field
-        //                await AssignAll(manifestId, pks);
+            
 
-        //                //assign > Assigned pudate currentPatientID
-        //                await AssignId(manifestId,pks);
+            return Task.CompletedTask;
+        }
 
-        //                //assign > New
-        //                await CreatNew(manifestId,pks);
 
-        //                //assign > Ups
-        //                await UpdateExisting(manifestId,pks);
+        private async Task UpdateLivestage(Guid manifestId, List<StagePatientExtract> pks)
+        {
 
-        //                //assign > Merged
-        //                await MergeAll(manifestId,  pks);
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Log.Error(e);
-        //                throw;
-        //            }
-        //        }
+            var cons = _context.Database.GetConnectionString();
 
-        //        private async Task AssignAll(Guid manifestId, List<Guid> ids)
-        //        {
-        //            var cons = _context.Database.Connection.ConnectionString;
+            var sql = @"
+                            UPDATE 
+                                    StagePatientExtract
+                            SET 
+                                    LiveStage= @nextlivestage 
+                            FROM 
+                                    StagePatientExtract 
+                            WHERE 
+                                    LiveSession = @manifestId AND 
+                                    LiveStage= @livestage AND
+                                     PatientPk = @patientPk AND 
+                                    SiteCode = @siteCode"; 
+            try
+            {
 
-        //            var sql = @"
-        //                    UPDATE 
-        //                            StagePatientExtract
-        //                    SET 
-        //                            LiveStage = @nextlivestage 
-        //                    WHERE 
-        //                            LiveSession = @manifestId AND 
-        //                            LiveStage = @livestage AND 
-        //                            Id IN @ids";
-        //            try
-        //            {
-        //                using (var connection = new SqlConnection(cons))
-        //                {
-        //                    if(connection.State!=ConnectionState.Open)
-        //                        connection.Open();
+                
+                using (var connection = new SqlConnection(cons))
+                {
+                    if (connection.State != ConnectionState.Open)
+                        connection.Open();
 
-        //                    using (var transaction = connection.BeginTransaction())
-        //                    {
-        //                        await connection.ExecuteAsync($"{sql}",
-        //                            new
-        //                            {
-        //                                manifestId, livestage = LiveStage.Rest, nextlivestage = LiveStage.Assigned, ids
-        //                            }, transaction, 0);
-        //                        transaction.Commit();
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Log.Error(e);
-        //                throw;
-        //            }
-        //        }
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        foreach (var pk in pks)
+                        {
 
-        //        private async Task AssignId(Guid manifestId,List<Guid> ids)
-        //        {
-        //            var cons = _context.Database.Connection.ConnectionString;
+                            await connection.ExecuteAsync($"{sql}",
+                                new
+                                {
+                                    manifestId,
+                                    livestage = LiveStage.Assigned,
+                                    nextlivestage = LiveStage.Merged,
+                                    patientPk = pk.PatientPk,
+                                    siteCode = pk.SiteCode
+                                }, transaction, 0);
+                        }
+                        transaction.Commit();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+        }
 
-        //            var sql = @"
-        //                    UPDATE 
-        //                            stg
-        //                    SET 
-        //                            stg.CurrentPatientId = p.Id 
-        //                    FROM 
-        //                            StagePatientExtract AS stg INNER JOIN PatientExtract AS p ON 
-        //                                    stg.PatientPID = p.PatientPID AND 
-        //                                    stg.FacilityId = p.FacilityId 
-        //                    WHERE 
-        //                            stg.LiveSession = @manifestId AND 
-        //                            stg.LiveStage= @livestage AND 
-        //                            stg.Id IN @ids AND
-        //                            stg.CurrentPatientId is Null ";
+        private bool CheckRecordExistence(SqlConnection connection, StagePatientExtract stageRecord)
+        {
+            string selectQuery = "SELECT COUNT(*) FROM PatientExtract WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode";
 
-        //            try
-        //            {
+            int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
+            return count > 0;
+        }
+        private void UpdateRecordInCentral(SqlConnection connection, StagePatientExtract stageRecord)
+        {
+            
+            PatientExtract updateRecord = _mapper.Map<PatientExtract>(stageRecord);
+            _context.Database.GetDbConnection().BulkUpdate(updateRecord);
+        }
 
-        //                // assign patientId
-        //                using (var connection = new SqlConnection(cons))
-        //                {
-        //                    if(connection.State!=ConnectionState.Open)
-        //                        connection.Open();
+        private void InsertRecordIntoCentral(SqlConnection connection, StagePatientExtract stageRecord)
+        {
+            PatientExtract newRecord = _mapper.Map<PatientExtract>(stageRecord);
 
-        //                    using (var transaction = connection.BeginTransaction())
-        //                    {
-        //                        await connection.ExecuteAsync($"{sql}", new {manifestId, livestage = LiveStage.Assigned,ids},
-        //                            transaction, 0);
-        //                        transaction.Commit();
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Log.Error(e);
-        //                throw;
-        //            }
-        //        }
+            _context.Database.GetDbConnection().BulkInsert(newRecord);
+        }
 
-        //        public Task UpdateExisting(Guid manifestId, List<Guid> ids)
-        //        {
-        //            var sqlUpdates = @"
-        //                    SELECT        
-        //                         CurrentPatientId Id, Emr, Project, Voided, Processed, NUPI, Pkv, Occupation, Gender, DOB, RegistrationDate, RegistrationAtCCC, RegistrationATPMTCT, RegistrationAtTBClinic, Region, PatientSource, District, Village, ContactRelation, LastVisit, 
-        //                         MaritalStatus, EducationLevel, DateConfirmedHIVPositive, PreviousARTExposure, PreviousARTStartDate, StatusAtCCC, StatusAtPMTCT, StatusAtTBClinic, Orphan, Inschool, PatientType, PopulationType, KeyPopulationType, 
-        //                         PatientResidentCounty, PatientResidentSubCounty, PatientResidentLocation, PatientResidentSubLocation, PatientResidentWard, PatientResidentVillage, TransferInDate, PatientPID, PatientCccNumber, FacilityId, 
-        //                         CurrentPatientId, LiveSession, LiveStage,GETDATE() Updated
-        //                    FROM            StagePatientExtract WITH (NOLOCK)
-        //                    WHERE 
-        //                          LiveSession = @manifestId AND 
-        //                          LiveStage = @livestage AND
-        //                          Id IN @ids AND
-        //                          CurrentPatientId IS NOT NULL";
-
-        //            try
-        //            {
-
-        //                //get updates
-        //                var updates = _context.GetConnection()
-        //                    .Query<PatientExtract>(sqlUpdates, new {manifestId, livestage = LiveStage.Assigned,ids});
-
-        //                if(updates.Any())
-        //                    _context.GetConnection().BulkUpdate(updates);
-
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Log.Error(e);
-        //                throw;
-        //            }
-
-        //            return Task.CompletedTask;
-        //        }
-
-        //        private Task CreatNew(Guid manifestId, List<Guid> ids)
-        //        {
-        //            var sqlNew = @"
-        //                    SELECT 
-        //                           *,GETDATE() Created FROM StagePatientExtract WITH (NOLOCK)
-        //                    WHERE 
-        //                          LiveSession = @manifestId AND
-        //                          LiveStage = @livestage AND
-        //                          Id IN @ids AND
-        //                          CurrentPatientId IS NULL";
-        //            try
-        //            {
-        //                //  get new
-        //                var inserts = _context.GetConnection()
-        //                    .Query<PatientExtract>(sqlNew, new {manifestId, livestage = LiveStage.Assigned,ids});
-
-        //                if(inserts.Any())
-        //                    _context.GetConnection().BulkInsert(inserts);
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Log.Error(e);
-        //                throw;
-        //            }
-
-        //            return Task.CompletedTask;
-        //        }
-
-        //        private async Task MergeAll(Guid manifestId, List<Guid> ids)
-        //        {
-
-        //            var cons = _context.Database.Connection.ConnectionString;
-
-        //            var sql = @"
-        //                    UPDATE 
-        //                            StagePatientExtract
-        //                    SET 
-        //                            LiveStage= @nextlivestage 
-        //                    FROM 
-        //                            StagePatientExtract 
-        //                    WHERE 
-        //                            LiveSession = @manifestId AND 
-        //                            LiveStage= @livestage AND
-        //                            Id IN @ids";
-        //            try
-        //            {
-
-        //                // assign patientId
-        //                using (var connection = new SqlConnection(cons))
-        //                {
-        //                    if(connection.State!=ConnectionState.Open)
-        //                        connection.Open();
-
-        //                    using (var transaction = connection.BeginTransaction())
-        //                    {
-        //                        await connection.ExecuteAsync($"{sql}",
-        //                            new
-        //                            {
-        //                                manifestId, livestage = LiveStage.Assigned, nextlivestage = LiveStage.Merged, ids
-        //                            }, transaction, 0);
-        //                        transaction.Commit();
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Log.Error(e);
-        //                throw;
-        //            }
-        //        }
     }
 }
