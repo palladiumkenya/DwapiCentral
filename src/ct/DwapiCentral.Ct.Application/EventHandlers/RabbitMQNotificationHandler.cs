@@ -16,22 +16,10 @@ namespace DwapiCentral.Ct.Application.EventHandlers
         private readonly IModel _channel;
         private readonly RabbitOptions _rabbitOptions;
 
-        public RabbitMQNotificationHandler(IOptions<RabbitOptions> rabbitMQOptions)
+        public RabbitMQNotificationHandler(IModel channel, RabbitOptions rabbitOptions)
         {
-            _rabbitOptions = rabbitMQOptions.Value;
-
-            var factory = new ConnectionFactory
-            {
-                HostName = _rabbitOptions.HostName,
-                Port = _rabbitOptions.Port,
-                UserName = _rabbitOptions.UserName,
-                Password = _rabbitOptions.Password
-            };
-
-            var connection = factory.CreateConnection();
-            _channel = connection.CreateModel();
-
-            _channel.ExchangeDeclare(_rabbitOptions.ExchangeName, ExchangeType.Fanout);
+            _channel= channel;
+            _rabbitOptions = rabbitOptions;
 
         }
 

@@ -7,7 +7,7 @@ namespace DwapiCentral.Ct.Domain.Repository.Stage
 {
     public interface IStagePatientExtractRepository
     {
-        Task ClearSite(Guid facilityId);
+        Task ClearSite(int  SiteCode);
         Task ClearSite(Guid facilityId, Guid manifestId);
         Task SyncStage(List<StagePatientExtract> extracts, Guid manifestId);
     }

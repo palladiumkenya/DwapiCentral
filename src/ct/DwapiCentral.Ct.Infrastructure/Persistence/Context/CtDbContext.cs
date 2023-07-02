@@ -82,6 +82,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .HasForeignKey(f =>new {f.PatientPk,f.SiteCode})
                 .IsRequired();
 
+            modelBuilder.Entity<StagePatientExtract>()
+               .HasKey(m => new { m.PatientPk, m.SiteCode });
+
+
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(c => c.PatientPharmacyExtracts)
                 .WithOne()
@@ -268,75 +272,79 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
 
             DapperPlusManager.Entity<StagePatientExtract>()
                 .Key(x => new { x.PatientPk, x.SiteCode })
-                .Table($"{nameof(StagePatientExtract)}");
+                .Table($"{nameof(StagePatientExtracts)}");
 
             DapperPlusManager.Entity<StageVisitExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageVisitExtract)}");
+                .Table($"{nameof(StageVisitExtracts)}");
 
             DapperPlusManager.Entity<StageAdverseEventExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageAdverseEventExtract)}");
+                .Table($"{nameof(StageAdverseEventExtracts)}");
 
             DapperPlusManager.Entity<StageAllergiesChronicIllnessExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageAllergiesChronicIllnessExtract)}");
+                .Table($"{nameof(StageAllergiesChronicIllnessExtracts)}");
 
             DapperPlusManager.Entity<StageArtExtract>()
-                .Key(x => x.Id).Table($"{nameof(StageArtExtract)}");
+                .Key(x => x.Id)
+                .Table($"{nameof(StageArtExtracts)}");
 
             DapperPlusManager.Entity<StageBaselineExtract>()
-                .Key(x => x.Id).Table($"{nameof(StageBaselineExtract)}");
+                .Key(x => x.Id)
+                .Table($"{nameof(StageBaselineExtracts)}");
 
             DapperPlusManager.Entity<StageContactListingExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageContactListingExtract)}");
+                .Table($"{nameof(StageContactListingExtracts)}");
 
             DapperPlusManager.Entity<StageCovidExtract>()
-                .Key(x => x.Id).Table($"{nameof(StageCovidExtract)}");
+                .Key(x => x.Id)
+                .Table($"{nameof(StageCovidExtracts)}");
 
             DapperPlusManager.Entity<StageDefaulterTracingExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageDefaulterTracingExtract)}");
+                .Table($"{nameof(StageDefaulterTracingExtracts)}");
 
             DapperPlusManager.Entity<StageDepressionScreeningExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageDepressionScreeningExtract)}");
+                .Table($"{nameof(StageDepressionScreeningExtracts)}");
 
             DapperPlusManager.Entity<StageDrugAlcoholScreeningExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageDrugAlcoholScreeningExtract)}");
+                .Table($"{nameof(StageDrugAlcoholScreeningExtracts)}");
 
             DapperPlusManager.Entity<StageEnhancedAdherenceCounsellingExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageEnhancedAdherenceCounsellingExtract)}");
+                .Table($"{nameof(StageEnhancedAdherenceCounsellingExtracts)}");
 
             DapperPlusManager.Entity<StageIptExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageIptExtract)}");
+                .Table($"{nameof(StageIptExtracts)}");
+
             DapperPlusManager.Entity<StageLaboratoryExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageLaboratoryExtract)}");
+                .Table($"{nameof(StageLaboratoryExtracts)}");
 
             DapperPlusManager.Entity<StageOtzExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageOtzExtract)}");
+                .Table($"{nameof(StageOtzExtracts)}");
 
             DapperPlusManager.Entity<StageOvcExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageOvcExtract)}");
+                .Table($"{nameof(StageOvcExtracts)}");
 
             DapperPlusManager.Entity<StagePharmacyExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StagePharmacyExtract)}");
+                .Table($"{nameof(StagePharmacyExtracts)}");
 
             DapperPlusManager.Entity<StageStatusExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageStatusExtract)}");
+                .Table($"{nameof(StageStatusExtracts)}");
 
             DapperPlusManager.Entity<StageGbvScreeningExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(StageGbvScreeningExtract)}");
+                .Table($"{nameof(StageGbvScreeningExtracts)}");
         }
 
         

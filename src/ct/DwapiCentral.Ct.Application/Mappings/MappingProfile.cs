@@ -37,7 +37,8 @@ namespace DwapiCentral.Ct.Application.Mappings
 
             //
             CreateMap<StagePatientExtract, PatientExtract>();
-            
+            CreateMap<PatientSourceDto, StagePatientExtract>();
+
         }
     }
 }

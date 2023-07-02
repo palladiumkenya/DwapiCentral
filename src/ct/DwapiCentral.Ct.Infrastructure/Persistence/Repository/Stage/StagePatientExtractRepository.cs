@@ -40,32 +40,32 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
 
 
-        public async Task ClearSite(Guid facilityId)
+        public async Task ClearSite(int  siteCode)
         {
 
             var cons = _context.Database.GetDbConnection();
 
             var sql = @"
 
-        delete  from StageAdverseEventExtract WHERE  FacilityId = @facilityId;
-        delete  from StageAllergiesChronicIllnessExtract WHERE  FacilityId = @facilityId;
-        delete  from StageArtExtract WHERE  FacilityId = @facilityId;
-        delete  from StageBaselineExtract WHERE  FacilityId = @facilityId;
-        delete  from StageContactListingExtract WHERE  FacilityId = @facilityId;
-        delete  from StageCovidExtract WHERE  FacilityId = @facilityId;
-        delete  from StageDefaulterTracingExtract WHERE  FacilityId = @facilityId;
-        delete  from StageDepressionScreeningExtract WHERE  FacilityId = @facilityId;
-        delete  from StageDrugAlcoholScreeningExtract WHERE  FacilityId = @facilityId;
-        delete  from StageEnhancedAdherenceCounsellingExtract WHERE  FacilityId = @facilityId;
-        delete  from StageGbvScreeningExtract WHERE  FacilityId = @facilityId;
-        delete  from StageIptExtract WHERE  FacilityId = @facilityId;
-        delete  from StageLaboratoryExtract WHERE  FacilityId = @facilityId;
-        delete  from StageOtzExtract WHERE  FacilityId = @facilityId;
-        delete  from StageOvcExtract WHERE  FacilityId = @facilityId;
-        delete  from StagePatientExtract WHERE  FacilityId = @facilityId;
-        delete  from StagePharmacyExtract WHERE  FacilityId = @facilityId;
-        delete  from StageStatusExtract WHERE  FacilityId = @facilityId;
-        delete  from StageVisitExtract WHERE  FacilityId = @facilityId;
+        delete  from StageAdverseEventExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageAllergiesChronicIllnessExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageArtExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageBaselineExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageContactListingExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageCovidExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageDefaulterTracingExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageDepressionScreeningExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageDrugAlcoholScreeningExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageEnhancedAdherenceCounsellingExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageGbvScreeningExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageIptExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageLaboratoryExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageOtzExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageOvcExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StagePatientExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StagePharmacyExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageStatusExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageVisitExtracts WHERE  SiteCode = @SiteCode;
 
         ";
             try
@@ -76,7 +76,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                     using (var transaction = cons.BeginTransaction())
                     {
-                        await cons.ExecuteAsync($"{sql}", new { facilityId }, transaction, 0);
+                        await cons.ExecuteAsync($"{sql}", new { siteCode }, transaction, 0);
                         transaction.Commit();
                     }
                
@@ -206,7 +206,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 var selectQuery = @"
                                 SELECT 
-                                       *,GETDATE() Created FROM StagePatientExtract WITH (NOLOCK)
+                                       *,GETDATE() Created FROM StagePatientExtracts WITH (NOLOCK)
                                 WHERE 
                                       LiveSession = @manifestId AND
                                       LiveStage = @livestage AND
@@ -257,7 +257,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             SET 
                                     LiveStage= @nextlivestage 
                             FROM 
-                                    StagePatientExtract 
+                                    StagePatientExtracts 
                             WHERE 
                                     LiveSession = @manifestId AND 
                                     LiveStage= @livestage AND

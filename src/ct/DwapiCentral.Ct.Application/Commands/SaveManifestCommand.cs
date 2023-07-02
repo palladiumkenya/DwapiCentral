@@ -4,6 +4,7 @@ using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Exceptions;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using Serilog;
 
@@ -24,12 +25,14 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
     private readonly IMediator _mediator;
     private readonly IManifestRepository _manifestRepository;
     private readonly IFacilityRepository _facilityRepository;
+    private readonly IStagePatientExtractRepository _stagePatientExtractRepository;
 
-    public SaveManifestCommandHandler(IMediator mediator, IManifestRepository manifestRepository, IFacilityRepository facilityRepository)
+    public SaveManifestCommandHandler(IMediator mediator, IManifestRepository manifestRepository, IFacilityRepository facilityRepository, IStagePatientExtractRepository stagePatientExtractRepository)
     {
         _mediator = mediator;
         _manifestRepository = manifestRepository;
         _facilityRepository = facilityRepository;
+        _stagePatientExtractRepository = stagePatientExtractRepository;
     }
 
     public async Task<Result> Handle(SaveManifestCommand request, CancellationToken cancellationToken)
@@ -46,8 +49,10 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
 
             await _manifestRepository.Save(request.manifest);
 
+            await _stagePatientExtractRepository.ClearSite(request.manifest.SiteCode);
+
             await _mediator.Publish(new ManifestReceivedEvent(request.manifest.Id, request.manifest.SiteCode), cancellationToken);
-            
+
             return Result.Success();
         }
         catch (Exception e)
