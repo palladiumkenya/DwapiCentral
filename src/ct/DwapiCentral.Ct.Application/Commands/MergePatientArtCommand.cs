@@ -1,6 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,27 +16,43 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class MergePatientArtCommand : IRequest<Result>
 {
-    public IEnumerable<PatientArtExtract> PatientArtExtracts { get; set; }
+    public PatientArtSourceBag PatientArtSourceBag { get; set; }
 
-    public MergePatientArtCommand(IEnumerable<PatientArtExtract> patientArtExtracts)
+    public MergePatientArtCommand(PatientArtSourceBag patientArtSourceBag)
     {
-        PatientArtExtracts = patientArtExtracts;
+        PatientArtSourceBag = patientArtSourceBag;
     }
 }
 
 public class MergePatientArtCommandHandler : IRequestHandler<MergePatientArtCommand, Result>
 {
 
-    private readonly IPatientArtExtractRepositorycs _patientArtExtractRepositorycs;
+    private readonly IStageArtExtractRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public MergePatientArtCommandHandler(IPatientArtExtractRepositorycs patientArtExtractRepositorycs)
+    public MergePatientArtCommandHandler(IStageArtExtractRepository patientArtExtractRepositorycs, IMapper mapper)
     {
-        _patientArtExtractRepositorycs= patientArtExtractRepositorycs;
+        _stageRepository = patientArtExtractRepositorycs;
+        _mapper= mapper;    
     }
 
     public async Task<Result> Handle(MergePatientArtCommand request, CancellationToken cancellationToken)
     {
-        await _patientArtExtractRepositorycs.MergPatientArt(request.PatientArtExtracts);
+       // await _patientArtExtractRepositorycs.MergPatientArt(request.PatientArtExtracts);
+        var extracts = _mapper.Map<List<StageArtExtract>>(request.PatientArtSourceBag.Extracts);
+
+
+
+            if (extracts.Any())
+            {
+                StandardizeClass<StageArtExtract, PatientArtSourceBag> standardizer = new(extracts, request.PatientArtSourceBag);
+                standardizer.StandardizeExtracts();
+
+            }
+
+        //stage
+        await _stageRepository.SyncStage(extracts, request.PatientArtSourceBag.ManifestId.Value);
+
         return Result.Success();
     }
 }

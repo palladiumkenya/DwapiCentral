@@ -42,6 +42,12 @@ public class SavePatientCommandHandler : IRequestHandler<SavePatientCommand, Res
         var extracts = _mapper.Map<List<StagePatientExtract>>(request.PatientSourceBag.Extracts);
 
         
+            if (extracts.Any())
+            {
+                StandardizeClass<StagePatientExtract, PatientSourceBag> standardizer = new (extracts, request.PatientSourceBag);
+                standardizer.StandardizeExtracts();
+          
+            }
         //stage
         await _patientExtractRepository.SyncStage(extracts, request.PatientSourceBag.ManifestId.Value);
      

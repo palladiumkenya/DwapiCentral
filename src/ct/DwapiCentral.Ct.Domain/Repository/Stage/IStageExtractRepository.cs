@@ -10,7 +10,7 @@ namespace DwapiCentral.Ct.Domain.Repository.Stage
         where T : IStage
         
     {
-        Task ClearSite(Guid facilityId, Guid manifestId);
+        
         Task SyncStage(List<T> extracts, Guid manifestId);
     }
 }

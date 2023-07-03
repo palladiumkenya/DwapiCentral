@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230702121722_InitialCT")]
-    partial class InitialCT
+    [Migration("20230703155201_InitialCt")]
+    partial class InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -2024,7 +2024,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("FacilityId")
@@ -2046,7 +2045,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Severity")
@@ -2124,7 +2122,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Eyes")
@@ -2155,7 +2152,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
@@ -2224,7 +2220,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ExitDate")
@@ -2285,7 +2280,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Provider")
@@ -2342,7 +2336,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("FacilityId")
@@ -2364,7 +2357,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
@@ -2484,7 +2476,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("FacilityId")
@@ -2524,7 +2515,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RelationshipWithPatient")
@@ -2623,7 +2613,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EverCOVID19Positive")
@@ -2666,7 +2655,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceivedCOVID19Vaccine")
@@ -2741,7 +2729,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("EncounterId")
@@ -2772,7 +2759,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
@@ -2829,7 +2815,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("FacilityId")
@@ -2884,7 +2869,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
@@ -2935,7 +2919,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("FacilityId")
@@ -2960,7 +2943,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
@@ -3101,7 +3083,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("FacilityId")
@@ -3156,7 +3137,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SessionNumber")
@@ -3207,7 +3187,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("FacilityId")
@@ -3241,7 +3220,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SexualIPV")
@@ -3295,7 +3273,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EvaluatedForIPT")
@@ -3353,7 +3330,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
@@ -3419,7 +3395,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("EnrollmentTest")
@@ -3447,7 +3422,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReportedByDate")
@@ -3501,7 +3475,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("FacilityId")
@@ -3538,7 +3511,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Remarks")
@@ -3598,7 +3570,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EnrolledinCPIMS")
@@ -3638,7 +3609,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RelationshipToClient")
@@ -3853,7 +3823,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ExpectedReturn")
@@ -3881,7 +3850,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProphylaxisType")
@@ -3953,7 +3921,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ExitDate")
@@ -3984,7 +3951,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReEnrollmentDate")
@@ -4080,7 +4046,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Emr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EverHadMenses")
@@ -4162,7 +4127,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProphylaxisUsed")

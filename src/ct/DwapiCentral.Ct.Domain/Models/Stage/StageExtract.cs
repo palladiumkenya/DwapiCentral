@@ -14,8 +14,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
         public Guid? LiveSession { get; set; }
         public LiveStage LiveStage { get; set; }
         public DateTime? Generated { get; set; } = DateTime.Now;        
-        public string Emr { get; set; }
-        public string Project { get; set; }       
+        public string? Emr { get; set; }
+        public string? Project { get; set; }       
         public bool Processed { get; set; }
     }
 }

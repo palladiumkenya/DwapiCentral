@@ -93,7 +93,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             var cons = _context.Database.GetDbConnection();
 
             var sql = @"
-                            DELETE FROM StagePatientExtract 
+                            DELETE FROM StagePatientExtracts 
                             WHERE 
                                     FacilityId = @facilityId AND
                                     LiveSession != @manifestId";
@@ -152,7 +152,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
             var sql = @"
                             UPDATE 
-                                    StagePatientExtract
+                                    StagePatientExtracts
                             SET 
                                     LiveStage = @nextlivestage 
                             WHERE 
@@ -210,30 +210,39 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                 WHERE 
                                       LiveSession = @manifestId AND
                                       LiveStage = @livestage AND
-                                      AND PatientPk = @patientPk
-                                      AND SiteCode = @siteCode";
+                                      PatientPk = @patientPk AND
+                                      SiteCode = @siteCode";
 
-
-                // Step 1: Retrieve data from the stage table
-                List<StagePatientExtract> stageData = connection.Query<StagePatientExtract>(selectQuery, new { manifestId, livestage = LiveStage.Assigned,patientPk = stagePatients.First().PatientPk,
-                siteCode = stagePatients.First().SiteCode }).AsList();
-              
-                // Step 2: Check if each record exists in the central table
-                List<PatientExtract> newRecords = new List<PatientExtract>();
-
-                foreach (StagePatientExtract stageRecord in stageData)
+                foreach (StagePatientExtract stagePatient in stagePatients)
                 {
-                    bool recordExists = CheckRecordExistence(connection, stageRecord);
 
-                    if (recordExists)
+                    // Step 1: Retrieve data from the stage table
+                    List<StagePatientExtract> stageData = connection.Query<StagePatientExtract>(selectQuery,
+                    new
                     {
-                        // Update existing record in the central table
-                        UpdateRecordInCentral(connection, stageRecord);
-                    }
-                    else
+                        manifestId,
+                        livestage = LiveStage.Assigned,
+                        patientPk = stagePatient.PatientPk,
+                        siteCode = stagePatient.SiteCode
+                    }).AsList();
+
+                    // Step 2: Check if each record exists in the central table
+                    List<PatientExtract> newRecords = new List<PatientExtract>();
+
+                    foreach (StagePatientExtract stageRecord in stageData)
                     {
-                        // Insert new record into the central table
-                        InsertRecordIntoCentral(connection, stageRecord);
+                        bool recordExists = CheckRecordExistence(connection, stageRecord);
+
+                        if (recordExists)
+                        {
+                            // Update existing record in the central table
+                            UpdateRecordInCentral(connection, stageRecord);
+                        }
+                        else
+                        {
+                            // Insert new record into the central table
+                            InsertRecordIntoCentral(connection, stageRecord);
+                        }
                     }
                 }
                 
@@ -253,7 +262,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
             var sql = @"
                             UPDATE 
-                                    StagePatientExtract
+                                    StagePatientExtracts
                             SET 
                                     LiveStage= @nextlivestage 
                             FROM 
@@ -261,7 +270,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE 
                                     LiveSession = @manifestId AND 
                                     LiveStage= @livestage AND
-                                     PatientPk = @patientPk AND 
+                                    PatientPk = @patientPk AND 
                                     SiteCode = @siteCode"; 
             try
             {
@@ -300,7 +309,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         private bool CheckRecordExistence(SqlConnection connection, StagePatientExtract stageRecord)
         {
-            string selectQuery = "SELECT COUNT(*) FROM PatientExtract WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode";
+            string selectQuery = "SELECT COUNT(*) FROM PatientExtracts WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode";
 
             int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
             return count > 0;

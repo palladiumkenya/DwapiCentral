@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
-    public partial class InitialCT : Migration
+    public partial class InitialCt : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -146,8 +146,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -191,8 +191,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -243,8 +243,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -292,8 +292,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -332,8 +332,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -392,8 +392,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -431,8 +431,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -472,8 +472,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -505,8 +505,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -577,8 +577,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -612,8 +612,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -661,8 +661,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -696,8 +696,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -734,8 +734,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -771,8 +771,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -872,8 +872,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -909,8 +909,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -994,8 +994,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveStage = table.Column<int>(type: "int", nullable: false),
                     Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Processed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

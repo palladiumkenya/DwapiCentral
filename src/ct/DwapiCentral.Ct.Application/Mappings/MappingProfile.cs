@@ -37,8 +37,26 @@ namespace DwapiCentral.Ct.Application.Mappings
 
             //
             CreateMap<StagePatientExtract, PatientExtract>();
+            CreateMap<StageArtExtract, PatientArtExtract>();
             CreateMap<PatientSourceDto, StagePatientExtract>();
-
-        }
+            CreateMap<PatientArtSourceDto, StageArtExtract>();
+            CreateMap<PatientBaselineSourceDto, StageBaselineExtract>();
+            CreateMap<StatusSourceDto, StageStatusExtract>();
+            CreateMap<AdverseEventSourceDto, StageAdverseEventExtract>();
+            CreateMap<PatientVisitSourceDto, StageVisitExtract>();
+            CreateMap<PharmacySourceDto,StagePharmacyExtract>();
+            CreateMap<LaboratorySourceDto, StageLaboratoryExtract>();
+            CreateMap<AllergiesChronicIllnessSourceDto, StageAllergiesChronicIllnessExtract>();
+            CreateMap<PatientIptSourceDto, StageIptExtract>();
+            CreateMap<DepressionScreeningSourceDto, StageDepressionScreeningExtract>();
+            CreateMap<ContactListingSourceDto, StageContactListingExtract>();
+            CreateMap<GbvScreeningSourceDto, StageGbvScreeningExtract>();
+            CreateMap<EnhancedAdherenceCounselingSourceDto, StageEnhancedAdherenceCounsellingExtract>();
+            CreateMap<DrugAlcoholScreeningSourceDto, StageDrugAlcoholScreeningExtract>();
+            CreateMap<OvcSourceDto, StageOvcExtract>();
+            CreateMap<OtzSourceDto, StageOtzExtract>();
+            CreateMap<CovidSourceDto, StageCovidExtract>();
+            CreateMap<DefaulterTracingSourceDto, StageDefaulterTracingExtract>();
+         }
     }
 }
