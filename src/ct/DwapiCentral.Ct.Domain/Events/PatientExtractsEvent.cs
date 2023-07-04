@@ -9,6 +9,10 @@ namespace DwapiCentral.Ct.Domain.Events
 {
     public class PatientExtractsEvent : INotification
     {
-        public int patientPks { get; set; }
+        public int PatientPks { get; set; }
+
+        public int SiteCode { get; set; }
+
+        public string ExtractName { get; set; }
     }
 }

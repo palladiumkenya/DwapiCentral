@@ -20,6 +20,8 @@ namespace DwapiCentral.Shared.Domain.Model.Common
 
         public string QueueName { get; set; }
 
+        public string routing_key { get; set; }
+
         public string VHost { get; set; } 
     }
 }

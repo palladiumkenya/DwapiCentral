@@ -8,8 +8,7 @@ namespace DwapiCentral.Contracts.Manifest
 {
     public interface IMetric
     {
-        Guid Id { get; set; }
-        string Type { get; set; } // indicator, facility ,extract ,pks 
+        Guid Id { get; set; }       
         string Name { get; set; } // indicator, facility ,extract ,pks
         string Value { get; set; } // {}
         Guid ManifestId { get; set; }

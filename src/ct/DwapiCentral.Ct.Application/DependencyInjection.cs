@@ -37,9 +37,10 @@ public static class DependencyInjection
         };
         var connection = factory.CreateConnection();
         var channel = connection.CreateModel();
-
+       
         // Declare the exchange and queue
-        channel.ExchangeDeclare(rabbitMQConfig.ExchangeName, ExchangeType.Direct, true, false, null);
+        
+        channel.ExchangeDeclare(rabbitMQConfig.ExchangeName, ExchangeType.Direct,false,false);
         channel.QueueDeclare(rabbitMQConfig.QueueName, true, false, false, null);
         channel.QueueBind(rabbitMQConfig.QueueName, rabbitMQConfig.ExchangeName, "", null);
 

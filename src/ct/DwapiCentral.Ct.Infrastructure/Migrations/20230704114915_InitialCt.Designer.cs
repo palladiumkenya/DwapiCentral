@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230703155201_InitialCt")]
+    [Migration("20230704114915_InitialCt")]
     partial class InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1963,9 +1963,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.Property<string>("Value")
                         .IsRequired()
