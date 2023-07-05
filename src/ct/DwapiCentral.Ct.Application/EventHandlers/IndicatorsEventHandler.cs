@@ -1,6 +1,6 @@
-﻿using DwapiCentral.Shared.Domain.Model.Common;
+﻿using DwapiCentral.Ct.Application.Events;
+using DwapiCentral.Shared.Domain.Model.Common;
 using MediatR;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System;
@@ -11,24 +11,27 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Application.EventHandlers
 {
-    public class RabbitMQNotificationHandler<T> : INotificationHandler<T> where T : INotification
+    public class IndicatorsEventHandler : INotificationHandler<IndicatorsExtractedEvent>
     {
         private readonly IModel _channel;
         private readonly RabbitOptions _rabbitOptions;
 
-        public RabbitMQNotificationHandler(IModel channel, RabbitOptions rabbitOptions)
+        public IndicatorsEventHandler(IModel channel, RabbitOptions rabbitOptions)
         {
-            _channel= channel;
+            _channel = channel;
             _rabbitOptions = rabbitOptions;
 
         }
 
-        public Task Handle(T notification, CancellationToken cancellationToken)
+     
+
+        public Task Handle(IndicatorsExtractedEvent notification, CancellationToken cancellationToken)
         {
             var message = JsonConvert.SerializeObject(notification);
             var body = Encoding.UTF8.GetBytes(message);
 
-            _channel.BasicPublish(_rabbitOptions.ExchangeName, "", null, body);
+
+            _channel.BasicPublish(_rabbitOptions.ExchangeName, "indicator.route", null, body);
 
             return Task.CompletedTask;
         }

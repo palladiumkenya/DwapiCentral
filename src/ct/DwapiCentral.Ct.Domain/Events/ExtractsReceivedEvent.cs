@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Domain.Events
 {
-    public class PatientExtractsEvent : INotification
+    public class ExtractsReceivedEvent : INotification
     {
-        public int PatientPks { get; set; }
+       
 
         public int SiteCode { get; set; }
 
         public string ExtractName { get; set; }
+
+        public int TotalExtractsCount { get; set; }  
     }
 }

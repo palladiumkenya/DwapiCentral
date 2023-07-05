@@ -41,15 +41,14 @@ public static class DependencyInjection
         // Declare the exchange and queue
         
         channel.ExchangeDeclare(rabbitMQConfig.ExchangeName, ExchangeType.Direct,false,false);
-        channel.QueueDeclare(rabbitMQConfig.QueueName, true, false, false, null);
-        channel.QueueBind(rabbitMQConfig.QueueName, rabbitMQConfig.ExchangeName, "", null);
+        
 
         // Register RabbitMQ services
         services.AddSingleton<IConnection>(connection);
         services.AddSingleton<IModel>(channel);
 
 
-        services.AddTransient(typeof(INotificationHandler<>), typeof(RabbitMQNotificationHandler<>));
+        
         return services;
     }
 }

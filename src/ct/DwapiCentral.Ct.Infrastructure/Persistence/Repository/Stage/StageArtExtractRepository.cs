@@ -2,6 +2,7 @@ using System.Data;
 using System.Reflection;
 using AutoMapper;
 using Dapper;
+using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
@@ -12,6 +13,7 @@ using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Z.Dapper.Plus;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 {
@@ -39,6 +41,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
+                var notification = new ExtractsReceivedEvent { TotalExtractsCount = extracts.Count, SiteCode = extracts.First().SiteCode, ExtractName = "PatientArtExtract" };
+                await _mediator.Publish(notification);
+
+
                 // assign > Assigned
                 await AssignAll(manifestId, extracts.Select(x => x.Id).ToList());
                 
@@ -46,7 +52,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await MergeExtracts(manifestId, extracts.Select(x =>new StageArtExtract{PatientPk= x.PatientPk,SiteCode= x.SiteCode,LastARTDate= x.LastARTDate}).ToList());
 
                 // assign > Merged
-               // await SmartMarkRegister(manifestId, extracts.Select(x => x.Id).ToList());
+               //await SmartMarkRegister(manifestId, extracts.Select(x => x.Id).ToList());
 
             }
             catch (Exception e)
@@ -58,76 +64,107 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         private async Task MergeExtracts(Guid manifestId, List<StageArtExtract> stageArt)
         {
-            //Retrieve existing visits from the central table
-            List<PatientArtExtract> extracts = await GetExistingData();
-
-            //Det if it's first Time sending Data
-            bool isFirstTime = extracts.Count == 0;
-
-            //Dictionary to keep track of uniqueData
-            Dictionary<string,PatientArtExtract> uniqueData = new Dictionary<string,PatientArtExtract>();
-
-            foreach(StageArtExtract stageArtExtract in stageArt) {
-
-                //gen a unique identifier for visit
-                string uniqueIdentifier = GetUniqueIdentifier(stageArtExtract);
-
-                //check if data exists in dictionary
-                if(uniqueData.TryGetValue(uniqueIdentifier, out PatientArtExtract existingExtracts)){
-
-                }
-                else if(isFirstTime)
-                {
-                    uniqueData.Add(uniqueIdentifier, CreateNewExtract(stageArt));
-                }
-            
-            
-            }
-            // Merge the unique visits from the staging table with the existing visits from the central table
-            List<PatientArtExtract> mergedArt = extracts.Concat(uniqueData.Values).ToList();
-
-            // Save the merged visits to the central table
-            await SaveMergedVisitsToCentralTable(mergedArt);
-
-
-
-
-           
-        }
-
-        private async Task SaveMergedVisitsToCentralTable(List<PatientArtExtract> mergedArtExtracts)
-        {
-            _context.Database.GetDbConnection().BulkMerge(mergedArtExtracts);
-        }
-
-        private PatientArtExtract CreateNewExtract(List<StageArtExtract> stageArt)
-        {
-            
-            PatientArtExtract newArt= _mapper.Map<PatientArtExtract>(stageArt);
-
-           
-
-            return newArt;
-        }
-
-        private string GetUniqueIdentifier(StageArtExtract stageArtExtract)
-        {
-            return $"{stageArtExtract.PatientPk}_{stageArtExtract.SiteCode}_{stageArtExtract.LastARTDate}";
-        }
-
-        private async Task<List<PatientArtExtract>> GetExistingData()
-        {
             var cons = _context.Database.GetConnectionString();
 
-            using (var connection = new SqlConnection(cons))
-            {
-                var query = "SELECT * FROM PatientArtExtracts";
+            // Merge data from staging table to central table using Dapper Plus
+            var sql = $@"
+                MERGE INTO PatientArtExtracts AS Target
+                USING (
+                    SELECT 
+                             Id,PatientPk, SiteCode, LastARTDate,LastVisit,DOB,AgeEnrollment,
+							 AgeARTStart,AgeLastVisit,RegistrationDate,Gender,PatientSource,StartARTDate,
+							 PreviousARTStartDate,PreviousARTRegimen,StartARTAtThisFacility,StartRegimen,StartRegimenLine,
+							 LastRegimen,LastRegimenLine,Duration,ExpectedReturn,Provider,ExitReason,ExitDate,
+							 PreviousARTUse,PreviousARTPurpose,DateLastUsed,DateCreated,DateLastModified,DateExtracted,
+							 Created,Updated,Voided
+                    FROM 
+                             StageArtExtracts
+                    WHERE
+                            LiveSession = @manifestId AND 
+                            LiveStage = @livestage 
+                          
+                ) AS Source
+                ON 
+                                    Target.PatientPk = Source.PatientPk
+                AND 
+                                    Target.SiteCode = Source.SiteCode
+                AND 
+                                    Target.LastARTDate = Source.LastARTDate
+                WHEN MATCHED THEN
+                UPDATE SET
+                                                    LastVisit=Source.LastVisit,
+													DOB=Source.DOB,
+													AgeEnrollment=Source.AgeEnrollment,
+													AgeARTStart=Source.AgeARTStart,
+													AgeLastVisit=Source.AgeLastVisit,
+													RegistrationDate=Source.RegistrationDate,
+													Gender=Source.Gender,
+													PatientSource=Source.PatientSource,
+													StartARTDate=Source.StartARTDate,
+													PreviousARTStartDate=Source.PreviousARTStartDate,
+													PreviousARTRegimen=Source.PreviousARTRegimen,
+													StartARTAtThisFacility=Source.StartARTAtThisFacility,
+													StartRegimen=Source.StartRegimen,
+													StartRegimenLine=Source.StartRegimenLine,
+													LastRegimen=Source.LastRegimen,
+													LastRegimenLine=Source.LastRegimenLine,
+													Duration=Source.Duration,
+													ExpectedReturn=Source.ExpectedReturn,
+													Provider=Source.Provider,
+													ExitReason=Source.ExitReason,
+													ExitDate=Source.ExitDate,
+													PreviousARTUse=Source.PreviousARTUse,
+													PreviousARTPurpose=Source.PreviousARTPurpose,
+													DateLastUsed=Source.DateLastUsed,
+													DateCreated=Source.DateCreated,
+													DateLastModified=Source.DateLastModified,
+													DateExtracted=Source.DateExtracted,
+													Created=Source.Created,
+													Updated=Source.Updated,
+													Voided=Source.Voided
+                WHEN NOT MATCHED THEN
+                INSERT 
+                             (Id,PatientPk, SiteCode, LastARTDate,LastVisit,DOB,AgeEnrollment,
+							 AgeARTStart,AgeLastVisit,RegistrationDate,Gender,PatientSource,StartARTDate,
+							 PreviousARTStartDate,PreviousARTRegimen,StartARTAtThisFacility,StartRegimen,StartRegimenLine,
+							 LastRegimen,LastRegimenLine,Duration,ExpectedReturn,Provider,ExitReason,ExitDate,
+							 PreviousARTUse,PreviousARTPurpose,DateLastUsed,DateCreated,DateLastModified,DateExtracted,
+							 Created,Updated,Voided)
+                VALUES 
+                             (Source.Id, Source.PatientPk, Source.SiteCode, Source.LastARTDate,Source.LastVisit,Source.DOB,Source.AgeEnrollment,
+							 Source.AgeARTStart,Source.AgeLastVisit,Source.RegistrationDate,Source.Gender,Source.PatientSource,Source.StartARTDate,
+							 Source.PreviousARTStartDate,Source.PreviousARTRegimen,Source.StartARTAtThisFacility,Source.StartRegimen,Source.StartRegimenLine,
+							 Source.LastRegimen,Source.LastRegimenLine,Source.Duration,Source.ExpectedReturn,Source.Provider,Source.ExitReason,Source.ExitDate,
+							 Source.PreviousARTUse,Source.PreviousARTPurpose,Source.DateLastUsed,Source.DateCreated,Source.DateLastModified,Source.DateExtracted,
+							 Source.Created,Source.Updated,Source.Voided);";
 
-                return (await connection.QueryAsync<PatientArtExtract>(query)).ToList();
-            }
-           
+            var deleteQuery = $@"
+                WITH CTE AS (
+                    SELECT ROW_NUMBER() OVER (
+                        PARTITION BY PatientPk, SiteCode, LastARTDate
+                        ORDER BY LastARTDate DESC) AS RowNumber
+                    FROM PatientArtExtracts
+                )
+                DELETE FROM CTE WHERE RowNumber > 1;";
 
+            try
+                {
+                    using (var connection = new SqlConnection(cons))
+                    {
+                        if (connection.State != ConnectionState.Open)
+                            connection.Open();
+                        await connection.ExecuteAsync($"{sql}",
+                            new { manifestId, livestage = LiveStage.Assigned }, null, 0);
 
+                       await connection.ExecuteAsync($"{deleteQuery}");
+
+                }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e);
+                    throw;
+                }
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

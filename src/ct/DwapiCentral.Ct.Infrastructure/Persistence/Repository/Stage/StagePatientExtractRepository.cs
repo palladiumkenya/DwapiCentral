@@ -125,7 +125,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new PatientExtractsEvent { PatientPks = extracts.Count, SiteCode=extracts.First().SiteCode,ExtractName="PatientExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsCount = extracts.Count, SiteCode=extracts.First().SiteCode,ExtractName="PatientExtract" };
                 await _mediator.Publish(notification);
 
                 var pks = extracts.Select(x => new StagePatientExtract {PatientPk= x.PatientPk,SiteCode= x.SiteCode }).ToList();

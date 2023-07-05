@@ -54,16 +54,17 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
 
             var facManifest = Manifest.Create(request.manifest);
             await _manifestRepository.Save(facManifest);
-            //Indicators            
+            //notify spot=> Indicators            
             var indicatorDtos = facManifest.Metrics.Where(x => x.Type == CargoType.Indicator).ToList();
             if (indicatorDtos.Any())
             {
-                var indstats = IndicatorDto.Generate(indicatorDtos);
+                var indicatorstats = IndicatorDto.Generate(indicatorDtos);
                 var indicators = new IndicatorsExtractedEvent
                 {
-                    IndicatorsExtracts = indstats
+                    IndicatorsExtracts = indicatorstats,
+                    
                 };
-                await _mediator.Publish(indicators, cancellationToken);
+                await _mediator.Publish(indicators,  cancellationToken);
             }   
 
             // notify spot => metrics
