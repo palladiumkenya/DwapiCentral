@@ -2,6 +2,7 @@ using System.Data;
 using System.Reflection;
 using AutoMapper;
 using Dapper;
+using DwapiCentral.Contracts.Common;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Models.Stage;
@@ -25,7 +26,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         private readonly IMediator _mediator;
         private readonly string _stageName;
 
-        public StageArtExtractRepository(CtDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageAdverseEventExtract)}s")
+        public StageArtExtractRepository(CtDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageArtExtract)}s")
         {
             _context = context;
             _mapper = mapper;
@@ -49,7 +50,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await AssignAll(manifestId, extracts.Select(x => x.Id).ToList());
                 
                 // Merge
-                await MergeExtracts(manifestId, extracts.Select(x =>new StageArtExtract{PatientPk= x.PatientPk,SiteCode= x.SiteCode,LastARTDate= x.LastARTDate}).ToList());
+                await MergeExtracts(manifestId, extracts);
 
                 // assign > Merged
                //await SmartMarkRegister(manifestId, extracts.Select(x => x.Id).ToList());
@@ -65,106 +66,58 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         private async Task MergeExtracts(Guid manifestId, List<StageArtExtract> stageArt)
         {
             var cons = _context.Database.GetConnectionString();
-
-            // Merge data from staging table to central table using Dapper Plus
-            var sql = $@"
-                MERGE INTO PatientArtExtracts AS Target
-                USING (
-                    SELECT 
-                             Id,PatientPk, SiteCode, LastARTDate,LastVisit,DOB,AgeEnrollment,
-							 AgeARTStart,AgeLastVisit,RegistrationDate,Gender,PatientSource,StartARTDate,
-							 PreviousARTStartDate,PreviousARTRegimen,StartARTAtThisFacility,StartRegimen,StartRegimenLine,
-							 LastRegimen,LastRegimenLine,Duration,ExpectedReturn,Provider,ExitReason,ExitDate,
-							 PreviousARTUse,PreviousARTPurpose,DateLastUsed,DateCreated,DateLastModified,DateExtracted,
-							 Created,Updated,Voided
-                    FROM 
-                             StageArtExtracts
-                    WHERE
-                            LiveSession = @manifestId AND 
-                            LiveStage = @livestage 
-                          
-                ) AS Source
-                ON 
-                                    Target.PatientPk = Source.PatientPk
-                AND 
-                                    Target.SiteCode = Source.SiteCode
-                AND 
-                                    Target.LastARTDate = Source.LastARTDate
-                WHEN MATCHED THEN
-                UPDATE SET
-                                                    LastVisit=Source.LastVisit,
-													DOB=Source.DOB,
-													AgeEnrollment=Source.AgeEnrollment,
-													AgeARTStart=Source.AgeARTStart,
-													AgeLastVisit=Source.AgeLastVisit,
-													RegistrationDate=Source.RegistrationDate,
-													Gender=Source.Gender,
-													PatientSource=Source.PatientSource,
-													StartARTDate=Source.StartARTDate,
-													PreviousARTStartDate=Source.PreviousARTStartDate,
-													PreviousARTRegimen=Source.PreviousARTRegimen,
-													StartARTAtThisFacility=Source.StartARTAtThisFacility,
-													StartRegimen=Source.StartRegimen,
-													StartRegimenLine=Source.StartRegimenLine,
-													LastRegimen=Source.LastRegimen,
-													LastRegimenLine=Source.LastRegimenLine,
-													Duration=Source.Duration,
-													ExpectedReturn=Source.ExpectedReturn,
-													Provider=Source.Provider,
-													ExitReason=Source.ExitReason,
-													ExitDate=Source.ExitDate,
-													PreviousARTUse=Source.PreviousARTUse,
-													PreviousARTPurpose=Source.PreviousARTPurpose,
-													DateLastUsed=Source.DateLastUsed,
-													DateCreated=Source.DateCreated,
-													DateLastModified=Source.DateLastModified,
-													DateExtracted=Source.DateExtracted,
-													Created=Source.Created,
-													Updated=Source.Updated,
-													Voided=Source.Voided
-                WHEN NOT MATCHED THEN
-                INSERT 
-                             (Id,PatientPk, SiteCode, LastARTDate,LastVisit,DOB,AgeEnrollment,
-							 AgeARTStart,AgeLastVisit,RegistrationDate,Gender,PatientSource,StartARTDate,
-							 PreviousARTStartDate,PreviousARTRegimen,StartARTAtThisFacility,StartRegimen,StartRegimenLine,
-							 LastRegimen,LastRegimenLine,Duration,ExpectedReturn,Provider,ExitReason,ExitDate,
-							 PreviousARTUse,PreviousARTPurpose,DateLastUsed,DateCreated,DateLastModified,DateExtracted,
-							 Created,Updated,Voided)
-                VALUES 
-                             (Source.Id, Source.PatientPk, Source.SiteCode, Source.LastARTDate,Source.LastVisit,Source.DOB,Source.AgeEnrollment,
-							 Source.AgeARTStart,Source.AgeLastVisit,Source.RegistrationDate,Source.Gender,Source.PatientSource,Source.StartARTDate,
-							 Source.PreviousARTStartDate,Source.PreviousARTRegimen,Source.StartARTAtThisFacility,Source.StartRegimen,Source.StartRegimenLine,
-							 Source.LastRegimen,Source.LastRegimenLine,Source.Duration,Source.ExpectedReturn,Source.Provider,Source.ExitReason,Source.ExitDate,
-							 Source.PreviousARTUse,Source.PreviousARTPurpose,Source.DateLastUsed,Source.DateCreated,Source.DateLastModified,Source.DateExtracted,
-							 Source.Created,Source.Updated,Source.Voided);";
-
-            var deleteQuery = $@"
-                WITH CTE AS (
-                    SELECT ROW_NUMBER() OVER (
-                        PARTITION BY PatientPk, SiteCode, LastARTDate
-                        ORDER BY LastARTDate DESC) AS RowNumber
-                    FROM PatientArtExtracts
-                )
-                DELETE FROM CTE WHERE RowNumber > 1;";
-
             try
-                {
-                    using (var connection = new SqlConnection(cons))
+            {
+                using var connection = new SqlConnection(cons);
+                List<StageArtExtract> uniqueStageExtracts;
+                await connection.OpenAsync();
+
+
+                // Query existing records from the central table
+                var existingRecords = await connection.QueryAsync<PatientArtExtract>("SELECT * FROM PatientArtExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND LastARTDate IN @LastARTDate",
+                    new
                     {
-                        if (connection.State != ConnectionState.Open)
-                            connection.Open();
-                        await connection.ExecuteAsync($"{sql}",
-                            new { manifestId, livestage = LiveStage.Assigned }, null, 0);
+                        PatientPKs = stageArt.Select(x => x.PatientPk),
+                        SiteCodes = stageArt.Select(x => x.SiteCode),
+                        LastARTDate = stageArt.Select(x => x.LastARTDate)
+                       
+                    });
 
-                       await connection.ExecuteAsync($"{deleteQuery}");
+                // Convert existing records to HashSet for duplicate checking
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, DateTime LastARTDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.LastARTDate)));
 
-                }
-                }
-                catch (Exception e)
+                if (existingRecordsSet.Any())
                 {
-                    Log.Error(e);
-                    throw;
+                  
+                    // Filter out duplicates from stageExtracts               
+                    uniqueStageExtracts = stageArt
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.LastARTDate)) && x.LiveSession == manifestId)
+                        .ToList();
+
+                    
+
+
                 }
+                else
+                {
+                    uniqueStageExtracts = stageArt;
+                }
+
+
+                // Use AutoMapper to map StageExtract to Extract model 
+                var artExtracts = _mapper.Map<List<PatientArtExtract>>(uniqueStageExtracts);               
+                _context.Database.GetDbConnection().BulkInsert(artExtracts);
+
+                var existingArtExtracts = _mapper.Map<List<PatientArtExtract>>(existingRecords);
+                // Perform bulk update
+                _context.Database.GetDbConnection().BulkUpdate(artExtracts);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+            
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
