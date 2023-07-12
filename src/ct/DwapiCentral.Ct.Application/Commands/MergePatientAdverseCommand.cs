@@ -1,6 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,9 +16,9 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class MergePatientAdverseCommand : IRequest<Result>
 {
-    public IEnumerable<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; }
+    public AdverseEventSourceBag PatientAdverseEventExtracts { get; set; }
 
-    public MergePatientAdverseCommand(IEnumerable<PatientAdverseEventExtract> patientAdverseEventExtracts)
+    public MergePatientAdverseCommand(AdverseEventSourceBag patientAdverseEventExtracts)
     {
         PatientAdverseEventExtracts = patientAdverseEventExtracts;
     }
@@ -23,17 +27,27 @@ public class MergePatientAdverseCommand : IRequest<Result>
 
 public class MergePatientAdverseCommandHandler : IRequestHandler<MergePatientAdverseCommand, Result>
 {
-    private readonly IPatientAdverseEventRepository _patientAdverseRepository;
+    private readonly IStageAdverseEventExtractRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public MergePatientAdverseCommandHandler(IPatientAdverseEventRepository patientAdverseEventRepository)
+    public MergePatientAdverseCommandHandler(IStageAdverseEventExtractRepository patientAdverseEventRepository, IMapper mapper)
     {
-        _patientAdverseRepository = patientAdverseEventRepository;
+        _stageRepository = patientAdverseEventRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergePatientAdverseCommand request, CancellationToken cancellationToken)
     {
+        //await _patientAdverseRepository.MergeAsync(request.PatientAdverseEventExtracts);
+        var extracts = _mapper.Map<List<StageAdverseEventExtract>>(request.PatientAdverseEventExtracts);
+        if (extracts.Any())
+        {
+            StandardizeClass<StageAdverseEventExtract, AdverseEventSourceBag> standardizer = new(extracts, request.PatientAdverseEventExtracts);
+            standardizer.StandardizeExtracts();
 
-        await _patientAdverseRepository.MergeAsync(request.PatientAdverseEventExtracts);
+        }
+        //stage
+        await _stageRepository.SyncStage(extracts, request.PatientAdverseEventExtracts.ManifestId.Value);
 
         return Result.Success();
 

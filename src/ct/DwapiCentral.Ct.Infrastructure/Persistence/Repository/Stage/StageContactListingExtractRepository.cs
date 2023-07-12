@@ -111,7 +111,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     uniqueStageExtracts = stageContactListing;
                 }
 
-                var contactListingExtracts = _mapper.Map<List<PatientBaselinesExtract>>(uniqueStageExtracts);
+                var contactListingExtracts = _mapper.Map<List<ContactListingExtract>>(uniqueStageExtracts);
                 _context.Database.GetDbConnection().BulkInsert(contactListingExtracts);
 
 

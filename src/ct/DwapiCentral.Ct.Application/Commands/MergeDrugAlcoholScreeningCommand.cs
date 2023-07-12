@@ -1,6 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,26 +16,36 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class MergeDrugAlcoholScreeningCommand : IRequest<Result>
 {
-    public IEnumerable<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; }
+    public DrugAlcoholScreeningSourceBag DrugAlcoholScreeningExtracts { get; set; }
 
-    public MergeDrugAlcoholScreeningCommand(IEnumerable<DrugAlcoholScreeningExtract> drugAlcoholScreeningExtracts)
+    public MergeDrugAlcoholScreeningCommand(DrugAlcoholScreeningSourceBag drugAlcoholScreeningExtracts)
     {
         DrugAlcoholScreeningExtracts = drugAlcoholScreeningExtracts;
     }
 }
 public class MergeDrugAlcoholScreeningCommandHandler : IRequestHandler<MergeDrugAlcoholScreeningCommand, Result>
 {
-    private readonly IDrugAlcoholScreeningRepository _drugAlcoholScreeningRepository;
+    private readonly IStageDrugAlcoholScreeningExtractRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public MergeDrugAlcoholScreeningCommandHandler(IDrugAlcoholScreeningRepository drugAlcoholScreeningRepository)
+    public MergeDrugAlcoholScreeningCommandHandler(IStageDrugAlcoholScreeningExtractRepository drugAlcoholScreeningRepository, IMapper mapper)
     {
-        _drugAlcoholScreeningRepository = drugAlcoholScreeningRepository;
+        _stageRepository = drugAlcoholScreeningRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergeDrugAlcoholScreeningCommand request, CancellationToken cancellationToken)
     {
+        //await _drugAlcoholScreeningRepository.MergeAsync(request.DrugAlcoholScreeningExtracts);
+        var extracts = _mapper.Map<List<StageDrugAlcoholScreeningExtract>>(request.DrugAlcoholScreeningExtracts);
+        if (extracts.Any())
+        {
+            StandardizeClass<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningSourceBag> standardizer = new(extracts, request.DrugAlcoholScreeningExtracts);
+            standardizer.StandardizeExtracts();
 
-        await _drugAlcoholScreeningRepository.MergeAsync(request.DrugAlcoholScreeningExtracts);
+        }
+        //stage
+        await _stageRepository.SyncStage(extracts, request.DrugAlcoholScreeningExtracts.ManifestId.Value);
 
         return Result.Success();
 

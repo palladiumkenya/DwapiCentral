@@ -81,11 +81,9 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<PatientIptSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<IptExtract> patientIptExtracts = _mapper.Map<IEnumerable<IptExtract>>(sourceDtos);
+                    
 
-
-                    var response = await _mediator.Send(new MergeIptCommand(patientIptExtracts));
+                    var response = await _mediator.Send(new MergeIptCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -131,11 +129,8 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<PatientVisitSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<PatientVisitExtract> patientVisitExtracts = _mapper.Map<IEnumerable<PatientVisitExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergePatientVisitCommand(patientVisitExtracts));
+                    
+                    var response = await _mediator.Send(new MergePatientVisitCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -226,11 +221,8 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<PatientBaselineSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<PatientBaselinesExtract> patientBaselinesExtracts = _mapper.Map<IEnumerable<PatientBaselinesExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergePatientBaselinesCommand(patientBaselinesExtracts));
+                    
+                    var response = await _mediator.Send(new MergePatientBaselinesCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -275,11 +267,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<AllergiesChronicIllnessSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<AllergiesChronicIllnessExtract> allergiesChronicIllnessExtract = _mapper.Map<IEnumerable<AllergiesChronicIllnessExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeAllergiesChronicIllnessCommand(allergiesChronicIllnessExtract));
+                    var response = await _mediator.Send(new MergeAllergiesChronicIllnessCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -324,11 +312,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<ContactListingSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<ContactListingExtract> contactListingExtract = _mapper.Map<IEnumerable<ContactListingExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeContactListingCommand(contactListingExtract));
+                    var response = await _mediator.Send(new MergeContactListingCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -373,11 +357,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<CovidSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<CovidExtract> covidExtract = _mapper.Map<IEnumerable<CovidExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeCovidExtractsCommand(covidExtract));
+                    var response = await _mediator.Send(new MergeCovidExtractsCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -422,11 +402,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<DefaulterTracingSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<DefaulterTracingExtract> defaulterTracingExtract = _mapper.Map<IEnumerable<DefaulterTracingExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeDefaulterTracingCommand(defaulterTracingExtract));
+                    var response = await _mediator.Send(new MergeDefaulterTracingCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -471,11 +447,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<DepressionScreeningSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<DepressionScreeningExtract> depressionScreeningExtract = _mapper.Map<IEnumerable<DepressionScreeningExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeDepressionScreeningCommand(depressionScreeningExtract));
+                    var response = await _mediator.Send(new MergeDepressionScreeningCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -520,11 +492,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<DrugAlcoholScreeningSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<DrugAlcoholScreeningExtract> drugAlcoholScreeningExtract = _mapper.Map<IEnumerable<DrugAlcoholScreeningExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeDrugAlcoholScreeningCommand(drugAlcoholScreeningExtract));
+                    var response = await _mediator.Send(new MergeDrugAlcoholScreeningCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -569,11 +537,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<EnhancedAdherenceCounselingSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<EnhancedAdherenceCounsellingExtract> enhancedAdheranceExtract = _mapper.Map<IEnumerable<EnhancedAdherenceCounsellingExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeEnhancedAdheranceCommand(enhancedAdheranceExtract));
+                    var response = await _mediator.Send(new MergeEnhancedAdheranceCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -618,11 +582,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<GbvScreeningSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<GbvScreeningExtract> gbvScreeningExtract = _mapper.Map<IEnumerable<GbvScreeningExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeGbvScreeningCommand(gbvScreeningExtract));
+                    var response = await _mediator.Send(new MergeGbvScreeningCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -667,11 +627,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<OtzSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<OtzExtract> otzExtract = _mapper.Map<IEnumerable<OtzExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeOtzCommand(otzExtract));
+                    var response = await _mediator.Send(new MergeOtzCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -717,11 +673,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<OvcSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<OvcExtract> ovcExtract = _mapper.Map<IEnumerable<OvcExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergeOvcCommand(ovcExtract));
+                    var response = await _mediator.Send(new MergeOvcCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -767,11 +719,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<AdverseEventSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<PatientAdverseEventExtract> patientAdverseEventExtract = _mapper.Map<IEnumerable<PatientAdverseEventExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergePatientAdverseCommand(patientAdverseEventExtract));
+                    var response = await _mediator.Send(new MergePatientAdverseCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -866,11 +814,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<PharmacySourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<PatientPharmacyExtract> patientPharmacyExtract = _mapper.Map<IEnumerable<PatientPharmacyExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new AddOrUpdatePatientPharmacyCommand(patientPharmacyExtract));
+                    var response = await _mediator.Send(new AddOrUpdatePatientPharmacyCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 
@@ -916,11 +860,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<StatusSourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<PatientStatusExtract> patientStatusExtract = _mapper.Map<IEnumerable<PatientStatusExtract>>(sourceDtos);
-
-
-                    var response = await _mediator.Send(new MergePatientStatusCommand(patientStatusExtract));
+                    var response = await _mediator.Send(new MergePatientStatusCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 

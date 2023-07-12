@@ -1,6 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,26 +16,36 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class MergeContactListingCommand : IRequest<Result>
 {
-    public IEnumerable<ContactListingExtract> ContactListingExtracts { get; set; }
+    public ContactListingSourceBag ContactListingExtracts { get; set; }
 
-    public MergeContactListingCommand(IEnumerable<ContactListingExtract> contactListingExtracts)
+    public MergeContactListingCommand(ContactListingSourceBag contactListingExtracts)
     {
         ContactListingExtracts = contactListingExtracts;
     }
 }
 public class MergeContactListingCommandHandler : IRequestHandler<MergeContactListingCommand, Result>
 {
-    private readonly IContactListingRepository _contactListingRepository;
+    private readonly IStageContactListingExtractRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public MergeContactListingCommandHandler(IContactListingRepository contactListingRepository)
+    public MergeContactListingCommandHandler(IStageContactListingExtractRepository stageContactListingRepository, IMapper mapper)
     {
-        _contactListingRepository = contactListingRepository;
+        _stageRepository = stageContactListingRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergeContactListingCommand request, CancellationToken cancellationToken)
     {
+        //await _contactListingRepository.MergeAsync(request.ContactListingExtracts);
+        var extracts = _mapper.Map<List<StageContactListingExtract>>(request.ContactListingExtracts.Extracts);
+        if (extracts.Any())
+        {
+            StandardizeClass<StageContactListingExtract, ContactListingSourceBag> standardizer = new(extracts, request.ContactListingExtracts);
+            standardizer.StandardizeExtracts();
 
-        await _contactListingRepository.MergeAsync(request.ContactListingExtracts);
+        }
+        //stage
+        await _stageRepository.SyncStage(extracts, request.ContactListingExtracts.ManifestId.Value);
 
         return Result.Success();
 

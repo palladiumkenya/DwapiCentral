@@ -1,6 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,9 +16,9 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class MergeGbvScreeningCommand : IRequest<Result>
 {
-    public IEnumerable<GbvScreeningExtract> GbvScreeningExtracts { get; set; }
+    public GbvScreeningSourceBag GbvScreeningExtracts { get; set; }
 
-    public MergeGbvScreeningCommand(IEnumerable<GbvScreeningExtract> gbvScreeningExtracts)
+    public MergeGbvScreeningCommand(GbvScreeningSourceBag gbvScreeningExtracts)
     {
         GbvScreeningExtracts = gbvScreeningExtracts;
     }
@@ -23,17 +27,26 @@ public class MergeGbvScreeningCommand : IRequest<Result>
 
 public class MergeGbvScreeningCommandHandler : IRequestHandler<MergeGbvScreeningCommand, Result>
 {
-    private readonly IGbvScreeningRepository _gbvScreeningRepository;
+    private readonly IStageGbvScreeningExtractRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public MergeGbvScreeningCommandHandler(IGbvScreeningRepository gbvScreeningRepository)
+    public MergeGbvScreeningCommandHandler(IStageGbvScreeningExtractRepository gbvScreeningRepository, IMapper mapper)
     {
-        _gbvScreeningRepository = gbvScreeningRepository;
+        _stageRepository = gbvScreeningRepository;
     }
 
     public async Task<Result> Handle(MergeGbvScreeningCommand request, CancellationToken cancellationToken)
     {
+        //await _gbvScreeningRepository.MergeAsync(request.GbvScreeningExtracts);
+        var extracts = _mapper.Map<List<StageGbvScreeningExtract>>(request.GbvScreeningExtracts);
+        if (extracts.Any())
+        {
+            StandardizeClass<StageGbvScreeningExtract, GbvScreeningSourceBag> standardizer = new(extracts, request.GbvScreeningExtracts);
+            standardizer.StandardizeExtracts();
 
-        await _gbvScreeningRepository.MergeAsync(request.GbvScreeningExtracts);
+        }
+        //stage
+        await _stageRepository.SyncStage(extracts, request.GbvScreeningExtracts.ManifestId.Value);
 
         return Result.Success();
 

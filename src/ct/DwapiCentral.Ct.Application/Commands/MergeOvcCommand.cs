@@ -1,6 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,9 +16,9 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class MergeOvcCommand : IRequest<Result>
 {
-    public IEnumerable<OvcExtract> OvcExtracts { get; set; }
+    public OvcSourceBag OvcExtracts { get; set; }
 
-    public MergeOvcCommand(IEnumerable<OvcExtract> ovcExtracts)
+    public MergeOvcCommand(OvcSourceBag ovcExtracts)
     {
         OvcExtracts = ovcExtracts;
     }
@@ -23,17 +27,27 @@ public class MergeOvcCommand : IRequest<Result>
 
 public class MergeOvcCommandHandler : IRequestHandler<MergeOvcCommand, Result>
 {
-    private readonly IOvcRepository _ovcRepository;
+    private readonly IStageOvcExtractRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public MergeOvcCommandHandler(IOvcRepository ovcRepository)
+    public MergeOvcCommandHandler(IStageOvcExtractRepository ovcRepository, IMapper mapper)
     {
-        _ovcRepository = ovcRepository;
+        _stageRepository = ovcRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergeOvcCommand request, CancellationToken cancellationToken)
     {
+        //await _ovcRepository.MergeAsync(request.OvcExtracts);
+        var extracts = _mapper.Map<List<StageOvcExtract>>(request.OvcExtracts);
+        if (extracts.Any())
+        {
+            StandardizeClass<StageOvcExtract, OvcSourceBag> standardizer = new(extracts, request.OvcExtracts);
+            standardizer.StandardizeExtracts();
 
-        await _ovcRepository.MergeAsync(request.OvcExtracts);
+        }
+        //stage
+        await _stageRepository.SyncStage(extracts, request.OvcExtracts.ManifestId.Value);
 
         return Result.Success();
 
