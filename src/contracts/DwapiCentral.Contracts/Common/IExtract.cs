@@ -7,7 +7,7 @@ public interface IExtract
     DateTime? DateCreated { get; set; }
     DateTime? DateLastModified { get; set; }
     DateTime? DateExtracted { get; set; }
-    DateTime? Created { get; set; }
+    DateTime? Created { get; set; } 
     DateTime? Updated { get; set; }
     bool? Voided { get; set; }
 }

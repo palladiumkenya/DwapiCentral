@@ -817,11 +817,10 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    List<LaboratorySourceDto> sourceDtos = sourceBag.Extracts;
-                    IEnumerable<PatientLaboratoryExtract> patientLabExtract = _mapper.Map<IEnumerable<PatientLaboratoryExtract>>(sourceDtos);
+                    
 
 
-                    var response = await _mediator.Send(new MergePatientLabsCommand(patientLabExtract));
+                    var response = await _mediator.Send(new MergePatientLabsCommand(sourceBag));
                     if (response.IsSuccess)
                     {
 

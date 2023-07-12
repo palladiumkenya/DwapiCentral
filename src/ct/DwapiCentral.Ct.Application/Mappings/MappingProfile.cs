@@ -15,6 +15,7 @@ namespace DwapiCentral.Ct.Application.Mappings
         
         public MappingProfile()
         {
+            //Dto >> Extract
             CreateMap<PatientSourceDto, PatientExtract>();
             CreateMap<PatientVisitSourceDto, PatientVisitExtract>();
             CreateMap<PatientIptSourceDto,IptExtract>();
@@ -35,9 +36,28 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<AllergiesChronicIllnessSourceDto,AllergiesChronicIllnessExtract>();
             CreateMap<AdverseEventSourceDto,PatientAdverseEventExtract>();
 
-            //
+            //stage >> Extract
             CreateMap<StagePatientExtract, PatientExtract>();
             CreateMap<StageArtExtract, PatientArtExtract>();
+            CreateMap<StageLaboratoryExtract, PatientLaboratoryExtract>();
+            CreateMap<StageAllergiesChronicIllnessExtract, AllergiesChronicIllnessExtract>();
+            CreateMap<StageAdverseEventExtract, PatientAdverseEventExtract>();
+            CreateMap<StageBaselineExtract, PatientBaselinesExtract>();
+            CreateMap<StageContactListingExtract, ContactListingExtract>();
+            CreateMap<StageCovidExtract, CovidExtract>();
+            CreateMap<StageDefaulterTracingExtract, DefaulterTracingExtract>();
+            CreateMap<StageDepressionScreeningExtract, DepressionScreeningExtract>();
+            CreateMap<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningExtract>();
+            CreateMap<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingExtract>();
+            CreateMap<StageGbvScreeningExtract, GbvScreeningExtract>();
+            CreateMap<StageIptExtract, IptExtract>();
+            CreateMap<StageOtzExtract, OtzExtract>();
+            CreateMap<StageOvcExtract, OvcExtract>();
+            CreateMap<StagePharmacyExtract, PatientPharmacyExtract>();
+            CreateMap<StageStatusExtract, PatientStatusExtract>();
+            CreateMap<StageVisitExtract, PatientVisitExtract>();
+            
+            //DTO >> Stage
             CreateMap<PatientSourceDto, StagePatientExtract>();
             CreateMap<PatientArtSourceDto, StageArtExtract>();
             CreateMap<PatientBaselineSourceDto, StageBaselineExtract>();

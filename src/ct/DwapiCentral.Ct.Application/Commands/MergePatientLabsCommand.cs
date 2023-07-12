@@ -1,6 +1,10 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,28 +18,41 @@ public class MergePatientLabsCommand : IRequest<Result>
 {
     
      
-    public IEnumerable<PatientLaboratoryExtract> PatientLabs { get; set; }
+    public LaboratorySourceBag PatientLabsSourceBag { get; set; }
 
-    public MergePatientLabsCommand(IEnumerable<PatientLaboratoryExtract> patientLaboratoryExtract)
+    public MergePatientLabsCommand(LaboratorySourceBag patientLaboratoryExtractsourceBag)
     {
-        PatientLabs= patientLaboratoryExtract;
+        PatientLabsSourceBag = patientLaboratoryExtractsourceBag;
     }
 
 }
 
 public class MergePatientLabsCommandHandler : IRequestHandler<MergePatientLabsCommand, Result>
 {
-    private readonly IPatientLaboratoryExtractRepository _patientLaboratoryRepository;
+    private readonly IStageLaboratoryExtractRepository _stageRepository;    
+    private readonly IMapper _mapper;
 
-    public MergePatientLabsCommandHandler(IPatientLaboratoryExtractRepository patientLaboratoryExtractRepository)
+    public MergePatientLabsCommandHandler(IStageLaboratoryExtractRepository stageLaboratoryExtractRepository,IMapper mapper)
     {
-        _patientLaboratoryRepository= patientLaboratoryExtractRepository;
+        _stageRepository = stageLaboratoryExtractRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergePatientLabsCommand request, CancellationToken cancellationToken)
     {
+        var extracts = _mapper.Map<List<StageLaboratoryExtract>>(request.PatientLabsSourceBag.Extracts);
 
-        await _patientLaboratoryRepository.MergeLaboratoryExtracts(request.PatientLabs);
+        if (extracts.Any())
+        {
+            StandardizeClass<StageLaboratoryExtract, LaboratorySourceBag> standardizer = new(extracts, request.PatientLabsSourceBag);
+            standardizer.StandardizeExtracts();
+
+        }
+
+        //stage
+        await _stageRepository.SyncStage(extracts, request.PatientLabsSourceBag.ManifestId.Value);
+
+
 
         return Result.Success();
        

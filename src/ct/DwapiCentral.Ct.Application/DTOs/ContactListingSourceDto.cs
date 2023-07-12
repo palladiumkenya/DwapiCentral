@@ -28,7 +28,7 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? DateCreated { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
-        public DateTime? Created { get ; set ; }
+        public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
 

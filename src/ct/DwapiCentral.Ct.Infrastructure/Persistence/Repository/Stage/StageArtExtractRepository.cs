@@ -52,9 +52,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // Merge
                 await MergeExtracts(manifestId, extracts);
 
-                // assign > Merged
-               //await SmartMarkRegister(manifestId, extracts.Select(x => x.Id).ToList());
-
+                
             }
             catch (Exception e)
             {
@@ -94,8 +92,21 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.LastARTDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    
+                    //Update existing data
+                    foreach (var existingExtract in existingRecords)
+                    {
+                        var stageExtract = stageArt.FirstOrDefault(x =>
+                            x.PatientPk == existingExtract.PatientPk &&
+                            x.SiteCode == existingExtract.SiteCode &&
+                            x.LastARTDate == existingExtract.LastARTDate);
 
+                        if (stageExtract != null)
+                        {
+                            _mapper.Map(stageExtract, existingExtract);
+                        }
+                    }
+
+                    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
 
                 }
                 else
@@ -103,14 +114,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     uniqueStageExtracts = stageArt;
                 }
 
-
-                // Use AutoMapper to map StageExtract to Extract model 
                 var artExtracts = _mapper.Map<List<PatientArtExtract>>(uniqueStageExtracts);               
                 _context.Database.GetDbConnection().BulkInsert(artExtracts);
 
-                var existingArtExtracts = _mapper.Map<List<PatientArtExtract>>(existingRecords);
-                // Perform bulk update
-                _context.Database.GetDbConnection().BulkUpdate(artExtracts);
+                
             }
             catch(Exception ex)
             {
