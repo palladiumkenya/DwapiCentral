@@ -23,7 +23,7 @@ namespace DwapiCentral.Ct.Controllers
 
         [HttpPost]
         [Route("api/v3/Spot")]
-        public async Task<IActionResult> PostManifest([FromBody] Manifest manifest)
+        public async Task<IActionResult> PostManifest([FromBody] FacilityManifest manifest)
         {
             
 

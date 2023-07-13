@@ -25,20 +25,31 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
         public Task MergPatientArt(IEnumerable<PatientArtExtract> patientArtExtracts)
         {
             var distinctExtracts = patientArtExtracts
-               .GroupBy(e => new { e.PatientPk, e.SiteCode, e.LastVisit })
-               .Select(g => g.OrderByDescending(e => e.Id).First());
+               .GroupBy(e => new { e.PatientPk, e.SiteCode, e.LastARTDate })
+               .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();
 
-            _context.Database.GetDbConnection().BulkMerge(distinctExtracts); 
 
-            var extractIdsToKeep = distinctExtracts.Select(e => e.Id).ToList();
-            var deleteQuery = $@"
-                    DELETE FROM PatientArtExtracts
-                    WHERE Id NOT IN ({string.Join(",", extractIdsToKeep)})
-                ";
+            var existingExtracts = _context.PatientArtExtracts
+                .AsEnumerable()
+                .Where(e => distinctExtracts.Any(d =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.LastARTDate == e.LastARTDate
+                   ))
+                .ToList();
 
-            _context.Database.GetDbConnection().ExecuteAsync(deleteQuery);
-            
-           
+            var distinctToInsert = distinctExtracts
+                .Where(d => !existingExtracts.Any(e =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.LastARTDate == e.LastARTDate))
+                .ToList();
+
+
+
+            _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
+
+
             _context.SaveChangesAsync();
             return Task.CompletedTask;
         }

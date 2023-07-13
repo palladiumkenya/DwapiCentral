@@ -11,7 +11,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public Guid Id { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public int VisitID { get; set; }
+        public int? VisitID { get; set; }
         public DateTime DispenseDate { get; set; }
         public string? Drug { get; set; }
         public string? Provider { get; set; }       

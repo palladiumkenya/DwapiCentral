@@ -10,7 +10,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public Guid Id { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public int VisitID { get; set; }
+        public int? VisitID { get; set; }
         public DateTime VisitDate { get; set; }
         public string? FacilityName { get; set; }
         public int? EncounterId { get; set; }

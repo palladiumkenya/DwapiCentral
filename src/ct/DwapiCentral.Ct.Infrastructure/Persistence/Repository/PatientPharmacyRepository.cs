@@ -26,32 +26,38 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
 
         public Task MergePharmacyExtractsAsync(IEnumerable<PatientPharmacyExtract> pharmacyExtracts)
         {
-            var uniquePharmacyExtracts = new List<PatientPharmacyExtract>();
+            var distinctExtracts = pharmacyExtracts
+                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.VisitID, e.DispenseDate ,e.Created})
+                .Select(g => g.OrderByDescending(e => e.Id).First())
+                .ToList();
 
-            foreach (var pharmacyExtract in pharmacyExtracts)
-            {
-                var key = (pharmacyExtract.PatientPk, pharmacyExtract.SiteCode, pharmacyExtract.VisitID, pharmacyExtract.DispenseDate);
+            var existingExtracts = _context.PatientPharmacyExtracts
+                .AsEnumerable()
+                .Where(e => distinctExtracts.Any(d =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.VisitID == e.VisitID &&
+                    d.DispenseDate == e.DispenseDate &&
+                    d.Created == e.Created))
+                .ToList();
 
-                if (_uniquePharmacyExtracts.Contains(key))
-                {
-                    _context.Database.GetDbConnection().BulkUpdate(uniquePharmacyExtracts);
-                    continue;
-                }
+            var distinctToInsert = distinctExtracts
+                .Where(d => !existingExtracts.Any(e =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.VisitID == e.VisitID &&
+                    d.DispenseDate == e.DispenseDate &&
+                    d.Created == e.Created
+                    ))
+                .ToList();
 
-                _uniquePharmacyExtracts.Add(key);
-                uniquePharmacyExtracts.Add(pharmacyExtract);
-            }
 
-            if (uniquePharmacyExtracts.Count > 0)
-            {
-               
-                _context.Database.GetDbConnection().BulkInsert(uniquePharmacyExtracts);
-               
-            }
 
-            
+            _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
 
-           
+
+
+
 
             _context.SaveChangesAsync();
             return Task.CompletedTask;

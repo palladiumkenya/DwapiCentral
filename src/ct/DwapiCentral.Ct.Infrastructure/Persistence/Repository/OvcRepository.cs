@@ -25,17 +25,28 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
         {
             var distinctExtracts = ovcExtracts
                .GroupBy(e => new { e.PatientPk, e.SiteCode,e.VisitID,e.VisitDate })
-               .Select(g => g.OrderByDescending(e => e.Id).First());
+               .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();
 
-            _context.Database.GetDbConnection().BulkMerge(distinctExtracts);
 
-            var extractIdsToKeep = distinctExtracts.Select(e => e.Id).ToList();
-            var deleteQuery = $@"
-                    DELETE FROM OvcExtract
-                    WHERE Id NOT IN ({string.Join(",", extractIdsToKeep)})
-                ";
+            var existingExtracts = _context.OvcExtracts
+                .AsEnumerable()
+                .Where(e => distinctExtracts.Any(d =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.VisitID== e.VisitID &&    
+                    d.VisitDate == e.VisitDate
+                   ))
+                .ToList();
 
-            _context.Database.GetDbConnection().ExecuteAsync(deleteQuery);
+            var distinctToInsert = distinctExtracts
+                .Where(d => !existingExtracts.Any(e =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.VisitID== e.VisitID &&
+                    d.VisitDate == e.VisitDate))
+                .ToList();
+
+            _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
 
 
             _context.SaveChangesAsync();

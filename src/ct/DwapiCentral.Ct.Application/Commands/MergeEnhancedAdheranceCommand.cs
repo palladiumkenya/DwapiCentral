@@ -1,6 +1,11 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,9 +18,9 @@ namespace DwapiCentral.Ct.Application.Commands;
 public class MergeEnhancedAdheranceCommand : IRequest<Result>
 {
 
-    public IEnumerable<EnhancedAdherenceCounsellingExtract> EnhancedAdherenceCounsellingExtracts { get; set; }
+    public EnhancedAdherenceCounsellingSourceBag EnhancedAdherenceCounsellingExtracts { get; set; }
 
-    public MergeEnhancedAdheranceCommand(IEnumerable<EnhancedAdherenceCounsellingExtract> enhancedAdherenceCounsellingExtracts)
+    public MergeEnhancedAdheranceCommand(EnhancedAdherenceCounsellingSourceBag enhancedAdherenceCounsellingExtracts)
     {
         EnhancedAdherenceCounsellingExtracts = enhancedAdherenceCounsellingExtracts;
     }
@@ -24,17 +29,27 @@ public class MergeEnhancedAdheranceCommand : IRequest<Result>
 
 public class MergeEnhancedAdheranceCommandCommandHandler : IRequestHandler<MergeEnhancedAdheranceCommand, Result>
 {
-    private readonly IEnhancedAdherenceCounsellingRepository _enhancedAdheranceRepository;
+    private readonly IStageEnhancedAdherenceCounsellingExtractRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public MergeEnhancedAdheranceCommandCommandHandler(IEnhancedAdherenceCounsellingRepository enhancedAdherenceCounsellingRepository)
+    public MergeEnhancedAdheranceCommandCommandHandler(IStageEnhancedAdherenceCounsellingExtractRepository enhancedAdherenceCounsellingRepository, IMapper mapper)
     {
-        _enhancedAdheranceRepository = enhancedAdherenceCounsellingRepository;
+        _stageRepository = enhancedAdherenceCounsellingRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergeEnhancedAdheranceCommand request, CancellationToken cancellationToken)
     {
+        // await _enhancedAdheranceRepository.MergeAsync(request.EnhancedAdherenceCounsellingExtracts);
+        var extracts = _mapper.Map<List<StageEnhancedAdherenceCounsellingExtract>>(request.EnhancedAdherenceCounsellingExtracts);
+        if (extracts.Any())
+        {
+            StandardizeClass<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingSourceBag> standardizer = new(extracts, request.EnhancedAdherenceCounsellingExtracts);
+            standardizer.StandardizeExtracts();
 
-        await _enhancedAdheranceRepository.MergeAsync(request.EnhancedAdherenceCounsellingExtracts);
+        }
+        //stage
+        await _stageRepository.SyncStage(extracts, request.EnhancedAdherenceCounsellingExtracts.ManifestId.Value);
 
         return Result.Success();
 

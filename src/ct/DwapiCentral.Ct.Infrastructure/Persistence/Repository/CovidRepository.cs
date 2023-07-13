@@ -24,18 +24,27 @@ namespace DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository
         {
             var distinctExtracts = covidExtracts
                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.VisitID, e.Covid19AssessmentDate })
-               .Select(g => g.OrderByDescending(e => e.Id).First());
+               .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();
 
-            _context.Database.GetDbConnection().BulkMerge(distinctExtracts);
+            var existingExtracts = _context.CovidExtracts
+                 .AsEnumerable()
+                 .Where(e => distinctExtracts.Any(d =>
+                     d.PatientPk == e.PatientPk &&
+                     d.SiteCode == e.SiteCode &&
+                     d.VisitID == e.VisitID &&
+                     d.Covid19AssessmentDate == e.Covid19AssessmentDate
+                    ))
+                 .ToList();
 
-            var extractIdsToKeep = distinctExtracts.Select(e => e.Id).ToList();
-            var deleteQuery = $@"
-                    DELETE FROM CovidExtract
-                    WHERE Id NOT IN ({string.Join(",", extractIdsToKeep)})
-                ";
+            var distinctToInsert = distinctExtracts
+                .Where(d => !existingExtracts.Any(e =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.VisitID == e.VisitID &&
+                    d.Covid19AssessmentDate == e.Covid19AssessmentDate))
+                .ToList();
 
-            _context.Database.GetDbConnection().ExecuteAsync(deleteQuery);
-
+            _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
 
 
             _context.SaveChangesAsync();

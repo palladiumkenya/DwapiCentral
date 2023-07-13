@@ -24,19 +24,27 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
         {
             var distinctExtracts = defaulterTracingExtracts
                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.VisitID, e.VisitDate })
-               .Select(g => g.OrderByDescending(e => e.Id).First());
+               .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();
 
-            _context.Database.GetDbConnection().BulkMerge(distinctExtracts);
+            var existingExtracts = _context.DefaulterTracingExtracts
+                 .AsEnumerable()
+                 .Where(e => distinctExtracts.Any(d =>
+                     d.PatientPk == e.PatientPk &&
+                     d.SiteCode == e.SiteCode &&
+                     d.VisitID == e.VisitID &&
+                     d.VisitDate == e.VisitDate
+                    ))
+                 .ToList();
 
-            var extractIdsToKeep = distinctExtracts.Select(e => e.Id).ToList();
-            var deleteQuery = $@"
-                    DELETE FROM DefaulterTracingExtract
-                    WHERE Id NOT IN ({string.Join(",", extractIdsToKeep)})
-                ";
+            var distinctToInsert = distinctExtracts
+                .Where(d => !existingExtracts.Any(e =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.VisitID == e.VisitID &&
+                    d.VisitDate == e.VisitDate))
+                .ToList();
 
-            _context.Database.GetDbConnection().ExecuteAsync(deleteQuery);
-
-
+            _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
 
             _context.SaveChangesAsync();
             return Task.CompletedTask;

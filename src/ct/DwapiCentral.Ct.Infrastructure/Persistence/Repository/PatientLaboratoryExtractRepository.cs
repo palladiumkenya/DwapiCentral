@@ -22,26 +22,35 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
 
         public Task MergeLaboratoryExtracts(IEnumerable<PatientLaboratoryExtract> patientLabs)
         {
-            var uniqueLabExtracts = new HashSet<string>();
+            var distinctExtracts = patientLabs
+               .GroupBy(e => new { e.PatientPk, e.SiteCode, e.VisitId, e.OrderedByDate,e.TestResult,e.TestName })
+               .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();
 
-            foreach (var labExtract in patientLabs)
-            {
-                var labExtractKey = $"{labExtract.PatientPk}_{labExtract.SiteCode}_{labExtract.VisitId}_{labExtract.OrderedByDate}";
-                if (uniqueLabExtracts.Contains(labExtractKey))
-                {
-                    // Skip duplicate lab extract
-                    continue;
-                }
+            var existingExtracts = _context.PatientLaboratoryExtracts
+                 .AsEnumerable()
+                 .Where(e => distinctExtracts.Any(d =>
+                     d.PatientPk == e.PatientPk &&
+                     d.SiteCode == e.SiteCode &&
+                     d.VisitId == e.VisitId &&
+                     d.OrderedByDate == e.OrderedByDate &&
+                     d.TestResult ==e.TestResult &&
+                     d.TestName == e.TestName
+                    ))
+                 .ToList();
 
-               
-                    // Add new lab extract
-                     _context.Database.GetDbConnection().BulkMerge(patientLabs);
-                
+            var distinctToInsert = distinctExtracts
+                .Where(d => !existingExtracts.Any(e =>
+                    d.PatientPk == e.PatientPk &&
+                    d.SiteCode == e.SiteCode &&
+                    d.VisitId == e.VisitId &&
+                    d.OrderedByDate == e.OrderedByDate &&
+                    d.TestResult == e.TestResult &&
+                    d.TestName == e.TestName))
+                .ToList();
 
-                
-            }
+            _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
 
-             _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
 
           
            

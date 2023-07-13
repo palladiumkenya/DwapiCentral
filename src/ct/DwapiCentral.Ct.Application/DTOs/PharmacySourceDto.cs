@@ -6,7 +6,7 @@ namespace DwapiCentral.Ct.Application.DTOs
 {
     public class PharmacySourceDto : IPharmacy
     {
-        public int VisitID { get; set; }
+        public int? VisitID { get; set; }
         public string? Drug { get; set; }
         public string? Provider { get; set; }
         public DateTime DispenseDate { get; set; }
@@ -25,7 +25,7 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
-        public DateTime? Created { get; set; }
+        public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
 
