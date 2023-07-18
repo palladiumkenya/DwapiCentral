@@ -34,4 +34,9 @@
       <ProjectReference Include="..\DwapiCentral.Ct.Infrastructure\DwapiCentral.Ct.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Command\" />
+      <Folder Include="Queries\" />
+    </ItemGroup>
+
 </Project>
