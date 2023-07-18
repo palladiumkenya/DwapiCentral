@@ -10,14 +10,12 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class UpdateHandshakeCommand : IRequest<Result>
 {
-    public Guid Id { get; set; }
-    public int SiteCode { get; set; }
-    public Guid? Session { get; set; }
+    
+    public Guid Session { get; set; }
 
-    public UpdateHandshakeCommand(Guid id, int siteCode, Guid? session)
+    public UpdateHandshakeCommand(Guid session)
     {
-        Id = id;
-        SiteCode = siteCode;
+       
         Session = session;
     }
 }
@@ -37,11 +35,10 @@ public class UpdateHandshakeCommandHandler : IRequestHandler<UpdateHandshakeComm
     {
         try
         {
-            // check if manifest exists 
-            
-            var manifest = await _manifestRepository.GetById(request.Id);
+            // check if manifest exists             
+            var manifest = await _manifestRepository.GetById(request.Session);
             if (null == manifest)
-                throw new ManifestNotFoundException(request.Id);
+                throw new ManifestNotFoundException(request.Session);
 
             // update handshake 
             
@@ -51,7 +48,7 @@ public class UpdateHandshakeCommandHandler : IRequestHandler<UpdateHandshakeComm
 
             // Publish event...
             
-            await _mediator.Publish(new HandshakeReceivedEvent(request.Id, request.SiteCode), cancellationToken);
+            await _mediator.Publish(new HandshakeReceivedEvent(manifest.Id, manifest.SiteCode), cancellationToken);
             
             return Result.Success();
         }

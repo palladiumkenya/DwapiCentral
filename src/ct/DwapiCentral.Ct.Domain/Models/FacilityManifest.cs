@@ -15,12 +15,15 @@ namespace DwapiCentral.Ct.Domain.Models
         public string Name { get; set; }
         public Guid EmrId { get; set; }
         public string EmrName { get; set; }
+        public string? EmrVersion { get; set; }
         public EmrSetup EmrSetup { get; set; }
         public List<int> PatientPKs { get; set; } = new List<int>();
         public string? Metrics { get; set; }
         public List<FacMetric> FacMetrics { get; set; } = new List<FacMetric>();
         public int PatientCount => PatientPKs.Count;
         public UploadMode UploadMode { get; set; }
+        public string? DwapiVersion { get; set; }
+        public string? Docket { get; set; } = "CT";
 
         public Guid Session { get; set; }
         public DateTime Start { get; set; }

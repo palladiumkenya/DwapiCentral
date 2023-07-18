@@ -1,8 +1,10 @@
 ﻿using DwapiCentral.Contracts.Manifest;
 using DwapiCentral.Ct.Application.Commands;
 using DwapiCentral.Ct.Domain.Models;
+using Infrastracture.Custom;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Serilog;
 using System.Linq.Expressions;
 using System.Net;
@@ -14,6 +16,7 @@ namespace DwapiCentral.Ct.Controllers
     public class ManifestController : Controller
     {
         private readonly IMediator _mediator;
+       
 
         public ManifestController(IMediator mediator)
         {
@@ -36,17 +39,31 @@ namespace DwapiCentral.Ct.Controllers
 
                     if (validFacility.IsSuccess)
                     {
-                        var responce = await _mediator.Send(new SaveManifestCommand(manifest));
 
-                        if (responce.IsSuccess)
+                        string json = manifest.FacMetrics[0].Metric;
+
+                        dynamic data = JsonConvert.DeserializeObject(json);
+
+                        manifest.EmrVersion = data.EmrVersion;
+
+                        dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.FacMetrics[1].Metric);
+
+                        manifest.DwapiVersion = dwapiVersiondata.Version;                     
+
+                                              
+
+                        var responce = await _mediator.Send(new SaveManifestCommand(manifest));
+                      if (responce.IsSuccess)
                         {
-                            var response = new HttpResponseMessage(HttpStatusCode.OK)
+                            var successMessage = new
                             {
-                                Content = new StringContent("Manifest saved successfully.")
+                                manifestDetails = Manifest.Create(manifest)
+                                
                             };
 
+                            return Ok(successMessage);
+
                             
-                            return Ok(response);
                         }
                         else return BadRequest(responce);
 
@@ -63,6 +80,33 @@ namespace DwapiCentral.Ct.Controllers
                 }
             return BadRequest($"The expected {new Manifest().GetType().Name} is null");
            
+        }
+
+        [HttpPost]
+        [Route("api/Handshake/{session}")]        
+        public async Task<IActionResult> Post(Guid session)
+        {
+            try
+            {
+                var responce = await _mediator.Send(new UpdateHandshakeCommand(session));
+
+                if (responce.IsSuccess)
+                {
+                    var response = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent("Manifest saved successfully.")
+                    };
+
+
+                    return Ok(response);
+                }
+                else return BadRequest(responce);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Handshake error", e);               
+                return BadRequest(e.Message);
+            }
         }
 
     }

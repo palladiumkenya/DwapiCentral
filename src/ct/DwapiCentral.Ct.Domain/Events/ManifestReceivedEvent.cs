@@ -12,6 +12,8 @@ public class ManifestReceivedEvent : INotification
     public DateTime Date { get; set; } = DateTime.Now;
     public UploadMode UploadMode { get; set; }    
     public EmrSetup EmrSetup { get; set; }
+    public string EmrVersion { get; set; }
+    public string DwapiVersion { get; set; }
     public string Status { get; set; }
     public ICollection<Metric> Metrics { get; set; }
 

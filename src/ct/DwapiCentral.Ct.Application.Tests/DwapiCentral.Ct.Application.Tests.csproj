@@ -17,6 +17,7 @@
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
         <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
         <PackageReference Include="coverlet.collector" Version="3.1.2" />
+        <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,6 +32,11 @@
     <ItemGroup>
       <ProjectReference Include="..\DwapiCentral.Ct.Infrastructure.Tests\DwapiCentral.Ct.Infrastructure.Tests.csproj" />
       <ProjectReference Include="..\DwapiCentral.Ct.Infrastructure\DwapiCentral.Ct.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Command\" />
+      <Folder Include="Queries\" />
     </ItemGroup>
 
 </Project>

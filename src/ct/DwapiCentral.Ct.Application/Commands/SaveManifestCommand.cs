@@ -76,6 +76,8 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
                 UploadMode = facManifest.UploadMode,
                 Status = facManifest.Status,
                 EmrSetup = facManifest.EmrSetup,
+                EmrVersion = facManifest.EmrVersion,
+                DwapiVersion = facManifest.DwapiVersion,
                 Metrics = facManifest.Metrics
             };
             await _mediator.Publish(notification, cancellationToken);
