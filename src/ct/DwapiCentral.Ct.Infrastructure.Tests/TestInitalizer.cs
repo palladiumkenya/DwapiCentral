@@ -1,5 +1,6 @@
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
 using DwapiCentral.Shared.Custom;
+using DwapiCentral.Shared.Domain.Model.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +23,10 @@ public class TestInitializer
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Test.json", optional: false, reloadOnChange: true)
             .Build();
+        // Print out the RabbitMQ configuration
+        var rabbitMQConfig = config.GetSection("RabbitMQ").Get<RabbitOptions>();
+        Console.WriteLine($"RabbitMQ HostName: {rabbitMQConfig.HostName}");
+        Console.WriteLine($"RabbitMQ Port: {rabbitMQConfig.Port}");
 
         var services = new ServiceCollection();
         services.AddInfrastructure(config, true,GenerateDynamicConnection());
