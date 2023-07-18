@@ -13,5 +13,6 @@ public class HandshakeReceivedEvent:INotification
     {
         ManifestId = manifestId;
         SiteCode = siteCode;
+
     }
 }

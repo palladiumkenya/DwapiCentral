@@ -1,3 +1,4 @@
+using Dapper;
 using DwapiCentral.Ct.Application.Interfaces.Repository;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -13,12 +14,11 @@ public class ManifestRepository:IManifestRepository
     {
         _context = context;
     }
-    
 
-    public async Task<Manifest> GetById(Guid id)
+    public async Task<Manifest> GetById(Guid session)
     {
        return await _context.Manifests
-            .AsTracking().FirstOrDefaultAsync(x => x.Id == id);
+            .AsTracking().FirstOrDefaultAsync(x => x.Session == session);
     }
 
     public async Task Save(Manifest manifest)

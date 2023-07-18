@@ -40,7 +40,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsCount = extracts.Count, SiteCode = extracts.First().SiteCode, ExtractName = "EnhancedAdherenceCounsellingExtracts" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsCount = extracts.Count, SiteCode = extracts.First().SiteCode, ExtractName = "EnhancedAdherenceCounsellingExtract" };
                 await _mediator.Publish(notification);
 
 

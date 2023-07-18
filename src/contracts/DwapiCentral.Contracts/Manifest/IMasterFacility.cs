@@ -12,5 +12,6 @@ namespace DwapiCentral.Contracts.Manifest
          int Code { get; set; }     
          string Name { get; set; }
          string County { get; set; }
+         Guid 
     }
 }

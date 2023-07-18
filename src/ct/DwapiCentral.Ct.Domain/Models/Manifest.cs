@@ -79,6 +79,9 @@ namespace DwapiCentral.Ct.Domain.Models
             fm.Session = manifest.Session;
             fm.Start = manifest.Start;
             fm.Tag = manifest.Tag;
+            fm.EmrVersion= manifest.EmrVersion;
+            fm.DwapiVersion = manifest.DwapiVersion;
+            fm.Docket = manifest.Docket;
 
             fm.AddCargo(manifest.Items);
 
