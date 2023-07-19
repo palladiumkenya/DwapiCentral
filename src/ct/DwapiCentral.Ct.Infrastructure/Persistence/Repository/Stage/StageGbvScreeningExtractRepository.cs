@@ -67,18 +67,34 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 List<StageGbvScreeningExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
+                var queryParameters = new
+                {
+                    PatientPKs = stageGbvScreening.Select(x => x.PatientPk),
+                    SiteCodes = stageGbvScreening.Select(x => x.SiteCode),
+                    VisitIds = stageGbvScreening.Select(x => x.VisitID),
+                    VisitDates = stageGbvScreening.Select(x => x.VisitDate)
+                };
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<GbvScreeningExtract>("SELECT * FROM GbvScreeningExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitID IN @VisitIDs AND VisitDate IN @VisitDates ",
-                    new
-                    {
-                        PatientPKs = stageGbvScreening.Select(x => x.PatientPk),
-                        SiteCodes = stageGbvScreening.Select(x => x.SiteCode),
-                        VisitIds = stageGbvScreening.Select(x => x.VisitID),
-                        VisitDates = stageGbvScreening.Select(x => x.VisitDate)
+                var query = @"
+                            SELECT p.*
+                            FROM GbvScreeningExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM (
+                                    SELECT PatientPK, SiteCode, VisitID, VisitDate, MAX(Date_Created) AS MaxCreatedTime
+                                    FROM StageGbvScreeningExtracts
+                                    GROUP BY PatientPK, SiteCode, VisitID, VisitDate
+                                ) s
+                                WHERE p.PatientPk = s.PatientPK
+                                    AND p.SiteCode = s.SiteCode
+                                    AND p.VisitID = s.VisitID
+                                    AND p.VisitDate = s.VisitDate
+                                    AND p.Date_Created = s.Date_Created
+                            )
+                        ";
 
 
-                    });
+                var existingRecords = await connection.QueryAsync<GbvScreeningExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
@@ -91,17 +107,21 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data  
+                    var stageDictionary = stageGbvScreening
+                                .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate })
+                                .ToDictionary(
+                                    g => g.Key,
+                                    g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+                                );
+
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageGbvScreening.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.VisitID == existingExtract.VisitID &&
-                            x.VisitDate == existingExtract.VisitDate
-                            );
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }
@@ -115,8 +135,24 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     uniqueStageExtracts = stageGbvScreening;
                 }
 
-                var extracts = _mapper.Map<List<GbvScreeningExtract>>(uniqueStageExtracts);
-                _context.Database.GetDbConnection().BulkInsert(extracts);
+                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+                var latestRecordsDict = new Dictionary<string, StageGbvScreeningExtract>();
+
+                foreach (var extract in sortedExtracts)
+                {
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.VisitID}_{extract.VisitDate}";
+
+                    if (!latestRecordsDict.ContainsKey(key))
+                    {
+                        latestRecordsDict[key] = extract;
+                    }
+                }
+
+                var filteredExtracts = latestRecordsDict.Values.ToList();
+                var mappedExtracts = _mapper.Map<List<GbvScreeningExtract>>(filteredExtracts);
+                _context.Database.GetDbConnection().BulkInsert(mappedExtracts);
+
+              
 
 
             }

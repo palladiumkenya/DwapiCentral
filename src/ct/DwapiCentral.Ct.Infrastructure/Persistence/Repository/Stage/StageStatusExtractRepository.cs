@@ -67,20 +67,30 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 List<StageStatusExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
+                var queryParameters = new
+                {
+                    PatientPKs = stageStatus.Select(x => x.PatientPk),
+                    SiteCodes = stageStatus.Select(x => x.SiteCode),
+                    ExitDates = stageStatus.Select(x => x.ExitDate),
+                    ExitReasons = stageStatus.Select(x => x.ExitReason)
+                };
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<PatientStatusExtract>("SELECT * FROM PatientStatusExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND ExitDate IN @ExitDates AND ExitReason IN @ExitReasons ",
-                    new
-                    {
-                        PatientPKs = stageStatus.Select(x => x.PatientPk),
-                        SiteCodes = stageStatus.Select(x => x.SiteCode),
-                        ExitDates = stageStatus.Select(x => x.ExitDate),
-                        ExitReasons = stageStatus.Select(x => x.ExitReason)
-                        
+                var query = @"
+                            SELECT p.*
+                            FROM PatientStatusExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageStatusExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode 
+                                AND P.ExitDate = s.ExitDate
+                                AND P.ExitReason = s.ExitReason                               
+                                
+                            )
+                        ";
 
-
-                    });
-
+                var existingRecords = await connection.QueryAsync<PatientStatusExtract>(query, queryParameters);
+              
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, DateTime ExitDate, string ExitReason)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.ExitDate, x.ExitReason)));
 
@@ -91,23 +101,22 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     uniqueStageExtracts = stageStatus
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.ExitDate, x.ExitReason)) && x.LiveSession == manifestId)
                         .ToList();
+                      
+                    //Update existing extracts
+                    var stageDictionary = stageStatus.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode, x.ExitDate, x.ExitReason },
+                        x => x);
 
-                    //Update existing data
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageStatus.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.ExitDate == existingExtract.ExitDate &&
-                            x.ExitReason == existingExtract.ExitReason
-                            );
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.ExitDate, existingExtract.ExitReason },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }
                     }
-
                     _context.Database.GetDbConnection().BulkUpdate(existingRecords);
 
                 }

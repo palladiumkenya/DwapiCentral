@@ -67,18 +67,29 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 List<StageOtzExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
+                var queryParameters = new
+                {
+                    PatientPKs = stageOtz.Select(x => x.PatientPk),
+                    SiteCodes = stageOtz.Select(x => x.SiteCode),
+                    VisitIds = stageOtz.Select(x => x.VisitID),
+                    VisitDates = stageOtz.Select(x => x.VisitDate)
+                };
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<OtzExtract>("SELECT * FROM OtzExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitID IN @VisitIDs AND VisitDate IN @VisitDates ",
-                    new
-                    {
-                        PatientPKs = stageOtz.Select(x => x.PatientPk),
-                        SiteCodes = stageOtz.Select(x => x.SiteCode),
-                        VisitIds = stageOtz.Select(x => x.VisitID),
-                        VisitDates = stageOtz.Select(x => x.VisitDate)
+                var query = @"
+                            SELECT p.*
+                            FROM OtzExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageOtzExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode 
+                                AND P.VisitID = s.VisitID
+                                AND P.VisitDate = s.VisitDate                               
+                                
+                            )
+                        ";
 
-
-                    });
+                var existingRecords = await connection.QueryAsync<OtzExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
@@ -91,17 +102,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stageDictionary = stageOtz.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate },
+                        x => x);
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageOtz.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.VisitID == existingExtract.VisitID &&
-                            x.VisitDate == existingExtract.VisitDate
-                            );
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }

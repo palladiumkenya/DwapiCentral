@@ -67,19 +67,32 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 List<StageCovidExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
-
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<CovidExtract>("SELECT * FROM CovidExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitID IN @VisitIDs AND Covid19AssessmentDate IN @Covid19AssessmentDates ",
-                    new
-                    {
-                        PatientPKs = stageCovid.Select(x => x.PatientPk),
-                        SiteCodes = stageCovid.Select(x => x.SiteCode),
-                        VisitIds = stageCovid.Select(x => x.VisitID),
-                        CovidAssessmentDates = stageCovid.Select(x => x.Covid19AssessmentDate)
+                var queryParameters = new
+                {
+                    stagePatientPKs = stageCovid.Select(x => x.PatientPk),
+                    stageSiteCodes = stageCovid.Select(x => x.SiteCode),
+                    stageVisitIDs = stageCovid.Select(x=> x.VisitID),
+                    stageCovid19AssessmentDates = stageCovid.Select(x => x.Covid19AssessmentDate),
 
 
-                    });
 
+                };
+
+                var query = @"
+                            SELECT p.*
+                            FROM CovidExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageCovidExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode 
+                                AND P.VisitID = s.VisitID
+                                AND P.Covid19AssessmentDate = s.Covid19AssessmentDate                               
+                                
+                            )
+                        ";
+
+                var existingRecords = await connection.QueryAsync<CovidExtract>(query, queryParameters);
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime Covid19AssessmentDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode,x.VisitID,x.Covid19AssessmentDate)));
 
@@ -91,15 +104,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.Covid19AssessmentDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stageDictionary = stageCovid.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode,x.VisitID,x.Covid19AssessmentDate },
+                        x => x);
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageCovid.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode
-                            );
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode,existingExtract.VisitID,existingExtract.Covid19AssessmentDate },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }

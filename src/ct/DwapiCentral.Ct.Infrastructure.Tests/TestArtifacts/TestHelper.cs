@@ -89,10 +89,10 @@ public class TestHelper
     {
         return new List<PatientBaselinesExtract>()
         {
-            new PatientBaselinesExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA5-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,DateCreated=DateTime.Now},
-            new PatientBaselinesExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA6-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,DateCreated=DateTime.Today.AddDays(-4)},
-            new PatientBaselinesExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA7-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,DateCreated=DateTime.Today.AddDays(-3)},
-            new PatientBaselinesExtract() {Id = new Guid("017EC6FE-A65F-4F3E-AEA8-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000, DateCreated = DateTime.Today.AddDays(-2)}
+            new PatientBaselinesExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA5-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,Date_Created=DateTime.Now},
+            new PatientBaselinesExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA6-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,Date_Created=DateTime.Today.AddDays(-4)},
+            new PatientBaselinesExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA7-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,Date_Created=DateTime.Today.AddDays(-3)},
+            new PatientBaselinesExtract() {Id = new Guid("017EC6FE-A65F-4F3E-AEA8-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000, Date_Created = DateTime.Today.AddDays(-2)}
 
         };
     }
@@ -220,10 +220,10 @@ public class TestHelper
     {
         return new List<ContactListingExtract>()
         {
-            new ContactListingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA5-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,DateCreated=DateTime.Now},
-            new ContactListingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA6-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,DateCreated=DateTime.Today.AddDays(-4)},
-            new ContactListingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA7-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,DateCreated=DateTime.Today.AddDays(-3)},
-            new ContactListingExtract() {Id = new Guid("017EC6FE-A65F-4F3E-AEA8-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,DateCreated = DateTime.Today.AddDays(-2)}
+            new ContactListingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA5-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,Date_Created=DateTime.Now},
+            new ContactListingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA6-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,Date_Created=DateTime.Today.AddDays(-4)},
+            new ContactListingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA7-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,Date_Created=DateTime.Today.AddDays(-3)},
+            new ContactListingExtract() {Id = new Guid("017EC6FE-A65F-4F3E-AEA8-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,Date_Created = DateTime.Today.AddDays(-2)}
 
         };
     }

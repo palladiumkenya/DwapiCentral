@@ -34,22 +34,31 @@ public class MergeAllergiesChronicIllnessCommandHandler : IRequestHandler<MergeA
     public MergeAllergiesChronicIllnessCommandHandler(IStageAllergiesChronicIllnessExtractRepository stageAllergiesChronicIllnessRepository, IMapper mapper)
     {
         _stageRepository = stageAllergiesChronicIllnessRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergeAllergiesChronicIllnessCommand request, CancellationToken cancellationToken)
     {
 
-        //await _allergiesChronicIllnessRepository.MergeAsync(request.AllergiesChronicIllnessExtracts);
-        var extracts = _mapper.Map<List<StageAllergiesChronicIllnessExtract>>(request.AllergiesChronicIllnessExtracts.Extracts);
-        if (extracts.Any())
+        try
         {
-            StandardizeClass<StageAllergiesChronicIllnessExtract, AllergiesChronicIllnessSourceBag> standardizer = new(extracts, request.AllergiesChronicIllnessExtracts);
-            standardizer.StandardizeExtracts();
+            //await _allergiesChronicIllnessRepository.MergeAsync(request.AllergiesChronicIllnessExtracts);
+            var extracts = _mapper.Map<List<StageAllergiesChronicIllnessExtract>>(request.AllergiesChronicIllnessExtracts.Extracts);
+            if (extracts.Any())
+            {
+                StandardizeClass<StageAllergiesChronicIllnessExtract, AllergiesChronicIllnessSourceBag> standardizer = new(extracts, request.AllergiesChronicIllnessExtracts);
+                standardizer.StandardizeExtracts();
+
+            }
+            //stage
+            await _stageRepository.SyncStage(extracts, request.AllergiesChronicIllnessExtracts.ManifestId.Value);
+            return Result.Success();
 
         }
-        //stage
-        await _stageRepository.SyncStage(extracts, request.AllergiesChronicIllnessExtracts.ManifestId.Value);        
-        return Result.Success();
+        catch(Exception ex)
+        {
+            return Result.Failure(ex.Message);
+        }
 
     }
 }

@@ -23,7 +23,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
         public Task MergeAsync(IEnumerable<PatientBaselinesExtract> patientBaselinesExtracts)
         {
            var distinctExtracts = patientBaselinesExtracts
-                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.DateCreated })
+                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.Date_Created })
                 .Select(g => g.OrderByDescending(e => e.Id).First())
                 .ToList();
 
@@ -32,7 +32,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                 .Where(e => distinctExtracts.Any(d =>
                     d.PatientPk == e.PatientPk &&
                     d.SiteCode == e.SiteCode &&
-                    d.DateCreated == e.DateCreated
+                    d.Date_Created == e.Date_Created
                    ))
                 .ToList();
 
@@ -40,7 +40,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                 .Where(d => !existingExtracts.Any(e =>
                     d.PatientPk == e.PatientPk &&
                     d.SiteCode == e.SiteCode &&
-                    d.DateCreated == e.DateCreated ))
+                    d.Date_Created == e.Date_Created ))
                 .ToList();
 
 

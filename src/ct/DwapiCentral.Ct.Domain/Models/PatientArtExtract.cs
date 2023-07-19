@@ -35,7 +35,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? PreviousARTUse { get ; set ; }
         public string? PreviousARTPurpose { get ; set ; }
         public DateTime? DateLastUsed { get ; set ; }       
-        public DateTime? DateCreated { get ; set ; }
+        public DateTime? Date_Created { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get; set; } = DateTime.Now;

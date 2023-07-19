@@ -68,19 +68,30 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 List<StageVisitExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
+                var queryParameters = new
+                {
+                    PatientPKs = stageVisits.Select(x => x.PatientPk),
+                    SiteCodes = stageVisits.Select(x => x.SiteCode),
+                    VisitIds = stageVisits.Select(x => x.VisitId),
+                    VisitDates = stageVisits.Select(x => x.VisitDate)
+                };
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<PatientVisitExtract>("SELECT * FROM PatientVisitExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitId IN @VisitIDs AND VisitDate IN @VisitDates ",
-                    new
-                    {
-                        PatientPKs = stageVisits.Select(x => x.PatientPk),
-                        SiteCodes = stageVisits.Select(x => x.SiteCode),
-                        VisitIds = stageVisits.Select(x => x.VisitId),
-                        VisitDates = stageVisits.Select(x => x.VisitDate)
+                var query = @"
+                            SELECT p.*
+                            FROM PatientVisitExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageVisitExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode 
+                                AND P.VisitId = s.VisitId
+                                AND P.VisitDate = s.VisitDate                               
+                                
+                            )
+                        ";
 
-
-                    });
-
+                var existingRecords = await connection.QueryAsync<PatientVisitExtract>(query, queryParameters);
+                
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitId, x.VisitDate)));
 
@@ -92,17 +103,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitId, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stageDictionary = stageVisits.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode, x.VisitId, x.VisitDate },
+                        x => x);
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageVisits.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.VisitId == existingExtract.VisitId &&
-                            x.VisitDate == existingExtract.VisitDate
-                            );
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitId, existingExtract.VisitDate },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }

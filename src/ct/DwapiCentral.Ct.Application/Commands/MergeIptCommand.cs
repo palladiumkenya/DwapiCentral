@@ -40,7 +40,7 @@ public class MergeIptCommandHandler : IRequestHandler<MergeIptCommand, Result>
     public async Task<Result> Handle(MergeIptCommand request, CancellationToken cancellationToken)
     {
         //await _iptRepository.MergeAsync(request.IptExtracts);
-        var extracts = _mapper.Map<List<StageIptExtract>>(request.IptExtracts);
+        var extracts = _mapper.Map<List<StageIptExtract>>(request.IptExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageIptExtract, PatientIptSourceBag> standardizer = new(extracts, request.IptExtracts);

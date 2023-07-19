@@ -31,6 +31,7 @@ public class MergeDepressionScreeningCommandHandler : IRequestHandler<MergeDepre
     public MergeDepressionScreeningCommandHandler(IStageDepressionScreeningExtractRepository depressionScreeningRepository, IMapper mapper)
     {
         _stageRepository = depressionScreeningRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergeDepressionScreeningCommand request, CancellationToken cancellationToken)

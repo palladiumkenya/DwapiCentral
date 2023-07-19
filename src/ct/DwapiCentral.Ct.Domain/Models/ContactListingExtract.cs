@@ -24,7 +24,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? KnowledgeOfHivStatus { get; set; }
         public string? PnsApproach { get; set; }
         public int? ContactPatientPK { get; set; }              
-        public DateTime? DateCreated { get; set; }
+        public DateTime? Date_Created { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; }

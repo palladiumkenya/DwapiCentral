@@ -41,7 +41,7 @@ public class MergeEnhancedAdheranceCommandCommandHandler : IRequestHandler<Merge
     public async Task<Result> Handle(MergeEnhancedAdheranceCommand request, CancellationToken cancellationToken)
     {
         // await _enhancedAdheranceRepository.MergeAsync(request.EnhancedAdherenceCounsellingExtracts);
-        var extracts = _mapper.Map<List<StageEnhancedAdherenceCounsellingExtract>>(request.EnhancedAdherenceCounsellingExtracts);
+        var extracts = _mapper.Map<List<StageEnhancedAdherenceCounsellingExtract>>(request.EnhancedAdherenceCounsellingExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingSourceBag> standardizer = new(extracts, request.EnhancedAdherenceCounsellingExtracts);

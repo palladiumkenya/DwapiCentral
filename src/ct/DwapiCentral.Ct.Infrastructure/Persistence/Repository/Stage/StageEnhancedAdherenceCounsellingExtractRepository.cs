@@ -25,7 +25,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
         private readonly IMediator _mediator;
         private readonly string _stageName;
 
-        public StageEnhancedAdherenceCounsellingExtractRepository(CtDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageDrugAlcoholScreeningExtract)}s")
+        public StageEnhancedAdherenceCounsellingExtractRepository(CtDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageEnhancedAdherenceCounsellingExtract)}s")
         {
             _context = context;
             _mapper = mapper;
@@ -68,18 +68,29 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 List<StageEnhancedAdherenceCounsellingExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
+                var queryParameters = new
+                {
+                    PatientPKs = stageEnhancedAdherance.Select(x => x.PatientPk),
+                    SiteCodes = stageEnhancedAdherance.Select(x => x.SiteCode),
+                    VisitIds = stageEnhancedAdherance.Select(x => x.VisitID),
+                    VisitDates = stageEnhancedAdherance.Select(x => x.VisitDate)
+                };
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<EnhancedAdherenceCounsellingExtract>("SELECT * FROM EnhancedAdherenceCounsellingExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitID IN @VisitIDs AND VisitDate IN @VisitDates ",
-                    new
-                    {
-                        PatientPKs = stageEnhancedAdherance.Select(x => x.PatientPk),
-                        SiteCodes = stageEnhancedAdherance.Select(x => x.SiteCode),
-                        VisitIds = stageEnhancedAdherance.Select(x => x.VisitID),
-                        VisitDates = stageEnhancedAdherance.Select(x => x.VisitDate)
+                var query = @"
+                            SELECT p.*
+                            FROM EnhancedAdherenceCounsellingExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageEnhancedAdherenceCounsellingExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode 
+                                AND P.VisitID = s.VisitID
+                                AND P.VisitDate = s.VisitDate                               
+                                
+                            )
+                        ";
 
-
-                    });
+                var existingRecords = await connection.QueryAsync<EnhancedAdherenceCounsellingExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
@@ -92,17 +103,17 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stageDictionary = stageEnhancedAdherance.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate },
+                        x => x);
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageEnhancedAdherance.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.VisitID == existingExtract.VisitID &&
-                            x.VisitDate == existingExtract.VisitDate
-                            );
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }

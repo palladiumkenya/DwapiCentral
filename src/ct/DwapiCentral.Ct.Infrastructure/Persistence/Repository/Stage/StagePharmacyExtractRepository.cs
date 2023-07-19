@@ -1,4 +1,5 @@
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using Dapper;
@@ -69,45 +70,59 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await connection.OpenAsync();
 
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<PatientPharmacyExtract>("SELECT * FROM PatientPharmacyExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitID IN @VisitIDs AND DispenseDate IN @DispenseDates",
-                    new
-                    {
-                        PatientPKs = stagePharmacy.Select(x => x.PatientPk),
-                        SiteCodes = stagePharmacy.Select(x => x.SiteCode),
-                        VisitIds = stagePharmacy.Select(x => x.VisitID),
-                        DispenseDates = stagePharmacy.Select(x => x.DispenseDate)
+                var queryParameters = new
+                {
+                    stagePharmacyPatientPKs = stagePharmacy.Select(x => x.PatientPk),
+                    stagePharmacySiteCodes = stagePharmacy.Select(x => x.SiteCode),
+                    stagePharmacyDateExtracted = stagePharmacy.Select(x=> x.DateExtracted),
+                    stagePharmacyDispenseDates = stagePharmacy.Select(x => x.DispenseDate)
+                };
 
-                    });
+                var query = @"
+                            SELECT p.*
+                            FROM PatientPharmacyExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StagePharmacyExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode
+                                AND p.DateExtracted = s.DateExtracted
+                                AND p.DispenseDate = s.DispenseDate
+                            )
+                        ";
+
+                var existingRecords = await connection.QueryAsync<PatientPharmacyExtract>(query, queryParameters);
+
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int? VisitID, DateTime DispenseDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.DispenseDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, DateTime? DateExtracted, DateTime DispenseDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode,x.DateExtracted, x.DispenseDate)));
 
                 if (existingRecordsSet.Any())
                 {
-
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stagePharmacy
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.DispenseDate)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode,x.DateExtracted, x.DispenseDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stagePharmacyDictionary = stagePharmacy.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode,x.DateExtracted, x.DispenseDate},
+                        x => x );
+
+                    
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stagePharmacy.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.VisitID == existingExtract.VisitID &&
-                            x.DispenseDate == existingExtract.DispenseDate
-                            );
-
-                        if (stageExtract != null)
+                        if (stagePharmacyDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode,existingExtract.DateExtracted, existingExtract.DispenseDate, },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }
                     }
 
-                    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                    // Bulk update the existingRecords
+                    _context.Database.GetDbConnection().BulkUpdate(existingRecords);                  
 
                 }
                 else

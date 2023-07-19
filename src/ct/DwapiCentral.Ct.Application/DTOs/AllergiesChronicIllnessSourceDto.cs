@@ -30,7 +30,7 @@ namespace DwapiCentral.Ct.Application.DTOs
         public string? Genitourinary { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public DateTime? DateCreated { get; set; }
+        public DateTime? Date_Created { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;

@@ -66,18 +66,28 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 using var connection = new SqlConnection(cons);
                 List<StageBaselineExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
+                var queryParameters = new
+                {
+                    stagePatientPKs = stageBaseline.Select(x => x.PatientPk),
+                    stageSiteCodes = stageBaseline.Select(x => x.SiteCode)
+                    
 
+                };
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<PatientBaselinesExtract>("SELECT * FROM PatientBaselinesExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes",
-                    new
-                    {
-                        PatientPKs = stageBaseline.Select(x => x.PatientPk),
-                        SiteCodes = stageBaseline.Select(x => x.SiteCode)
-                        
+                var query = @"
+                            SELECT p.*
+                            FROM PatientBaselinesExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageBaselineExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode                               
+                                
+                                
+                            )
+                        ";
 
-                    });
-
+                var existingRecords = await connection.QueryAsync<PatientBaselinesExtract>(query, queryParameters);
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode)));
 
@@ -89,15 +99,18 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stageDictionary = stageBaseline.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode },
+                        x => x);
+
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageBaseline.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode
-                            );
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }

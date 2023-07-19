@@ -67,20 +67,34 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 List<StageLaboratoryExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
+                var queryParameters = new
+                {
+                    PatientPKs = stageLab.Select(x => x.PatientPk),
+                    SiteCodes = stageLab.Select(x => x.SiteCode),
+                    VisitIds = stageLab.Select(x => x.VisitId),
+                    OrderedByDates = stageLab.Select(x => x.OrderedByDate),
+                    TestResults = stageLab.Select(x => x.TestResult),
+                    TestNames = stageLab.Select(x => x.TestName)
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<PatientLaboratoryExtract>("SELECT * FROM PatientLaboratoryExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitId IN @VisitIds AND OrderedByDate IN @OrderedByDates AND TestResult IN @TestResults AND TestName IN @TestNames",
-                    new
-                    {
-                        PatientPKs = stageLab.Select(x => x.PatientPk),
-                        SiteCodes = stageLab.Select(x => x.SiteCode),
-                        VisitIds = stageLab.Select(x => x.VisitId),
-                        OrderedByDates = stageLab.Select(x => x.OrderedByDate),
-                        TestResults = stageLab.Select(x => x.TestResult),
-                        TestNames = stageLab.Select(x => x.TestName)
+                };
 
+                var query = @"
+                            SELECT p.*
+                            FROM PatientLaboratoryExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageLaboratoryExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode 
+                                AND P.VisitId = s.VisitId
+                                AND P.OrderedByDate = s.OrderedByDate 
+                                AND P.TestResult = s.TestResult 
+                                AND P.TestName = s.TestName 
+                                
+                            )
+                        ";
 
-                    });
+                var existingRecords = await connection.QueryAsync<PatientLaboratoryExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitId, DateTime OrderedByDate, string TestResult, string TestName)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitId, x.OrderedByDate,x.TestResult,x.TestName)));
@@ -93,18 +107,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitId,x.OrderedByDate,x.TestResult,x.TestName)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stageDictionary = stageLab.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode, x.VisitId, x.OrderedByDate,x.TestResult,x.TestName },
+                        x => x);
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageLab.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.VisitId == existingExtract.VisitId &&
-                            x.OrderedByDate == existingExtract.OrderedByDate &&
-                            x.TestResult == existingExtract.TestResult &&
-                            x.TestName == existingExtract.TestName);
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitId, existingExtract.OrderedByDate,existingExtract.TestResult,existingExtract.TestName, },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }

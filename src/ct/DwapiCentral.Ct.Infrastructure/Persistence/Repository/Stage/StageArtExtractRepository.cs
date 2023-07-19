@@ -69,18 +69,28 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 using var connection = new SqlConnection(cons);
                 List<StageArtExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
+                var queryParameters = new
+                {
+                    stagePatientPKs = stageArt.Select(x => x.PatientPk),
+                    stageSiteCodes = stageArt.Select(x => x.SiteCode),
+                    stageLastARTDate = stageArt.Select(x => x.LastARTDate)
 
+                };
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<PatientArtExtract>("SELECT * FROM PatientArtExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND LastARTDate IN @LastARTDate",
-                    new
-                    {
-                        PatientPKs = stageArt.Select(x => x.PatientPk),
-                        SiteCodes = stageArt.Select(x => x.SiteCode),
-                        LastARTDate = stageArt.Select(x => x.LastARTDate)
-                       
-                    });
+                var query = @"
+                            SELECT p.*
+                            FROM PatientArtExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageArtExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode                               
+                                AND p.LastARTDate = s.LastARTDate
+                                
+                            )
+                        ";
 
+                var existingRecords = await connection.QueryAsync<PatientArtExtract>(query, queryParameters);
                 // Convert existing records to HashSet for duplicate checking
                 var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, DateTime LastARTDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.LastARTDate)));
 
@@ -92,15 +102,18 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.LastARTDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stageDictionary = stageArt.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode,  x.LastARTDate },
+                        x => x);
+
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageArt.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.LastARTDate == existingExtract.LastARTDate);
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode,  existingExtract.LastARTDate, },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }

@@ -67,21 +67,32 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 List<StageIptExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
+                var queryParameters = new
+                {
+                    PatientPKs = stageIpt.Select(x => x.PatientPk),
+                    SiteCodes = stageIpt.Select(x => x.SiteCode),
+                    VisitIds = stageIpt.Select(x => x.VisitID),
+                    VisitDates = stageIpt.Select(x => x.VisitDate)
+                };
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<IptExtract>("SELECT * FROM IptExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitID IN @VisitIDs AND VisitDate IN @VisitDates ",
-                    new
-                    {
-                        PatientPKs = stageIpt.Select(x => x.PatientPk),
-                        SiteCodes = stageIpt.Select(x => x.SiteCode),
-                        VisitIds = stageIpt.Select(x => x.VisitID),
-                        VisitDates = stageIpt.Select(x => x.VisitDate)
+                var query = @"
+                            SELECT p.*
+                            FROM IptExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM StageIptExtracts s
+                                WHERE p.PatientPk = s.PatientPK
+                                AND p.SiteCode = s.SiteCode 
+                                AND P.VisitID = s.VisitID
+                                AND P.VisitDate = s.VisitDate                               
+                                
+                            )
+                        ";
 
-
-                    });
+                var existingRecords = await connection.QueryAsync<IptExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int? VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
 
                 if (existingRecordsSet.Any())
                 {
@@ -91,22 +102,21 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
+                    //Update existing data                    
+                    var stageDictionary = stageIpt.ToDictionary(
+                        x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate },
+                        x => x);
+
                     foreach (var existingExtract in existingRecords)
                     {
-                        var stageExtract = stageIpt.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode &&
-                            x.VisitID == existingExtract.VisitID &&
-                            x.VisitDate == existingExtract.VisitDate
-                            );
-
-                        if (stageExtract != null)
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
+                            out var stageExtract)
+                        )
                         {
                             _mapper.Map(stageExtract, existingExtract);
                         }
                     }
-
                     _context.Database.GetDbConnection().BulkUpdate(existingRecords);
 
                 }
