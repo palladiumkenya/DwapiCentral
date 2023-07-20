@@ -7,7 +7,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
 {
     public class PatientPharmacyExtract : IPharmacy
     {
-        [Key]
+        [Key]        
         public Guid Id { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }

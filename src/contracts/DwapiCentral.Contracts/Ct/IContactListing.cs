@@ -5,7 +5,7 @@ namespace DwapiCentral.Contracts.Ct
 {
     public interface IContactListing : IExtract
     {
-        public Guid Id { get; set; }
+        Guid Id { get; set; }
         string? FacilityName { get; set; }
         int? PartnerPersonID { get; set; }
         string? ContactAge { get; set; }

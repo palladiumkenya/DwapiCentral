@@ -83,7 +83,7 @@ namespace DwapiCentral.Ct.Controllers
         }
 
         [HttpPost]
-        [Route("api/Handshake/{session}")]        
+        [Route("api/Handshake")]        
         public async Task<IActionResult> Post(Guid session)
         {
             try
@@ -92,13 +92,13 @@ namespace DwapiCentral.Ct.Controllers
 
                 if (responce.IsSuccess)
                 {
-                    var response = new HttpResponseMessage(HttpStatusCode.OK)
+                    var message = new
                     {
-                        Content = new StringContent("Manifest saved successfully.")
+                        session
+
                     };
-
-
-                    return Ok(response);
+                    
+                    return Ok(message);
                 }
                 else return BadRequest(responce);
             }

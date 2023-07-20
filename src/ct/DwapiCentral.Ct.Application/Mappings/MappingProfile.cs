@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DwapiCentral.Ct.Application.DTOs;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using System;
@@ -35,6 +36,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<StatusSourceDto, PatientStatusExtract>();
             CreateMap<AllergiesChronicIllnessSourceDto,AllergiesChronicIllnessExtract>();
             CreateMap<AdverseEventSourceDto,PatientAdverseEventExtract>();
+            CreateMap<CervicalCancerScreeningSourceDto, CervicalCancerScreeningExtract>();
 
             //stage >> Extract
             CreateMap<StagePatientExtract, PatientExtract>();
@@ -56,7 +58,8 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<StagePharmacyExtract, PatientPharmacyExtract>();
             CreateMap<StageStatusExtract, PatientStatusExtract>();
             CreateMap<StageVisitExtract, PatientVisitExtract>();
-            
+            CreateMap<StageCervicalCancerScreeningExtract, CervicalCancerScreeningExtract>();
+
             //DTO >> Stage
             CreateMap<PatientSourceDto, StagePatientExtract>();
             CreateMap<PatientArtSourceDto, StageArtExtract>();
@@ -77,6 +80,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<OtzSourceDto, StageOtzExtract>();
             CreateMap<CovidSourceDto, StageCovidExtract>();
             CreateMap<DefaulterTracingSourceDto, StageDefaulterTracingExtract>();
-         }
+            CreateMap<CervicalCancerScreeningSourceDto, StageCervicalCancerScreeningExtract>();
+        }
     }
 }

@@ -106,7 +106,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     PatientResidentVillage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TransferInDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Occupation = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -134,7 +134,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     AdverseEventRegimen = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdverseEventCause = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -180,7 +180,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Genitourinary = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -232,7 +232,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateLastUsed = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -281,7 +281,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     m6CD4Date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -299,6 +299,46 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StageBaselineExtracts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StageCervicalCancerScreeningExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisitType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentToday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferredOut = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NextAppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ScreeningType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostTreatmentComplicationCause = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtherPostTreatmentComplication = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferralReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveStage = table.Column<int>(type: "int", nullable: false),
+                    Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Processed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StageCervicalCancerScreeningExtracts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -321,7 +361,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     ContactPatientPK = table.Column<int>(type: "int", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -381,7 +421,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     BoosterDoseVerified = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -420,7 +460,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -461,7 +501,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DepressionAssesmentScore = table.Column<int>(type: "int", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -494,7 +534,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DrugUse = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -566,7 +606,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     EACFollowupDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -601,7 +641,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     IPVRelationship = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -626,7 +666,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VisitID = table.Column<int>(type: "int", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OnTBDrugs = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -650,7 +690,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     IndicationForIPT = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -685,7 +725,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     SampleType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -723,7 +763,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     OutcomeDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -760,7 +800,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     ExitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -823,7 +863,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     PatientResidentVillage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TransferInDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Occupation = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -861,7 +901,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     StopRegimenDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -898,7 +938,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     EffectiveDiscontinuationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -983,7 +1023,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     RefillDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1051,7 +1091,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Abdomen = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CNS = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Genitourinary = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1063,6 +1103,44 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     table.PrimaryKey("PK_AllergiesChronicIllnessExtracts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AllergiesChronicIllnessExtracts_PatientExtracts_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CervicalCancerScreeningExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisitType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentToday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferredOut = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NextAppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ScreeningType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostTreatmentComplicationCause = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtherPostTreatmentComplication = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferralReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CervicalCancerScreeningExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CervicalCancerScreeningExtracts_PatientExtracts_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PatientExtracts",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
@@ -1089,7 +1167,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     KnowledgeOfHivStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PnsApproach = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContactPatientPK = table.Column<int>(type: "int", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1147,7 +1225,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     COVID19TestResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Sequence = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BoosterDoseVerified = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1184,7 +1262,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     CauseOfDeath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1223,7 +1301,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     PHQ9_9 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PHQ_9_rating = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DepressionAssesmentScore = table.Column<int>(type: "int", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1254,7 +1332,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DrinkingAlcohol = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Smoking = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DrugUse = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1324,7 +1402,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     EACHomevisit = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EACAdherencePlan = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EACFollowupDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1357,7 +1435,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     EmotionalIPV = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SexualIPV = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IPVRelationship = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1382,7 +1460,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    VisitID = table.Column<int>(type: "int", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OnTBDrugs = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -1404,7 +1482,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     IPTClientWorkUp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartIPT = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IndicationForIPT = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1440,7 +1518,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TransitionAttritionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OutcomeDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1475,7 +1553,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     PartnerOfferingOVCServices = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OVCExitReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1510,7 +1588,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     AdverseEventIsPregnant = table.Column<bool>(type: "bit", nullable: true),
                     AdverseEventRegimen = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdverseEventCause = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1560,7 +1638,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     PreviousARTUse = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PreviousARTPurpose = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastUsed = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1607,7 +1685,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     m12CD4Date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     m6CD4 = table.Column<int>(type: "int", nullable: true),
                     m6CD4Date = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1640,7 +1718,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     TestResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateSampleTaken = table.Column<DateTime>(type: "datetime2", nullable: true),
                     SampleType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1679,7 +1757,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     RegimenChangeSwitchReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StopRegimenReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StopRegimenDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1714,7 +1792,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     SpecificDeathReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeathDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EffectiveDiscontinuationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1797,7 +1875,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     CNS = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Genitourinary = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefillDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1818,6 +1896,11 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AllergiesChronicIllnessExtracts_PatientPk_SiteCode",
                 table: "AllergiesChronicIllnessExtracts",
+                columns: new[] { "PatientPk", "SiteCode" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CervicalCancerScreeningExtracts_PatientPk_SiteCode",
+                table: "CervicalCancerScreeningExtracts",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
@@ -1917,6 +2000,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 name: "AllergiesChronicIllnessExtracts");
 
             migrationBuilder.DropTable(
+                name: "CervicalCancerScreeningExtracts");
+
+            migrationBuilder.DropTable(
                 name: "contactListingExtracts");
 
             migrationBuilder.DropTable(
@@ -1987,6 +2073,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "StageBaselineExtracts");
+
+            migrationBuilder.DropTable(
+                name: "StageCervicalCancerScreeningExtracts");
 
             migrationBuilder.DropTable(
                 name: "StageContactListingExtracts");

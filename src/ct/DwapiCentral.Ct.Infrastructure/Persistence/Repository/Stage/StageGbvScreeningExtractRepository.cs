@@ -39,7 +39,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsCount = extracts.Count, SiteCode = extracts.First().SiteCode, ExtractName = "GbvScreeningExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "GbvScreeningExtract" };
                 await _mediator.Publish(notification);
 
 
@@ -89,7 +89,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                     AND p.SiteCode = s.SiteCode
                                     AND p.VisitID = s.VisitID
                                     AND p.VisitDate = s.VisitDate
-                                    AND p.Date_Created = s.Date_Created
+                                    AND p.Date_Created = s.MaxCreatedTime
                             )
                         ";
 
@@ -107,7 +107,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data  
+                    //Update existing data                    
                     var stageDictionary = stageGbvScreening
                                 .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate })
                                 .ToDictionary(

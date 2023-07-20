@@ -1,8 +1,7 @@
-using System.Data;
-using System.Reflection;
-using AutoMapper;
+﻿using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
@@ -12,11 +11,18 @@ using log4net;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Z.Dapper.Plus;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 {
-    public class StageDrugAlcoholScreeningExtractRepository :IStageDrugAlcoholScreeningExtractRepository
+    public class StageCervicalCancerScreeningExtractsRepository : IStageCervicalCancerScreeningExtractsRepository
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly CtDbContext _context;
@@ -24,7 +30,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         private readonly IMediator _mediator;
         private readonly string _stageName;
 
-        public StageDrugAlcoholScreeningExtractRepository(CtDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageDrugAlcoholScreeningExtract)}s")
+        public StageCervicalCancerScreeningExtractsRepository(CtDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageCervicalCancerScreeningExtract)}s")
         {
             _context = context;
             _mapper = mapper;
@@ -32,14 +38,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             _stageName = stageName;
         }
 
-        public async Task SyncStage(List<StageDrugAlcoholScreeningExtract> extracts, Guid manifestId)
+        public async Task SyncStage(List<StageCervicalCancerScreeningExtract> extracts, Guid manifestId)
         {
             try
             {
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "DrugAlcoholScreeningExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "CervicalCancerScreeningExtract" };
                 await _mediator.Publish(notification);
 
 
@@ -58,31 +64,30 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             }
         }
 
-        private async Task MergeExtracts(Guid manifestId, List<StageDrugAlcoholScreeningExtract> stageDrug)
+        private async Task MergeExtracts(Guid manifestId, List<StageCervicalCancerScreeningExtract> stageCancerScreening)
         {
             var cons = _context.Database.GetConnectionString();
             try
             {
                 using var connection = new SqlConnection(cons);
-                List<StageDrugAlcoholScreeningExtract> uniqueStageExtracts;
+                List<StageCervicalCancerScreeningExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
                 var queryParameters = new
                 {
-                    PatientPKs = stageDrug.Select(x => x.PatientPk),
-                    SiteCodes = stageDrug.Select(x => x.SiteCode),
-                    VisitIds = stageDrug.Select(x => x.VisitID),
-                    VisitDates = stageDrug.Select(x => x.VisitDate)
+                    PatientPKs = stageCancerScreening.Select(x => x.PatientPk),
+                    SiteCodes = stageCancerScreening.Select(x => x.SiteCode),
+                    VisitIds = stageCancerScreening.Select(x => x.VisitID),
+                    VisitDates = stageCancerScreening.Select(x => x.VisitDate)
                 };
-
                 var query = @"
                             SELECT p.*
-                            FROM DrugAlcoholScreeningExtracts p
+                            FROM CervicalCancerScreeningExtracts p
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
                                     SELECT PatientPK, SiteCode, VisitID, VisitDate, MAX(Date_Created) AS MaxCreatedTime
-                                    FROM StageDrugAlcoholScreeningExtracts
+                                    FROM StageCervicalCancerScreeningExtracts
                                     GROUP BY PatientPK, SiteCode, VisitID, VisitDate
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
@@ -93,28 +98,27 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             )
                         ";
 
-
-                var existingRecords = await connection.QueryAsync<DrugAlcoholScreeningExtract>(query, queryParameters);
+                var existingRecords = await connection.QueryAsync<CervicalCancerScreeningExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int? VisitID, DateTime? VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
-                    uniqueStageExtracts = stageDrug
+                    uniqueStageExtracts = stageCancerScreening
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
                     //Update existing data
-                    var stageDictionary = stageDrug
+                    var stageDictionary = stageCancerScreening
                              .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate })
                              .ToDictionary(
                                  g => g.Key,
                                  g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
                              );
-                   
+
                     foreach (var existingExtract in existingRecords)
                     {
                         if (stageDictionary.TryGetValue(
@@ -125,17 +129,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             _mapper.Map(stageExtract, existingExtract);
                         }
                     }
-
-
                     _context.Database.GetDbConnection().BulkUpdate(existingRecords);
 
                 }
                 else
                 {
-                    uniqueStageExtracts = stageDrug;
+                    uniqueStageExtracts = stageCancerScreening;
                 }
                 var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
-                var latestRecordsDict = new Dictionary<string, StageDrugAlcoholScreeningExtract>();
+                var latestRecordsDict = new Dictionary<string, StageCervicalCancerScreeningExtract>();
 
                 foreach (var extract in sortedExtracts)
                 {
@@ -148,9 +150,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 }
 
                 var filteredExtracts = latestRecordsDict.Values.ToList();
-                var mappedExtracts = _mapper.Map<List<DrugAlcoholScreeningExtract>>(filteredExtracts);
-                _context.Database.GetDbConnection().BulkInsert(mappedExtracts);               
-
+                var mappedExtracts = _mapper.Map<List<CervicalCancerScreeningExtract>>(filteredExtracts);
+                _context.Database.GetDbConnection().BulkInsert(mappedExtracts);
 
             }
             catch (Exception ex)

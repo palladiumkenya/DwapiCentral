@@ -39,7 +39,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsCount = extracts.Count, SiteCode = extracts.First().SiteCode, ExtractName = "IptExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "IptExtract" };
                 await _mediator.Publish(notification);
 
 
@@ -74,18 +74,21 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     VisitIds = stageIpt.Select(x => x.VisitID),
                     VisitDates = stageIpt.Select(x => x.VisitDate)
                 };
-
                 var query = @"
                             SELECT p.*
                             FROM IptExtracts p
                             WHERE EXISTS (
                                 SELECT 1
-                                FROM StageIptExtracts s
+                                FROM (
+                                    SELECT PatientPK, SiteCode, VisitID, VisitDate, MAX(Date_Created) AS MaxCreatedTime
+                                    FROM StageIptExtracts
+                                    GROUP BY PatientPK, SiteCode, VisitID, VisitDate
+                                ) s
                                 WHERE p.PatientPk = s.PatientPK
-                                AND p.SiteCode = s.SiteCode 
-                                AND P.VisitID = s.VisitID
-                                AND P.VisitDate = s.VisitDate                               
-                                
+                                    AND p.SiteCode = s.SiteCode
+                                    AND p.VisitID = s.VisitID
+                                    AND p.VisitDate = s.VisitDate
+                                    AND p.Date_Created = s.MaxCreatedTime
                             )
                         ";
 
@@ -102,10 +105,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data                    
-                    var stageDictionary = stageIpt.ToDictionary(
-                        x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate },
-                        x => x);
+                    //Update existing data
+                    var stageDictionary = stageIpt
+                             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate })
+                             .ToDictionary(
+                                 g => g.Key,
+                                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+                             );
 
                     foreach (var existingExtract in existingRecords)
                     {
@@ -124,10 +130,22 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     uniqueStageExtracts = stageIpt;
                 }
+                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+                var latestRecordsDict = new Dictionary<string, StageIptExtract>();
 
-                var extracts = _mapper.Map<List<IptExtract>>(uniqueStageExtracts);
-                _context.Database.GetDbConnection().BulkInsert(extracts);
+                foreach (var extract in sortedExtracts)
+                {
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.VisitID}_{extract.VisitDate}";
 
+                    if (!latestRecordsDict.ContainsKey(key))
+                    {
+                        latestRecordsDict[key] = extract;
+                    }
+                }
+
+                var filteredExtracts = latestRecordsDict.Values.ToList();
+                var mappedExtracts = _mapper.Map<List<IptExtract>>(filteredExtracts);
+                _context.Database.GetDbConnection().BulkInsert(mappedExtracts);
 
             }
             catch (Exception ex)
