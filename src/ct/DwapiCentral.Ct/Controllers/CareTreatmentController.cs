@@ -36,11 +36,25 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
+                    string jobId;
+                    if (sourceBag.HasJobId)
+                    {
+                        jobId = BatchJob.ContinueBatchWith(sourceBag.JobId,
+                            x => { x.Enqueue(() => Send($"{sourceBag}", new SyncVisit(sourceBag))); }, $"{sourceBag}");
+                    }
+                    else
+                    {
+                        jobId = BatchJob.StartNew(x =>
+                        {
+                            x.Enqueue(() => Send($"{sourceBag}", new SyncVisit(sourceBag)));
+                        }, $"{sourceBag}");
+                    }
+
+
+
                     var response = await _mediator.Send(new SavePatientCommand(sourceBag));
                     if (response.IsSuccess)
                     {
-
-
                         var successMessage = new
                         {
 

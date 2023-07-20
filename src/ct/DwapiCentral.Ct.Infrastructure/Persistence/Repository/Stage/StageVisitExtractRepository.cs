@@ -37,7 +37,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                // stage > Rest
+                // stage
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientVisitExtract" };
@@ -161,7 +161,6 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-
                 //Update existing data
                 var stageDictionary = stageVisits
                          .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitId, x.VisitDate })
@@ -181,7 +180,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+               _context.Database.GetDbConnection().BulkUpdate(existingRecords);
             }
             catch(Exception ex )
             {
