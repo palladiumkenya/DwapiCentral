@@ -47,15 +47,15 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<StageBaselineExtract, PatientBaselinesExtract>();
             CreateMap<StageContactListingExtract, ContactListingExtract>();
             CreateMap<StageCovidExtract, CovidExtract>();
-            CreateMap<StageDefaulterTracingExtract, DefaulterTracingExtract>();
+            CreateMap<StageDefaulterTracingExtract, DefaulterTracingExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
             CreateMap<StageDepressionScreeningExtract, DepressionScreeningExtract>();
             CreateMap<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningExtract>();
             CreateMap<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingExtract>();
             CreateMap<StageGbvScreeningExtract, GbvScreeningExtract>();
-            CreateMap<StageIptExtract, IptExtract>();
+            CreateMap<StageIptExtract, IptExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
             CreateMap<StageOtzExtract, OtzExtract>();
             CreateMap<StageOvcExtract, OvcExtract>();
-            CreateMap<StagePharmacyExtract, PatientPharmacyExtract>();
+            CreateMap<StagePharmacyExtract, PatientPharmacyExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));        
             CreateMap<StageStatusExtract, PatientStatusExtract>();
             CreateMap<StageVisitExtract, PatientVisitExtract>();
             CreateMap<StageCervicalCancerScreeningExtract, CervicalCancerScreeningExtract>();

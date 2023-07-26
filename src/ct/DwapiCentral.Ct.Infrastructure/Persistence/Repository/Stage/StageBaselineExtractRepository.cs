@@ -42,14 +42,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientBaselinesExtract" };
                 await _mediator.Publish(notification);
 
+                var pks = extracts.Select(x => x.Id).ToList();
 
                 // assign > Assigned
-                await AssignAll(manifestId, extracts.Select(x => x.Id).ToList());
+                await AssignAll(manifestId, pks);
 
                 // Merge
                 await MergeExtracts(manifestId, extracts);
 
-
+                await UpdateLivestage(manifestId, pks);
             }
             catch (Exception e)
             {
@@ -68,24 +69,29 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await connection.OpenAsync();
                 var queryParameters = new
                 {
-                    stagePatientPKs = stageBaseline.Select(x => x.PatientPk),
-                    stageSiteCodes = stageBaseline.Select(x => x.SiteCode)
-                    
-
+                    manifestId,
+                    livestage = LiveStage.Assigned
                 };
 
-                var query = @"
+                var query = $@"
                             SELECT p.*
                             FROM PatientBaselinesExtracts p
                             WHERE EXISTS (
                                 SELECT 1
-                                FROM StageBaselineExtracts s
+                                FROM (
+                                    SELECT PatientPK, SiteCode, MAX(Date_Created) AS MaxCreatedTime
+                                    FROM {_stageName} WITH (NOLOCK)
+                                    WHERE 
+                                        LiveSession = @manifestId 
+                                        AND LiveStage = @livestage
+                                    GROUP BY PatientPK, SiteCode
+                                ) s
                                 WHERE p.PatientPk = s.PatientPK
-                                AND p.SiteCode = s.SiteCode                               
-                                
-                                
+                                    AND p.SiteCode = s.SiteCode 
+                                    AND p.Date_Created = s.MaxCreatedTime                                    
                             )
                         ";
+             
 
                 var existingRecords = await connection.QueryAsync<PatientBaselinesExtract>(query, queryParameters);
                 // Convert existing records to HashSet for duplicate checking
@@ -99,35 +105,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data                    
-                    var stageDictionary = stageBaseline.ToDictionary(
-                        x => new { x.PatientPk, x.SiteCode },
-                        x => x);
-
-
-                    foreach (var existingExtract in existingRecords)
-                    {
-                        if (stageDictionary.TryGetValue(
-                            new { existingExtract.PatientPk, existingExtract.SiteCode, },
-                            out var stageExtract)
-                        )
-                        {
-                            _mapper.Map(stageExtract, existingExtract);
-                        }
-                    }
-
-                    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                    await UpdateCentralDataWithStagingData(stageBaseline, existingRecords);
 
                 }
                 else
                 {
                     uniqueStageExtracts = stageBaseline;
                 }
-
-                var baselineExtracts = _mapper.Map<List<PatientBaselinesExtract>>(uniqueStageExtracts);
-                _context.Database.GetDbConnection().BulkInsert(baselineExtracts);
-
-
+                await InsertNewDataFromStaging(uniqueStageExtracts);
             }
             catch (Exception ex)
             {
@@ -135,6 +120,66 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 throw;
             }
 
+        }
+
+        private async Task InsertNewDataFromStaging(List<StageBaselineExtract> uniqueStageExtracts)
+        {
+            try
+            {
+                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+                var latestRecordsDict = new Dictionary<string, StageBaselineExtract>();
+
+                foreach (var extract in sortedExtracts)
+                {
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}";
+
+                    if (!latestRecordsDict.ContainsKey(key))
+                    {
+                        latestRecordsDict[key] = extract;
+                    }
+                }
+
+                var filteredExtracts = latestRecordsDict.Values.ToList();
+                var mappedExtracts = _mapper.Map<List<PatientBaselinesExtract>>(filteredExtracts);
+                _context.Database.GetDbConnection().BulkInsert(mappedExtracts);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+        }
+
+        private async Task UpdateCentralDataWithStagingData(List<StageBaselineExtract> stageBaseline, IEnumerable<PatientBaselinesExtract> existingRecords)
+        {
+            try
+            {
+                //Update existing data
+                var stageDictionary = stageBaseline
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode })
+                         .ToDictionary(
+                             g => g.Key,
+                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+                         );
+
+                foreach (var existingExtract in existingRecords)
+                {
+                    if (stageDictionary.TryGetValue(
+                        new { existingExtract.PatientPk, existingExtract.SiteCode },
+                        out var stageExtract)
+                    )
+                    {
+                        _mapper.Map(stageExtract, existingExtract);
+                    }
+                }
+
+                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
@@ -163,6 +208,43 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         nextlivestage = LiveStage.Assigned,
                         ids
                     }, null, 0);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+        }
+
+        private async Task UpdateLivestage(Guid manifestId, List<Guid> ids)
+        {
+
+            var cons = _context.Database.GetConnectionString();
+
+            var sql = $@"
+                            UPDATE 
+                                    {_stageName}
+                            SET 
+                                    LiveStage= @nextlivestage 
+                            
+                            WHERE 
+                                    LiveSession = @manifestId AND 
+                                    LiveStage= @livestage AND
+                                    Id IN @ids";
+            try
+            {
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync($"{sql}",
+                    new
+                    {
+                        manifestId,
+                        livestage = LiveStage.Assigned,
+                        nextlivestage = LiveStage.Merged,
+                        ids
+                    }, null, 0);
+
             }
             catch (Exception e)
             {

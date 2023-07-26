@@ -43,6 +43,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "EnhancedAdherenceCounsellingExtract" };
                 await _mediator.Publish(notification);
 
+                var pks = extracts.Select(x => x.Id).ToList();
 
                 // assign > Assigned
                 await AssignAll(manifestId, extracts.Select(x => x.Id).ToList());
@@ -50,6 +51,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 // Merge
                 await MergeExtracts(manifestId, extracts);
 
+                await UpdateLivestage(manifestId, pks);
 
             }
             catch (Exception e)
@@ -67,29 +69,33 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 using var connection = new SqlConnection(cons);
                 List<StageEnhancedAdherenceCounsellingExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
-
                 var queryParameters = new
                 {
-                    PatientPKs = stageEnhancedAdherance.Select(x => x.PatientPk),
-                    SiteCodes = stageEnhancedAdherance.Select(x => x.SiteCode),
-                    VisitIds = stageEnhancedAdherance.Select(x => x.VisitID),
-                    VisitDates = stageEnhancedAdherance.Select(x => x.VisitDate)
+                    manifestId,
+                    livestage = LiveStage.Assigned
                 };
-
-                var query = @"
+                var query = $@"
                             SELECT p.*
-                            FROM EnhancedAdherenceCounsellingExtracts p
+                            FROM EnhancedAdherenceCounsellingExtracts p 
                             WHERE EXISTS (
                                 SELECT 1
-                                FROM StageEnhancedAdherenceCounsellingExtracts s
+                                FROM (
+                                    SELECT PatientPK, SiteCode, VisitID, VisitDate, MAX(Date_Created) AS MaxCreatedTime
+                                    FROM {_stageName} WITH (NOLOCK)
+                                    WHERE 
+                                        LiveSession = @manifestId 
+                                        AND LiveStage = @livestage
+                                    GROUP BY PatientPK, SiteCode, VisitID, VisitDate
+                                ) s
                                 WHERE p.PatientPk = s.PatientPK
-                                AND p.SiteCode = s.SiteCode 
-                                AND P.VisitID = s.VisitID
-                                AND P.VisitDate = s.VisitDate                               
-                                
+                                    AND p.SiteCode = s.SiteCode
+                                    AND p.VisitID = s.VisitID
+                                    AND p.VisitDate = s.VisitDate
+                                    AND p.Date_Created = s.MaxCreatedTime                                    
                             )
                         ";
 
+               
                 var existingRecords = await connection.QueryAsync<EnhancedAdherenceCounsellingExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
@@ -103,34 +109,13 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data                    
-                    var stageDictionary = stageEnhancedAdherance.ToDictionary(
-                        x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate },
-                        x => x);
-
-                    foreach (var existingExtract in existingRecords)
-                    {
-                        if (stageDictionary.TryGetValue(
-                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
-                            out var stageExtract)
-                        )
-                        {
-                            _mapper.Map(stageExtract, existingExtract);
-                        }
-                    }
-
-                    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
-
+                    await UpdateCentralDataWithStagingData(stageEnhancedAdherance, existingRecords);
                 }
                 else
                 {
                     uniqueStageExtracts = stageEnhancedAdherance;
                 }
-
-                var extracts = _mapper.Map<List<EnhancedAdherenceCounsellingExtract>>(uniqueStageExtracts);
-                _context.Database.GetDbConnection().BulkInsert(extracts);
-
-
+                await InsertNewDataFromStaging(uniqueStageExtracts);
             }
             catch (Exception ex)
             {
@@ -138,6 +123,67 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 throw;
             }
 
+        }
+
+        private async Task InsertNewDataFromStaging(List<StageEnhancedAdherenceCounsellingExtract> uniqueStageExtracts)
+        {
+
+            try
+            {
+                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+                var latestRecordsDict = new Dictionary<string, StageEnhancedAdherenceCounsellingExtract>();
+
+                foreach (var extract in sortedExtracts)
+                {
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.VisitID}_{extract.VisitDate}";
+
+                    if (!latestRecordsDict.ContainsKey(key))
+                    {
+                        latestRecordsDict[key] = extract;
+                    }
+                }
+
+                var filteredExtracts = latestRecordsDict.Values.ToList();
+                var mappedExtracts = _mapper.Map<List<EnhancedAdherenceCounsellingExtract>>(filteredExtracts);
+                _context.Database.GetDbConnection().BulkInsert(mappedExtracts);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+        }
+
+        private async Task UpdateCentralDataWithStagingData(List<StageEnhancedAdherenceCounsellingExtract> stageEnhancedAdherance, IEnumerable<EnhancedAdherenceCounsellingExtract> existingRecords)
+        {
+            try
+            {
+                //Update existing data
+                var stageDictionary = stageEnhancedAdherance
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate })
+                         .ToDictionary(
+                             g => g.Key,
+                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+                         );
+
+                foreach (var existingExtract in existingRecords)
+                {
+                    if (stageDictionary.TryGetValue(
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
+                        out var stageExtract)
+                    )
+                    {
+                        _mapper.Map(stageExtract, existingExtract);
+                    }
+                }
+
+                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
@@ -166,6 +212,43 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                         nextlivestage = LiveStage.Assigned,
                         ids
                     }, null, 0);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+        }
+
+        private async Task UpdateLivestage(Guid manifestId, List<Guid> ids)
+        {
+
+            var cons = _context.Database.GetConnectionString();
+
+            var sql = $@"
+                            UPDATE 
+                                    {_stageName}
+                            SET 
+                                    LiveStage= @nextlivestage 
+                            
+                            WHERE 
+                                    LiveSession = @manifestId AND 
+                                    LiveStage= @livestage AND
+                                    Id IN @ids";
+            try
+            {
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync($"{sql}",
+                    new
+                    {
+                        manifestId,
+                        livestage = LiveStage.Assigned,
+                        nextlivestage = LiveStage.Merged,
+                        ids
+                    }, null, 0);
+
             }
             catch (Exception e)
             {

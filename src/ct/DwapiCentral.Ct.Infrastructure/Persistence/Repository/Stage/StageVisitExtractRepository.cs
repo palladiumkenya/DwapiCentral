@@ -43,10 +43,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientVisitExtract" };
                 await _mediator.Publish(notification);
 
-                var pks = extracts.Select(x => new StageVisitExtract { PatientPk = x.PatientPk, SiteCode = x.SiteCode }).ToList();
+                var pks = extracts.Select(x => x.Id).ToList();
 
                 // assign > Assigned
-                await AssignAll(manifestId, extracts.Select(x => x.Id).ToList());
+                await AssignAll(manifestId, pks);
 
                 // Merge
                 await MergeExtracts(manifestId, extracts);
@@ -83,16 +83,16 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, VisitID, VisitDate, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT PatientPK, SiteCode, VisitId, VisitDate, MAX(Date_Created) AS MaxCreatedTime
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, VisitID, VisitDate
+                                    GROUP BY PatientPK, SiteCode, VisitId, VisitDate
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
-                                    AND p.VisitID = s.VisitID
+                                    AND p.VisitId = s.VisitId
                                     AND p.VisitDate = s.VisitDate
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )
@@ -101,11 +101,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<PatientVisitExtract>(query, queryParameters);
                 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitId, x.VisitDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitId, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitId, x.VisitDate)));
 
                 if (existingRecordsSet.Any())               {                  
-
-                    // Filter out duplicates from stageExtracts               
+                                                   
                     uniqueStageExtracts = stageVisits
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitId, x.VisitDate)) && x.LiveSession == manifestId)
                         .ToList();
@@ -223,7 +222,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             }
         }
 
-        private async Task UpdateLivestage(Guid manifestId, List<StageVisitExtract> pks)
+        private async Task UpdateLivestage(Guid manifestId, List<Guid> ids)
         {
 
             var cons = _context.Database.GetConnectionString();
@@ -233,40 +232,25 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                     {_stageName}
                             SET 
                                     LiveStage= @nextlivestage 
-                            FROM 
-                                    {_stageName}
+                            
                             WHERE 
                                     LiveSession = @manifestId AND 
                                     LiveStage= @livestage AND
-                                    PatientPk = @patientPk AND 
-                                    SiteCode = @siteCode";
+                                    Id IN @ids"; 
             try
             {
-
-
-                using (var connection = new SqlConnection(cons))
-                {
-                    if (connection.State != ConnectionState.Open)
-                        connection.Open();
-
-                    using (var transaction = connection.BeginTransaction())
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync($"{sql}",
+                    new
                     {
-                        foreach (var pk in pks)
-                        {
+                        manifestId,
+                        livestage = LiveStage.Assigned,
+                        nextlivestage = LiveStage.Merged,
+                        ids
+                    }, null, 0);
 
-                            await connection.ExecuteAsync($"{sql}",
-                                new
-                                {
-                                    manifestId,
-                                    livestage = LiveStage.Assigned,
-                                    nextlivestage = LiveStage.Merged,
-                                    patientPk = pk.PatientPk,
-                                    siteCode = pk.SiteCode
-                                }, transaction, 0);
-                        }
-                        transaction.Commit();
-                    }
-                }
             }
             catch (Exception e)
             {

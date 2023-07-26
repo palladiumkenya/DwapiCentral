@@ -1,4 +1,5 @@
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -18,6 +19,13 @@ public static class RegisterStartupMiddlewares
         }
 
         app.UseHttpsRedirection();
+
+        app.UseHangfireDashboard("/hangfire", new DashboardOptions
+        {
+            Authorization = new[] { new MyAuthorizationFilter() }
+        });
+
+
 
         app.UseAuthorization();
 

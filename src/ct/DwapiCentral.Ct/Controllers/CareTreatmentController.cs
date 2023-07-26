@@ -7,6 +7,8 @@ using Infrastracture.Custom;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Hangfire;
+using System.ComponentModel;
 
 namespace DwapiCentral.Ct.Controllers
 {
@@ -36,22 +38,7 @@ namespace DwapiCentral.Ct.Controllers
 
                 try
                 {
-                    string jobId;
-                    if (sourceBag.HasJobId)
-                    {
-                        jobId = BatchJob.ContinueBatchWith(sourceBag.JobId,
-                            x => { x.Enqueue(() => Send($"{sourceBag}", new SyncVisit(sourceBag))); }, $"{sourceBag}");
-                    }
-                    else
-                    {
-                        jobId = BatchJob.StartNew(x =>
-                        {
-                            x.Enqueue(() => Send($"{sourceBag}", new SyncVisit(sourceBag)));
-                        }, $"{sourceBag}");
-                    }
-
-
-
+                    
                     var response = await _mediator.Send(new SavePatientCommand(sourceBag));
                     if (response.IsSuccess)
                     {
@@ -950,6 +937,14 @@ namespace DwapiCentral.Ct.Controllers
 
             return BadRequest($"The expected '{new CervicalCancerScreeningSourceBag().GetType().Name}' is null");
         }
+
+        //[Queue("patient")]       
+        //[AutomaticRetry(Attempts = 3)]
+        //[DisplayName("{0}")]
+        //public async Task Send(string jobName, IRequest command)
+        //{
+        //    await _mediator.Send(command);
+        //}
 
 
     }
