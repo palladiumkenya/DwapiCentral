@@ -48,24 +48,22 @@ namespace DwapiCentral.Ct.Controllers
 
                         dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.FacMetrics[1].Metric);
 
-                        manifest.DwapiVersion = dwapiVersiondata.Version;                     
+                        manifest.DwapiVersion = dwapiVersiondata.Version;
 
-                                              
-
+                      
                         var responce = await _mediator.Send(new SaveManifestCommand(manifest));
-                      if (responce.IsSuccess)
-                        {
-                            var successMessage = new
-                            {
-                                manifestDetails = Manifest.Create(manifest)
-                                
-                            };
+                          if (responce.IsSuccess)
+                           {
 
-                            return Ok(successMessage);
+                            var masterFacility = ManifestResponse.Create(manifest);
+                                
+                                
+
+                            return Ok(masterFacility);
 
                             
-                        }
-                        else return BadRequest(responce);
+                           }
+                            else return BadRequest(responce);
 
                         
                     }

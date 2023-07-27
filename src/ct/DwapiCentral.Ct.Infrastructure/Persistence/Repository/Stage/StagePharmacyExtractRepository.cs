@@ -90,8 +90,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                     GROUP BY PatientPK, SiteCode, VisitID, DispenseDate
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
-                                    AND p.SiteCode = s.SiteCode
-                                    AND p.VisitID = s.VisitID
+                                    AND p.SiteCode = s.SiteCode                                    
                                     AND p.DispenseDate = s.DispenseDate
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )

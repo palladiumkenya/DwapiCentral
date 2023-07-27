@@ -40,25 +40,25 @@ namespace DwapiCentral.Ct.Application.Mappings
 
             //stage >> Extract
             CreateMap<StagePatientExtract, PatientExtract>();
-            CreateMap<StageArtExtract, PatientArtExtract>();
-            CreateMap<StageLaboratoryExtract, PatientLaboratoryExtract>();
-            CreateMap<StageAllergiesChronicIllnessExtract, AllergiesChronicIllnessExtract>();
-            CreateMap<StageAdverseEventExtract, PatientAdverseEventExtract>();
-            CreateMap<StageBaselineExtract, PatientBaselinesExtract>();
-            CreateMap<StageContactListingExtract, ContactListingExtract>();
-            CreateMap<StageCovidExtract, CovidExtract>();
+            CreateMap<StageArtExtract, PatientArtExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageLaboratoryExtract, PatientLaboratoryExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageAllergiesChronicIllnessExtract, AllergiesChronicIllnessExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); 
+            CreateMap<StageAdverseEventExtract, PatientAdverseEventExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageBaselineExtract, PatientBaselinesExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); 
+            CreateMap<StageContactListingExtract, ContactListingExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); 
+            CreateMap<StageCovidExtract, CovidExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); 
             CreateMap<StageDefaulterTracingExtract, DefaulterTracingExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
-            CreateMap<StageDepressionScreeningExtract, DepressionScreeningExtract>();
-            CreateMap<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningExtract>();
-            CreateMap<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingExtract>();
-            CreateMap<StageGbvScreeningExtract, GbvScreeningExtract>();
+            CreateMap<StageDepressionScreeningExtract, DepressionScreeningExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); 
+            CreateMap<StageGbvScreeningExtract, GbvScreeningExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); 
             CreateMap<StageIptExtract, IptExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
-            CreateMap<StageOtzExtract, OtzExtract>();
-            CreateMap<StageOvcExtract, OvcExtract>();
-            CreateMap<StagePharmacyExtract, PatientPharmacyExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));        
-            CreateMap<StageStatusExtract, PatientStatusExtract>();
-            CreateMap<StageVisitExtract, PatientVisitExtract>();
-            CreateMap<StageCervicalCancerScreeningExtract, CervicalCancerScreeningExtract>();
+            CreateMap<StageOtzExtract, OtzExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageOvcExtract, OvcExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StagePharmacyExtract, PatientPharmacyExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageStatusExtract, PatientStatusExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageVisitExtract, PatientVisitExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageCervicalCancerScreeningExtract, CervicalCancerScreeningExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
 
             //DTO >> Stage
             CreateMap<PatientSourceDto, StagePatientExtract>();

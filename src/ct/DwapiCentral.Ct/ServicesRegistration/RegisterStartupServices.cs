@@ -22,24 +22,36 @@ public static class RegisterStartupServices
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-           
 
-        builder.Services.AddHangfire(configuration => configuration
-               .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-               .UseSimpleAssemblyNameTypeSerializer()
-               .UseRecommendedSerializerSettings()
-               .UseSqlServerStorage("CentralDwapiHangfire", new SqlServerStorageOptions
-               {
-                   CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                   SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                   QueuePollInterval = TimeSpan.Zero,
-                   UseRecommendedIsolationLevel = true,
-                   DisableGlobalLocks = true
-               }));
 
-            builder.Services.AddHangfireServer();
 
-           
+            builder.Services.AddHangfire(configuration => configuration           
+           .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+           .UseSimpleAssemblyNameTypeSerializer()
+           .UseRecommendedSerializerSettings()
+           .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+           {
+               CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+               SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+               QueuePollInterval = TimeSpan.Zero,
+               UseRecommendedIsolationLevel = true,
+               DisableGlobalLocks = true
+           }));
+
+        GlobalConfiguration.Configuration.UseBatches();
+
+        builder.Services.AddHangfireServer();
+
+        var queues = new List<string>
+            {
+                "manifest", "patient", "patientart", "patientpharmacy", "patientvisits", "patientstatus",
+                "covid","defaultertracing", "patientlabs", "patientbaselines", "patientadverseevents", "otz", "ovc",
+                "depressionscreening", "drugalcoholscreening", "enhancedadherencecounselling", "gbvscreening", "ipt",
+                "allergieschronicillness", "contactlisting", "default", "cervicalcancerscreening"
+            };
+        queues.ForEach(queue => ConfigureWorkers(builder.Configuration,new[] { queue.ToLower() }));
+
+
 
         builder.Services.RegisterCtApp(builder.Configuration);
             

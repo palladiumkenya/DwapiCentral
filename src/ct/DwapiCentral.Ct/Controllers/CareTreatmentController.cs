@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Hangfire;
 using System.ComponentModel;
+using CSharpFunctionalExtensions;
+using System.Net;
 
 namespace DwapiCentral.Ct.Controllers
 {
@@ -24,50 +26,7 @@ namespace DwapiCentral.Ct.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Route("api/v3/Patient")]
-        public async Task<IActionResult> PostBatchPatientExtract([FromBody] PatientSourceBag sourceBag)
-        {
-            if (null != sourceBag && sourceBag.Extracts.Any())
-            {
-                if (sourceBag.Extracts.Any(x => !x.IsValid()))
-                {
-                    return BadRequest("Invalid data, please ensure it has Patient, Facility, and at least one (1) Extract");
-
-                }
-
-                try
-                {
-                    
-                    var response = await _mediator.Send(new SavePatientCommand(sourceBag));
-                    if (response.IsSuccess)
-                    {
-                        var successMessage = new
-                        {
-
-                            BatchKey = new List<Guid>() { LiveGuid.NewGuid() }
-                        };
-                        return Ok(successMessage);
-                    }
-                    else
-                    {
-                        return BadRequest(response.Error);
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(new string('*', 30));
-                    Log.Error(nameof(PatientSourceBag), ex);
-                    Log.Error(new string('*', 30));
-                    return BadRequest(ex);
-                }
-            }
-
-            return BadRequest($"The expected '{new PatientSourceBag().GetType().Name}' is null");
-        }
-
+       
         [HttpPost]
         [Route("api/v3/Ipt")]
         public async Task<IActionResult> PostBatchIptExtract([FromBody] PatientIptSourceBag sourceBag)
@@ -938,14 +897,7 @@ namespace DwapiCentral.Ct.Controllers
             return BadRequest($"The expected '{new CervicalCancerScreeningSourceBag().GetType().Name}' is null");
         }
 
-        //[Queue("patient")]       
-        //[AutomaticRetry(Attempts = 3)]
-        //[DisplayName("{0}")]
-        //public async Task Send(string jobName, IRequest command)
-        //{
-        //    await _mediator.Send(command);
-        //}
-
+        
 
     }
 }

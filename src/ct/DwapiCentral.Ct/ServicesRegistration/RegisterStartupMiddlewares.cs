@@ -30,6 +30,7 @@ public static class RegisterStartupMiddlewares
         app.UseAuthorization();
 
         app.MapControllers();
+
         Log.Debug("starting ct...");
         SeedData(app);
         return app;
