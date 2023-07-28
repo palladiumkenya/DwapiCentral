@@ -38,10 +38,8 @@ public static class RegisterStartupServices
                DisableGlobalLocks = true
            }));
 
-        GlobalConfiguration.Configuration.UseBatches();
-
-        builder.Services.AddHangfireServer();
-
+        Hangfire.GlobalConfiguration.Configuration.UseBatches(TimeSpan.FromDays(30));
+        
         var queues = new List<string>
             {
                 "manifest", "patient", "patientart", "patientpharmacy", "patientvisits", "patientstatus",
@@ -49,16 +47,14 @@ public static class RegisterStartupServices
                 "depressionscreening", "drugalcoholscreening", "enhancedadherencecounselling", "gbvscreening", "ipt",
                 "allergieschronicillness", "contactlisting", "default", "cervicalcancerscreening"
             };
-        queues.ForEach(queue => ConfigureWorkers(builder.Configuration,new[] { queue.ToLower() }));
-
-
+        queues.ForEach(queue => ConfigureWorkers(builder.Configuration,builder.Services,new[] { queue.ToLower() }));
 
         builder.Services.RegisterCtApp(builder.Configuration);
             
             return builder;
         }
 
-    private static void ConfigureWorkers(IConfiguration configuration, string[] queues)
+    private static void ConfigureWorkers(IConfiguration configuration,IServiceCollection services, string[] queues)
     {
 
         var hangfireQueueOptions = new BackgroundJobServerOptions
@@ -69,7 +65,14 @@ public static class RegisterStartupServices
             ShutdownTimeout = TimeSpan.FromMinutes(2),
         };
 
-       
+        services.AddHangfireServer(options =>
+        {
+            options.ServerName = hangfireQueueOptions.ServerName;
+            options.WorkerCount = hangfireQueueOptions.WorkerCount;
+            options.Queues = hangfireQueueOptions.Queues;
+            options.ShutdownTimeout = hangfireQueueOptions.ShutdownTimeout;
+        });
+        
     }
 
     private static int GetWorkerCount(IConfiguration configuration, string queue)

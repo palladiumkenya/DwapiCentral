@@ -20,10 +20,7 @@ public static class RegisterStartupMiddlewares
 
         app.UseHttpsRedirection();
 
-        app.UseHangfireDashboard("/hangfire", new DashboardOptions
-        {
-            Authorization = new[] { new MyAuthorizationFilter() }
-        });
+        app.UseHangfireDashboard("/hangfire");
 
 
 

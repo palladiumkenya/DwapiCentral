@@ -1,18 +1,21 @@
-﻿using DwapiCentral.Contracts.Manifest;
+﻿using CSharpFunctionalExtensions;
+using DwapiCentral.Contracts.Manifest;
 using DwapiCentral.Ct.Application.Commands;
+using DwapiCentral.Ct.Application.DTOs.Source;
+using DwapiCentral.Ct.Application.Interfaces;
 using DwapiCentral.Ct.Domain.Models;
+using Hangfire;
 using Infrastracture.Custom;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Serilog;
+using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Net;
 
 namespace DwapiCentral.Ct.Controllers
 {
-    
-    [ApiController]
     public class ManifestController : Controller
     {
         private readonly IMediator _mediator;
@@ -26,7 +29,7 @@ namespace DwapiCentral.Ct.Controllers
 
         [HttpPost]
         [Route("api/v3/Spot")]
-        public async Task<IActionResult> PostManifest([FromBody] FacilityManifest manifest)
+        public async Task<IActionResult> Post([FromBody] FacilityManifest manifest)
         {
             
 
@@ -48,24 +51,19 @@ namespace DwapiCentral.Ct.Controllers
 
                         dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.FacMetrics[1].Metric);
 
-                        manifest.DwapiVersion = dwapiVersiondata.Version;
+                        manifest.DwapiVersion = dwapiVersiondata.Version;                       
 
-                      
-                        var responce = await _mediator.Send(new SaveManifestCommand(manifest));
-                          if (responce.IsSuccess)
-                           {
+                        var jobId = BatchJob.StartNew(x => 
+                        { 
+                            x.Enqueue(() => Send($"{manifest.Info("Save")}", new SaveManifestCommand(manifest))); 
+                        },$"{manifest.Info("Save")}");
 
-                            var masterFacility = ManifestResponse.Create(manifest);
-                                
-                                
 
-                            return Ok(masterFacility);
+                        var masterFacility = ManifestResponse.Create(manifest);
+                        masterFacility.JobId = jobId;
 
-                            
-                           }
-                            else return BadRequest(responce);
+                        return Ok(masterFacility);
 
-                        
                     }
                     else return BadRequest(validFacility.Error.ToString());
                 }
@@ -80,31 +78,13 @@ namespace DwapiCentral.Ct.Controllers
            
         }
 
-        [HttpPost]
-        [Route("api/Handshake")]        
-        public async Task<IActionResult> Post(Guid session)
+       
+        [Queue("manifest")]        
+        [AutomaticRetry(Attempts = 3)]
+        [DisplayName("{0}")]
+        public async Task Send(string jobName, IRequest<Result> command)
         {
-            try
-            {
-                var responce = await _mediator.Send(new UpdateHandshakeCommand(session));
-
-                if (responce.IsSuccess)
-                {
-                    var message = new
-                    {
-                        session
-
-                    };
-                    
-                    return Ok(message);
-                }
-                else return BadRequest(responce);
-            }
-            catch (Exception e)
-            {
-                Log.Error("Handshake error", e);               
-                return BadRequest(e.Message);
-            }
+            await _mediator.Send(command);
         }
 
     }
