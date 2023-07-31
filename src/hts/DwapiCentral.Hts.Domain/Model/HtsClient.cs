@@ -3,11 +3,9 @@ using DwapiCentral.Shared.Domain.Entities;
 
 namespace DwapiCentral.Hts.Domain.Model
 {
-    public class HtsClient : Entity<Guid>,IHtsClients
+    public class HtsClient : IHtsClients
     {
         public string HtsNumber { get; set; }
-        public int PatientPk { get; set; }
-        public int SiteCode { get; set; }
         public string FacilityName { get; set; }
         public string Serial { get; set; }
         public DateTime? StatusDate { get; set; }
@@ -46,6 +44,8 @@ namespace DwapiCentral.Hts.Domain.Model
         public string NUPI { get; set; }
         public string Pkv { get; set; }
         public Guid FacilityId { get; set; }
+        public int PatientPk { get; set; }
+        public int SiteCode { get; set; }
         public string Emr { get; set; }
         public string Project { get; set; }
         public DateTime? Date_Created { get; set; }
@@ -54,5 +54,5 @@ namespace DwapiCentral.Hts.Domain.Model
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }
         public DateTime? Extracted { get; set; }
+        public Guid Id { get; set; }
     }
-}

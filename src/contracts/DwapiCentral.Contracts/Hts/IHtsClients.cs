@@ -9,18 +9,10 @@ namespace DwapiCentral.Contracts.Hts
 {
       public interface IHtsClients : IEntity
     {
-          string HtsNumber { get; set; }
-      
-
-
-          int PatientPk { get; set; }
-          int SiteCode { get; set; }
+          string HtsNumber { get; set; }          
           string FacilityName { get; set; }
           string Serial { get; set; }
-         
           DateTime? StatusDate { get; set; }
-          
-
           int? EncounterId { get; set; }
           DateTime? VisitDate { get; set; }
           DateTime? Dob { get; set; }
@@ -45,7 +37,6 @@ namespace DwapiCentral.Contracts.Hts
           string ClientSelfTested { get; set; }
           string CoupleDiscordant { get; set; }
           string TestType { get; set; }
-
           string KeyPopulationType { get; set; }
           string PopulationType { get; set; }
           string PatientDisabled { get; set; }
@@ -56,7 +47,6 @@ namespace DwapiCentral.Contracts.Hts
           string Ward { get; set; }
           string NUPI { get; set; }
           string Pkv { get; set; }
-
           Guid FacilityId { get; set; }
     }
 }
