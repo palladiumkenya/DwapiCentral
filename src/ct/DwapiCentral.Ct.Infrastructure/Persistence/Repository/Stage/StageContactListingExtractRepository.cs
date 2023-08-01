@@ -39,7 +39,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "contactListingExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "ContactListingExtract" };
                 await _mediator.Publish(notification);
 
                 var pks = extracts.Select(x => x.Id).ToList();
