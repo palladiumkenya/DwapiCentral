@@ -4,7 +4,7 @@ public interface IExtract
 {
     int PatientPk { get; set; }
     int SiteCode { get; set; }
-    DateTime? DateCreated { get; set; }
+    DateTime? Date_Created { get; set; }
     DateTime? DateLastModified { get; set; }
     DateTime? DateExtracted { get; set; }
     DateTime? Created { get; set; } 

@@ -30,5 +30,8 @@ namespace DwapiCentral.Ct.Domain.Models
         public DateTime? End { get; set; }
         public string? Tag { get; set; }
         public string Items => string.Join(",", PatientPKs);
+
+        public string Info(string action) => $"{SiteCode}-{Name} [{PatientCount}] {action} Manifest";
+
     }
 }

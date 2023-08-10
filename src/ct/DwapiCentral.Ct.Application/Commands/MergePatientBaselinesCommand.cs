@@ -39,7 +39,7 @@ public class MergePatientBaselinesCommandHandler : IRequestHandler<MergePatientB
     public async Task<Result> Handle(MergePatientBaselinesCommand request, CancellationToken cancellationToken)
     {
         //await _patientBaselineRepository.MergeAsync(request.PatientBaselinesExtracts);
-        var extracts = _mapper.Map<List<StageBaselineExtract>>(request.PatientBaselinesExtracts);
+        var extracts = _mapper.Map<List<StageBaselineExtract>>(request.PatientBaselinesExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageBaselineExtract, PatientBaselineSourceBag> standardizer = new(extracts, request.PatientBaselinesExtracts);

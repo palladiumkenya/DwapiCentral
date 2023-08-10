@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using DwapiCentral.Contracts.Common;
 using DwapiCentral.Ct.Application.Interfaces.Repository;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Exceptions;
@@ -47,8 +48,16 @@ public class UpdateHandshakeCommandHandler : IRequestHandler<UpdateHandshakeComm
             await _manifestRepository.Update(manifest);
 
             // Publish event...
-            
-            await _mediator.Publish(new HandshakeReceivedEvent(manifest.Id, manifest.SiteCode), cancellationToken);
+            var notification = new HandshakeReceivedEvent { 
+                ManifestId=manifest.Id,
+                Docket=manifest.Docket,
+                SiteCode=manifest.SiteCode,
+                Status=manifest.Status,
+                Name="HandShake",
+                Date=DateTime.Now
+            };
+            await _mediator.Publish(notification);
+           
             
             return Result.Success();
         }

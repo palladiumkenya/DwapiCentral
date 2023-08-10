@@ -32,7 +32,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? m12CD4Date { get ; set ; }
         public int? m6CD4 { get ; set ; }
         public DateTime? m6CD4Date { get ; set ; }       
-        public DateTime? DateCreated { get ; set ; }
+        public DateTime? Date_Created { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get ; set ; } = DateTime.Now;

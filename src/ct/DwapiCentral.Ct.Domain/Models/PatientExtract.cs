@@ -51,7 +51,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? TransferInDate { get; set; }
         public string? Occupation { get; set; }
 
-        public DateTime? DateCreated { get; set; }
+        public DateTime? Date_Created { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;
@@ -76,5 +76,6 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public virtual ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();
         public virtual ICollection<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventExtract>();
         public virtual ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
+        public virtual ICollection<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; } = new List<CervicalCancerScreeningExtract>();
     }
 }

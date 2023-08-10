@@ -7,8 +7,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public abstract class StageExtract : IStage
     {
-        public Guid Id { get; set; }
-        
+        public Guid Id { get; set; }        
         public Guid? FacilityId { get; set; }
         public Guid? CurrentPatientId { get; set; }
         public Guid? LiveSession { get; set; }

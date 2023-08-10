@@ -33,12 +33,13 @@ public class MergeGbvScreeningCommandHandler : IRequestHandler<MergeGbvScreening
     public MergeGbvScreeningCommandHandler(IStageGbvScreeningExtractRepository gbvScreeningRepository, IMapper mapper)
     {
         _stageRepository = gbvScreeningRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(MergeGbvScreeningCommand request, CancellationToken cancellationToken)
     {
         //await _gbvScreeningRepository.MergeAsync(request.GbvScreeningExtracts);
-        var extracts = _mapper.Map<List<StageGbvScreeningExtract>>(request.GbvScreeningExtracts);
+        var extracts = _mapper.Map<List<StageGbvScreeningExtract>>(request.GbvScreeningExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageGbvScreeningExtract, GbvScreeningSourceBag> standardizer = new(extracts, request.GbvScreeningExtracts);

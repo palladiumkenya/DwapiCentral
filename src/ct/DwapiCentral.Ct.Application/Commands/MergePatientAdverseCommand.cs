@@ -39,7 +39,7 @@ public class MergePatientAdverseCommandHandler : IRequestHandler<MergePatientAdv
     public async Task<Result> Handle(MergePatientAdverseCommand request, CancellationToken cancellationToken)
     {
         //await _patientAdverseRepository.MergeAsync(request.PatientAdverseEventExtracts);
-        var extracts = _mapper.Map<List<StageAdverseEventExtract>>(request.PatientAdverseEventExtracts);
+        var extracts = _mapper.Map<List<StageAdverseEventExtract>>(request.PatientAdverseEventExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageAdverseEventExtract, AdverseEventSourceBag> standardizer = new(extracts, request.PatientAdverseEventExtracts);

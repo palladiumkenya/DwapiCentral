@@ -66,6 +66,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         delete  from StagePharmacyExtracts WHERE  SiteCode = @SiteCode;
         delete  from StageStatusExtracts WHERE  SiteCode = @SiteCode;
         delete  from StageVisitExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageCervicalCancerScreeningExtracts WHERE  SiteCode = @SiteCode;
 
         ";
             try
@@ -125,7 +126,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsCount = extracts.Count, SiteCode=extracts.First().SiteCode,ExtractName="PatientExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count,ManifestId=manifestId, SiteCode=extracts.First().SiteCode,ExtractName="PatientExtract" };
                 await _mediator.Publish(notification);
 
                 var pks = extracts.Select(x => new StagePatientExtract {PatientPk= x.PatientPk,SiteCode= x.SiteCode }).ToList();

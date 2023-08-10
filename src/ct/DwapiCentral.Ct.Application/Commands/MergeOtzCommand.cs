@@ -40,7 +40,7 @@ public class MergeOtzCommandHandler : IRequestHandler<MergeOtzCommand, Result>
     public async Task<Result> Handle(MergeOtzCommand request, CancellationToken cancellationToken)
     {
         //await _otzRepository.MergeAsync(request.OtzExtracts);
-        var extracts = _mapper.Map<List<StageOtzExtract>>(request.OtzExtracts);
+        var extracts = _mapper.Map<List<StageOtzExtract>>(request.OtzExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageOtzExtract, OtzSourceBag> standardizer = new(extracts, request.OtzExtracts);

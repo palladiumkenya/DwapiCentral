@@ -41,7 +41,7 @@ public class MergePatientVisitCommandHandler : IRequestHandler<MergePatientVisit
     public async Task<Result> Handle(MergePatientVisitCommand request, CancellationToken cancellationToken)
     {
         //await _patientVisitRepository.MergeAsync(request.PatientVisits);
-        var extracts = _mapper.Map<List<StageVisitExtract>>(request.PatientVisits);
+        var extracts = _mapper.Map<List<StageVisitExtract>>(request.PatientVisits.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageVisitExtract, PatientVisitSourceBag> standardizer = new(extracts, request.PatientVisits);
