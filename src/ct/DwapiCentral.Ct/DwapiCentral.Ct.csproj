@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <Reference Include="Hangfire.Pro">
-      <HintPath>..\libs\Hangfire.Pro.dll</HintPath>
+      <HintPath>..\..\..\libs\Hangfire.Pro.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastracture.Custom
+namespace DwapiCentral.Shared.Custom
 {
     public class LiveGuid
     {

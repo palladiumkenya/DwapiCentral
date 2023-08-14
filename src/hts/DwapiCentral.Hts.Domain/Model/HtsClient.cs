@@ -55,4 +55,13 @@ namespace DwapiCentral.Hts.Domain.Model
         public DateTime? Updated { get; set; }
         public DateTime? Extracted { get; set; }
         public Guid Id { get; set; }
+
+        public virtual ICollection<HtsClientLinkage> HtsClientLinkages { get; set; } = new List<HtsClientLinkage>();
+        public virtual ICollection<HtsClientPartner> HtsClientPartners { get; set; } = new List<HtsClientPartner>();
+        public virtual ICollection<HtsClientTest> HtsClientTests { get; set; } = new List<HtsClientTest>();
+        public virtual ICollection<HtsClientTracing> HtsClientTracings { get; set; } = new List<HtsClientTracing>();
+        public virtual ICollection<HtsPartnerNotificationServices> HtsPartnerNotificationServices { get; set; } = new List<HtsPartnerNotificationServices>();
+        public virtual ICollection<HtsPartnerTracing> HtsPartnerTracings { get; set; } = new List<HtsPartnerTracing>();
+        public virtual ICollection<HtsTestKit> HtsTestKits { get; set; } = new List<HtsTestKit>();
     }
+}

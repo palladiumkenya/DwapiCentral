@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DwapiCentral.Shared.Custom;
 
 namespace DwapiCentral.Shared.Domain.Entities
 {
@@ -17,10 +18,10 @@ namespace DwapiCentral.Shared.Domain.Entities
         protected Entity()
         {
             Type idType = typeof(TId);
-            //if (idType == typeof(Guid))
-            //{
-            //    Id = (TId)(object)LiveGuid.NewGuid();
-            //}
+            if (idType == typeof(Guid))
+            {
+                Id = (TId)(object)LiveGuid.NewGuid();
+            }
         }
         protected Entity(TId id)
         {
