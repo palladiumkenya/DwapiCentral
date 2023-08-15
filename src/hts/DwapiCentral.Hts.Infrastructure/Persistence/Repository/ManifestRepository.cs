@@ -4,6 +4,7 @@ using DwapiCentral.Hts.Domain.Model;
 using DwapiCentral.Hts.Domain.Repository;
 using DwapiCentral.Hts.Infrastructure.Persistence.Context;
 using DwapiCentral.Shared.Domain.Enums;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System;
@@ -12,6 +13,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
 {
@@ -102,6 +104,35 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
         {
             return await _context.Manifests
                  .AsTracking().FirstOrDefaultAsync(x => x.Session == session);
+        }
+
+        public async Task<Guid> GetManifestId(int siteCode)
+        {
+            var sql = @"
+                        SELECT TOP 1 Id 
+                        FROM Manifests 
+                        WHERE SiteCode = @siteCode AND ManifestStatus = @status
+                        ORDER BY DateArrived DESC;
+                    ";
+
+            var parameters = new { siteCode, status = ManifestStatus.Staged };
+
+            try
+            {
+                using (var connection = new SqlConnection(_context.Database.GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+
+                    var manifestId = await connection.QueryFirstOrDefaultAsync<Guid>(sql, parameters);
+
+                    return manifestId;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
         }
 
         public async Task Save(Manifest manifest)

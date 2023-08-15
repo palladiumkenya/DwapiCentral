@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DwapiCentral.Hts.Domain.Model;
+using DwapiCentral.Hts.Domain.Model.Stage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,13 @@ namespace DwapiCentral.Hts.Application.Mappings
 
         public MappingProfile()
         {
+            //central => stage
+            CreateMap<HtsClient, StageHtsClient>();
 
+
+
+            //stage => centralDb
+            CreateMap<StageHtsClient, HtsClient>();
         }
     }
 }

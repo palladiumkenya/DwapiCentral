@@ -10,66 +10,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PatientPk = table.Column<int>(type: "int", nullable: false),
-                    SiteCode = table.Column<int>(type: "int", nullable: false),
-                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Serial = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StatusDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    EncounterId = table.Column<int>(type: "int", nullable: true),
-                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaritalStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KeyPop = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestedBefore = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MonthsLastTested = table.Column<int>(type: "int", nullable: true),
-                    ClientTestedAs = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StrategyHTS = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitName1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitLotNumber1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitExpiryDate1 = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TestResultsHTS1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitName2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitLotNumber2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitExpiryDate2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestResultsHTS2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FinalResultHTS = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FinalResultsGiven = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TBScreeningHTS = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClientSelfTested = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoupleDiscordant = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KeyPopulationType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PopulationType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PatientDisabled = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DisabilityType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PatientConsented = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    County = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubCounty = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NUPI = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Pkv = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Extracted = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => new { x.PatientPk, x.SiteCode, x.HtsNumber });
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Dockets",
                 columns: table => new
                 {
@@ -94,6 +34,44 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Facilities", x => x.Code);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HtsClients",
+                columns: table => new
+                {
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Pkv = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Occupation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PriorityPopulationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HtsRecencyId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Serial = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StatusDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EncounterId = table.Column<int>(type: "int", nullable: true),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaritalStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    KeyPopulationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PopulationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PatientDisabled = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    County = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubCounty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NUPI = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HtsClients", x => new { x.PatientPk, x.SiteCode, x.HtsNumber });
                 });
 
             migrationBuilder.CreateTable(
@@ -220,55 +198,37 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Serial = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Pkv = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Occupation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PriorityPopulationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HtsRecencyId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Serial = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StatusDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EncounterId = table.Column<int>(type: "int", nullable: true),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaritalStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KeyPop = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestedBefore = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MonthsLastTested = table.Column<int>(type: "int", nullable: true),
-                    ClientTestedAs = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StrategyHTS = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitName1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitLotNumber1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitExpiryDate1 = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TestResultsHTS1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitName2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitLotNumber2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestKitExpiryDate2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestResultsHTS2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FinalResultHTS = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FinalResultsGiven = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TBScreeningHTS = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClientSelfTested = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoupleDiscordant = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TestType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KeyPopulationType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PopulationType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PatientDisabled = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DisabilityType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PatientConsented = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    County = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubCounty = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NUPI = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Pkv = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PatientPk = table.Column<int>(type: "int", nullable: false),
-                    SiteCode = table.Column<int>(type: "int", nullable: false),
-                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Project = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaritalStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    KeyPopulationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PopulationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PatientDisabled = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    County = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubCounty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NUPI = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LiveStage = table.Column<int>(type: "int", nullable: false),
+                    ManifestId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: false),
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Extracted = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Extracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -472,7 +432,28 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientLinkages",
+                name: "Subscribers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuthCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DocketId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RefId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subscribers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Subscribers_Dockets_DocketId",
+                        column: x => x.DocketId,
+                        principalTable: "Dockets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HtsClientLinkages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -510,17 +491,17 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientLinkages", x => x.Id);
+                    table.PrimaryKey("PK_HtsClientLinkages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientLinkages_Clients_PatientPk_SiteCode_HtsNumber",
+                        name: "FK_HtsClientLinkages_HtsClients_PatientPk_SiteCode_HtsNumber",
                         columns: x => new { x.PatientPk, x.SiteCode, x.HtsNumber },
-                        principalTable: "Clients",
+                        principalTable: "HtsClients",
                         principalColumns: new[] { "PatientPk", "SiteCode", "HtsNumber" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientPartners",
+                name: "HtsClientPartners",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -548,11 +529,11 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientPartners", x => x.Id);
+                    table.PrimaryKey("PK_HtsClientPartners", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientPartners_Clients_PatientPk_SiteCode_HtsNumber",
+                        name: "FK_HtsClientPartners_HtsClients_PatientPk_SiteCode_HtsNumber",
                         columns: x => new { x.PatientPk, x.SiteCode, x.HtsNumber },
-                        principalTable: "Clients",
+                        principalTable: "HtsClients",
                         principalColumns: new[] { "PatientPk", "SiteCode", "HtsNumber" },
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -601,9 +582,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_HtsClientTests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HtsClientTests_Clients_PatientPk_SiteCode_HtsNumber",
+                        name: "FK_HtsClientTests_HtsClients_PatientPk_SiteCode_HtsNumber",
                         columns: x => new { x.PatientPk, x.SiteCode, x.HtsNumber },
-                        principalTable: "Clients",
+                        principalTable: "HtsClients",
                         principalColumns: new[] { "PatientPk", "SiteCode", "HtsNumber" },
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -639,9 +620,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_HtsClientTracing", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HtsClientTracing_Clients_PatientPk_SiteCode_HtsNumber",
+                        name: "FK_HtsClientTracing_HtsClients_PatientPk_SiteCode_HtsNumber",
                         columns: x => new { x.PatientPk, x.SiteCode, x.HtsNumber },
-                        principalTable: "Clients",
+                        principalTable: "HtsClients",
                         principalColumns: new[] { "PatientPk", "SiteCode", "HtsNumber" },
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -692,9 +673,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_HtsPartnerNotificationServices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HtsPartnerNotificationServices_Clients_PatientPk_SiteCode_HtsNumber",
+                        name: "FK_HtsPartnerNotificationServices_HtsClients_PatientPk_SiteCode_HtsNumber",
                         columns: x => new { x.PatientPk, x.SiteCode, x.HtsNumber },
-                        principalTable: "Clients",
+                        principalTable: "HtsClients",
                         principalColumns: new[] { "PatientPk", "SiteCode", "HtsNumber" },
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -732,9 +713,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_HtsPartnerTracings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HtsPartnerTracings_Clients_PatientPk_SiteCode_HtsNumber",
+                        name: "FK_HtsPartnerTracings_HtsClients_PatientPk_SiteCode_HtsNumber",
                         columns: x => new { x.PatientPk, x.SiteCode, x.HtsNumber },
-                        principalTable: "Clients",
+                        principalTable: "HtsClients",
                         principalColumns: new[] { "PatientPk", "SiteCode", "HtsNumber" },
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -776,31 +757,10 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_HtsTestKits", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HtsTestKits_Clients_PatientPk_SiteCode_HtsNumber",
+                        name: "FK_HtsTestKits_HtsClients_PatientPk_SiteCode_HtsNumber",
                         columns: x => new { x.PatientPk, x.SiteCode, x.HtsNumber },
-                        principalTable: "Clients",
+                        principalTable: "HtsClients",
                         principalColumns: new[] { "PatientPk", "SiteCode", "HtsNumber" },
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Subscribers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AuthCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DocketId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RefId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Subscribers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Subscribers_Dockets_DocketId",
-                        column: x => x.DocketId,
-                        principalTable: "Dockets",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -830,13 +790,13 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 column: "ManifestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientLinkages_PatientPk_SiteCode_HtsNumber",
-                table: "ClientLinkages",
+                name: "IX_HtsClientLinkages_PatientPk_SiteCode_HtsNumber",
+                table: "HtsClientLinkages",
                 columns: new[] { "PatientPk", "SiteCode", "HtsNumber" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientPartners_PatientPk_SiteCode_HtsNumber",
-                table: "ClientPartners",
+                name: "IX_HtsClientPartners_PatientPk_SiteCode_HtsNumber",
+                table: "HtsClientPartners",
                 columns: new[] { "PatientPk", "SiteCode", "HtsNumber" });
 
             migrationBuilder.CreateIndex(
@@ -876,13 +836,13 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 name: "Cargoes");
 
             migrationBuilder.DropTable(
-                name: "ClientLinkages");
-
-            migrationBuilder.DropTable(
-                name: "ClientPartners");
-
-            migrationBuilder.DropTable(
                 name: "Facilities");
+
+            migrationBuilder.DropTable(
+                name: "HtsClientLinkages");
+
+            migrationBuilder.DropTable(
+                name: "HtsClientPartners");
 
             migrationBuilder.DropTable(
                 name: "HtsClientTests");
@@ -933,7 +893,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 name: "Manifests");
 
             migrationBuilder.DropTable(
-                name: "Clients");
+                name: "HtsClients");
 
             migrationBuilder.DropTable(
                 name: "Dockets");

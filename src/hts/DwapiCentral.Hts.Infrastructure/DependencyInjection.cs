@@ -1,6 +1,8 @@
 using DwapiCentral.Hts.Domain.Repository;
+using DwapiCentral.Hts.Domain.Repository.Stage;
 using DwapiCentral.Hts.Infrastructure.Persistence.Context;
 using DwapiCentral.Hts.Infrastructure.Persistence.Repository;
+using DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<IFacilityRepository, FacilityRepository>();
         services.AddScoped<IManifestRepository, ManifestRepository>();
         services.AddScoped<IDocketRepository, DocketRepository>();
+        services.AddScoped<IStageHtsClientRepository, StageHtsClientRepository>();
 
 
 

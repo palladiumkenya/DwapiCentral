@@ -95,60 +95,28 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("HtsNumber")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ClientSelfTested")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientTestedAs")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("County")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CoupleDiscordant")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Last_Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisabilityType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("EncounterId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("FacilityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FinalResultHTS")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FinalResultsGiven")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -156,34 +124,25 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("HtsRecencyId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("KeyPop")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("KeyPopulationType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaritalStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MonthsLastTested")
-                        .HasColumnType("int");
 
                     b.Property<string>("NUPI")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PatientConsented")
-                        .IsRequired()
+                    b.Property<string>("Occupation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientDisabled")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Pkv")
@@ -191,69 +150,18 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PopulationType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Project")
-                        .IsRequired()
+                    b.Property<string>("PriorityPopulationType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Serial")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StatusDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("StrategyHTS")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SubCounty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TBScreeningHTS")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("TestKitExpiryDate1")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TestKitExpiryDate2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestKitLotNumber1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestKitLotNumber2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestKitName1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestKitName2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestResultsHTS1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestResultsHTS2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestedBefore")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
@@ -262,16 +170,12 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Ward")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PatientPk", "SiteCode", "HtsNumber");
 
-                    b.ToTable("Clients");
+                    b.ToTable("HtsClients");
                 });
 
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsClientLinkage", b =>
@@ -390,7 +294,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
 
-                    b.ToTable("ClientLinkages");
+                    b.ToTable("HtsClientLinkages");
                 });
 
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsClientPartner", b =>
@@ -474,7 +378,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
 
-                    b.ToTable("ClientPartners");
+                    b.ToTable("HtsClientPartners");
                 });
 
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsClientTest", b =>
@@ -1134,41 +1038,23 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ClientSelfTested")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientTestedAs")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("County")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CoupleDiscordant")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Date_Last_Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisabilityType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("EncounterId")
                         .HasColumnType("int");
@@ -1176,19 +1062,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Extracted")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("FacilityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FinalResultHTS")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FinalResultsGiven")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
@@ -1196,34 +1070,30 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("KeyPop")
-                        .IsRequired()
+                    b.Property<string>("HtsRecencyId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KeyPopulationType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MaritalStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MonthsLastTested")
+                    b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
-                    b.Property<string>("NUPI")
-                        .IsRequired()
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MaritalStatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PatientConsented")
-                        .IsRequired()
+                    b.Property<string>("NUPI")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Occupation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientDisabled")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -1234,15 +1104,12 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PopulationType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Project")
-                        .IsRequired()
+                    b.Property<string>("PriorityPopulationType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Serial")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
@@ -1251,55 +1118,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("StatusDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("StrategyHTS")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SubCounty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TBScreeningHTS")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("TestKitExpiryDate1")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TestKitExpiryDate2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestKitLotNumber1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestKitLotNumber2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestKitName1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestKitName2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestResultsHTS1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestResultsHTS2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestedBefore")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
@@ -1308,11 +1127,10 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.Property<string>("Ward")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2123,7 +1941,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsClientTest", b =>
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
-                        .WithMany("HtsClientTests")
+                        .WithMany("HtsClientTestss")
                         .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2141,7 +1959,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsPartnerNotificationServices", b =>
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
-                        .WithMany("HtsPartnerNotificationServices")
+                        .WithMany("HtsPartnerNotificationServicess")
                         .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2159,7 +1977,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsTestKit", b =>
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
-                        .WithMany("HtsTestKits")
+                        .WithMany("HtsTestKitss")
                         .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2185,15 +2003,15 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Navigation("HtsClientPartners");
 
-                    b.Navigation("HtsClientTests");
+                    b.Navigation("HtsClientTestss");
 
                     b.Navigation("HtsClientTracings");
 
-                    b.Navigation("HtsPartnerNotificationServices");
+                    b.Navigation("HtsPartnerNotificationServicess");
 
                     b.Navigation("HtsPartnerTracings");
 
-                    b.Navigation("HtsTestKits");
+                    b.Navigation("HtsTestKitss");
                 });
 
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.Manifest", b =>

@@ -10,6 +10,9 @@ namespace DwapiCentral.Hts.Domain.Repository
     public interface IManifestRepository
     {
         Task<Manifest> GetById(Guid id);
+
+        Task<Guid> GetManifestId(int siteCode);
+
         Task Save(Manifest manifest);
         Task Update(Manifest manifest);
         Task ClearFacility(int siteCode);

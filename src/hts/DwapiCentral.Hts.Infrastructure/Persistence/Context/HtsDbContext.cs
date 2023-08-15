@@ -25,9 +25,9 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
         public DbSet<Docket> Dockets { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
 
-        public DbSet<HtsClient> Clients { get; set; }
-        public DbSet<HtsClientLinkage> ClientLinkages { get; set; }
-        public DbSet<HtsClientPartner> ClientPartners { get; set; }
+        public DbSet<HtsClient> HtsClients { get; set; }
+        public DbSet<HtsClientLinkage> HtsClientLinkages { get; set; }
+        public DbSet<HtsClientPartner> HtsClientPartners { get; set; }
         public DbSet<HtsClientTest> HtsClientTests { get; set; }
         public DbSet<HtsClientTracing> HtsClientTracing { get; set; }
         public DbSet<HtsPartnerNotificationServices> HtsPartnerNotificationServices { get; set; }
@@ -69,7 +69,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
                .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
-               .HasMany(c => c.HtsClientTests)
+               .HasMany(c => c.HtsClientTestss)
                .WithOne()
                .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
                .IsRequired();
@@ -81,7 +81,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
                .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
-               .HasMany(c => c.HtsPartnerNotificationServices)
+               .HasMany(c => c.HtsPartnerNotificationServicess)
                .WithOne()
                .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
                .IsRequired();
@@ -93,7 +93,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
                .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
-               .HasMany(c => c.HtsTestKits)
+               .HasMany(c => c.HtsTestKitss)
                .WithOne()
                .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
                .IsRequired();
@@ -107,7 +107,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
 
             DapperPlusManager.Entity<HtsClient>()
                 .Key(x => new { x.PatientPk, x.SiteCode, x.HtsNumber })
-                .Table($"{nameof(Clients)}");
+                .Table($"{nameof(HtsClients)}");
             DapperPlusManager.Entity<StageHtsClient>()
                 .Key(x => new { x.PatientPk, x.SiteCode, x.HtsNumber })
                 .Table($"{nameof(StageClients)}");
@@ -115,14 +115,14 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
 
             DapperPlusManager.Entity<HtsClientLinkage>()
                 .Key(x => new { x.Id })
-                .Table($"{nameof(ClientLinkages)}");
+                .Table($"{nameof(HtsClientLinkages)}");
             DapperPlusManager.Entity<StageHtsClientLinkage>()
                 .Key(x => new { x.Id })
-                .Table($"{nameof(Clients)}");
+                .Table($"{nameof(StageClientLinkages)}");
 
             DapperPlusManager.Entity<HtsClientPartner>()
                .Key(x => new { x.Id })
-               .Table($"{nameof(ClientPartners)}");
+               .Table($"{nameof(HtsClientPartners)}");
             DapperPlusManager.Entity<StageHtsClientPartner>()
                 .Key(x => new { x.Id })
                 .Table($"{nameof(StageClientPartners)}");
