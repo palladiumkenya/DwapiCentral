@@ -1069,8 +1069,8 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("End")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ManifestStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()

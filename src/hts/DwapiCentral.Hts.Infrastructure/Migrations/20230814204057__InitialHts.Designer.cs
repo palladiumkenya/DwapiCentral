@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Hts.Infrastructure.Migrations
 {
     [DbContext(typeof(HtsDbContext))]
-    [Migration("20230814195141__InitialHts")]
+    [Migration("20230814204057__InitialHts")]
     partial class _InitialHts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1071,8 +1071,8 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("End")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ManifestStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
