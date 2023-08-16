@@ -27,7 +27,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
 
         public DbSet<HtsClient> HtsClients { get; set; }
         public DbSet<HtsClientLinkage> HtsClientLinkages { get; set; }
-        public DbSet<HtsClientPartner> HtsClientPartners { get; set; }
+        public DbSet<HtsEligibilityScreening> HtsEligibilityExtract { get; set; }
         public DbSet<HtsClientTest> HtsClientTests { get; set; }
         public DbSet<HtsClientTracing> HtsClientTracing { get; set; }
         public DbSet<HtsPartnerNotificationServices> HtsPartnerNotificationServices { get; set; }
@@ -37,7 +37,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
         //Stage
         public virtual DbSet<StageHtsClient> StageClients { get; set; }
         public virtual DbSet<StageHtsClientLinkage> StageClientLinkages { get; set; }
-        public virtual DbSet<StageHtsClientPartner> StageClientPartners { get; set; }
+        public virtual DbSet<StageHtsEligibilityScreening> StageHtsEligibilityExtract { get; set; }
         public virtual DbSet<StageHtsClientTest> StageHtsClientTests { get; set; }
         public virtual DbSet<StageHtsClientTracing> StageHtsClientTracing { get; set; }
         public virtual DbSet<StageHtsPartnerNotificationServices> StageHtsPartnerNotificationServices { get; set; }
@@ -120,12 +120,12 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
                 .Key(x => new { x.Id })
                 .Table($"{nameof(StageClientLinkages)}");
 
-            DapperPlusManager.Entity<HtsClientPartner>()
+            DapperPlusManager.Entity<HtsEligibilityScreening>()
                .Key(x => new { x.Id })
-               .Table($"{nameof(HtsClientPartners)}");
-            DapperPlusManager.Entity<StageHtsClientPartner>()
+               .Table($"{nameof(HtsEligibilityExtract)}");
+            DapperPlusManager.Entity<StageHtsEligibilityScreening>()
                 .Key(x => new { x.Id })
-                .Table($"{nameof(StageClientPartners)}");
+                .Table($"{nameof(StageHtsEligibilityExtract)}");
 
             DapperPlusManager.Entity<HtsClientTest>()
                .Key(x => new { x.Id })

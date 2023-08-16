@@ -7,28 +7,20 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Contracts.Hts
 {
-    public  interface IHtsClientLinkage : IEntity
+    public  interface IHtsClientLinkage : IExtract
     {
             string FacilityName { get; set; }            
-            string HtsNumber { get; set; }            
-            bool? Processed { get; set; }
-            string QueueId { get; set; }
-            string Status { get; set; }
-            DateTime? StatusDate { get; set; }
-            DateTime? DateExtracted { get; set; }
-            DateTime? PhoneTracingDate { get; set; }
-            DateTime? PhysicalTracingDate { get; set; }
-            string TracingOutcome { get; set; }
-            string CccNumber { get; set; }
-            string EnrolledFacilityName { get; set; }
+            string HtsNumber { get; set; }   
+            string? EnrolledFacilityName { get; set; }
             DateTime? ReferralDate { get; set; }
             DateTime? DateEnrolled { get; set; }
             DateTime? DatePrefferedToBeEnrolled { get; set; }
-            string FacilityReferredTo { get; set; }
-            string HandedOverTo { get; set; }
-            string HandedOverToCadre { get; set; }
-            string ReportedCCCNumber { get; set; }
+            string? FacilityReferredTo { get; set; }
+            string? HandedOverTo { get; set; }
+            string? HandedOverToCadre { get; set; }
+            string? ReportedCCCNumber { get; set; }
             DateTime? ReportedStartARTDate { get; set; }
-            Guid FacilityId { get; set; }
+
+       
     }
 }

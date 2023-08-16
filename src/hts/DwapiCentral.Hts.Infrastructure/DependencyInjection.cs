@@ -39,6 +39,13 @@ public static class DependencyInjection
         services.AddScoped<IManifestRepository, ManifestRepository>();
         services.AddScoped<IDocketRepository, DocketRepository>();
         services.AddScoped<IStageHtsClientRepository, StageHtsClientRepository>();
+        services.AddScoped<IStageHtsClientTestRepository, StageHtsClientTestRepository>();
+        services.AddScoped<IStageHtsClientLinkageRepository, StageHtsClientLinkageRepository>();
+        services.AddScoped<IStageHtsTestKitRepository, StageHtsTestKitRepository>();
+        services.AddScoped<IStageHtsClientTracingRepository, StageHtsClientTracingRepository>();
+        services.AddScoped<IStageHtsPartnerTracingRepository, StageHtsPartnerTracingRepository>();
+        services.AddScoped<IStageHtsPartnerNotificationServicesRepository, StageHtsPartnerNotificationServicesRepository>();
+        services.AddScoped<IStageHtsEligibilityScreeningRepository, StageHtsEligibilityScreeningRepository>();
 
 
 

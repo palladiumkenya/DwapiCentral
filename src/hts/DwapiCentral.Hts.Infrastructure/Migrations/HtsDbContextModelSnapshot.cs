@@ -184,10 +184,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CccNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
@@ -197,43 +193,29 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DatePrefferedToBeEnrolled")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Date_Last_Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("EnrolledFacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacilityReferredTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HandedOverTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HandedOverToCadre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsNumber")
@@ -243,28 +225,10 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("PhoneTracingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("PhysicalTracingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("ReferralDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ReportedCCCNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReportedStartARTDate")
@@ -273,21 +237,10 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TracingOutcome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -297,110 +250,25 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.ToTable("HtsClientLinkages");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsClientPartner", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateExtracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Last_Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FacilityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HtsNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("PatientPk")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SiteCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TracingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TracingOutcome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TracingType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Voided")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
-
-                    b.ToTable("HtsClientPartners");
-                });
-
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsClientTest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Approach")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ClientSelfTested")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientTestedAs")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Consent")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoupleDiscordant")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
@@ -409,32 +277,23 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EncounterId")
+                    b.Property<int>("EncounterId")
                         .HasColumnType("int");
 
                     b.Property<string>("EntryPoint")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EverTestedForHiv")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
@@ -448,11 +307,16 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("HtsRiskCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("HtsRiskScore")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("MonthsSinceLastTest")
                         .HasColumnType("int");
 
                     b.Property<string>("PatientGivenResult")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -461,51 +325,40 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<bool?>("Processed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
+                    b.Property<string>("Setting")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StatusDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TbScreening")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("TestDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TestResult1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestResult2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestStrategy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -527,21 +380,14 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
@@ -554,42 +400,22 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("TracingDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TracingOutcome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TracingType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -597,6 +423,252 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
 
                     b.ToTable("HtsClientTracing");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsEligibilityScreening", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AlcoholSex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AssessmentOutcome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BreastfeedingMother")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CCCNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChildReasonsForIneligibility")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CondomBurst")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactWithTBCase")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cough")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoupleDiscordant")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CurrentlyHasSTI")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CurrentlyOnPep")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CurrentlyOnPrep")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateTestedProvider")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateTestedSelf")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Department")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Disability")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisabilityType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EligibleForTest")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EncounterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverHadSTI")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverHadSex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverHadTB")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverOnPep")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverOnPrep")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExperiencedGBV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fever")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ForcedSex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HIVRiskCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HTSEntryPoint")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HTSStrategy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HtsNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("IsHealthWorker")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("KeyPopulation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("KnownStatusPartner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lethargy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MoneySex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MothersStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MultiplePartners")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NeedleStickInjuries")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewPartner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NightSweats")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NumberOfPartners")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PartnerHIVStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PatientType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PopulationType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pregnant")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PriorityPopulation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonNotReffered")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonRefferredForTesting")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonsForIneligibility")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceivedServices")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferredForTesting")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RelationshipWithContact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResultOfHIV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResultOfHIVSelf")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreenedTB")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SexuallyActive")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SharedNeedle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SpecificReasonForIneligibility")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StartedOnART")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TBStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestedHIVBefore")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TraditionalProcedures")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeGBV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnknownStatusPartner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("VisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("WeightLoss")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WhoPerformedTest")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
+
+                    b.ToTable("HtsEligibilityExtract");
                 });
 
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsPartnerNotificationServices", b =>
@@ -609,20 +681,21 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CccNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CurrentlyLivingWithIndexClient")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateElicited")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
@@ -634,18 +707,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("FacilityLinkedTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacilityName")
@@ -657,22 +719,18 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IpvScreeningOutcome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KnowledgeOfHivStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LinkDateLinkedToCare")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LinkedToCare")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaritalStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PartnerPatientPk")
@@ -685,50 +743,27 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PnsApproach")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PnsConsent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RelationsipToIndexClient")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ScreenedForIpv")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sex")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -753,21 +788,14 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
@@ -777,48 +805,28 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("PartnerPersonID")
+                    b.Property<int?>("PartnerPersonId")
                         .HasColumnType("int");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("TraceDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TraceOutcome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TraceType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -840,24 +848,17 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("EncounterId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
@@ -870,63 +871,40 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("SyphilisResult")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("TestKitExpiry1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitExpiry2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitLotNumber1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitLotNumber2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitName1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitName2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestResult1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestResult2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -1144,10 +1122,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CccNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
@@ -1157,74 +1131,48 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DatePrefferedToBeEnrolled")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Date_Last_Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("EnrolledFacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacilityReferredTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HandedOverTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HandedOverToCadre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientPk")
+                    b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("PhoneTracingDate")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("PhysicalTracingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ReferralDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ReportedCCCNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReportedStartARTDate")
@@ -1233,108 +1181,15 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TracingOutcome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.ToTable("StageClientLinkages");
-                });
-
-            modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.Stage.StageHtsClientPartner", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateExtracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Last_Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FacilityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HtsNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PatientPk")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SiteCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TracingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TracingOutcome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TracingType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Voided")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StageClientPartners");
                 });
 
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.Stage.StageHtsClientTest", b =>
@@ -1343,20 +1198,19 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Approach")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ClientSelfTested")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientTestedAs")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Consent")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoupleDiscordant")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
@@ -1365,32 +1219,23 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EncounterId")
+                    b.Property<int>("EncounterId")
                         .HasColumnType("int");
 
                     b.Property<string>("EntryPoint")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EverTestedForHiv")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
@@ -1404,11 +1249,22 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("HtsRiskCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("HtsRiskScore")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("MonthsSinceLastTest")
                         .HasColumnType("int");
 
                     b.Property<string>("PatientGivenResult")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -1417,51 +1273,40 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<bool?>("Processed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
+                    b.Property<string>("Setting")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StatusDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TbScreening")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("TestDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TestResult1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestResult2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestStrategy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -1481,21 +1326,14 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
@@ -1505,50 +1343,286 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("TracingDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TracingOutcome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TracingType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.ToTable("StageHtsClientTracing");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.Stage.StageHtsEligibilityScreening", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AlcoholSex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AssessmentOutcome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BreastfeedingMother")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CCCNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChildReasonsForIneligibility")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CondomBurst")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactWithTBCase")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cough")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoupleDiscordant")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CurrentlyHasSTI")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CurrentlyOnPep")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CurrentlyOnPrep")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateTestedProvider")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateTestedSelf")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Department")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Disability")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisabilityType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EligibleForTest")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EncounterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverHadSTI")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverHadSex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverHadTB")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverOnPep")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EverOnPrep")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExperiencedGBV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fever")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ForcedSex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HIVRiskCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HTSEntryPoint")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HTSStrategy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HtsNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IsHealthWorker")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("KeyPopulation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("KnownStatusPartner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lethargy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MoneySex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MothersStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MultiplePartners")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NeedleStickInjuries")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewPartner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NightSweats")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NumberOfPartners")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PartnerHIVStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PatientType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PopulationType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pregnant")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PriorityPopulation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonNotReffered")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonRefferredForTesting")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonsForIneligibility")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceivedServices")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferredForTesting")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RelationshipWithContact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResultOfHIV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResultOfHIVSelf")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreenedTB")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SexuallyActive")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SharedNeedle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SpecificReasonForIneligibility")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StartedOnART")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TBStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestedHIVBefore")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TraditionalProcedures")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeGBV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnknownStatusPartner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("VisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("WeightLoss")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WhoPerformedTest")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StageHtsEligibilityExtract");
                 });
 
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.Stage.StageHtsPartnerNotificationServices", b =>
@@ -1561,20 +1635,21 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CccNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CurrentlyLivingWithIndexClient")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateElicited")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
@@ -1586,18 +1661,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("FacilityLinkedTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacilityName")
@@ -1609,22 +1673,24 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpvScreeningOutcome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KnowledgeOfHivStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LinkDateLinkedToCare")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LinkedToCare")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("MaritalStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PartnerPatientPk")
@@ -1637,50 +1703,27 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PnsApproach")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PnsConsent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RelationsipToIndexClient")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ScreenedForIpv")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sex")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -1703,21 +1746,14 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
@@ -1727,48 +1763,34 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PartnerPersonID")
+                    b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("PartnerPersonId")
                         .HasColumnType("int");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("TraceDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TraceOutcome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TraceType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -1788,24 +1810,17 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("DateExtracted")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Emr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("EncounterId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("Extracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
                         .IsRequired()
@@ -1815,66 +1830,49 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientPk")
+                    b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Processed")
-                        .HasColumnType("bit");
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QueueId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("SyphilisResult")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("StatusDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("TestKitExpiry1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitExpiry2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitLotNumber1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitLotNumber2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitName1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestKitName2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestResult1")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestResult2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Voided")
+                    b.Property<bool?>("Voided")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -1929,15 +1927,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsClientPartner", b =>
-                {
-                    b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
-                        .WithMany("HtsClientPartners")
-                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsClientTest", b =>
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
@@ -1951,6 +1940,15 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
                         .WithMany("HtsClientTracings")
+                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Hts.Domain.Model.HtsEligibilityScreening", b =>
+                {
+                    b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
+                        .WithMany("HtsClientPartners")
                         .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Hts.Domain.Repository.Stage
 {
-    public interface IStageHtsClientPartnerRepository
+    public interface IStageHtsEligibilityScreeningRepository
     {
-        Task SyncStage(List<StageHtsClientPartner> extracts, Guid manifestId);
+        Task SyncStage(List<StageHtsEligibilityScreening> extracts, Guid manifestId);
     }
 }

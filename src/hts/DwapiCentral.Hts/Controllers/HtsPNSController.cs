@@ -7,28 +7,26 @@ using System.ComponentModel;
 
 namespace DwapiCentral.Hts.Controllers
 {
-    public class HtsClientController : Controller
+    public class HtsPNSController : Controller
     {
-
         private readonly IMediator _mediator;
 
 
-        public HtsClientController(IMediator mediator)
+        public HtsPNSController(IMediator mediator)
         {
             _mediator = mediator;
         }
-
-        // POST api/Hts/Clients
-        [HttpPost("api/Hts/Clients")]
-        public async Task<IActionResult> ProcessClient([FromBody] MergeHtsClientsCommand client)
+        // POST api/Hts/Pns
+        [HttpPost("api/Hts/Pns")]
+        public IActionResult ProcessPns([FromBody] MergeHtsPNSCommand client)
         {
             if (null == client)
                 return BadRequest();
 
             try
             {
-              var id = BackgroundJob.Enqueue(() => SaveClientsJob(client));
-              
+                var id = BackgroundJob.Enqueue(() => SavePNSJob(client));
+
                 return Ok(new
                 {
                     BatchKey = id
@@ -41,10 +39,10 @@ namespace DwapiCentral.Hts.Controllers
             }
         }
 
-        [Queue("clients")]
+        [Queue("pns")]
         [AutomaticRetry(Attempts = 3)]
         [DisplayName("{0}")]
-        public async Task SaveClientsJob(MergeHtsClientsCommand saveCommandManifest)
+        public async Task SavePNSJob(MergeHtsPNSCommand saveCommandManifest)
         {
             await _mediator.Send(saveCommandManifest);
 

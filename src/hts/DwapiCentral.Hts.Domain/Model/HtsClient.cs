@@ -41,7 +41,7 @@ namespace DwapiCentral.Hts.Domain.Model
 
 
         public virtual ICollection<HtsClientLinkage> HtsClientLinkages { get; set; } = new List<HtsClientLinkage>();
-        public virtual ICollection<HtsClientPartner> HtsClientPartners { get; set; } = new List<HtsClientPartner>();
+        public virtual ICollection<HtsEligibilityScreening> HtsClientPartners { get; set; } = new List<HtsEligibilityScreening>();
         public virtual ICollection<HtsClientTest> HtsClientTestss { get; set; } = new List<HtsClientTest>();
         public virtual ICollection<HtsClientTracing> HtsClientTracings { get; set; } = new List<HtsClientTracing>();
         public virtual ICollection<HtsPartnerNotificationServices> HtsPartnerNotificationServicess { get; set; } = new List<HtsPartnerNotificationServices>();

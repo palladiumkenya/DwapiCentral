@@ -61,8 +61,8 @@ namespace DwapiCentral.Hts.Controllers
 
                 try
                 {
-                    //BackgroundJob.Enqueue(() => SaveManifestJob(manifest));
-                  await  SaveManifestJob(manifest);
+                  BackgroundJob.Enqueue(() => SaveManifestJob(manifest));
+                 
                     return Ok();
                 }
                 catch (Exception e)
@@ -74,9 +74,9 @@ namespace DwapiCentral.Hts.Controllers
             else return BadRequest(validFacility.Error.ToString());
         }
 
-        //[Queue("manifest")]
-        //[AutomaticRetry(Attempts = 3)]
-        //[DisplayName("{0}")]
+        [Queue("manifest")]
+        [AutomaticRetry(Attempts = 3)]
+        [DisplayName("{0}")]
         public async Task SaveManifestJob(SaveManifestCommand saveCommandManifest)
         {
             await _mediator.Send(saveCommandManifest);
