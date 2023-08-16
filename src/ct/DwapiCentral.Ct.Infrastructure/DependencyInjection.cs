@@ -81,6 +81,7 @@ public static class DependencyInjection
         services.AddScoped<IStageBaselineExtractRepository, StageBaselineExtractRepository>();
         services.AddScoped<IStageStatusExtractRepository, StageStatusExtractRepository>();
         services.AddScoped<IStageCervicalCancerScreeningExtractsRepository, StageCervicalCancerScreeningExtractsRepository>();
+        services.AddScoped<IStageIITRiskScoreRepository, StageIITRiskScoreRepository>();
 
 
         try

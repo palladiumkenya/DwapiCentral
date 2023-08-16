@@ -7,6 +7,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class LaboratorySourceDto : ILab
     {
         public Guid Id { get; set; }
+        public string RecordUUID { get; set; }
         public int VisitId { get; set; }
         public DateTime OrderedByDate { get; set; }
         public DateTime? ReportedByDate { get; set; }

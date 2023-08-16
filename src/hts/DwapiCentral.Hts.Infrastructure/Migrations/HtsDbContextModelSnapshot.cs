@@ -155,6 +155,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("PriorityPopulationType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Serial")
                         .HasColumnType("nvarchar(max)");
 
@@ -224,6 +227,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
+
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReferralDate")
                         .HasColumnType("datetime2");
@@ -325,6 +331,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<bool?>("Processed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Setting")
                         .HasColumnType("nvarchar(max)");
 
@@ -399,6 +408,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
+
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
@@ -601,6 +613,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("ReceivedServices")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ReferredForTesting")
                         .HasColumnType("nvarchar(max)");
 
@@ -748,6 +763,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("PnsConsent")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RelationsipToIndexClient")
                         .HasColumnType("nvarchar(max)");
 
@@ -811,6 +829,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
@@ -870,6 +891,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
+
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
@@ -1087,6 +1111,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("PriorityPopulationType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Serial")
                         .HasColumnType("nvarchar(max)");
 
@@ -1168,6 +1195,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
+
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ReferralDate")
                         .HasColumnType("datetime2");
@@ -1273,6 +1303,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<bool?>("Processed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Setting")
                         .HasColumnType("nvarchar(max)");
 
@@ -1351,6 +1384,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
+
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
@@ -1557,6 +1593,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("ReceivedServices")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ReferredForTesting")
                         .HasColumnType("nvarchar(max)");
 
@@ -1708,6 +1747,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("PnsConsent")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RelationsipToIndexClient")
                         .HasColumnType("nvarchar(max)");
 
@@ -1775,6 +1817,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
@@ -1838,6 +1883,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
+
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");

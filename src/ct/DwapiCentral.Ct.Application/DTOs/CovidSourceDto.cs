@@ -7,6 +7,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class CovidSourceDto : ICovid
     {
         public Guid Id { get ; set ; }
+        public string RecordUUID { get; set; }
         public string? FacilityName { get ; set ; }
         public int VisitID { get ; set ; }
         public DateTime Covid19AssessmentDate { get ; set ; }

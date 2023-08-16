@@ -10,6 +10,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class CervicalCancerScreeningSourceDto :  ICervicalCancerScreening
     {
         public Guid Id { get; set; }
+        public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public int? VisitID { get; set; }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Hts.Infrastructure.Migrations
 {
-    public partial class _InitialHts : Migration
+    public partial class _InitialHts_Updaterecorduuid : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Pkv = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Occupation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PriorityPopulationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -124,6 +125,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -156,6 +158,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -198,6 +201,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -245,6 +249,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -272,6 +277,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -362,6 +368,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -404,6 +411,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -433,6 +441,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -488,6 +497,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -524,6 +534,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -575,6 +586,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -606,6 +618,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -700,6 +713,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -746,6 +760,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -779,6 +794,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),

@@ -10,6 +10,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StagePatientExtract : IStage, IPatient
     {
+        public string RecordUUID { get; set; }
         public string? CccNumber { get; set; }
         public string? Nupi { get; set; }
         public string? MpiId { get; set; }

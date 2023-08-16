@@ -8,6 +8,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
     {
         [Key]
         public Guid Id { get; set; }
+        public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public int VisitID { get; set; }

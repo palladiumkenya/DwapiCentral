@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
-    public partial class InitialCt : Migration
+    public partial class _InitialCt_IItRiskScore : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -69,6 +69,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 {
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CccNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Nupi = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MpiId = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -141,6 +142,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -186,6 +188,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -238,6 +241,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -287,6 +291,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -327,6 +332,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -367,6 +373,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -427,6 +434,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -466,6 +474,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -507,6 +516,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -540,6 +550,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -612,6 +623,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -647,6 +659,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -659,6 +672,41 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StageGbvScreeningExtracts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StageIITRiskScoresExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SourceSysUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RiskScore = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RiskFactors = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RiskDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RiskEvaluationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveStage = table.Column<int>(type: "int", nullable: false),
+                    Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Processed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StageIITRiskScoresExtracts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -696,6 +744,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -731,6 +780,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -769,6 +819,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -806,6 +857,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -826,6 +878,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 {
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CccNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Nupi = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MpiId = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -907,6 +960,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -944,6 +998,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1029,6 +1084,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1071,6 +1127,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: false),
@@ -1114,6 +1171,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: true),
@@ -1152,6 +1210,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -1190,6 +1249,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: false),
@@ -1248,6 +1308,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: true),
@@ -1285,6 +1346,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: false),
@@ -1324,6 +1386,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: false),
@@ -1355,6 +1418,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: false),
@@ -1425,6 +1489,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: false),
@@ -1454,10 +1519,44 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IITRiskScoresExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    SourceSysUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RiskScore = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RiskFactors = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RiskDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RiskEvaluationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IITRiskScoresExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_IITRiskScoresExtracts_PatientExtracts_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IptExtracts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: true),
@@ -1505,6 +1604,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: false),
@@ -1541,6 +1641,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: false),
@@ -1576,6 +1677,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1611,6 +1713,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     LastARTDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1661,6 +1764,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     bCD4 = table.Column<int>(type: "int", nullable: true),
@@ -1708,6 +1812,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitId = table.Column<int>(type: "int", nullable: false),
@@ -1741,6 +1846,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitID = table.Column<int>(type: "int", nullable: true),
@@ -1780,6 +1886,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     ExitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1815,6 +1922,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     VisitId = table.Column<int>(type: "int", nullable: false),
@@ -1939,6 +2047,11 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_IITRiskScoresExtracts_PatientPk_SiteCode",
+                table: "IITRiskScoresExtracts",
+                columns: new[] { "PatientPk", "SiteCode" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_IptExtracts_PatientPk_SiteCode",
                 table: "IptExtracts",
                 columns: new[] { "PatientPk", "SiteCode" });
@@ -2027,6 +2140,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 name: "GbvScreeningExtracts");
 
             migrationBuilder.DropTable(
+                name: "IITRiskScoresExtracts");
+
+            migrationBuilder.DropTable(
                 name: "IptExtracts");
 
             migrationBuilder.DropTable(
@@ -2097,6 +2213,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "StageGbvScreeningExtracts");
+
+            migrationBuilder.DropTable(
+                name: "StageIITRiskScoresExtracts");
 
             migrationBuilder.DropTable(
                 name: "StageIptExtracts");

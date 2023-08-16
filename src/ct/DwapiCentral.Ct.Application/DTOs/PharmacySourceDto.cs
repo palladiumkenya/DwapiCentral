@@ -7,6 +7,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class PharmacySourceDto : IPharmacy
     {        
         public Guid Id { get; set; }
+        public string RecordUUID { get; set; }
         public int? VisitID { get; set; }
         public string? Drug { get; set; }
         public string? Provider { get; set; }

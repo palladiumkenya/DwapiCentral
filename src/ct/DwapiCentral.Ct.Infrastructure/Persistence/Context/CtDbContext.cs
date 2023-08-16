@@ -44,6 +44,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; }
         public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
         public DbSet<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; }
+        public virtual DbSet<IITRiskScore> IITRiskScoresExtracts { get; set; }
 
         public virtual DbSet<StagePatientExtract> StagePatientExtracts { get; set; }
         public virtual DbSet<StageVisitExtract> StageVisitExtracts { get; set; }
@@ -65,7 +66,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public virtual DbSet<StageStatusExtract> StageStatusExtracts { get; set; }
         public virtual DbSet<StageGbvScreeningExtract> StageGbvScreeningExtracts { get; set; }
         public virtual DbSet<StageCervicalCancerScreeningExtract> StageCervicalCancerScreeningExtracts { get; set; }
-        //public virtual DbSet<SmartActionRegister> SmartActionRegisters { get; set; }
+        public virtual DbSet<StageIITRiskScore> StageIITRiskScoresExtracts { get; set; }
 
         public CtDbContext(DbContextOptions<CtDbContext> options) : base(options)
         {
@@ -196,6 +197,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.IITRiskScoresExtracts)
+               .WithOne()
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
+                .IsRequired();
+
             DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
 
             DapperPlusManager.Entity<Facility>().Key(x => x.Code).Table($"{nameof(Facilities)}");
@@ -282,6 +289,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
               .Key(x => x.Id)
               .Table($"{nameof(CervicalCancerScreeningExtracts)}");
 
+            DapperPlusManager.Entity<IITRiskScore>()
+                .Key(x => x.Id)
+               .Table($"{nameof(IITRiskScoresExtracts)}");
+
+
             DapperPlusManager.Entity<StagePatientExtract>()
                 .Key(x => new { x.PatientPk, x.SiteCode })
                 .Table($"{nameof(StagePatientExtracts)}");
@@ -361,6 +373,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<StageCervicalCancerScreeningExtract>()
                 .Key(x => x.Id)
                 .Table($"{nameof(StageCervicalCancerScreeningExtracts)}");
+
+            DapperPlusManager.Entity<StageIITRiskScore>().Key(x => x.Id)
+              .Table($"{nameof(StageIITRiskScoresExtracts)}");
         }
 
         
