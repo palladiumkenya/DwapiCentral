@@ -221,7 +221,32 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     IITRiskScoresExtracts
+
+                               SET
+                                    RiskScore = @RiskScore,
+                                    RiskFactors = @RiskFactors,
+                                    RiskDescription = @RiskDescription,
+                                    RiskEvaluationDate = @RiskEvaluationDate,
+                                    Date_Last_Modified = @Date_Last_Modified,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

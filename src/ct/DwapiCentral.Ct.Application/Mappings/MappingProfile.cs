@@ -83,7 +83,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<CovidSourceDto, StageCovidExtract>();
             CreateMap<DefaulterTracingSourceDto, StageDefaulterTracingExtract>();
             CreateMap<CervicalCancerScreeningSourceDto, StageCervicalCancerScreeningExtract>();
-            CreateMap<IndicatorItemDto, StageIITRiskScore>();
+            CreateMap<IITRiskScoreSourceDto, StageIITRiskScore>();
         }
     }
 }

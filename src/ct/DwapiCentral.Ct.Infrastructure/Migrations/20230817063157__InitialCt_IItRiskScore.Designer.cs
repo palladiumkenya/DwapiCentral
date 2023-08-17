@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230816194136__InitialCt_IItRiskScore")]
+    [Migration("20230817063157__InitialCt_IItRiskScore")]
     partial class _InitialCt_IItRiskScore
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2045,14 +2045,12 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
                     b.Property<string>("RecordUUID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RiskDescription")
@@ -3648,7 +3646,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Generated")
@@ -3670,7 +3667,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RiskDescription")

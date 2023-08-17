@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Application.DTOs.Source
 {
-    public class IITRiskScoreSourceBag: SourceBag<AdverseEventSourceDto> { }
+    public class IITRiskScoreSourceBag: SourceBag<IITRiskScoreSourceDto> { }
 }
    

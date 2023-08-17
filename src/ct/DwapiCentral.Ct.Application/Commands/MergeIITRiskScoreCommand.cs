@@ -34,18 +34,24 @@ public class MergeIITRiskScoreCommanddHandler : IRequestHandler<MergeIITRiskScor
 
     public async Task<Result> Handle(MergeIITRiskScoreCommand request, CancellationToken cancellationToken)
     {
-        
-        var extracts = _mapper.Map<List<StageIITRiskScore>>(request.IITRiskScoreExtracts.Extracts);
-        if (extracts.Any())
+        try
         {
-            StandardizeClass<StageIITRiskScore, IITRiskScoreSourceBag> standardizer = new(extracts, request.IITRiskScoreExtracts);
-            standardizer.StandardizeExtracts();
+            var extracts = _mapper.Map<List<StageIITRiskScore>>(request.IITRiskScoreExtracts.Extracts);
+            if (extracts.Any())
+            {
+                StandardizeClass<StageIITRiskScore, IITRiskScoreSourceBag> standardizer = new(extracts, request.IITRiskScoreExtracts);
+                standardizer.StandardizeExtracts();
 
+            }
+            //stage
+            await _stageRepository.SyncStage(extracts, request.IITRiskScoreExtracts.ManifestId.Value);
+
+            return Result.Success();
+
+        }catch(Exception ex)
+        {
+            return Result.Failure(ex.Message);
         }
-        //stage
-        await _stageRepository.SyncStage(extracts, request.IITRiskScoreExtracts.ManifestId.Value);
-
-        return Result.Success();
 
     }
 }

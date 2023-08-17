@@ -178,7 +178,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
             }
             catch (Exception ex)
             {

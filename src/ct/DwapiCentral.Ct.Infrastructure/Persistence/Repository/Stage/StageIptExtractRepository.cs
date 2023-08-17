@@ -80,17 +80,16 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, VisitID, VisitDate, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, VisitID, VisitDate
+                                    GROUP BY PatientPK, SiteCode, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
-                                    AND p.VisitID = s.VisitID
-                                    AND p.VisitDate = s.VisitDate
+                                    AND p.RecordUUID = s.RecordUUID                                  
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )
                         ";
@@ -99,14 +98,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<IptExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int? VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageIpt
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageIpt, existingRecords);
@@ -134,7 +133,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.VisitID}_{extract.VisitDate}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -159,7 +158,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageIpt
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
@@ -168,7 +167,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -176,7 +175,48 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     IptExtracts
+
+                               SET
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,                                    
+                                    OnTBDrugs = @OnTBDrugs,
+                                    OnIPT = @OnIPT,
+                                    EverOnIPT = @EverOnIPT,
+                                    Cough = @Cough,
+                                    Fever = @Fever,
+                                    NoticeableWeightLoss = @NoticeableWeightLoss,
+                                    NightSweats = @NightSweats,
+                                    Lethargy = @Lethargy,
+                                    ICFActionTaken = @ICFActionTaken,
+                                    TestResult = @TestResult,
+                                    TBClinicalDiagnosis = @TBClinicalDiagnosis,
+                                    ContactsInvited = @ContactsInvited,
+                                    EvaluatedForIPT = @EvaluatedForIPT,
+                                    StartAntiTBs = @StartAntiTBs,
+                                    TBRxStartDate = @TBRxStartDate,
+                                    TBScreening = @TBScreening,
+                                    IPTClientWorkUp = @IPTClientWorkUp,
+                                    StartIPT = @StartIPT,
+                                    IndicationForIPT = @IndicationForIPT,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

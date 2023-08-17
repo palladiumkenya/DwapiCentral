@@ -84,16 +84,16 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, LastARTDate, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, LastARTDate
+                                    GROUP BY PatientPK, SiteCode, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode                                    
-                                    AND p.LastARTDate = s.LastARTDate
+                                    AND p.RecordUUID = s.RecordUUID
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )
                         ";
@@ -101,13 +101,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 var existingRecords = await connection.QueryAsync<PatientArtExtract>(query, queryParameters);
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, DateTime LastARTDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.LastARTDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {                  
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageArt
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.LastARTDate)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageArt, existingRecords);
@@ -138,7 +138,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.LastARTDate}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -161,9 +161,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
+
                 //Update existing data
                 var stageDictionary = stageArt
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.LastARTDate })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
@@ -172,7 +173,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.LastARTDate },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -180,7 +181,52 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     PatientArtExtracts
+
+                               SET     
+                                     LastARTDate  = @LastARTDate
+                                    ,LastVisit  = @LastVisit
+                                    ,DOB  = @DOB
+                                    ,AgeEnrollment  = @AgeEnrollment
+                                    ,AgeARTStart  = @AgeARTStart
+                                    ,AgeLastVisit  = @AgeLastVisit
+                                    ,RegistrationDate  = @RegistrationDate
+                                    ,Gender  = @Gender
+                                    ,PatientSource  = @PatientSource
+                                    ,StartARTDate  = @StartARTDate
+                                    ,PreviousARTStartDate  = @PreviousARTStartDate
+                                    ,PreviousARTRegimen  = @PreviousARTRegimen
+                                    ,StartARTAtThisFacility  = @StartARTAtThisFacility
+                                    ,StartRegimen  = @StartRegimen
+                                    ,StartRegimenLine  = @StartRegimenLine
+                                    ,LastRegimen  = @LastRegimen
+                                    ,LastRegimenLine  = @LastRegimenLine
+                                    ,Duration  = @Duration
+                                    ,ExpectedReturn  = @ExpectedReturn
+                                    ,Provider  = @Provider
+                                    ,ExitReason  = @ExitReason
+                                    ,ExitDate  = @ExitDate
+                                    ,PreviousARTUse  = @PreviousARTUse
+                                    ,PreviousARTPurpose  = @PreviousARTPurpose
+                                    ,DateLastUsed  = @DateLastUsed
+                                    ,Date_Created = @Date_Created
+                                    ,DateLastModified = @DateLastModified
+                                    ,DateExtracted = @DateExtracted
+                                    ,Created = @Created
+                                    ,Updated = @Updated
+                                    ,Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

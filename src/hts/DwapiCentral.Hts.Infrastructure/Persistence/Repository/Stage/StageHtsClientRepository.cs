@@ -188,7 +188,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
         {
 
             HtsClient updateRecord = _mapper.Map<HtsClient>(stageRecord);
-            _context.Database.GetDbConnection().BulkUpdate(updateRecord);
+            _context.Database.GetDbConnection().BulkMerge(updateRecord);
         }
 
         private void InsertRecordIntoCentral(SqlConnection connection, StageHtsClient stageRecord)

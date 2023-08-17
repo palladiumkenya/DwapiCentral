@@ -22,7 +22,7 @@ namespace DwapiCentral.Ct.Controllers
             _mediator = mediator;
         }
 
-
+        [HttpPost]
         [Route("api/v3/IITRiskScores")]
         public async Task<IActionResult> PostBatchNew([FromBody] IITRiskScoreSourceBag sourceBag)
         {
@@ -42,7 +42,9 @@ namespace DwapiCentral.Ct.Controllers
                     {
 
                         jobId = BatchJob.ContinueBatchWith(sourceBag.JobId,
-                          x => { x.Enqueue(() => Send($"{sourceBag}", new MergeIITRiskScoreCommand(sourceBag))); }, $"{sourceBag}");
+                         x => { x.Enqueue(() => Send($"{sourceBag}", new MergeIITRiskScoreCommand(sourceBag))); }, $"{sourceBag}");
+                         
+
                     }
                     else
                     {
@@ -53,7 +55,7 @@ namespace DwapiCentral.Ct.Controllers
                     }
                     var successMessage = new
                     {
-                        JobId = jobId,
+                        //JobId = jobId,
                         BatchKey = new List<Guid>() { LiveGuid.NewGuid() }
                     };
                     return Ok(successMessage);

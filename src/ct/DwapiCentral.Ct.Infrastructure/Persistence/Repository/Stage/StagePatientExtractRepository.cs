@@ -310,7 +310,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         private bool CheckRecordExistence(SqlConnection connection, StagePatientExtract stageRecord)
         {
-            string selectQuery = "SELECT COUNT(*) FROM PatientExtracts WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode";
+            string selectQuery = "SELECT COUNT(*) FROM PatientExtracts WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND @RecordUUID = RecordUUID";
 
             int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
             return count > 0;
@@ -319,7 +319,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             
             PatientExtract updateRecord = _mapper.Map<PatientExtract>(stageRecord);
-            _context.Database.GetDbConnection().BulkUpdate(updateRecord);
+            _context.Database.GetDbConnection().BulkMerge(updateRecord);
         }
 
         private void InsertRecordIntoCentral(SqlConnection connection, StagePatientExtract stageRecord)

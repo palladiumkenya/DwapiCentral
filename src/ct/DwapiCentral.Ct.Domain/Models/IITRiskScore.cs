@@ -15,8 +15,8 @@ namespace DwapiCentral.Ct.Domain.Models
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string SourceSysUUID { get; set; }
-        public string RecordUUID { get; set; }
-        public string FacilityName { get; set; }
+        public string? RecordUUID { get; set; }
+        public string? FacilityName { get; set; }
         public decimal? RiskScore { get; set; }
         public string? RiskFactors { get; set; }
         public string? RiskDescription { get; set; }

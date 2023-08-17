@@ -679,7 +679,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SourceSysUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RiskScore = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     RiskFactors = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -688,7 +688,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1526,8 +1526,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     SourceSysUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskScore = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     RiskFactors = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
