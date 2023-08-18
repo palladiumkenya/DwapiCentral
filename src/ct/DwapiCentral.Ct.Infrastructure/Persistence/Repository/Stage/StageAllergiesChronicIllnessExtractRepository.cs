@@ -222,9 +222,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                      AllergiesChronicIllnessExtracts
 
                                SET     
-                                    ,VisitDate = @VisitDate
+                                     VisitDate = @VisitDate
                                     ,VisitID = @VisitID
-                                    ,ChronicIllness @ChronicIllness
+                                    ,ChronicIllness = @ChronicIllness
                                     ,ChronicOnsetDate = @ChronicOnsetDate
                                     ,knownAllergies =@knownAllergies
                                     ,AllergyCausativeAgent = @AllergyCausativeAgent

@@ -181,10 +181,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.SourceSysUUID}";
 
+
                     if (!latestRecordsDict.ContainsKey(key))
                     {
                         latestRecordsDict[key] = extract;
                     }
+                                    
                 }
 
                 var filteredExtracts = latestRecordsDict.Values.ToList();

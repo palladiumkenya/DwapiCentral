@@ -67,6 +67,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         delete  from StageStatusExtracts WHERE  SiteCode = @SiteCode;
         delete  from StageVisitExtracts WHERE  SiteCode = @SiteCode;
         delete  from StageCervicalCancerScreeningExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageIITRiskScoresExtracts WHERE  SiteCode = @SiteCode;
 
         ";
             try
