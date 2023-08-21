@@ -51,8 +51,8 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Context
 
         public virtual void EnsureSeeded()
         {
-            SeedFromCsv<Docket>("DwapiCentral.Hts.Infrastructure.Persistence.Seed.Docket.csv");
-            SeedFromCsv<Subscriber>("DwapiCentral.Hts.Infrastructure.Persistence.Seed.Subscriber.csv");
+            SeedFromCsv<Docket>("DwapiCentral.Mnch.Infrastructure.Persistence.Seed.Docket.csv");
+            SeedFromCsv<Subscriber>("DwapiCentral.Mnch.Infrastructure.Persistence.Seed.Subscriber.csv");
 
             SaveChanges();
 

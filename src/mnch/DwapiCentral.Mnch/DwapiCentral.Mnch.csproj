@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.7.28" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -16,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <Reference Include="Hangfire.Pro">
+      <HintPath>..\..\..\libs\Hangfire.Pro.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

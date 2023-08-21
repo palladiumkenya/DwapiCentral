@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
+namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository
 {
     public class DocketRepository : IDocketRepository
     {
@@ -21,10 +21,10 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
 
         public Task<Docket?> GetDocketId(string docket)
         {
-         return _context.Dockets
-                .Include(x => x.Subscribers)
-                .AsTracking()
-                .FirstOrDefaultAsync(x => x.Id == docket);
+            return _context.Dockets
+                   .Include(x => x.Subscribers)
+                   .AsTracking()
+                   .FirstOrDefaultAsync(x => x.Id == docket);
         }
     }
 }

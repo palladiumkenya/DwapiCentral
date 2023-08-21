@@ -16,7 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Collections.Specialized.BitVector32;
 
-namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
+namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository
 {
     public class ManifestRepository : IManifestRepository
     {
@@ -89,7 +89,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
 
                 using (var transaction = cons.BeginTransaction())
                 {
-                    await cons.ExecuteAsync($"{sql}", new { siteCode,project }, transaction, 0);
+                    await cons.ExecuteAsync($"{sql}", new { siteCode, project }, transaction, 0);
                     transaction.Commit();
                 }
 
@@ -136,26 +136,16 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
             }
         }
 
-        public Task Save(Manifest manifest)
+        public async Task Save(Manifest manifest)
         {
-            throw new NotImplementedException();
+            await _context.Manifests.AddAsync(manifest);
+            await _context.SaveChangesAsync();
         }
 
-        public Task Update(Manifest manifest)
+        public async Task Update(Manifest manifest)
         {
-            throw new NotImplementedException();
+            _context.Manifests.Update(manifest);
+            await _context.SaveChangesAsync();
         }
-
-        //public async Task Save(Manifest manifest)
-        //{
-        //    await _context.Manifests.AddAsync(manifest);
-        //    await _context.SaveChangesAsync();
-        //}
-
-        //public async Task Update(Manifest manifest)
-        //{
-        //    _context.Manifests.Update(manifest);
-        //    await _context.SaveChangesAsync();
-        //}
     }
 }
