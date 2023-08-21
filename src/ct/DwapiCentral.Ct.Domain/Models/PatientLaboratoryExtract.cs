@@ -20,6 +20,8 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? DateSampleTaken { get; set; }
         public string? SampleType { get; set; }
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; }

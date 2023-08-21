@@ -85,6 +85,7 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public string? ReasonRefferredForTesting { get; set; }
         public string? ReasonNotReffered { get; set; }
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; }

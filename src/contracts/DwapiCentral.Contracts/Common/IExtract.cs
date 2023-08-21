@@ -6,6 +6,8 @@ public interface IExtract
     int SiteCode { get; set; }
     string RecordUUID { get; set; }
     DateTime? Date_Created { get; set; }
+    DateTime? Date_Last_Modified { get; set; }
+
     DateTime? DateLastModified { get; set; }
     DateTime? DateExtracted { get; set; }
     DateTime? Created { get; set; } 

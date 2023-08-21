@@ -33,6 +33,7 @@ namespace DwapiCentral.Hts.Domain.Model
          
            
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         bool? IExtract.Voided { get; set; }

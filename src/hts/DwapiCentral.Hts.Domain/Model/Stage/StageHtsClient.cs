@@ -35,12 +35,12 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public string? County { get; set; }
         public string? SubCounty { get; set; }
         public string? Ward { get; set; }
-        public string? NUPI { get; set; }
-        
+        public string? NUPI { get; set; }        
         public LiveStage LiveStage { get; set; }
         public Guid? ManifestId { get; set; }
 
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
         public bool? Voided { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }

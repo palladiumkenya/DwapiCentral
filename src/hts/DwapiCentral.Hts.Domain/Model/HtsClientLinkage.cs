@@ -25,9 +25,10 @@ namespace DwapiCentral.Hts.Domain.Model
         public string? HandedOverTo { get; set; }
         public string? HandedOverToCadre { get; set; }
         public string? ReportedCCCNumber { get; set; }
-        public DateTime? ReportedStartARTDate { get; set; }
-       
+        public DateTime? ReportedStartARTDate { get; set; }       
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;

@@ -45,6 +45,8 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? Sequence { get ; set ; }
         public string? BoosterDoseVerified { get ; set ; }            
         public DateTime? Date_Created { get ; set ; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get; set; } = DateTime.Now;
