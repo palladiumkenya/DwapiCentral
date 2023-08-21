@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230817063157__InitialCt_IItRiskScore")]
-    partial class _InitialCt_IItRiskScore
+    [Migration("20230821083030__InitialCt")]
+    partial class _InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,6 +40,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FacilityName")
@@ -152,6 +155,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ENT")
                         .HasColumnType("nvarchar(max)");
 
@@ -230,6 +236,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FacilityName")
@@ -351,6 +360,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("EverCOVID19Positive")
                         .HasColumnType("nvarchar(max)");
 
@@ -449,6 +461,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("EncounterId")
                         .HasColumnType("int");
 
@@ -512,6 +527,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DepressionAssesmentScore")
@@ -597,6 +615,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DrinkingAlcohol")
                         .HasColumnType("nvarchar(max)");
 
@@ -657,6 +678,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EACAdherencePlan")
@@ -832,6 +856,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("EmotionalIPV")
                         .HasColumnType("nvarchar(max)");
 
@@ -901,6 +928,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EvaluatedForIPT")
@@ -1004,6 +1034,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
 
@@ -1079,6 +1112,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EnrolledinCPIMS")
@@ -1173,6 +1209,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -1233,6 +1272,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("Duration")
@@ -1334,6 +1376,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PatientPk")
@@ -1455,6 +1500,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("District")
@@ -1593,6 +1641,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("EnrollmentTest")
                         .HasColumnType("int");
 
@@ -1653,6 +1704,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DispenseDate")
@@ -1736,6 +1790,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeathDate")
@@ -1840,6 +1897,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DifferentiatedCare")
@@ -2247,6 +2307,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Emr")
                         .HasColumnType("nvarchar(max)");
 
@@ -2344,6 +2407,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ENT")
@@ -2446,6 +2512,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("Duration")
@@ -2569,6 +2638,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
@@ -2700,6 +2772,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Emr")
                         .HasColumnType("nvarchar(max)");
 
@@ -2815,6 +2890,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
@@ -2958,6 +3036,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Emr")
                         .HasColumnType("nvarchar(max)");
 
@@ -3078,6 +3159,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Emr")
                         .HasColumnType("nvarchar(max)");
 
@@ -3163,6 +3247,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DepressionAssesmentScore")
@@ -3270,6 +3357,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DrinkingAlcohol")
                         .HasColumnType("nvarchar(max)");
 
@@ -3352,6 +3442,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EACAdherencePlan")
@@ -3549,6 +3642,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("EmotionalIPV")
                         .HasColumnType("nvarchar(max)");
 
@@ -3726,6 +3822,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Emr")
                         .HasColumnType("nvarchar(max)");
 
@@ -3852,6 +3951,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Emr")
                         .HasColumnType("nvarchar(max)");
 
@@ -3934,6 +4036,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
@@ -4033,6 +4138,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Emr")
@@ -4137,6 +4245,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("District")
@@ -4287,6 +4398,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DispenseDate")
                         .HasColumnType("datetime2");
 
@@ -4390,6 +4504,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeathDate")
@@ -4516,6 +4633,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DifferentiatedCare")
