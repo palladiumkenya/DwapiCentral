@@ -51,27 +51,7 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
             if (null == facility)
                 throw new SiteNotEnrolledException(request.manifest.SiteCode);
 
-            try
-            {
-                if (request.manifest.EmrSetup != EmrSetup.Community)
-                    _manifestRepository.ClearFacility(request.manifest.SiteCode);
-            }
-            catch (Exception e)
-            {
-                Log.Error("Clear MANIFEST ERROR ", e);
-            }
-
-            try
-            {
-                if (request.manifest.EmrSetup == EmrSetup.Community)
-                    _manifestRepository.ClearFacility(request.manifest.SiteCode, "IRDO");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Clear COMMUNITY MANIFEST ERROR ", e);
-            }
-
-
+            
             await _manifestRepository.Save(request.manifest);
 
             // notify spot => manifest
@@ -88,18 +68,7 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
             };
             await _mediator.Publish(notification, cancellationToken);
 
-            //notify spot => Hts metrics          
-            var metricDtos = MetricDto.Generate(request.manifest);
-
-            if (metricDtos.Any())
-            {
-                var metrics = new MnchMetricsEvent
-                {
-                    HtsMetricExtracts = metricDtos,
-
-                };
-                await _mediator.Publish(metrics, cancellationToken);
-            }
+           
 
             return Result.Success();
         }

@@ -1,6 +1,8 @@
 ﻿using DwapiCentral.Mnch.Application.Commands;
+using DwapiCentral.Mnch.Application.DTOs;
 using Hangfire;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Serilog;
@@ -38,29 +40,35 @@ namespace DwapiCentral.Mnch.Controllers
         }
 
 
-        [HttpPost("api/Hts/Manifest")]
-        public async Task<IActionResult> ProcessManifest([FromBody] SaveManifestCommand manifest)
+        [HttpPost("api/Mnch/Manifest")]
+        public async Task<IActionResult> ProcessManifest([FromBody] ManifestExtractDto manifestDto)
         {
-            if (null == manifest)
+            if (null == manifestDto)
                 return BadRequest();
-            var validFacility = await _mediator.Send(new ValidateSiteCommand(manifest.manifest.SiteCode, manifest.manifest.Name));
+            var validFacility = await _mediator.Send(new ValidateSiteCommand(manifestDto.Manifest.SiteCode, manifestDto.Manifest.Name));
             if (validFacility.IsSuccess)
             {
-                string json = manifest.manifest.Cargoes[1].Items;
+                string json = manifestDto.Manifest.Cargoes[1].Items;
 
                 dynamic data = JsonConvert.DeserializeObject(json);
 
-                manifest.manifest.EmrVersion = data.EmrVersion;
+                manifestDto.Manifest.EmrVersion = data.EmrVersion;
 
-                dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.manifest.Cargoes[2].Items);
+                dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifestDto.Manifest.Cargoes[2].Items);
 
-                manifest.manifest.DwapiVersion = dwapiVersiondata.Version;
+                manifestDto.Manifest.DwapiVersion = dwapiVersiondata.Version;
 
                 try
                 {
-                    //BackgroundJob.Enqueue(() => SaveManifestJob(manifest));
+                    var manifest = new SaveManifestCommand(manifestDto.Manifest);
 
-                    return Ok();
+                    var faciliyKey = await _mediator.Send(manifest, HttpContext.RequestAborted);
+
+                    BackgroundJob.Enqueue(() => SaveManifestJob(new ProcessManifestCommand(manifestDto.Manifest.SiteCode)));
+                    return Ok(new
+                    {
+                        FacilityKey = faciliyKey
+                    });
                 }
                 catch (Exception e)
                 {
@@ -69,6 +77,13 @@ namespace DwapiCentral.Mnch.Controllers
                 }
             }
             else return BadRequest(validFacility.Error.ToString());
+        }
+
+      
+        public async Task SaveManifestJob(ProcessManifestCommand saveCommandManifest)
+        {
+            await _mediator.Send(saveCommandManifest);
+
         }
 
     }

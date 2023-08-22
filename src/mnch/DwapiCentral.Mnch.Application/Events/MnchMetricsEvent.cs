@@ -10,6 +10,6 @@ namespace DwapiCentral.Mnch.Application.Events
 {
     public class MnchMetricsEvent : INotification
     {
-        public List<MetricDto> HtsMetricExtracts { get; set; }
+        public List<MetricDto> MnchMetricExtracts { get; set; }
     }
 }
