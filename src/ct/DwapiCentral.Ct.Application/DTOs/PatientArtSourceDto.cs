@@ -10,6 +10,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class PatientArtSourceDto : IArt
     {
         public Guid Id { get ; set ; }
+        public string RecordUUID { get; set; }       
         public DateTime LastARTDate { get; set; }        
         public DateTime? DOB { get ; set ; }
         public decimal? AgeEnrollment { get ; set ; }
@@ -37,7 +38,8 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? DateLastUsed { get ; set ; }
         public int PatientPk { get ; set ; }
         public int SiteCode { get ; set ; }
-        public DateTime? DateCreated { get ; set ; }
+        public DateTime? Date_Created { get ; set ; }
+        public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get; set; } = DateTime.Now;

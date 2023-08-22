@@ -3,6 +3,7 @@ using System.Reflection;
 using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
@@ -39,15 +40,18 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsCount = extracts.Count, SiteCode = extracts.First().SiteCode, ExtractName = "CovidExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "CovidExtract" };
                 await _mediator.Publish(notification);
 
+                var pks = extracts.Select(x => x.Id).ToList();
 
                 // assign > Assigned
-                await AssignAll(manifestId, extracts.Select(x => x.Id).ToList());
+                await AssignAll(manifestId, pks);
 
                 // Merge
                 await MergeExtracts(manifestId, extracts);
+
+                await UpdateLivestage(manifestId, pks);
 
 
             }
@@ -68,53 +72,50 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await connection.OpenAsync();
 
 
-                // Query existing records from the central table
-                var existingRecords = await connection.QueryAsync<CovidExtract>("SELECT * FROM CovidExtracts WHERE PatientPk IN @PatientPKs AND SiteCode IN @SiteCodes AND VisitID IN @VisitIDs AND Covid19AssessmentDate IN @Covid19AssessmentDates ",
-                    new
-                    {
-                        PatientPKs = stageCovid.Select(x => x.PatientPk),
-                        SiteCodes = stageCovid.Select(x => x.SiteCode),
-                        VisitIds = stageCovid.Select(x => x.VisitID),
-                        CovidAssessmentDates = stageCovid.Select(x => x.Covid19AssessmentDate)
+                var queryParameters = new
+                {
+                    manifestId,
+                    livestage = LiveStage.Assigned
+                };
+                var query = $@"
+                            SELECT p.*
+                            FROM CovidExtracts p
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM (
+                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    FROM {_stageName} WITH (NOLOCK)
+                                    WHERE 
+                                        LiveSession = @manifestId 
+                                        AND LiveStage = @livestage
+                                    GROUP BY PatientPK, SiteCode, RecordUUID
+                                ) s
+                                WHERE p.PatientPk = s.PatientPK
+                                    AND p.SiteCode = s.SiteCode
+                                    AND p.RecordUUID = s.RecordUUID                                    
+                                    AND p.Date_Created = s.MaxCreatedTime                                    
+                            )
+                        ";
 
-
-                    });
-
+                var existingRecords = await connection.QueryAsync<CovidExtract>(query, queryParameters);
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime Covid19AssessmentDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode,x.VisitID,x.Covid19AssessmentDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode,x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageCovid
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.Covid19AssessmentDate)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    //Update existing data
-                    foreach (var existingExtract in existingRecords)
-                    {
-                        var stageExtract = stageCovid.FirstOrDefault(x =>
-                            x.PatientPk == existingExtract.PatientPk &&
-                            x.SiteCode == existingExtract.SiteCode
-                            );
-
-                        if (stageExtract != null)
-                        {
-                            _mapper.Map(stageExtract, existingExtract);
-                        }
-                    }
-
-                    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
-
+                    await UpdateCentralDataWithStagingData(stageCovid, existingRecords);
                 }
                 else
                 {
                     uniqueStageExtracts = stageCovid;
                 }
-
-                var covidExtracts = _mapper.Map<List<CovidExtract>>(uniqueStageExtracts);
-                _context.Database.GetDbConnection().BulkInsert(covidExtracts);
+                await InsertNewDataFromStaging(uniqueStageExtracts);
 
 
             }
@@ -124,6 +125,111 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 throw;
             }
 
+        }
+
+        private async Task InsertNewDataFromStaging(List<StageCovidExtract> uniqueStageExtracts)
+        {
+            try
+            {
+                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+                var latestRecordsDict = new Dictionary<string, StageCovidExtract>();
+
+                foreach (var extract in sortedExtracts)
+                {
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
+
+                    if (!latestRecordsDict.ContainsKey(key))
+                    {
+                        latestRecordsDict[key] = extract;
+                    }
+                }
+
+                var filteredExtracts = latestRecordsDict.Values.ToList();
+                var mappedExtracts = _mapper.Map<List<CovidExtract>>(filteredExtracts);
+                _context.Database.GetDbConnection().BulkInsert(mappedExtracts);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+        }
+
+        private async Task UpdateCentralDataWithStagingData(List<StageCovidExtract> stageCovid, IEnumerable<CovidExtract> existingRecords)
+        {
+            try
+            {
+                //Update existing data
+                var stageDictionary = stageCovid
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+                         .ToDictionary(
+                             g => g.Key,
+                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+                         );
+
+                foreach (var existingExtract in existingRecords)
+                {
+                    if (stageDictionary.TryGetValue(
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+                        out var stageExtract)
+                    )
+                    {
+                        _mapper.Map(stageExtract, existingExtract);
+                    }
+                }
+
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     CovidExtracts
+
+                               SET  VisitID = @VisitID,
+                                    Covid19AssessmentDate = @Covid19AssessmentDate,                                   
+                                    ReceivedCOVID19Vaccine = @ReceivedCOVID19Vaccine,                                    
+                                    FirstDoseVaccineAdministered = @FirstDoseVaccineAdministered,                                    
+                                    SecondDoseVaccineAdministered = @SecondDoseVaccineAdministered,
+                                    VaccinationStatus = @VaccinationStatus,
+                                    VaccineVerification = @VaccineVerification,
+                                    BoosterGiven = @BoosterGiven,
+                                    BoosterDose = @BoosterDose,                                    
+                                    EverCOVID19Positive = @EverCOVID19Positive,
+                                    COVID19TestDate = COALESCE(@COVID19TestDate, 1900-01-01),
+                                    PatientStatus = @PatientStatus,
+                                    AdmissionStatus = @AdmissionStatus,
+                                    AdmissionUnit = @AdmissionUnit,
+                                    MissedAppointmentDueToCOVID19 = @MissedAppointmentDueToCOVID19,                                    
+                                    COVID19TestDateSinceLastVisit = COALESCE(@COVID19TestDateSinceLastVisit,1900-01-01),
+                                    PatientStatusSinceLastVisit = @PatientStatusSinceLastVisit,
+                                    AdmissionStatusSinceLastVisit = @AdmissionStatusSinceLastVisit,                                   
+                                    AdmissionUnitSinceLastVisit = @AdmissionUnitSinceLastVisit,
+                                    SupplementalOxygenReceived = @SupplementalOxygenReceived,
+                                    PatientVentilated = @PatientVentilated,
+                                    TracingFinalOutcome = @TracingFinalOutcome,
+                                    CauseOfDeath = @CauseOfDeath,
+                                    COVID19TestResult = @COVID19TestResult,
+                                    Sequence = @Sequence,
+                                    BoosterDoseVerified = @BoosterDoseVerified,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = COALESCE(@DateLastModified,1900-01-01),
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
@@ -152,6 +258,43 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         nextlivestage = LiveStage.Assigned,
                         ids
                     }, null, 0);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+        }
+
+        private async Task UpdateLivestage(Guid manifestId, List<Guid> ids)
+        {
+
+            var cons = _context.Database.GetConnectionString();
+
+            var sql = $@"
+                            UPDATE 
+                                    {_stageName}
+                            SET 
+                                    LiveStage= @nextlivestage 
+                            
+                            WHERE 
+                                    LiveSession = @manifestId AND 
+                                    LiveStage= @livestage AND
+                                    Id IN @ids";
+            try
+            {
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync($"{sql}",
+                    new
+                    {
+                        manifestId,
+                        livestage = LiveStage.Assigned,
+                        nextlivestage = LiveStage.Merged,
+                        ids
+                    }, null, 0);
+
             }
             catch (Exception e)
             {

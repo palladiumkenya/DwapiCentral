@@ -41,7 +41,7 @@ public class MergePatientStatusCommandHandler : IRequestHandler<MergePatientStat
     {
         // await _patientStatusRepository.MergeAsync(request.PatientStatusExtracts);
 
-        var extracts = _mapper.Map<List<StageStatusExtract>>(request.PatientStatusExtracts);
+        var extracts = _mapper.Map<List<StageStatusExtract>>(request.PatientStatusExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageStatusExtract, StatusSourceBag> standardizer = new(extracts, request.PatientStatusExtracts);

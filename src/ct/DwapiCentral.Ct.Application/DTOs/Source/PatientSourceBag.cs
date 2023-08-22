@@ -1,5 +1,4 @@
 ﻿using DwapiCentral.Ct.Domain.Custom;
-using Infrastracture.Custom;
 using System;
 using System.Collections.Generic;
 using System.Linq;

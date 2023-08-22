@@ -39,7 +39,7 @@ public class MergeOvcCommandHandler : IRequestHandler<MergeOvcCommand, Result>
     public async Task<Result> Handle(MergeOvcCommand request, CancellationToken cancellationToken)
     {
         //await _ovcRepository.MergeAsync(request.OvcExtracts);
-        var extracts = _mapper.Map<List<StageOvcExtract>>(request.OvcExtracts);
+        var extracts = _mapper.Map<List<StageOvcExtract>>(request.OvcExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageOvcExtract, OvcSourceBag> standardizer = new(extracts, request.OvcExtracts);

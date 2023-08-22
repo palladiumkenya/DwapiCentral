@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
     {
         [Key]
         public Guid Id { get ; set ; }
+        public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public DateTime ExitDate { get; set; }
@@ -21,7 +22,9 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? SpecificDeathReason { get ; set ; }
         public DateTime? DeathDate { get ; set ; }
         public DateTime? EffectiveDiscontinuationDate { get ; set ; }      
-        public DateTime? DateCreated { get ; set ; }
+        public DateTime? Date_Created { get ; set ; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get ; set ; } = DateTime.Now;

@@ -13,16 +13,11 @@ namespace DwapiCentral.Contracts.Manifest
           string? Docket { get; set; }
           int SiteCode { get; set; }
           string Name { get; set; }
-          string? Project { get; set; }    
-          
-          
-          string? DwapiVersion  { get; set; } 
-          
-          
+          string? Project { get; set; }
+          string? DwapiVersion  { get; set; }
           Guid EmrId { get; set; }
           string EmrName { get; set; }            
-          string? EmrVersion  { get; set; } 
-          
+          string? EmrVersion  { get; set; }
           Guid Session { get; set; }
           DateTime Start { get; set; }
           DateTime? End { get; set; }
@@ -30,5 +25,7 @@ namespace DwapiCentral.Contracts.Manifest
           DateTime StatusDate { get; set; }
           string? Tag { get; set; }
           DateTime Created { get; set; }
+
+
     }
 }

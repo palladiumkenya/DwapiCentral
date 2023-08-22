@@ -7,20 +7,16 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Contracts.Hts
 {
-     public interface IHtsPartnerTracing :IEntity
+     public interface IHtsPartnerTracing :IExtract
     {
-          string FacilityName { get; set; }          
+                
           string HtsNumber { get; set; }
-          bool? Processed { get; set; }
-          string QueueId { get; set; }
-          string Status { get; set; }
-          DateTime? StatusDate { get; set; }
-          DateTime? DateExtracted { get; set; }
-          string TraceType { get; set; }
+          int? PartnerPersonId { get; set; }
           DateTime? TraceDate { get; set; }
-          string TraceOutcome { get; set; }
-          DateTime? BookingDate { get; set; }
-          Guid FacilityId { get; set; }
-          int? PartnerPersonID { get; set; }
+          string FacilityName { get; set; }
+          string? TraceType { get; set; }
+          string? TraceOutcome { get; set; }
+          DateTime? BookingDate { get; set; }          
+          DateTime? Date_Last_Modified { get; set; }
     }
 }

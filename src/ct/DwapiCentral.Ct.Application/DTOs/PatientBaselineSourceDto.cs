@@ -10,6 +10,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class PatientBaselineSourceDto : IPatientBaselines
     {
         public Guid Id { get ; set ; }
+        public string RecordUUID { get; set; }
         public int? bCD4 { get ; set ; }
         public DateTime? bCD4Date { get ; set ; }
         public int? bWAB { get ; set ; }
@@ -34,7 +35,8 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? m6CD4Date { get ; set ; }
         public int PatientPk { get ; set ; }
         public int SiteCode { get ; set ; }
-        public DateTime? DateCreated { get ; set ; }
+        public DateTime? Date_Created { get ; set ; }
+        public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get; set; } = DateTime.Now;

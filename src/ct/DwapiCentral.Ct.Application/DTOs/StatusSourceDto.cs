@@ -7,6 +7,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class StatusSourceDto : IStatus
     {
         public Guid Id { get; set; }
+        public string RecordUUID { get; set; }
         public string? ExitDescription { get; set; }
         public DateTime ExitDate { get; set; }
         public string? ExitReason { get; set; }
@@ -19,7 +20,8 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? EffectiveDiscontinuationDate { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public DateTime? DateCreated { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;

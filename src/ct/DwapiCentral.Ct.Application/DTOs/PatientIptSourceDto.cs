@@ -10,7 +10,8 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class PatientIptSourceDto : IIpt
     {
         public Guid Id { get; set; }
-        public int VisitID { get; set; }
+        public string RecordUUID { get; set; }
+        public int? VisitID { get; set; }
         public DateTime VisitDate { get; set; }
         public string? FacilityName { get; set; }
         public string? OnTBDrugs { get; set; }
@@ -34,7 +35,8 @@ namespace DwapiCentral.Ct.Application.DTOs
         public string? IndicationForIPT { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public DateTime? DateCreated { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;

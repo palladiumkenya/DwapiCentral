@@ -37,7 +37,7 @@ public class MergeDrugAlcoholScreeningCommandHandler : IRequestHandler<MergeDrug
     public async Task<Result> Handle(MergeDrugAlcoholScreeningCommand request, CancellationToken cancellationToken)
     {
         //await _drugAlcoholScreeningRepository.MergeAsync(request.DrugAlcoholScreeningExtracts);
-        var extracts = _mapper.Map<List<StageDrugAlcoholScreeningExtract>>(request.DrugAlcoholScreeningExtracts);
+        var extracts = _mapper.Map<List<StageDrugAlcoholScreeningExtract>>(request.DrugAlcoholScreeningExtracts.Extracts);
         if (extracts.Any())
         {
             StandardizeClass<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningSourceBag> standardizer = new(extracts, request.DrugAlcoholScreeningExtracts);

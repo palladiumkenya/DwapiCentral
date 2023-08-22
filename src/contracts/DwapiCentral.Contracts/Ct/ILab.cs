@@ -5,7 +5,7 @@ namespace DwapiCentral.Contracts.Ct
 {
      public interface ILab : IExtract
     {
-        public Guid Id { get; set; }
+        Guid Id { get; set; }
         int VisitId { get; set; }
         DateTime OrderedByDate { get; set; }
         DateTime? ReportedByDate { get; set; }

@@ -6,7 +6,7 @@ namespace DwapiCentral.Contracts.Ct
     public  interface IIpt : IExtract
     {
           Guid Id { get; set; }         
-          int VisitID { get; set; }
+          int? VisitID { get; set; }
           DateTime VisitDate { get; set; }
           string? FacilityName { get; set; }
           string? OnTBDrugs { get; set; }
