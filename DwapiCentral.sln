@@ -47,6 +47,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwapiCentral.Mnch.Domain", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwapiCentral.Mnch.Infrastructure", "src\mnch\DwapiCentral.Mnch.Infrastructure\DwapiCentral.Mnch.Infrastructure.csproj", "{93237FBA-8CDF-4D29-A96B-0C38DEA008A2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prep", "prep", "{C07C7EAD-75FA-4C7C-B4BB-093928094095}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Prep", "src\prep\DwapiCentral.Prep\DwapiCentral.Prep.csproj", "{4EA30E28-A3BA-4A6A-B0D7-CD7F3493F0C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +125,10 @@ Global
 		{93237FBA-8CDF-4D29-A96B-0C38DEA008A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93237FBA-8CDF-4D29-A96B-0C38DEA008A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93237FBA-8CDF-4D29-A96B-0C38DEA008A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EA30E28-A3BA-4A6A-B0D7-CD7F3493F0C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EA30E28-A3BA-4A6A-B0D7-CD7F3493F0C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EA30E28-A3BA-4A6A-B0D7-CD7F3493F0C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA30E28-A3BA-4A6A-B0D7-CD7F3493F0C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +151,7 @@ Global
 		{2BE7AAA4-8077-426B-80BF-2A2A427A4229} = {26A3DA10-4A99-49A2-BA5F-0B573584B3B1}
 		{16C6827A-7CF9-49F2-A641-167F7E579062} = {26A3DA10-4A99-49A2-BA5F-0B573584B3B1}
 		{93237FBA-8CDF-4D29-A96B-0C38DEA008A2} = {26A3DA10-4A99-49A2-BA5F-0B573584B3B1}
+		{4EA30E28-A3BA-4A6A-B0D7-CD7F3493F0C5} = {C07C7EAD-75FA-4C7C-B4BB-093928094095}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E3EEEBCF-CEDB-48AF-9F77-E3D19B3168B8}
