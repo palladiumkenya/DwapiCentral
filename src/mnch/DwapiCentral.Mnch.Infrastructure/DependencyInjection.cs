@@ -1,6 +1,8 @@
 using DwapiCentral.Mnch.Domain.Repository;
+using DwapiCentral.Mnch.Domain.Repository.Stage;
 using DwapiCentral.Mnch.Infrastructure.Persistence.Context;
 using DwapiCentral.Mnch.Infrastructure.Persistence.Repository;
+using DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +38,23 @@ public static class DependencyInjection
         services.AddScoped<IFacilityRepository, FacilityRepository>();
         services.AddScoped<IManifestRepository, ManifestRepository>();
         services.AddScoped<IDocketRepository, DocketRepository>();
-        
+
+
+        services.AddScoped<IStageAncVisitRepository, StageAncVisitRepository>();
+        services.AddScoped<IStageCwcEnrolmentRepository, StageCwcEnrolmentRepository>();
+        services.AddScoped<IStageCwcVisitRepository, StageCwcVisitRepository>();
+        services.AddScoped<IStageHeiExtractRepository, StageHeiExtractRepository>();
+        services.AddScoped<IStageMatVisitRepository, StageMatVisitRepository>();
+        services.AddScoped<IStageMnchArtRepository, StageMnchArtRepository>();
+        services.AddScoped<IStageMnchEnrolmentRepository, StageMnchEnrolmentRepository>();
+        services.AddScoped<IStageMnchImmunizationRepository, StageMnchImmunizationRepository>();
+        services.AddScoped<IStageMnchLabRepository, StageMnchLabRepository>();
+        services.AddScoped<IStageMotherBabyPairRepository, StageMotherBabyPairRepository>();
+        services.AddScoped<IStagePatientMnchRepository, StagePatientMnchRepository>();
+        services.AddScoped<IStagePncVisitRepository, StagePncVisitRepository>();
+
+
+
 
 
 

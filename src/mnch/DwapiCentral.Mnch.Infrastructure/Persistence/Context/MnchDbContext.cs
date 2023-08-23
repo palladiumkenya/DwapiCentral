@@ -192,7 +192,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Context
         {
             SeedFromCsv<Docket>("DwapiCentral.Mnch.Infrastructure.Persistence.Seed.Docket.csv");
             SeedFromCsv<Subscriber>("DwapiCentral.Mnch.Infrastructure.Persistence.Seed.Subscriber.csv");
-            SeedFromCsv<Subscriber>("DwapiCentral.Mnch.Infrastructure.Persistence.Seed.MasterFacility.csv");
+            SeedFromCsv<MasterFacility>("DwapiCentral.Mnch.Infrastructure.Persistence.Seed.MasterFacility.csv");
 
             SaveChanges();
 

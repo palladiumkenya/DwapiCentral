@@ -1,6 +1,4 @@
 ﻿using Dapper;
-using DwapiCentral.Contracts.Hts;
-
 using DwapiCentral.Mnch.Domain.Model;
 using DwapiCentral.Mnch.Domain.Repository;
 using DwapiCentral.Mnch.Infrastructure.Persistence.Context;
@@ -29,76 +27,84 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository
 
         public async Task ClearFacility(int siteCode)
         {
-        //    var cons = _context.Database.GetDbConnection();
+            var cons = _context.Database.GetDbConnection();
 
-        //    var sql = @"
+            var sql = @"
 
-        //delete  from StageClients WHERE  SiteCode = @SiteCode;
-        //delete  from StageClientLinkages WHERE  SiteCode = @SiteCode;
-        //delete  from StageClientPartners WHERE  SiteCode = @SiteCode;
-        //delete  from StageHtsClientTests WHERE  SiteCode = @SiteCode;
-        //delete  from StageHtsClientTracing WHERE  SiteCode = @SiteCode;
-        //delete  from StageHtsPartnerNotificationServices WHERE  SiteCode = @SiteCode;
-        //delete  from StageHtsPartnerTracings WHERE  SiteCode = @SiteCode;
-        //delete  from StageHtsTestKits WHERE  SiteCode = @SiteCode;
+        delete  from StageMnchPatients WHERE  SiteCode = @SiteCode;
+        delete  from StageMnchEnrolments WHERE  SiteCode = @SiteCode;
+        delete  from StageMnchArts WHERE  SiteCode = @SiteCode;
+        delete  from StageAncVisits WHERE  SiteCode = @SiteCode;
+        delete  from StageMatVisits WHERE  SiteCode = @SiteCode;
+        delete  from StagePncVisits WHERE  SiteCode = @SiteCode;
+        delete  from StageMotherBabyPairs WHERE  SiteCode = @SiteCode;
+        delete  from StageCwcEnrolments WHERE  SiteCode = @SiteCode;
+        delete  from StageCwcVisits WHERE  SiteCode = @SiteCode;
+        delete  from StageHeis WHERE  SiteCode = @SiteCode;
+        delete  from StageMnchLabs WHERE  SiteCode = @SiteCode;
+        delete  from StageMnchImmunizations WHERE  SiteCode = @SiteCode;
         
 
-        //";
-        //    try
-        //    {
+        ";
+            try
+            {
 
-        //        if (cons.State != ConnectionState.Open)
-        //            cons.Open();
+                if (cons.State != ConnectionState.Open)
+                    cons.Open();
 
-        //        using (var transaction = cons.BeginTransaction())
-        //        {
-        //            await cons.ExecuteAsync($"{sql}", new { siteCode }, transaction, 0);
-        //            transaction.Commit();
-        //        }
+                using (var transaction = cons.BeginTransaction())
+                {
+                    await cons.ExecuteAsync($"{sql}", new { siteCode }, transaction, 0);
+                    transaction.Commit();
+                }
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Log.Error(e.Message);
-        //        throw;
-        //    }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
         }
 
         public async Task ClearFacility(int siteCode, string project)
         {
-        //    var cons = _context.Database.GetDbConnection();
+            var cons = _context.Database.GetDbConnection();
 
-        //    var sql = @"
+            var sql = @"
 
-        //delete  from StageClients WHERE  SiteCode = @SiteCode AND Project = @project;
-        //delete  from StageClientLinkages WHERE  SiteCode = @SiteCode AND Project = @project;
-        //delete  from StageClientPartners WHERE  SiteCode = @SiteCode AND Project = @project;
-        //delete  from StageHtsClientTests WHERE  SiteCode = @SiteCode AND Project = @project;
-        //delete  from StageHtsClientTracing WHERE  SiteCode = @SiteCode AND Project = @project;
-        //delete  from StageHtsPartnerNotificationServices WHERE  SiteCode = @SiteCode AND Project = @project;
-        //delete  from StageHtsPartnerTracings WHERE  SiteCode = @SiteCode AND Project = @project;
-        //delete  from StageHtsTestKits WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageMnchPatients WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageMnchEnrolments WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageMnchArts WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageAncVisits WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageMatVisits WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StagePncVisits WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageMotherBabyPairs WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageCwcEnrolments WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageCwcVisits WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageHeis WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageMnchLabs WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageMnchImmunizations WHERE  SiteCode = @SiteCode AND Project = @project;
         
 
-        //";
-        //    try
-        //    {
+        ";
+            try
+            {
 
-        //        if (cons.State != ConnectionState.Open)
-        //            cons.Open();
+                if (cons.State != ConnectionState.Open)
+                    cons.Open();
 
-        //        using (var transaction = cons.BeginTransaction())
-        //        {
-        //            await cons.ExecuteAsync($"{sql}", new { siteCode, project }, transaction, 0);
-        //            transaction.Commit();
-        //        }
+                using (var transaction = cons.BeginTransaction())
+                {
+                    await cons.ExecuteAsync($"{sql}", new { siteCode, project }, transaction, 0);
+                    transaction.Commit();
+                }
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Log.Error(e.Message);
-        //        throw;
-        //    }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
         }
 
         public async Task<Manifest?> GetById(Guid session)
