@@ -1,12 +1,59 @@
-﻿using System;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Mnch.Domain.Model;
+using DwapiCentral.Mnch.Domain.Model.Stage;
+using DwapiCentral.Mnch.Domain.Repository;
+using DwapiCentral.Mnch.Domain.Repository.Stage;
+using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DwapiCentral.Mnch.Application.Commands
+namespace DwapiCentral.Mnch.Application.Commands;
+
+public class MergeAncVisitCommand : IRequest<Result>
 {
-    internal class MergeAncVisitCommand
+    public IEnumerable<AncVisit> AncVisits { get; set; }
+
+    public MergeAncVisitCommand(IEnumerable<AncVisit> ancVisits)
     {
+        AncVisits = ancVisits;
     }
 }
+public class MergeAncVisitCommandHandler : IRequestHandler<MergeAncVisitCommand, Result>
+{
+    private readonly IStageAncVisitRepository _Repository;
+    private readonly IManifestRepository _manifestRepository;
+    private readonly IMapper _mapper;
+
+
+    public MergeAncVisitCommandHandler(IStageAncVisitRepository ancVisitRepository, IManifestRepository manifestRepository, IMapper mapper)
+    {
+        _Repository = ancVisitRepository;
+        _manifestRepository = manifestRepository;
+        _mapper = mapper;
+    }
+
+    public async Task<Result> Handle(MergeAncVisitCommand request, CancellationToken cancellationToken)
+    {
+        var manifestId = await _manifestRepository.GetManifestId(request.AncVisits.FirstOrDefault().SiteCode);
+
+        var extracts = _mapper.Map<List<StageAncVisit>>(request.AncVisits);
+
+
+        if (extracts.Any())
+        {
+            StandardizeClass<StageAncVisit> standardizer = new(extracts, manifestId);
+            standardizer.StandardizeExtracts();
+
+        }
+        //stage
+        await _Repository.SyncStage(extracts, manifestId);
+
+
+        return Result.Success();
+    }
+}
+
