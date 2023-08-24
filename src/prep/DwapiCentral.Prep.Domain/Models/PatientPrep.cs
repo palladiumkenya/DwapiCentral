@@ -47,6 +47,13 @@ namespace DwapiCentral.Prep.Domain.Models
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+        public object PrepAdverseEvent { get; set; }
 
+        public virtual ICollection<PrepAdverseEvent> PrepAdverseEvents { get; set; } = new List<PrepAdverseEvent>();
+        public virtual ICollection<PrepBehaviourRisk> PrepBehaviourRisks { get; set; } = new List<PrepBehaviourRisk>();
+        public virtual ICollection<PrepCareTermination> PrepCareTerminations { get; set; } = new List<PrepCareTermination>();
+        public virtual ICollection<PrepLab> PrepLabs { get; set; } = new List<PrepLab>();
+        public virtual ICollection<PrepPharmacy> PrepPharmacies { get; set; } = new List<PrepPharmacy>();
+        public virtual ICollection<PrepVisit> PrepVisits { get; set; } = new List<PrepVisit>();
     }
 }
