@@ -35,7 +35,6 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
         public DbSet<PrepVisit> PrepVisits { get; set; }
 
         //Stage
-
         public DbSet<StagePatientPrep> StagePrepPatients { get; set; }
         public DbSet<StagePrepAdverseEvent> StagePrepAdverseEvents { get; set; }
         public DbSet<StagePrepBehaviourRisk> StagePrepBehaviourRisks { get; set; }

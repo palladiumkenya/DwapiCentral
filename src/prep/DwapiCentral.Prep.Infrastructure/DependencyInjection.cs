@@ -1,6 +1,9 @@
+using DwapiCentral.Prep.Domain.Models.Stage;
 using DwapiCentral.Prep.Domain.Repository;
+using DwapiCentral.Prep.Domain.Repository.Stage;
 using DwapiCentral.Prep.Infrastructure.Persistence.Context;
 using DwapiCentral.Prep.Infrastructure.Persistence.Repository;
+using DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,10 +39,14 @@ public static class DependencyInjection
         services.AddScoped<IFacilityRepository, FacilityRepository>();
         services.AddScoped<IManifestRepository, ManifestRepository>();
         services.AddScoped<IDocketRepository, DocketRepository>();
-        
 
-
-
+        services.AddScoped<IStagePatientPrepRepository, StagePatientPrepRepository>();
+        services.AddScoped<IStagePrepAdverseEventRepository, StagePrepAdverseEventRepository>();
+        services.AddScoped<IStagePrepBehaviourRiskRepository, StagePrepBehaviourRiskRepository>();
+        services.AddScoped<IStagePrepCareTerminationRepository, StagePrepCareTerminationRepository>();
+        services.AddScoped<IStagePrepLabRepository, StagePrepLabRepository>();
+        services.AddScoped<IStagePrepPharmacyRepository, StagePrepPharmacyRepository>();
+        services.AddScoped<IStagePrepVisitRepository, StagePrepVisitRepository>();
 
         try
         {
