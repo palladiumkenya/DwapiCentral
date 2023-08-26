@@ -39,9 +39,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                //notify spot
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "AllergiesChronicIllnessExtract" };
-                await _mediator.Publish(notification);
+               
 
                 var pks = extracts.Select(x => x.Id).ToList();
 
@@ -53,7 +51,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
-
+                //notify spot
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "AllergiesChronicIllnessExtract" };
+                await _mediator.Publish(notification);
             }
             catch (Exception e)
             {

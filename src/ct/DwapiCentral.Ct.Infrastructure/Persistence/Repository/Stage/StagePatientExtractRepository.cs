@@ -127,12 +127,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count,ManifestId=manifestId, SiteCode=extracts.First().SiteCode,ExtractName="PatientExtract" };
-                await _mediator.Publish(notification);
-
                 var pks = extracts.Select(x => new StagePatientExtract {PatientPk= x.PatientPk,SiteCode= x.SiteCode }).ToList();
                
-                //update livestage var from rest to assigned
+                //update livestage from rest to assigned
                 await AssignAll(manifestId, pks);
 
                 //create new patientrecords or update the existing patientRecords
@@ -140,6 +137,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 
                 await UpdateLivestage(manifestId, pks);
+
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientExtract" };
+                await _mediator.Publish(notification);
+
             }
             catch (Exception e)
             {

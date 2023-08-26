@@ -41,8 +41,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "DefaulterTracingExtract" };
-                await _mediator.Publish(notification);
+              
 
                 var pks = extracts.Select(x => x.Id).ToList();
 
@@ -54,6 +53,9 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "DefaulterTracingExtract" };
+
+                await _mediator.Publish(notification);
             }
             catch (Exception e)
             {

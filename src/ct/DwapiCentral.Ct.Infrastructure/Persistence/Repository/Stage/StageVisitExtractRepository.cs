@@ -38,10 +38,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             try
             {
                 // stage
-                _context.Database.GetDbConnection().BulkInsert(extracts);
-
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientVisitExtract" };
-                await _mediator.Publish(notification);
+                _context.Database.GetDbConnection().BulkInsert(extracts);              
 
                 var pks = extracts.Select(x => x.Id).ToList();
 
@@ -54,7 +51,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
-
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientVisitExtract" };
+                await _mediator.Publish(notification);
             }
             catch (Exception e)
             {

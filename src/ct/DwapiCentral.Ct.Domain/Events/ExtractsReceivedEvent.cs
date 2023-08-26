@@ -13,7 +13,7 @@ namespace DwapiCentral.Ct.Domain.Events
 
         public int SiteCode { get; set; }
 
-        public Guid ManifestId { get; set; }
+        public Guid? ManifestId { get; set; }
 
         public string ExtractName { get; set; }
 

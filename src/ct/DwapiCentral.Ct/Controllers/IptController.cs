@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.Commands;
 using DwapiCentral.Ct.Application.DTOs.Source;
+using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Shared.Custom;
 using Hangfire;
 using MediatR;
@@ -52,6 +53,11 @@ namespace DwapiCentral.Ct.Controllers
                             x.Enqueue(() => Send($"{sourceBag}", new MergeIptCommand(sourceBag)));
                         }, $"{sourceBag}");
                     }
+
+                    var notification = new ExtractsReceivedEvent { TotalExtractsStaged = sourceBag.Extracts.Count, ManifestId = sourceBag.ManifestId, SiteCode = sourceBag.Extracts.First().SiteCode, ExtractName = "IptExtract" };
+
+                    await _mediator.Publish(notification);
+
                     var successMessage = new
                     {
                         JobId = jobId,
