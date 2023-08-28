@@ -79,6 +79,28 @@ namespace DwapiCentral.Prep.Controllers
             else return BadRequest(validFacility.Error.ToString());
         }
 
+        
+        [HttpGet("api/Prep/Status")]
+        public IActionResult GetStatus()
+        {
+            try
+            {
+                var ver = GetType().Assembly.GetName().Version;
+                return Ok(new
+                {
+                    name = "Dwapi Central - API (PREP)",
+                    status = "running",
+                    version = "v1.0.0.1",
+                    build = "05JUL221256"
+                });
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "status error");
+                return StatusCode(500, e.Message);
+            }
+        }
+
 
         public async Task SaveManifestJob(ProcessManifestCommand saveCommandManifest)
         {
