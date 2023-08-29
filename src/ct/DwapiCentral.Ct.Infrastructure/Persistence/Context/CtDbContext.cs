@@ -44,7 +44,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<PatientBaselinesExtract> PatientBaselinesExtract { get; set; }
         public DbSet<PatientStatusExtract> PatientStatusExtract { get; set; }
         public DbSet<CervicalCancerScreeningExtract> CervicalCancerScreeningExtract { get; set; }
-        public virtual DbSet<> IITRiskScoresExtract { get; set; }
+        public virtual DbSet<IITRiskScore> IITRiskScoresExtract { get; set; }
 
         public virtual DbSet<StagePatientExtract> StagePatientExtracts { get; set; }
         public virtual DbSet<StageVisitExtract> StageVisitExtracts { get; set; }
