@@ -37,7 +37,7 @@ public class GbvScreeningRepositoryTest
 
 
         //Assert
-        var savedPatientGbvExtracts = _context.GbvScreeningExtracts.ToList();
+        var savedPatientGbvExtracts = _context.GbvScreeningExtract.ToList();
         Assert.IsNotNull(savedPatientGbvExtracts);
 
     }

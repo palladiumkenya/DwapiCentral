@@ -27,7 +27,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.Date_Created })
                .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();        
 
-            var existingExtracts = _context.contactListingExtracts
+            var existingExtracts = _context.ContactListingExtract
                  .AsEnumerable()
                  .Where(e => distinctExtracts.Any(d =>
                      d.PatientPk == e.PatientPk &&

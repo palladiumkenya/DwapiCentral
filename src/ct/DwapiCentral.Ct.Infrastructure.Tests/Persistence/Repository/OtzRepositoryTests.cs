@@ -37,7 +37,7 @@ public class OtzRepositoryTests
 
 
         //Assert
-        var savedPatientOtcExtracts = _context.OtzExtracts.ToList();
+        var savedPatientOtcExtracts = _context.OtzExtract.ToList();
         Assert.IsNotNull(savedPatientOtcExtracts);
 
     }

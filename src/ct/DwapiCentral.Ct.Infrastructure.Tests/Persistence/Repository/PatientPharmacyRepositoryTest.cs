@@ -38,7 +38,7 @@ public class PatientPharmacyRepositoryTest
 
 
         //assert
-        var PharmacyExtractsAdded = _context.PatientPharmacyExtracts.ToList();
+        var PharmacyExtractsAdded = _context.PatientPharmacyExtract.ToList();
         Assert.NotNull(PharmacyExtractsAdded);
 
 

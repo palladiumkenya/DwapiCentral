@@ -34,7 +34,7 @@ public class PatientStatusRepositoryTests
         await _patientStatusRepository.MergeAsync(patientStatus);
 
         //Assert
-        var savedPatientStatus = _context.PatientStatusExtracts.ToList();
+        var savedPatientStatus = _context.PatientStatusExtract.ToList();
         Assert.IsNotNull(savedPatientStatus);
 
     }

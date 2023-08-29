@@ -36,7 +36,7 @@ public class PatientArtExtractRepositoryTests
 
 
         //Assert
-        var savedPatientArtExtracts  = _context.PatientArtExtracts.ToList();
+        var savedPatientArtExtracts  = _context.PatientArtExtract.ToList();
         Assert.IsNotNull(savedPatientArtExtracts);
     }
 }

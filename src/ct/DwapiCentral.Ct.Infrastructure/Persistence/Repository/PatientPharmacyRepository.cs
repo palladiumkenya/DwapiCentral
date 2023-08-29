@@ -31,7 +31,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                 .Select(g => g.OrderByDescending(e => e.Id).First())
                 .ToList();
 
-            var existingExtracts = _context.PatientPharmacyExtracts
+            var existingExtracts = _context.PatientPharmacyExtract
                 .AsEnumerable()
                 .Where(e => distinctExtracts.Any(d =>
                     d.PatientPk == e.PatientPk &&

@@ -37,7 +37,7 @@ public class AllergiesChronicIllnessRepositoryTests
 
 
         //Assert
-        var savedAllergiesChronicIllnessExtracts = _context.AllergiesChronicIllnessExtracts.ToList();
+        var savedAllergiesChronicIllnessExtracts = _context.AllergiesChronicIllnessExtract.ToList();
         Assert.IsNotNull(savedAllergiesChronicIllnessExtracts);
 
     }

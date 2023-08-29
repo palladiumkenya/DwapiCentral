@@ -26,7 +26,7 @@ namespace DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository
                .GroupBy(e => new { e.PatientPk, e.SiteCode, e.VisitID, e.Covid19AssessmentDate })
                .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();
 
-            var existingExtracts = _context.CovidExtracts
+            var existingExtracts = _context.CovidExtract
                  .AsEnumerable()
                  .Where(e => distinctExtracts.Any(d =>
                      d.PatientPk == e.PatientPk &&

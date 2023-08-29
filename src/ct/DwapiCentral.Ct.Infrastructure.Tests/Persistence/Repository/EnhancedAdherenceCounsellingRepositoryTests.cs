@@ -37,7 +37,7 @@ public class EnhancedAdherenceCounsellingRepositoryTests
 
 
         //Assert
-        var savedPatientEnhanceAdhExtracts = _context.EnhancedAdherenceCounsellingExtracts.ToList();
+        var savedPatientEnhanceAdhExtracts = _context.EnhancedAdherenceCounsellingExtract.ToList();
         Assert.IsNotNull(savedPatientEnhanceAdhExtracts);
 
     }

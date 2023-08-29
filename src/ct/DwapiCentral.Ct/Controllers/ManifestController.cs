@@ -77,6 +77,50 @@ namespace DwapiCentral.Ct.Controllers
            
         }
 
+        [HttpPost]
+        [Route("api/Spot")]
+        public async Task<IActionResult> PostManifest([FromBody] FacilityManifest manifest)
+        {
+         
+            if(null != manifest)
+            {
+
+                //validate manifest
+                if (!manifest.IsValid())
+                {
+                    return BadRequest($"Invalid Manifest,Please ensure the SiteCode [{manifest.SiteCode}] is valid and there exists at least one (1) Patient record");
+                }
+                //validate site
+                Log.Debug("checking SiteCode...");
+                var validFacility = await _mediator.Send(new ValidateSiteCommand(manifest.SiteCode, manifest.Name));
+
+                if (validFacility.IsSuccess)
+                {
+                    try
+                    {
+                        var jobId = BatchJob.StartNew(x =>
+                        {
+                            x.Enqueue(() => Send($"{manifest.Info("Save")}", new MergeDifferentialManifestCommand(manifest)));
+                        }, $"{manifest.Info("Save")}");
+
+
+                        var masterFacility = ManifestResponse.Create(manifest);
+                       
+
+                        return Ok(masterFacility);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error("Clear Site Manifest Error", e);
+                    }
+                }
+                else return BadRequest(validFacility.Error.ToString());
+
+            }
+            return BadRequest($"The expected {new Manifest().GetType().Name} is null");
+
+        }
+
        
         [Queue("manifest")]        
         [AutomaticRetry(Attempts = 3)]

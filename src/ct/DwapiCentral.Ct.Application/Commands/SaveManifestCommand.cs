@@ -11,6 +11,8 @@ using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Shared.Domain.Enums;
 using MediatR;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 
 namespace DwapiCentral.Ct.Application.Commands;
@@ -31,6 +33,7 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
     private readonly IManifestRepository _manifestRepository;
     private readonly IFacilityRepository _facilityRepository;
     private readonly IStagePatientExtractRepository _stagePatientExtractRepository;
+    private readonly JsonSerializerSettings _serializerSettings;
 
     public SaveManifestCommandHandler(IMediator mediator, IManifestRepository manifestRepository, IFacilityRepository facilityRepository, IStagePatientExtractRepository stagePatientExtractRepository)
     {
@@ -38,6 +41,8 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
         _manifestRepository = manifestRepository;
         _facilityRepository = facilityRepository;
         _stagePatientExtractRepository = stagePatientExtractRepository;
+        _serializerSettings = new JsonSerializerSettings()
+        { ContractResolver = new CamelCasePropertyNamesContractResolver() };
     }
 
     public async Task<Result> Handle(SaveManifestCommand request, CancellationToken cancellationToken)
@@ -54,33 +59,38 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
 
             var facManifest = Manifest.Create(request.manifest);
             await _manifestRepository.Save(facManifest);
-            //notify spot=> Indicators            
-            var indicatorDtos = facManifest.Metrics.Where(x => x.Type == CargoType.Indicator).ToList();
-            if (indicatorDtos.Any())
-            {
-                var indicatorstats = IndicatorDto.Generate(indicatorDtos);
-                var indicators = new IndicatorsExtractedEvent
-                {
-                    IndicatorsExtracts = indicatorstats,
-                    
-                };
-                await _mediator.Publish(indicators,  cancellationToken);
-            }   
 
-            // notify spot => metrics
-            var notification = new ManifestReceivedEvent
+            Log.Debug("posting to SPOT...");
+            var manifestDto = new ManifestDto(facManifest, request.manifest);
+            var metrics = MetricDto.Generate(facManifest);
+            var metricDtos = metrics.Where(x => x.CargoType != CargoType.Indicator).ToList();
+            var indicatorDtos = metrics.Where(x => x.CargoType == CargoType.Indicator).ToList();
+            manifestDto.Cargo =
+                JsonConvert.SerializeObject(ExtractDto.GenerateCargo(metricDtos), _serializerSettings);
+
+            var notification = new ManifestDtoEvent
             {
-                ManifestId = facManifest.Id,
-                SiteCode = facManifest.SiteCode,
-                Docket = facManifest.Docket,
-                UploadMode = facManifest.UploadMode,
-                Status = facManifest.Status,
-                EmrSetup = facManifest.EmrSetup,
-                EmrVersion = facManifest.EmrVersion,
-                DwapiVersion = facManifest.DwapiVersion,
-                Metrics = facManifest.Metrics
+                manifestDtoEvent = manifestDto
             };
             await _mediator.Publish(notification, cancellationToken);
+
+
+            if (metricDtos.Any())
+            {
+                var metricEvent = new MetricsExtractedEvent { metricDtos = metricDtos };
+                await _mediator.Publish(metricEvent, cancellationToken);
+            }
+
+            if (indicatorDtos.Any())
+            {
+                var indstats = IndicatorDto.Generate(indicatorDtos);
+                var indicators = new IndicatorsExtractedEvent
+                {
+                    IndicatorsExtracts = indstats,
+
+                };
+                await _mediator.Publish(indicators, cancellationToken);
+            }
 
             await _stagePatientExtractRepository.ClearSite(request.manifest.SiteCode);
 

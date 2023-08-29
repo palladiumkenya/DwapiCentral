@@ -35,7 +35,7 @@ public class PatientAdverseEventRepositoryTests
 
 
         //Assert
-        var savedPatientAdverseExtracts = _context.PatientAdverseEventExtracts.ToList();
+        var savedPatientAdverseExtracts = _context.PatientAdverseEventExtract.ToList();
         Assert.IsNotNull(savedPatientAdverseExtracts);
 
     }

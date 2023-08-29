@@ -34,7 +34,7 @@ public class PatientBaseLinesRepositoryTests
         await _patientBaselinesRepository.MergeAsync(patientBaselines);
 
         //Assert
-        var savedPatientBaselines = _context.PatientBaselinesExtracts.ToList();
+        var savedPatientBaselines = _context.PatientBaselinesExtract.ToList();
         Assert.IsNotNull(savedPatientBaselines);
 
     }

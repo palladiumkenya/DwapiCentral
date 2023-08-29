@@ -36,7 +36,7 @@ public class OvcRepositoryTests
 
 
         //Assert
-        var savedPatientOvcExtracts = _context.OvcExtracts.ToList();
+        var savedPatientOvcExtracts = _context.OvcExtract.ToList();
         Assert.IsNotNull(savedPatientOvcExtracts);
 
     }

@@ -35,7 +35,7 @@ public class ContactListingRepositoryTests
 
 
         //Assert
-        var savedContactListingExtracts = _context.contactListingExtracts.ToList();
+        var savedContactListingExtracts = _context.ContactListingExtract.ToList();
         Assert.IsNotNull(savedContactListingExtracts);
     }
 }

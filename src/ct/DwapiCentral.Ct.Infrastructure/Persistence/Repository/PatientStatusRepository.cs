@@ -30,7 +30,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
             .Select(g => g.OrderByDescending(e => e.Id).First())
             .ToList();
 
-            var existingExtracts = _context.PatientStatusExtracts
+            var existingExtracts = _context.PatientStatusExtract
                 .AsEnumerable()
                 .Where(e => distinctExtracts.Any(d =>
                     d.PatientPk == e.PatientPk &&

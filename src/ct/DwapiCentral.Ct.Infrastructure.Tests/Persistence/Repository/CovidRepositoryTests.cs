@@ -36,7 +36,7 @@ public class CovidRepositoryTests
 
 
         //Assert
-        var savedCovidExtracts = _context.CovidExtracts.ToList();
+        var savedCovidExtracts = _context.CovidExtract.ToList();
         Assert.IsNotNull(savedCovidExtracts);
 
     }

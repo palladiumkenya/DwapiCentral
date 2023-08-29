@@ -1,11 +1,12 @@
 using Dapper;
 using DwapiCentral.Contracts.Ct;
-
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -38,7 +39,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
             var existingPatientKeys = patientExtracts.Select(p => new { p.PatientPk, p.SiteCode }).ToList();
 
             // Query all patients from the database
-            var allPatients = _context.PatientExtracts.ToList();
+            var allPatients = _context.PatientExtract.ToList();
 
             // Separate the new patients and existing patients that need to be updated
             var newPatients = new List<PatientExtract>();
@@ -100,7 +101,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
 
         public async Task UpdateAsync(PatientExtract patientExtract)
         {
-            _context.PatientExtracts.Update(patientExtract);
+            _context.PatientExtract.Update(patientExtract);
             await _context.SaveChangesAsync();
         }
 
@@ -120,5 +121,56 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                 return hashStringBuilder.ToString();
             }
         }
+
+        public async Task processDifferentialPatients(FacilityManifest manifest)
+        {
+            Log.Debug($"clearing {manifest.SiteCode}...");
+            var cons = _context.Database.GetConnectionString();
+
+            var updateProcessedSql = @"
+                                        UPDATE 
+                                            PatientExtract 
+                                        SET 
+                                            Processed = 0  
+                                        WHERE
+                                            SiteCode = @SiteCode";
+
+            var batchUpdateSql = @"
+                                        UPDATE 
+                                            PatientExtract 
+                                        SET 
+                                            Processed = 1  
+                                        WHERE        
+                                            SiteCode = @SiteCode AND 
+                                            PatientPID IN @BatchPks";
+
+            var cleanUpSql = @"
+                                        DELETE 
+                                            FROM PatientExtract
+                                        WHERE
+                                            SiteCode = @SiteCode AND
+                                            Processed = 0";
+
+            var batchPks = manifest.GetBatchPatientPKsJoined(5000);
+
+            using (var connection = new SqlConnection(cons))
+            {
+                try
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        await connection.ExecuteAsync(updateProcessedSql, new { SiteCode = manifest.SiteCode }, transaction);
+                        await connection.ExecuteAsync(batchUpdateSql, new { SiteCode = manifest.SiteCode, BatchPks = batchPks }, transaction);
+                        await connection.ExecuteAsync(cleanUpSql, new { SiteCode = manifest.SiteCode }, transaction);
+                        transaction.Commit();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e.Message);
+                }
+            }
+        }    
     }
 }

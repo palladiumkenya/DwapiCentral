@@ -28,7 +28,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();
 
 
-            var existingExtracts = _context.OvcExtracts
+            var existingExtracts = _context.OvcExtract
                 .AsEnumerable()
                 .Where(e => distinctExtracts.Any(d =>
                     d.PatientPk == e.PatientPk &&

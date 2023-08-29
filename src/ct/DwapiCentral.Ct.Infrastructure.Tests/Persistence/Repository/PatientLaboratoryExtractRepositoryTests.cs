@@ -34,7 +34,7 @@ public class PatientLaboratoryExtractRepositoryTests
         await _PatientLaboratoryExtractRepository.MergeLaboratoryExtracts(patientLabs);
 
         //Assert
-        var savedPatientLabs = _context.PatientLaboratoryExtracts.ToList();
+        var savedPatientLabs = _context.PatientLaboratoryExtract.ToList();
         Assert.IsNotNull(savedPatientLabs);
 
     }

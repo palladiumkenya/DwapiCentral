@@ -29,7 +29,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
            
 
 
-            var existingExtracts = _context.PatientAdverseEventExtracts
+            var existingExtracts = _context.PatientAdverseEventExtract
                 .AsEnumerable()
                 .Where(e => distinctExtracts.Any(d =>
                     d.PatientPk == e.PatientPk &&

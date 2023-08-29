@@ -28,13 +28,13 @@ namespace DwapiCentral.Ct.Application.DTOs
             Stage = "EMR";
         }
 
-        public static List<IndicatorDto> Generate(List<Metric> metrics)
+        public static List<IndicatorDto> Generate(List<MetricDto> metrics)
         {
             var indicators = new List<IndicatorDto>();
             foreach (var m in metrics)
             {
-                var idn = new IndicatorDto(m.Id, m.SiteCode, m.FacilityName, m.ManifestId);
-                var cargo = JsonConvert.DeserializeObject<IndicatorItemDto>(m.Value);
+                var idn = new IndicatorDto(m.Id, m.FacilityCode, m.FacilityName, m.FacilityManifestId);
+                var cargo = JsonConvert.DeserializeObject<IndicatorItemDto>(m.Cargo);
                 idn.Name = cargo.Indicator;
                 idn.Value = cargo.IndicatorValue;
                 idn.IndicatorDate = cargo.IndicatorDate;

@@ -36,7 +36,7 @@ public class DefaulterTracingRepositoryTests
 
 
         //Assert
-        var savedDefaulterTracingExtracts = _context.DefaulterTracingExtracts.ToList();
+        var savedDefaulterTracingExtracts = _context.DefaulterTracingExtract.ToList();
         Assert.IsNotNull(savedDefaulterTracingExtracts);
 
     }

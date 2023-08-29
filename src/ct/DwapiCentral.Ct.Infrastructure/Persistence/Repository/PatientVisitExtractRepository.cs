@@ -30,7 +30,7 @@ public class PatientVisitExtractRepository:IPatientVisitExtractRepository
          .Select(g => g.OrderByDescending(e => e.Id).First())
          .ToList();
 
-        var existingExtracts = _context.PatientVisitExtracts
+        var existingExtracts = _context.PatientVisitExtract
             .AsEnumerable()
             .Where(e => distinctExtracts.Any(d =>
                 d.PatientPk == e.PatientPk &&

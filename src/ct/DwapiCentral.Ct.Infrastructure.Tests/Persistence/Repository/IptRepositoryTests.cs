@@ -38,7 +38,7 @@ public class IptRepositoryTests
 
 
         //Assert
-        var savedPatientIptExtracts = _context.IptExtracts.ToList();
+        var savedPatientIptExtracts = _context.IptExtract.ToList();
         Assert.IsNotNull(savedPatientIptExtracts);
 
     }

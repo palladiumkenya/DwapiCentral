@@ -36,7 +36,7 @@ public class DrugAlcoholScreeningRepositoryTest
 
 
         //Assert
-        var savedPatientDrugAlcoholExtracts = _context.DrugAlcoholScreeningExtracts.ToList();
+        var savedPatientDrugAlcoholExtracts = _context.DrugAlcoholScreeningExtract.ToList();
         Assert.IsNotNull(savedPatientDrugAlcoholExtracts);
 
     }
