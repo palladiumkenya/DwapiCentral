@@ -9,7 +9,7 @@ using AutoMapper;
 using Dapper;
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Ct.Domain.Events;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -313,7 +313,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         private bool CheckRecordExistence(SqlConnection connection, StagePatientExtract stageRecord)
         {
-            string selectQuery = "SELECT COUNT(*) FROM PatientExtracts WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND @RecordUUID = RecordUUID";
+            string selectQuery = "SELECT COUNT(*) FROM PatientExtract WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND @RecordUUID = RecordUUID";
 
             int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
             return count > 0;

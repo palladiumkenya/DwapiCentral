@@ -3,7 +3,7 @@ using System.Reflection;
 using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -76,7 +76,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 };
                 var query = $@"
                             SELECT p.*
-                            FROM PatientStatusExtracts p 
+                            FROM PatientStatusExtract p 
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
@@ -177,7 +177,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var cons = _context.Database.GetConnectionString();
                 var sql = $@"
                            UPDATE 
-                                     PatientStatusExtracts
+                                     PatientStatusExtract
 
                                SET
                                     ExitDate = @ExitDate,

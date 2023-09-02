@@ -1,4 +1,5 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 
 
@@ -31,6 +32,49 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public DepressionScreeningSourceDto()
+        {
+        }
+
+        public DepressionScreeningSourceDto(DepressionScreeningExtract DepressionScreeningExtract)
+        {
+            FacilityName = DepressionScreeningExtract.FacilityName;
+            VisitID = DepressionScreeningExtract.VisitID;
+            VisitDate = DepressionScreeningExtract.VisitDate;
+            PHQ9_1 = DepressionScreeningExtract.PHQ9_1;
+            PHQ9_2 = DepressionScreeningExtract.PHQ9_2;
+            PHQ9_3 = DepressionScreeningExtract.PHQ9_3;
+            PHQ9_4 = DepressionScreeningExtract.PHQ9_4;
+            PHQ9_5 = DepressionScreeningExtract.PHQ9_5;
+            PHQ9_6 = DepressionScreeningExtract.PHQ9_6;
+            PHQ9_7 = DepressionScreeningExtract.PHQ9_7;
+            PHQ9_8 = DepressionScreeningExtract.PHQ9_8;
+            PHQ9_9 = DepressionScreeningExtract.PHQ9_9;
+            PHQ_9_rating = DepressionScreeningExtract.PHQ_9_rating;
+            DepressionAssesmentScore = DepressionScreeningExtract.DepressionAssesmentScore;
+
+            SiteCode = DepressionScreeningExtract.SiteCode;
+            PatientPk = DepressionScreeningExtract.PatientPk;
+           
+            Date_Created = DepressionScreeningExtract.Date_Created;
+            Date_Last_Modified = DepressionScreeningExtract.Date_Last_Modified;
+            RecordUUID = DepressionScreeningExtract.RecordUUID;
+
+        }
+
+
+
+        public IEnumerable<DepressionScreeningSourceDto> GenerateDepressionScreeningExtractDtOs(IEnumerable<DepressionScreeningExtract> extracts)
+        {
+            var statusExtractDtos = new List<DepressionScreeningSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new DepressionScreeningSourceDto(e));
+            }
+            return statusExtractDtos;
+        }
+
         public virtual bool IsValid()
         {
             return SiteCode > 0 &&

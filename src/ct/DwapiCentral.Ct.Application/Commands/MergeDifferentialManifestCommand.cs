@@ -75,14 +75,14 @@ public class MergeDifferentialManifestCommandHandler : IRequestHandler<MergeDiff
            
             var notification = new ManifestDtoEvent
             {
-               manifestDtoEvent = manifestDto
+               manifest = manifestDto
             };
             await _mediator.Publish(notification, cancellationToken);
            
 
             if (metricDtos.Any())
             {
-                var metricEvent = new MetricsExtractedEvent { metricDtos = metricDtos };
+                var metricEvent = new MetricsExtractedEvent { metrics = metricDtos };
                 await _mediator.Publish(metricEvent, cancellationToken);
             }
             

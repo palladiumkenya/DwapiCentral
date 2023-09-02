@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Shared.Domain.Entities.Ct;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
     public class PatientPharmacyExtract : IPharmacy
     {

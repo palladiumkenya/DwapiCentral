@@ -4,7 +4,7 @@ using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -80,7 +80,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 };
                 var query = $@"
                             SELECT p.*
-                            FROM DefaulterTracingExtracts p
+                            FROM DefaulterTracingExtract p
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
@@ -184,7 +184,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 var cons = _context.Database.GetConnectionString();
                 var sql = $@"
                            UPDATE 
-                                     DefaulterTracingExtracts
+                                     DefaulterTracingExtract
 
                                SET                                  
                                     VisitID = @VisitID,

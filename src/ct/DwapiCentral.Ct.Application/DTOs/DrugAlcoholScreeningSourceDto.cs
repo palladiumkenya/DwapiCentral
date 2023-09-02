@@ -1,4 +1,5 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 
 
@@ -23,6 +24,39 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public DrugAlcoholScreeningSourceDto()
+        {
+        }
+
+        public DrugAlcoholScreeningSourceDto(DrugAlcoholScreeningExtract DrugAlcoholScreeningExtract)
+        {
+            FacilityName = DrugAlcoholScreeningExtract.FacilityName;
+            VisitID = DrugAlcoholScreeningExtract.VisitID;
+            VisitDate = DrugAlcoholScreeningExtract.VisitDate;
+            DrinkingAlcohol = DrugAlcoholScreeningExtract.DrinkingAlcohol;
+            Smoking = DrugAlcoholScreeningExtract.Smoking;
+            DrugUse = DrugAlcoholScreeningExtract.DrugUse;
+
+            SiteCode = DrugAlcoholScreeningExtract.SiteCode;
+            PatientPk = DrugAlcoholScreeningExtract.PatientPk;
+           
+            Date_Created = DrugAlcoholScreeningExtract.Date_Created;
+            Date_Last_Modified = DrugAlcoholScreeningExtract.Date_Last_Modified;
+            RecordUUID = DrugAlcoholScreeningExtract.RecordUUID;
+
+        }
+
+        public IEnumerable<DrugAlcoholScreeningSourceDto> GenerateDrugAlcoholScreeningExtractDtOs(IEnumerable<DrugAlcoholScreeningExtract> extracts)
+        {
+            var statusExtractDtos = new List<DrugAlcoholScreeningSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new DrugAlcoholScreeningSourceDto(e));
+            }
+            return statusExtractDtos;
+        }
+
         public virtual bool IsValid()
         {
             return SiteCode > 0 &&

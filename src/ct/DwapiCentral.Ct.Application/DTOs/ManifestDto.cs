@@ -22,6 +22,14 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
         public string Tag { get; set; }
+
+        public UploadMode UploadMode { get; set; }
+        public string? DwapiVersion { get; set; }
+        
+        public string EmrName { get; set; }
+        public string? EmrVersion { get; set; }
+        public EmrSetup EmrSetup { get; set; }
+
         public List<Metric> Metrics { get; set; } = new List<Metric>();
 
 
@@ -40,6 +48,11 @@ namespace DwapiCentral.Ct.Application.DTOs
             Start = manifest.Start;
             End = manifest.End;
             Tag = manifest.Tag;
+            UploadMode = manifest.UploadMode;
+            DwapiVersion= manifest.DwapiVersion;
+            EmrName = manifest.EmrName;
+            EmrVersion = manifest.EmrVersion;
+            EmrSetup= manifest.EmrSetup;
             Metrics = manifest.Metrics.Where(x => x.Type != CargoType.Patient).ToList();
         }
 

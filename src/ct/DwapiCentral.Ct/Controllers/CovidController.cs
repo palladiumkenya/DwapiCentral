@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.Commands;
 using DwapiCentral.Ct.Application.DTOs.Source;
+using DwapiCentral.Ct.Application.Profiles;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Shared.Custom;
 using Hangfire;
@@ -74,6 +75,44 @@ namespace DwapiCentral.Ct.Controllers
             }
 
             return BadRequest($"The expected '{new CovidSourceBag().GetType().Name}' is null");
+        }
+
+        [HttpPost]
+        [Route("api/v2/Covid")]
+        public async Task<IActionResult> PostBatchNew([FromBody] List<CovidProfile> patientProfile)
+        {
+            if (null != patientProfile && patientProfile.Any())
+            {
+                //if (patientProfile.Any(x => !x.IsValid()))
+                //{
+                //    return BadRequest("Invalid data, please ensure it has Patient, Facility, and at least one (1) Extract");
+
+                //}
+
+                try
+                {
+
+                    //BatchJob.StartNew(x =>
+                    //{
+                    //    x.Enqueue(() => Send($"{sourceBag}", new MergePatientLabsCommand(sourceBag)));
+                    //}, $"{sourceBag}");
+
+
+                    var successMessage = new
+                    {
+                        BatchKey = new List<Guid>() { LiveGuid.NewGuid() }
+                    };
+                    return Ok(successMessage);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(new string('*', 30));
+                    Log.Error(nameof(LaboratorySourceBag), ex);
+                    Log.Error(new string('*', 30));
+                    return BadRequest(ex);
+                }
+            }
+            return BadRequest($"The expected '{new LaboratorySourceBag().GetType().Name}' is null");
         }
 
         [Queue("covid")]        

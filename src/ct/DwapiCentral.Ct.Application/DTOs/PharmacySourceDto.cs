@@ -1,4 +1,5 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 
 
@@ -31,6 +32,48 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public PharmacySourceDto()
+        {
+
+        }
+
+        public PharmacySourceDto(PatientPharmacyExtract patientPharmacyExtract)
+        {
+            VisitID = patientPharmacyExtract.VisitID;
+            Drug = patientPharmacyExtract.Drug;
+            Provider = patientPharmacyExtract.Provider;
+            DispenseDate = patientPharmacyExtract.DispenseDate;
+            Duration = patientPharmacyExtract.Duration;
+            ExpectedReturn = patientPharmacyExtract.ExpectedReturn;
+            TreatmentType = patientPharmacyExtract.TreatmentType;
+            PeriodTaken = patientPharmacyExtract.PeriodTaken;
+            RegimenLine = patientPharmacyExtract.RegimenLine;
+            PeriodTaken = patientPharmacyExtract.PeriodTaken;
+            ProphylaxisType = patientPharmacyExtract.ProphylaxisType;
+            SiteCode = patientPharmacyExtract.SiteCode;
+            PatientPk = patientPharmacyExtract.PatientPk;
+           
+
+            RegimenChangedSwitched = patientPharmacyExtract.RegimenChangedSwitched;
+            RegimenChangeSwitchReason = patientPharmacyExtract.RegimenChangeSwitchReason;
+            StopRegimenReason = patientPharmacyExtract.StopRegimenReason;
+            StopRegimenDate = patientPharmacyExtract.StopRegimenDate;
+            Date_Created = patientPharmacyExtract.Date_Created;
+            Date_Last_Modified = patientPharmacyExtract.Date_Last_Modified;
+            RecordUUID = patientPharmacyExtract.RecordUUID;
+
+        }
+
+        public IEnumerable<PharmacySourceDto> GeneratePatientPharmacyExtractDtOs(IEnumerable<PatientPharmacyExtract> extracts)
+        {
+            var pharmacyExtractDtos = new List<PharmacySourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                pharmacyExtractDtos.Add(new PharmacySourceDto(e));
+            }
+            return pharmacyExtractDtos;
+        }
 
         public virtual bool IsValid()
         {

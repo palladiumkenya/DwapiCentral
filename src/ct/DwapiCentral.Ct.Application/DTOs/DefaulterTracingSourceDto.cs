@@ -1,4 +1,5 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 
 
@@ -29,6 +30,44 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public DefaulterTracingSourceDto()
+        {
+        }
+
+        public DefaulterTracingSourceDto(DefaulterTracingExtract DefaulterTracingExtract)
+        {
+            FacilityName = DefaulterTracingExtract.FacilityName;
+            VisitID = DefaulterTracingExtract.VisitID;
+            VisitDate = DefaulterTracingExtract.VisitDate;
+            EncounterId = DefaulterTracingExtract.EncounterId;
+            TracingType = DefaulterTracingExtract.TracingType;
+            TracingOutcome = DefaulterTracingExtract.TracingOutcome;
+            AttemptNumber = DefaulterTracingExtract.AttemptNumber;
+            IsFinalTrace = DefaulterTracingExtract.IsFinalTrace;
+            TrueStatus = DefaulterTracingExtract.TrueStatus;
+            CauseOfDeath = DefaulterTracingExtract.CauseOfDeath;
+            Comments = DefaulterTracingExtract.Comments;
+            BookingDate = DefaulterTracingExtract.BookingDate;
+            SiteCode = DefaulterTracingExtract.SiteCode;
+            PatientPk = DefaulterTracingExtract.PatientPk;
+           
+            Date_Created = DefaulterTracingExtract.Date_Created;
+            Date_Last_Modified = DefaulterTracingExtract.Date_Last_Modified;
+            RecordUUID = DefaulterTracingExtract.RecordUUID;
+
+        }
+
+        public IEnumerable<DefaulterTracingSourceDto> GenerateDefaulterTracingExtractDtOs(IEnumerable<DefaulterTracingExtract> extracts)
+        {
+            var statusExtractDtos = new List<DefaulterTracingSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new DefaulterTracingSourceDto(e));
+            }
+            return statusExtractDtos;
+        }
+
         public virtual bool IsValid()
         {
             return SiteCode > 0 &&

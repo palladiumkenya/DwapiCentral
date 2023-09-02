@@ -4,7 +4,7 @@ using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -80,7 +80,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 };
                 var query = $@"
                             SELECT p.*
-                            FROM CovidExtracts p
+                            FROM CovidExtract p
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
@@ -182,7 +182,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var cons = _context.Database.GetConnectionString();
                 var sql = $@"
                            UPDATE 
-                                     CovidExtracts
+                                     CovidExtract
 
                                SET  VisitID = @VisitID,
                                     Covid19AssessmentDate = @Covid19AssessmentDate,                                   

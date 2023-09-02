@@ -31,7 +31,7 @@ public class PatientLaboratoryExtractRepositoryTests
 
         //act
 
-        await _PatientLaboratoryExtractRepository.MergeLaboratoryExtracts(patientLabs);
+        await _PatientLaboratoryExtractRepository.InsertPatientLabExtract(patientLabs);
 
         //Assert
         var savedPatientLabs = _context.PatientLaboratoryExtract.ToList();

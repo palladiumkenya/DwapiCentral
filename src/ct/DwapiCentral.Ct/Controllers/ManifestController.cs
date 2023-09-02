@@ -98,6 +98,16 @@ namespace DwapiCentral.Ct.Controllers
                 {
                     try
                     {
+                        string json = manifest.FacMetrics[0].Metric;
+
+                        dynamic data = JsonConvert.DeserializeObject(json);
+
+                        manifest.EmrVersion = data.EmrVersion;
+
+                        dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.FacMetrics[1].Metric);
+
+                        manifest.DwapiVersion = dwapiVersiondata.Version;
+
                         var jobId = BatchJob.StartNew(x =>
                         {
                             x.Enqueue(() => Send($"{manifest.Info("Save")}", new MergeDifferentialManifestCommand(manifest)));

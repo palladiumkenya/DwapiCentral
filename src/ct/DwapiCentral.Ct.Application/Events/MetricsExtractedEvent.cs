@@ -10,6 +10,6 @@ namespace DwapiCentral.Ct.Application.Events
 {
     public class MetricsExtractedEvent : INotification
     {
-        public List<MetricDto> metricDtos { get; set; }
+        public List<MetricDto> metrics { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace DwapiCentral.Ct.Application.Events
 {
     public class ManifestDtoEvent : INotification
     {
-        public ManifestDto manifestDtoEvent { get; set; }
+        public ManifestDto manifest { get; set; }
     }
 }

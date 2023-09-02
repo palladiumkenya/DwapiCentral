@@ -1,5 +1,6 @@
 ﻿using Dapper;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
+
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,5 @@
 ﻿using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,37 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
+
+        public IITRiskScoreSourceDto()
+        {
+        }
+
+        public IITRiskScoreSourceDto(IITRiskScore IITRiskScoresExtract)
+        {
+            FacilityName = IITRiskScoresExtract.FacilityName;
+            SourceSysUUID = IITRiskScoresExtract.SourceSysUUID;
+            RiskEvaluationDate = IITRiskScoresExtract.RiskEvaluationDate;
+            RiskScore = IITRiskScoresExtract.RiskScore;
+            RiskFactors = IITRiskScoresExtract.RiskFactors;
+            RiskDescription = IITRiskScoresExtract.RiskDescription;
+            PatientPk = IITRiskScoresExtract.PatientPk;
+            SiteCode = IITRiskScoresExtract.SiteCode;
+           
+            Date_Created = IITRiskScoresExtract.Date_Created;
+            Date_Last_Modified = IITRiskScoresExtract.Date_Last_Modified;
+
+
+        }
+
+        public IEnumerable<IITRiskScoreSourceDto> GenerateIITRiskScoresExtractDtOs(IEnumerable<IITRiskScore> extracts)
+        {
+            var statusExtractDtos = new List<IITRiskScoreSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new IITRiskScoreSourceDto(e));
+            }
+            return statusExtractDtos;
+        }
 
         public virtual bool IsValid()
         {

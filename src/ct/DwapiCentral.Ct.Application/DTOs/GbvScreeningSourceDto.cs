@@ -1,4 +1,5 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 
 
@@ -25,6 +26,42 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public GbvScreeningSourceDto()
+        {
+        }
+
+        public GbvScreeningSourceDto(GbvScreeningExtract GbvScreeningExtract)
+        {
+            FacilityName = GbvScreeningExtract.FacilityName;
+            VisitID = GbvScreeningExtract.VisitID;
+            VisitDate = GbvScreeningExtract.VisitDate;
+            IPV = GbvScreeningExtract.IPV;
+            PhysicalIPV = GbvScreeningExtract.PhysicalIPV;
+            EmotionalIPV = GbvScreeningExtract.EmotionalIPV;
+            SexualIPV = GbvScreeningExtract.SexualIPV;
+            IPVRelationship = GbvScreeningExtract.IPVRelationship;
+
+            SiteCode = GbvScreeningExtract.SiteCode;
+            PatientPk = GbvScreeningExtract.PatientPk;
+           
+            Date_Created = GbvScreeningExtract.Date_Created;
+            Date_Last_Modified = GbvScreeningExtract.Date_Last_Modified;
+            RecordUUID = GbvScreeningExtract.RecordUUID;
+
+        }
+
+
+
+        public IEnumerable<GbvScreeningSourceDto> GenerateGbvScreeningExtractDtOs(IEnumerable<GbvScreeningExtract> extracts)
+        {
+            var statusExtractDtos = new List<GbvScreeningSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new GbvScreeningSourceDto(e));
+            }
+            return statusExtractDtos;
+        }
 
         public virtual bool IsValid()
         {
