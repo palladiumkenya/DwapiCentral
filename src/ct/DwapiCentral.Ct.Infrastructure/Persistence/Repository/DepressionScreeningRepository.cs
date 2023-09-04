@@ -1,10 +1,16 @@
 ﻿using Dapper;
+using DwapiCentral.Ct.Application.Interfaces.Repository;
+using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using MediatR;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,41 +21,107 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
     public class DepressionScreeningRepository : IDepressionScreeningRepository
     {
         private readonly CtDbContext _context;
+        private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
 
-        public DepressionScreeningRepository(CtDbContext context)
+        public DepressionScreeningRepository(CtDbContext context, IMediator mediator, IManifestRepository manifestRepository)
         {
             _context = context;
+            _mediator = mediator;
+            _manifestRepository = manifestRepository;
         }
-        public Task MergeAsync(IEnumerable<DepressionScreeningExtract> depressionScreeningExtracts)
+
+        public async Task<DepressionScreeningExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID)
         {
-            var distinctExtracts = depressionScreeningExtracts
-               .GroupBy(e => new { e.PatientPk, e.SiteCode, e.VisitID, e.VisitDate })
-               .Select(g => g.OrderByDescending(e => e.Id).First()).ToList();
+            // If not cached, retrieve the record from the database
+            var query = "SELECT * FROM DepressionScreeningExtract WHERE PatientPK = @PatientPK AND SiteCode = @SiteCode AND RecordUUID = @RecordUUID";
 
-            var existingExtracts = _context.DepressionScreeningExtract
-                 .AsEnumerable()
-                 .Where(e => distinctExtracts.Any(d =>
-                     d.PatientPk == e.PatientPk &&
-                     d.SiteCode == e.SiteCode &&
-                     d.VisitID == e.VisitID &&
-                     d.VisitDate == e.VisitDate
-                    ))
-                 .ToList();
+            var patientExtract = await _context.Database.GetDbConnection().QueryFirstOrDefaultAsync<DepressionScreeningExtract>(query, new { patientPK, siteCode, recordUUID });
 
-            var distinctToInsert = distinctExtracts
-                .Where(d => !existingExtracts.Any(e =>
-                    d.PatientPk == e.PatientPk &&
-                    d.SiteCode == e.SiteCode &&
-                    d.VisitID == e.VisitID &&
-                    d.VisitDate == e.VisitDate))
-                .ToList();
+            return patientExtract;
 
-            _context.Database.GetDbConnection().BulkMerge(distinctToInsert);
+        }
+
+        public async Task InsertExtract(List<DepressionScreeningExtract> patientExtract)
+        {
+            try
+            {
+                var cons = _context.Database.GetConnectionString();
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+
+                _context.Database.GetDbConnection().BulkInsert(patientExtract);
+
+                var manifestId = await _manifestRepository.GetManifestId(patientExtract.First().SiteCode);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = patientExtract.Count, ManifestId = manifestId, SiteCode = patientExtract.First().SiteCode, ExtractName = "DepressionScreeningExtract" };
+                await _mediator.Publish(notification);
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occurred during bulk Insert of DepressionScreeningExtract.");
+            }
+        }
+
+        public async Task UpdateExtract(List<DepressionScreeningExtract> patientExtract)
+        {
+            try
+            {
+                var cons = _context.Database.GetConnectionString();
 
 
+                var sql = $@"
+                           UPDATE 
+                                     DepressionScreeningExtract
 
-            _context.SaveChangesAsync();
-            return Task.CompletedTask;
+                               SET                                  
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,
+                                    PHQ9_1 = @PHQ9_1,
+                                    PHQ9_2 = @PHQ9_2,
+                                    PHQ9_3 = @PHQ9_3,
+                                    PHQ9_4 = @PHQ9_4,
+                                    PHQ9_5 = @PHQ9_5,
+                                    PHQ9_6 = @PHQ9_6,
+                                    PHQ9_7 = @PHQ9_7,
+                                    PHQ9_8 = @PHQ9_8,
+                                    PHQ9_9 = @PHQ9_9,
+                                    PHQ_9_rating = @PHQ_9_rating,
+                                    DepressionAssesmentScore = @DepressionAssesmentScore,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, patientExtract);
+
+                var manifestId = await _manifestRepository.GetManifestId(patientExtract.First().SiteCode);
+
+                connection.Close();
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = patientExtract.Count, ManifestId = manifestId, SiteCode = patientExtract.First().SiteCode, ExtractName = "DepressionScreeningExtract" };
+                await _mediator.Publish(notification);
+
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occurred during bulk update of DepressionScreeningExtract.");
+
+            }
         }
     }
 }

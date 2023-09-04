@@ -9,6 +9,6 @@ namespace DwapiCentral.Ct.Domain.Repository
 {
     public interface IDepressionScreeningRepository
     {
-        Task MergeAsync(IEnumerable<DepressionScreeningExtract> depressionScreeningExtracts);
+        Task<DepressionScreeningExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID); Task UpdateExtract(List<DepressionScreeningExtract> patientLabExtract); Task InsertExtract(List<DepressionScreeningExtract> patientLabExtract);
     }
 }

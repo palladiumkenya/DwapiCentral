@@ -32,7 +32,7 @@ public class DepressionScreeningRepositoryTests
 
 
         //Act
-        await _depressionScreeningRepository.MergeAsync(depressionScreening);
+        await _depressionScreeningRepository.InsertExtract(depressionScreening);
 
 
         //Assert

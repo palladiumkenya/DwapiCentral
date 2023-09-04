@@ -33,7 +33,7 @@ public class AllergiesChronicIllnessRepositoryTests
 
 
         //Act
-        await _allergiesChronicIllnessRepository.MergeAsync(allergiesChronicIllness);
+        await _allergiesChronicIllnessRepository.InsertExtract(allergiesChronicIllness);
 
 
         //Assert

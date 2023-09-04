@@ -44,7 +44,7 @@ public static class DependencyInjection
         services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
         services.AddScoped<IPatientPharmacyRepository, PatientPharmacyRepository>();
         services.AddScoped<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>();
-        services.AddScoped<IPatientArtExtractRepositorycs, PatientArtExtractRepository>();
+        services.AddScoped<IPatientArtExtractRepository, PatientArtExtractRepository>();
         services.AddScoped<IAllergiesChronicIllnessRepository,AllergiesChronicIllnessRepository>();
         services.AddScoped<IContactListingRepository, ContactListingRepository>();
         services.AddScoped<ICovidRepository, CovidRepository>();

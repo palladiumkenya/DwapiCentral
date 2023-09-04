@@ -31,7 +31,7 @@ public class PatientBaseLinesRepositoryTests
 
         //act
 
-        await _patientBaselinesRepository.MergeAsync(patientBaselines);
+        await _patientBaselinesRepository.InsertExtract(patientBaselines);
 
         //Assert
         var savedPatientBaselines = _context.PatientBaselinesExtract.ToList();

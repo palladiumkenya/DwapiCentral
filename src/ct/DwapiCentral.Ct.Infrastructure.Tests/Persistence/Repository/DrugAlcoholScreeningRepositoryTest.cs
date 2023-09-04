@@ -32,7 +32,7 @@ public class DrugAlcoholScreeningRepositoryTest
 
 
         //Act
-        await _drugAlcoholScreening.MergeAsync(drugAlcoholScreening);
+        await _drugAlcoholScreening.InsertExtract(drugAlcoholScreening);
 
 
         //Assert

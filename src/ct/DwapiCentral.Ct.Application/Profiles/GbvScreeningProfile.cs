@@ -10,44 +10,13 @@ using System.Linq;
 
 namespace DwapiCentral.Ct.Application.Profiles
 {
-    public class GbvScreeningProfile : ExtractProfile<GbvScreeningExtract>, IGbvScreeningProfile
+    public class GbvScreeningProfile 
     {
-        public List<GbvScreeningSourceDto> GbvScreeningExtracts { get; set; } = new List<GbvScreeningSourceDto>();
+        public List<GbvScreeningExtract> GbvScreeningExtracts { get; set; }
 
-        public static GbvScreeningProfile Create(Facility facility, PatientExtract patient)
-        {
-            var patientProfile = new GbvScreeningProfile
-            {
-                Facility = new FacilityDTO(facility),
-                //Demographic = new PatientExtractDTO(patient),
-                GbvScreeningExtracts =
-                    new GbvScreeningSourceDto().GenerateGbvScreeningExtractDtOs(patient.GbvScreeningExtracts)
-                        .ToList()
-            };
-            return patientProfile;
-        }
+        public PatientExtractDTO Demographic { get; set; }
 
-        public static List<GbvScreeningProfile> Create(Facility facility, List<PatientExtract> patients)
-        {
-            var patientProfiles = new List<GbvScreeningProfile>();
-            foreach (var patient in patients)
-            {
-                var patientProfile = Create(facility, patient);
-                patientProfiles.Add(patientProfile);
-            }
+        public FacilityDTO Facility { get; set; }
 
-            return patientProfiles;
-        }
-        public override bool IsValid()
-        {
-            return base.IsValid() && GbvScreeningExtracts.Count > 0;
-        }
-
-        public override bool HasData()
-        {
-            return base.HasData() && null != GbvScreeningExtracts;
-        }
-
-       
     }
 }

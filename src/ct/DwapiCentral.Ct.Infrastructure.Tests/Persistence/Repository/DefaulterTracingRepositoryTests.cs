@@ -32,7 +32,7 @@ public class DefaulterTracingRepositoryTests
 
 
         //Act
-        await _defaulterTracingRepository.MergeAsync(defaulterTracing);
+        await _defaulterTracingRepository.InsertExtract(defaulterTracing);
 
 
         //Assert

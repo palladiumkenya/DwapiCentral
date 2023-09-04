@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.Commands;
+using DwapiCentral.Ct.Application.Commands.DifferentialCommands;
 using DwapiCentral.Ct.Application.DTOs;
 using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Application.Interfaces;
@@ -94,7 +95,7 @@ namespace DwapiCentral.Ct.Controllers
                 {                 
                    
 
-                    BackgroundJob.Enqueue(() => SaveDiffData(new MergeDifferentialDataCommand(patientProfile)));
+                    BackgroundJob.Enqueue(() => SaveDiffData(new MergeDifferentialLabsCommand(patientProfile)));
                  
 
                     var successMessage = new
@@ -115,7 +116,7 @@ namespace DwapiCentral.Ct.Controllers
         }
 
 
-        public async Task SaveDiffData(MergeDifferentialDataCommand saveDiffCommand)
+        public async Task SaveDiffData(MergeDifferentialLabsCommand saveDiffCommand)
         {
             await _mediator.Send(saveDiffCommand);
 

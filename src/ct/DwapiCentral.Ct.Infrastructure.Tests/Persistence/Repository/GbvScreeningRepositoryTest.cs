@@ -33,7 +33,7 @@ public class GbvScreeningRepositoryTest
 
 
         //Act
-        await _gbvScreeningRepository.MergeAsync(gbvScreeningExtracts);
+        await _gbvScreeningRepository.InsertExtract(gbvScreeningExtracts);
 
 
         //Assert

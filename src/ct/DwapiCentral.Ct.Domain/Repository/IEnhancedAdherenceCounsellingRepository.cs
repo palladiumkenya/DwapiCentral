@@ -9,6 +9,6 @@ namespace DwapiCentral.Ct.Domain.Repository
 {
     public interface IEnhancedAdherenceCounsellingRepository
     {
-        Task MergeAsync(IEnumerable<EnhancedAdherenceCounsellingExtract> enhancedAdherenceCounsellingExtracts);
+        Task<EnhancedAdherenceCounsellingExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID); Task UpdateExtract(List<EnhancedAdherenceCounsellingExtract> patientLabExtract); Task InsertExtract(List<EnhancedAdherenceCounsellingExtract> patientLabExtract);
     }
 }

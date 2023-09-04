@@ -33,7 +33,7 @@ public class EnhancedAdherenceCounsellingRepositoryTests
 
 
         //Act
-        await _enhancedAdheranceCouncellingRepository.MergeAsync(enhancedAdheranceScreening);
+        await _enhancedAdheranceCouncellingRepository.InsertExtract(enhancedAdheranceScreening);
 
 
         //Assert

@@ -31,7 +31,7 @@ public class PatientPharmacyRepositoryTest
 
         //act
 
-        await _patientPharmacyRepository.MergePharmacyExtractsAsync(patientPharmacy);
+        await _patientPharmacyRepository.InsertExtract(patientPharmacy);
 
         
 

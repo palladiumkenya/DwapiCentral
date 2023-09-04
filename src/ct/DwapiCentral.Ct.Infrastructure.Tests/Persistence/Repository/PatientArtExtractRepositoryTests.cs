@@ -14,13 +14,13 @@ namespace DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository;
 public class PatientArtExtractRepositoryTests
 {
     private CtDbContext _context;
-    private IPatientArtExtractRepositorycs _patientArtRepository;
+    private IPatientArtExtractRepository _patientArtRepository;
 
     [SetUp]
     public void Setup()
     {
         _context = TestInitializer.ServiceProvider.GetService<CtDbContext>();
-        _patientArtRepository = TestInitializer.ServiceProvider.GetService<IPatientArtExtractRepositorycs>();
+        _patientArtRepository = TestInitializer.ServiceProvider.GetService<IPatientArtExtractRepository>();
     }
 
     [Test]
@@ -32,7 +32,7 @@ public class PatientArtExtractRepositoryTests
 
 
         //Act
-        await _patientArtRepository.MergPatientArt(patientArt);
+        await _patientArtRepository.InsertExtract(patientArt);
 
 
         //Assert

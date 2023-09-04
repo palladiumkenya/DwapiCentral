@@ -9,44 +9,17 @@ using System.Linq;
 
 namespace DwapiCentral.Ct.Application.Profiles
 {
-    public class AllergiesChronicIllnessProfile : ExtractProfile<AllergiesChronicIllnessExtract>, IAllergiesChronicIllnessProfile
+    public class AllergiesChronicIllnessProfile
     {
-        public List<AllergiesChronicIllnessSourceDto> AllergiesChronicIllnessExtracts { get; set; } = new List<AllergiesChronicIllnessSourceDto>();
+       
 
-        public static AllergiesChronicIllnessProfile Create(Facility facility, PatientExtract patient)
-        {
-            var patientProfile = new AllergiesChronicIllnessProfile
-            {
-                Facility = new FacilityDTO(facility),
-                //Demographic = new PatientExtractDTO(patient),
-                AllergiesChronicIllnessExtracts =
-                    new AllergiesChronicIllnessSourceDto().GenerateAllergiesChronicIllnessExtractDtOs(patient.AllergiesChronicIllnessExtracts)
-                        .ToList()
-            };
-            return patientProfile;
-        }
+        public List<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
 
-        public static List<AllergiesChronicIllnessProfile> Create(Facility facility, List<PatientExtract> patients)
-        {
-            var patientProfiles = new List<AllergiesChronicIllnessProfile>();
-            foreach (var patient in patients)
-            {
-                var patientProfile = Create(facility, patient);
-                patientProfiles.Add(patientProfile);
-            }
+        public PatientExtractDTO Demographic { get; set; }
 
-            return patientProfiles;
-        }
-        public override bool IsValid()
-        {
-            return base.IsValid() && AllergiesChronicIllnessExtracts.Count > 0;
-        }
+        public FacilityDTO Facility { get; set; }
 
-        public override bool HasData()
-        {
-            return base.HasData() && null != AllergiesChronicIllnessExtracts;
-        }
 
-        
+
     }
 }

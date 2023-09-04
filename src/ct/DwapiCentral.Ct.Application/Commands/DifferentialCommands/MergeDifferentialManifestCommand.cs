@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DwapiCentral.Ct.Application.Commands;
+namespace DwapiCentral.Ct.Application.Commands.DifferentialCommands;
 
 public class MergeDifferentialManifestCommand : IRequest<Result>
 {
@@ -61,31 +61,35 @@ public class MergeDifferentialManifestCommandHandler : IRequestHandler<MergeDiff
             if (null != manifest)
                 throw new ManifestAlreadyExistsException(request.manifest.Id);
 
+            var facManifest = Manifest.Create(request.manifest);
+
+            await _manifestRepository.Save(facManifest);
+
             await _patientExtractRepository.processDifferentialPatients(request.manifest);
 
             //notify spot
-            Log.Debug("posting to SPOT...");          
-            var facManifest = Manifest.Create(request.manifest);
+            Log.Debug("posting to SPOT...");
+
             var manifestDto = new ManifestDto(facManifest, request.manifest);
             var metrics = MetricDto.Generate(facManifest);
             var metricDtos = metrics.Where(x => x.CargoType != CargoType.Indicator).ToList();
             var indicatorDtos = metrics.Where(x => x.CargoType == CargoType.Indicator).ToList();
             manifestDto.Cargo =
                 JsonConvert.SerializeObject(ExtractDto.GenerateCargo(metricDtos), _serializerSettings);
-           
+
             var notification = new ManifestDtoEvent
             {
-               manifest = manifestDto
+                manifest = manifestDto
             };
             await _mediator.Publish(notification, cancellationToken);
-           
+
 
             if (metricDtos.Any())
             {
                 var metricEvent = new MetricsExtractedEvent { metrics = metricDtos };
                 await _mediator.Publish(metricEvent, cancellationToken);
             }
-            
+
             if (indicatorDtos.Any())
             {
                 var indstats = IndicatorDto.Generate(indicatorDtos);
@@ -97,7 +101,7 @@ public class MergeDifferentialManifestCommandHandler : IRequestHandler<MergeDiff
                 await _mediator.Publish(indicators, cancellationToken);
             }
 
-            await _manifestRepository.Save(facManifest);
+
 
             return Result.Success();
         }

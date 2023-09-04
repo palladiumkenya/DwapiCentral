@@ -32,7 +32,7 @@ public class OvcRepositoryTests
 
 
         //Act
-        await _ovcRepository.MergeAsync(ovcExtracts);
+        await _ovcRepository.InsertExtract(ovcExtracts);
 
 
         //Assert

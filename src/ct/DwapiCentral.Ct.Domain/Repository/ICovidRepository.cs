@@ -9,7 +9,9 @@ namespace DwapiCentral.Ct.Domain.Repository
 {
     public interface ICovidRepository 
     {
-        Task MergeAsync(IEnumerable<CovidExtract> covidExtracts);
+        Task<CovidExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID);
+        Task UpdateExtract(List<CovidExtract> patientLabExtract);
+        Task InsertExtract(List<CovidExtract> patientLabExtract);
 
     }
 }

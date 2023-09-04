@@ -31,7 +31,7 @@ public class PatientAdverseEventRepositoryTests
 
 
         //Act
-        await _patientAdverseRepository.MergeAsync(patientAdverseEvent);
+        await _patientAdverseRepository.InsertExtract(patientAdverseEvent);
 
 
         //Assert

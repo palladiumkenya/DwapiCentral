@@ -32,7 +32,7 @@ public class CovidRepositoryTests
 
 
         //Act
-        await _covidRepository.MergeAsync(covidExtract);
+        await _covidRepository.InsertExtract(covidExtract);
 
 
         //Assert

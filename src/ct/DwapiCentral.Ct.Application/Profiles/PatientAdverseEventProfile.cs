@@ -10,44 +10,13 @@ using System.Linq;
 
 namespace DwapiCentral.Ct.Application.Profiles
 {
-    public class PatientAdverseEventProfile : ExtractProfile<PatientAdverseEventExtract>, IPatientAdverseEventProfile
+    public class PatientAdverseEventProfile 
     {
-        public List<AdverseEventSourceDto> AdverseEventExtracts { get; set; } = new List<AdverseEventSourceDto>();
+        public List<PatientAdverseEventExtract> AdverseEventExtracts { get; set; }
 
-        public static PatientAdverseEventProfile Create(Facility facility, PatientExtract patient)
-        {
-            var patientProfile = new PatientAdverseEventProfile
-            {
-                Facility = new FacilityDTO(facility),
-                //Demographic = new PatientExtractDTO(patient),
-                AdverseEventExtracts =
-                    new AdverseEventSourceDto().GeneratePatientAdverseEventExtractDtOs(patient.PatientAdverseEventExtracts)
-                        .ToList()
-            };
-            return patientProfile;
-        }
+        public PatientExtractDTO Demographic { get; set; }
 
-        public static List<PatientAdverseEventProfile> Create(Facility facility, List<PatientExtract> patients)
-        {
-            var patientProfiles = new List<PatientAdverseEventProfile>();
-            foreach (var patient in patients)
-            {
-                var patientProfile = Create(facility, patient);
-                patientProfiles.Add(patientProfile);
-            }
-
-            return patientProfiles;
-        }
-
-        public override bool IsValid()
-        {
-            return base.IsValid() && AdverseEventExtracts.Count > 0;
-        }
-
-        public override bool HasData()
-        {
-            return base.HasData() && null != AdverseEventExtracts;
-        }
+        public FacilityDTO Facility { get; set; }
 
     }
 }

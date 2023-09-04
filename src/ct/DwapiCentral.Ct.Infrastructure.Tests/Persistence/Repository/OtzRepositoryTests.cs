@@ -33,10 +33,10 @@ public class OtzRepositoryTests
 
 
         //Act
-        await _otzRepository.MergeAsync(otcExtracts);
+        await _otzRepository.InsertExtract(otcExtracts);
 
 
-        //Assert
+        //Assert    
         var savedPatientOtcExtracts = _context.OtzExtract.ToList();
         Assert.IsNotNull(savedPatientOtcExtracts);
 

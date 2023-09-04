@@ -10,43 +10,13 @@ using System.Linq;
 
 namespace DwapiCentral.Ct.Application.Profiles
 {
-    public class OvcProfile : ExtractProfile<OvcExtract>, IOvcProfile
+    public class OvcProfile 
     {
-        public List<OvcSourceDto> OvcExtracts { get; set; } = new List<OvcSourceDto>();
+        public List<OvcExtract> OvcExtracts { get; set; }
 
-        public static OvcProfile Create(Facility facility, PatientExtract patient)
-        {
-            var patientProfile = new OvcProfile
-            {
-                Facility = new FacilityDTO(facility),
-                //Demographic = new PatientExtractDTO(patient),
-                OvcExtracts =
-                    new OvcSourceDto().GenerateOvcExtractDtOs(patient.OvcExtracts)
-                        .ToList()
-            };
-            return patientProfile;
-        }
+        public PatientExtractDTO Demographic { get; set; }
 
-        public static List<OvcProfile> Create(Facility facility, List<PatientExtract> patients)
-        {
-            var patientProfiles = new List<OvcProfile>();
-            foreach (var patient in patients)
-            {
-                var patientProfile = Create(facility, patient);
-                patientProfiles.Add(patientProfile);
-            }
-
-            return patientProfiles;
-        }
-        public override bool IsValid()
-        {
-            return base.IsValid() && OvcExtracts.Count > 0;
-        }
-
-        public override bool HasData()
-        {
-            return base.HasData() && null != OvcExtracts;
-        }
+        public FacilityDTO Facility { get; set; }
 
     }
 }

@@ -9,6 +9,6 @@ namespace DwapiCentral.Ct.Domain.Repository
 {
     public interface IDrugAlcoholScreeningRepository
     {
-        Task MergeAsync(IEnumerable<DrugAlcoholScreeningExtract> drugAlcoholScreeningExtracts);
+        Task<DrugAlcoholScreeningExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID); Task UpdateExtract(List<DrugAlcoholScreeningExtract> patientLabExtract); Task InsertExtract(List<DrugAlcoholScreeningExtract> patientLabExtract);
     }
 }

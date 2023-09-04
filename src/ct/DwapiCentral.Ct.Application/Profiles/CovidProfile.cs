@@ -9,25 +9,17 @@ using System.Linq;
 
 namespace DwapiCentral.Ct.Application.Profiles
 {
-    public class CovidProfile : ExtractProfile<CovidExtract>, ICovidProfile
+    public class CovidProfile
     {
-        public List<CovidSourceDto> CovidExtracts { get; set; } = new List<CovidSourceDto>();
+        public List<CovidExtract> CovidExtracts { get; set; }
 
-        public static CovidProfile Create(Facility facility, PatientExtract patient)
-        {
-            var patientProfile = new CovidProfile
-            {
-                Facility = new FacilityDTO(facility),
-                //Demographic = new PatientExtractDTO(patient),
-                CovidExtracts =
-                    new CovidSourceDto().GenerateCovidExtractDtOs(patient.CovidExtracts)
-                        .ToList()
-            };
-            return patientProfile;
-        }
+
+        public PatientExtractDTO Demographic { get; set; }
+
+        public FacilityDTO Facility { get; set; }
 
 
 
-        
+
     }
 }

@@ -1,9 +1,12 @@
 using Dapper;
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Application.Interfaces.Repository;
+using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models;
 
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -15,6 +18,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using Z.Dapper.Plus;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -23,14 +27,22 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
     public class PatientExtractRepository : IPatientExtractRepository
     {
         public readonly CtDbContext _context;
+
+        public readonly IManifestRepository _manifestRepository;
        
         private readonly HashSet<string> patientHashes;
 
-        public PatientExtractRepository(CtDbContext context)
+        private readonly IMediator _mediator;
+
+        public PatientExtractRepository(CtDbContext context, IManifestRepository manifestRepository, IMediator mediator)
         {
             _context = context;
             
             this.patientHashes = new HashSet<string>();
+
+            _manifestRepository = manifestRepository;
+
+            _mediator = mediator;
         }
 
         public Task MergeAsync(IEnumerable<PatientExtract> patientExtracts)
@@ -126,43 +138,55 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
         {
             Log.Debug($"clearing {manifest.SiteCode}...");
             var cons = _context.Database.GetConnectionString();
-
-            var updateProcessedSql = @"
-                                        UPDATE 
-                                            PatientExtract 
-                                        SET 
-                                            Processed = 0  
-                                        WHERE
-                                            SiteCode = @SiteCode";
-
-            var batchUpdateSql = @"
-                                        UPDATE 
-                                            PatientExtract 
-                                        SET 
-                                            Processed = 1  
-                                        WHERE        
-                                            SiteCode = @SiteCode AND 
-                                            PatientPID IN @BatchPks";
-
-            var cleanUpSql = @"
-                                        DELETE 
-                                            FROM PatientExtract
-                                        WHERE
-                                            SiteCode = @SiteCode AND
-                                            Processed = 0";
-
             var batchPks = manifest.GetBatchPatientPKsJoined(5000);
-
             using (var connection = new SqlConnection(cons))
             {
+
                 try
                 {
                     connection.Open();
                     using (var transaction = connection.BeginTransaction())
                     {
-                        await connection.ExecuteAsync(updateProcessedSql, new { SiteCode = manifest.SiteCode }, transaction);
-                        await connection.ExecuteAsync(batchUpdateSql, new { SiteCode = manifest.SiteCode, BatchPks = batchPks }, transaction);
-                        await connection.ExecuteAsync(cleanUpSql, new { SiteCode = manifest.SiteCode }, transaction);
+
+
+                        var updateProcessedSql = @"
+                                        UPDATE 
+                                            PatientExtract 
+                                        SET 
+                                            Processed = 0  
+                                        WHERE
+                                            SiteCode = @siteCode";
+
+
+                        await connection.ExecuteAsync(updateProcessedSql, new { siteCode = manifest.SiteCode }, transaction);
+
+                        foreach (var batchPk in batchPks)
+                        {
+
+                            var updateBatchSql = @"
+                                        UPDATE 
+                                            PatientExtract 
+                                        SET 
+                                            Processed = 1  
+                                        WHERE        
+                                            SiteCode = @siteCode AND 
+                                            PatientPk IN @BatchPk";
+
+
+                            var parameters = new { siteCode = manifest.SiteCode, BatchPk = batchPk.Split(',').Select(int.Parse) };
+
+                            await connection.ExecuteAsync(updateBatchSql, parameters, transaction);
+                        }
+
+                        var cleanUpSql = @"
+                                        DELETE 
+                                            FROM PatientExtract
+                                        WHERE
+                                            SiteCode = @siteCode AND
+                                            Processed = 0";
+                        
+                        await connection.ExecuteAsync(cleanUpSql, new { siteCode = manifest.SiteCode }, transaction);
+
                         transaction.Commit();
                     }
                 }
@@ -171,6 +195,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                     Log.Error(e.Message);
                 }
             }
-        }    
+            var manifestId = await _manifestRepository.GetManifestId(manifest.SiteCode);
+
+            var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = manifest.PatientPKs.Count, ManifestId = manifestId, SiteCode = manifest.SiteCode, ExtractName = "PatientLabExtract" };
+            await _mediator.Publish(notification);
+
+        }
     }
 }

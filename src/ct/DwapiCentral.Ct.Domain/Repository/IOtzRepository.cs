@@ -9,7 +9,7 @@ namespace DwapiCentral.Ct.Domain.Repository
     public interface IOtzRepository 
     {
 
-        Task MergeAsync(IEnumerable<OtzExtract> otzExtracts);
+        Task<OtzExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID); Task UpdateExtract(List<OtzExtract> patientLabExtract); Task InsertExtract(List<OtzExtract> patientLabExtract);
 
     }
 }

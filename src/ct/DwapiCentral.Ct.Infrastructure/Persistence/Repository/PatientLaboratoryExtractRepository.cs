@@ -106,10 +106,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
 
                 var manifestId = await _manifestRepository.GetManifestId(patientLabExtract.First().SiteCode);
 
+                connection.Close();
+
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = patientLabExtract.Count, ManifestId = manifestId, SiteCode = patientLabExtract.First().SiteCode, ExtractName = "PatientLabExtract" };
                 await _mediator.Publish(notification);
 
-                connection.Close();
+                
             }
             catch (Exception ex)
             {

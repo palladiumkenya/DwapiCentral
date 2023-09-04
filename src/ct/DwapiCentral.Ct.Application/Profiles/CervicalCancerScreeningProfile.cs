@@ -10,44 +10,15 @@ using System.Linq;
 
 namespace DwapiCentral.Ct.Application.Profiles
 {
-    public class CervicalCancerScreeningProfile : ExtractProfile<CervicalCancerScreeningExtract>, ICervicalCancerScreeningProfile
+    public class CervicalCancerScreeningProfile 
     {
-        public List<CervicalCancerScreeningSourceDto> CervicalCancerScreeningExtracts { get; set; } = new List<CervicalCancerScreeningSourceDto>();
+      
 
-        public static CervicalCancerScreeningProfile Create(Facility facility, PatientExtract patient)
-        {
-            var patientProfile = new CervicalCancerScreeningProfile
-            {
-                Facility = new FacilityDTO(facility),
-                //Demographic = new PatientExtractDTO(patient),
-                CervicalCancerScreeningExtracts =
-                    new CervicalCancerScreeningSourceDto().GenerateCervicalCancerScreeningExtractDtOs(patient.CervicalCancerScreeningExtracts)
-                        .ToList()
-            };
-            return patientProfile;
-        }
+        public List<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; }
 
-        public static List<CervicalCancerScreeningProfile> Create(Facility facility, List<PatientExtract> patients)
-        {
-            var patientProfiles = new List<CervicalCancerScreeningProfile>();
-            foreach (var patient in patients)
-            {
-                var patientProfile = Create(facility, patient);
-                patientProfiles.Add(patientProfile);
-            }
+        public PatientExtractDTO Demographic { get; set; }
 
-            return patientProfiles;
-        }
-        public override bool IsValid()
-        {
-            return base.IsValid() && CervicalCancerScreeningExtracts.Count > 0;
-        }
+        public FacilityDTO Facility { get; set; }
 
-        public override bool HasData()
-        {
-            return base.HasData() && null != CervicalCancerScreeningExtracts;
-        }
-
-       
     }
 }
