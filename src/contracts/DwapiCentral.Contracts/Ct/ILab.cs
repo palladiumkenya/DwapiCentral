@@ -13,7 +13,8 @@ namespace DwapiCentral.Contracts.Ct
         int? EnrollmentTest { get; set; }
         string? TestResult { get; set; }       
         DateTime? DateSampleTaken { get; set; }
-        string? SampleType { get; set; }   
-      
+        string? SampleType { get; set; }
+        string? Reason { get; set; }
+
     }
 }

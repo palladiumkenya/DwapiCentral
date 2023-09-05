@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230829120003__InitialCT")]
-    partial class _InitialCT
+    [Migration("20230905081905__InitialCt")]
+    partial class _InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,90 +24,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CervicalCancerScreeningExtract", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateExtracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateLastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Last_Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FacilityName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("NextAppointmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OtherPostTreatmentComplication")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PatientPk")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PostTreatmentComplicationCause")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RecordUUID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReferralReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReferredOut")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ScreeningMethod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ScreeningResult")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ScreeningType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SiteCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TreatmentToday")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("VisitDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("VisitID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VisitType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("Voided")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientPk", "SiteCode");
-
-                    b.ToTable("CervicalCancerScreeningExtract");
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.AllergiesChronicIllnessExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.AllergiesChronicIllnessExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -205,7 +122,90 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("AllergiesChronicIllnessExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.ContactListingExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CervicalCancerScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("NextAppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OtherPostTreatmentComplication")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostTreatmentComplicationCause")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecordUUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferralReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferredOut")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TreatmentToday")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("VisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VisitType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientPk", "SiteCode");
+
+                    b.ToTable("CervicalCancerScreeningExtract");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.ContactListingExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -288,7 +288,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("ContactListingExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.CovidExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CovidExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -431,7 +431,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("CovidExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.DefaulterTracingExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.DefaulterTracingExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -511,7 +511,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("DefaulterTracingExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.DepressionScreeningExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.DepressionScreeningExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -597,7 +597,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("DepressionScreeningExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.DrugAlcoholScreeningExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.DrugAlcoholScreeningExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -659,7 +659,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("DrugAlcoholScreeningExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.EnhancedAdherenceCounsellingExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.EnhancedAdherenceCounsellingExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -838,7 +838,24 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("EnhancedAdherenceCounsellingExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.GbvScreeningExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Facility", b =>
+                {
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("Facilities");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.GbvScreeningExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -906,7 +923,69 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("GbvScreeningExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.IptExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.IITRiskScore", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RecordUUID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RiskDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RiskEvaluationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RiskFactors")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("RiskScore")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SourceSysUUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientPk", "SiteCode");
+
+                    b.ToTable("IITRiskScoresExtract");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.IptExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1016,7 +1095,124 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("IptExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.OtzExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Manifest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Docket")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DwapiVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EmrId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EmrName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmrSetup")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmrVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("End")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Project")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Session")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StatusDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Tag")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UploadMode")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Manifests");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.MasterFacility", b =>
+                {
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<string>("County")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("MasterFacilities");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Metric", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FacilityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ManifestId");
+
+                    b.ToTable("Metrics");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.OtzExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1093,7 +1289,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("OtzExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.OvcExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.OvcExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1167,7 +1363,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("OvcExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientAdverseEventExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientAdverseEventExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1241,7 +1437,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("PatientAdverseEventExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientArtExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientArtExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1360,7 +1556,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("PatientArtExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientBaselinesExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientBaselinesExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1470,7 +1666,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("PatientBaselinesExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientExtract", b =>
                 {
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -1623,7 +1819,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("PatientExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientLaboratoryExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientLaboratoryExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1655,6 +1851,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
                         .IsRequired()
@@ -1691,7 +1890,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("PatientLaboratoryExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientPharmacyExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientPharmacyExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1777,7 +1976,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("PatientPharmacyExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientStatusExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientStatusExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1851,7 +2050,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("PatientStatusExtract");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientVisitExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientVisitExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1968,6 +2167,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<decimal?>("OxygenSaturation")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("PaedsDisclosure")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -2062,207 +2265,18 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<decimal?>("Weight")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("ZScore")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ZScoreAbsolute")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PatientVisitExtract");
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Facility", b =>
-                {
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Code");
-
-                    b.ToTable("Facilities");
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.IITRiskScore", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateExtracted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateLastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date_Last_Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FacilityName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PatientPk")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RecordUUID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RiskDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RiskEvaluationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RiskFactors")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("RiskScore")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("SiteCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SourceSysUUID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("Voided")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientPk", "SiteCode");
-
-                    b.ToTable("IITRiskScoresExtract");
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Manifest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Docket")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DwapiVersion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("EmrId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EmrName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmrSetup")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EmrVersion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Project")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("Session")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SiteCode")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Start")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StatusDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Tag")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UploadMode")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Manifests");
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.MasterFacility", b =>
-                {
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
-
-                    b.Property<string>("County")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Code");
-
-                    b.ToTable("MasterFacilities");
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Metric", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FacilityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ManifestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SiteCode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ManifestId");
-
-                    b.ToTable("Metrics");
                 });
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Stage.StageAdverseEventExtract", b =>
@@ -3987,6 +4001,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Project")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RecordUUID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -4719,6 +4736,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<decimal?>("OxygenSaturation")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("PaedsDisclosure")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -4819,177 +4840,94 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<decimal?>("Weight")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("ZScore")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ZScoreAbsolute")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("StageVisitExtracts");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CervicalCancerScreeningExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.AllergiesChronicIllnessExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("CervicalCancerScreeningExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.AllergiesChronicIllnessExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("AllergiesChronicIllnessExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.ContactListingExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CervicalCancerScreeningExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("CervicalCancerScreeningExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.ContactListingExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("ContactListingExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.CovidExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CovidExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("CovidExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.DefaulterTracingExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.DefaulterTracingExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("DefaulterTracingExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.DepressionScreeningExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.DepressionScreeningExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("DepressionScreeningExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.DrugAlcoholScreeningExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.DrugAlcoholScreeningExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("DrugAlcoholScreeningExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.EnhancedAdherenceCounsellingExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.EnhancedAdherenceCounsellingExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("EnhancedAdherenceCounsellingExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.GbvScreeningExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.GbvScreeningExtract", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("GbvScreeningExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.IptExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("IptExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.OtzExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("OtzExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.OvcExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("OvcExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientAdverseEventExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("PatientAdverseEventExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientArtExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("PatientArtExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientBaselinesExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("PatientBaselinesExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientLaboratoryExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("PatientLaboratoryExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientPharmacyExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("PatientPharmacyExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientStatusExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("PatientStatusExtracts")
-                        .HasForeignKey("PatientPk", "SiteCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientVisitExtract", b =>
-                {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
-                        .WithMany("PatientVisitExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -4997,8 +4935,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.IITRiskScore", b =>
                 {
-                    b.HasOne("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", null)
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
                         .WithMany("IITRiskScoresExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.IptExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("IptExtracts")
                         .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5013,7 +4960,93 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Extracts.PatientExtract", b =>
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.OtzExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("OtzExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.OvcExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("OvcExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientAdverseEventExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("PatientAdverseEventExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientArtExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("PatientArtExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientBaselinesExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("PatientBaselinesExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientLaboratoryExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("PatientLaboratoryExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientPharmacyExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("PatientPharmacyExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientStatusExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("PatientStatusExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientVisitExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("PatientVisitExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Manifest", b =>
+                {
+                    b.Navigation("Metrics");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientExtract", b =>
                 {
                     b.Navigation("AllergiesChronicIllnessExtracts");
 
@@ -5054,11 +5087,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Navigation("PatientStatusExtracts");
 
                     b.Navigation("PatientVisitExtracts");
-                });
-
-            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Manifest", b =>
-                {
-                    b.Navigation("Metrics");
                 });
 #pragma warning restore 612, 618
         }

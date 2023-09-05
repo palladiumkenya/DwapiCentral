@@ -59,7 +59,9 @@ public static class DependencyInjection
         services.AddScoped<IPatientAdverseEventRepository, PatientAdverseEventRepository>();
         services.AddScoped<IPatientBaseLinesRepository, PatientBaseLinesRepository>();
         services.AddScoped<IPatientStatusRepository, PatientStatusRepository>();
-        
+        services.AddScoped<ICervicalCancerScreeningRepository, CervicalCancerScreeningRepository>();
+        services.AddScoped<IIITRiskScoreRepository, IITRiskScoreRepository>();
+
 
         services.AddScoped<IStagePatientExtractRepository, StagePatientExtractRepository>();
         services.AddScoped<IStageVisitExtractRepository, StageVisitExtractRepository>();

@@ -20,6 +20,7 @@ namespace DwapiCentral.Ct.Application.DTOs
         public string? SampleType { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
+        public string? Reason { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get; set; }

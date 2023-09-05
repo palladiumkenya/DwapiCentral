@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.Commands;
+using DwapiCentral.Ct.Application.Commands.DifferentialCommands;
 using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Application.Profiles;
 using DwapiCentral.Ct.Domain.Events;
@@ -83,19 +84,9 @@ namespace DwapiCentral.Ct.Controllers
         {
             if (null != patientProfile && patientProfile.Any())
             {
-                //if (patientProfile.Any(x => !x.IsValid()))
-                //{
-                //    return BadRequest("Invalid data, please ensure it has Patient, Facility, and at least one (1) Extract");
-
-                //}
-
                 try
                 {
-
-                    //BatchJob.StartNew(x =>
-                    //{
-                    //    x.Enqueue(() => Send($"{sourceBag}", new MergePatientLabsCommand(sourceBag)));
-                    //}, $"{sourceBag}");
+                    BackgroundJob.Enqueue(() => SaveDiffData(new MergeDifferentialCovidCommand(patientProfile)));
 
 
                     var successMessage = new
@@ -107,12 +98,19 @@ namespace DwapiCentral.Ct.Controllers
                 catch (Exception ex)
                 {
                     Log.Error(new string('*', 30));
-                    Log.Error(nameof(LaboratorySourceBag), ex);
+                    Log.Error(nameof(CovidProfile), ex);
                     Log.Error(new string('*', 30));
                     return BadRequest(ex);
                 }
             }
-            return BadRequest($"The expected '{new LaboratorySourceBag().GetType().Name}' is null");
+            return BadRequest($"The expected '{new CovidProfile().GetType().Name}' is null");
+        }
+
+
+        public async Task SaveDiffData(MergeDifferentialCovidCommand saveDiffCommand)
+        {
+            await _mediator.Send(saveDiffCommand);
+
         }
 
         [Queue("covid")]        

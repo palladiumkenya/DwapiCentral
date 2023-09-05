@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
-    public partial class _InitialCT : Migration
+    public partial class _InitialCt : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -791,6 +791,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1106,6 +1107,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    ZScore = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
+                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1862,6 +1866,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     SampleType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -2029,7 +2034,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    ZScore = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
+                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
