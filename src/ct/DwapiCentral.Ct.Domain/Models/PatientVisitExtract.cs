@@ -76,8 +76,8 @@ namespace DwapiCentral.Ct.Domain.Models
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
-        public string ZScore { get; set; }
+        public string? ZScore { get; set; }
         public int? ZScoreAbsolute { get; set; }
-        public string PaedsDisclosure { get; set; }
+        public string? PaedsDisclosure { get; set; }
     }
 }

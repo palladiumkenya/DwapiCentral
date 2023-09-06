@@ -695,7 +695,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SourceSysUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RiskScore = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RiskScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskFactors = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskEvaluationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1107,9 +1107,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
-                    ZScore = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
-                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1563,7 +1563,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     SourceSysUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RiskScore = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RiskScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskFactors = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskEvaluationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -2035,9 +2035,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
-                    ZScore = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
-                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

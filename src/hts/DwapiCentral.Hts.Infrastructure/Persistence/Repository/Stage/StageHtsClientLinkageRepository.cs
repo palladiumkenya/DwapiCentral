@@ -44,15 +44,17 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClientLinkage" };
-                await _mediator.Publish(notification);
-
+               
                 var pks = extracts.Select(x => x.Id).ToList();
 
                 // Merge
                 await MergeExtracts(manifestId, extracts);
 
                 await UpdateLivestage(manifestId, pks);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClientLinkage" };
+                await _mediator.Publish(notification);
+
             }
             catch (Exception e)
             {
@@ -81,31 +83,31 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, HtsNumber, DateEnrolled
+                                    SELECT PatientPK, SiteCode, HtsNumber, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         ManifestId = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, HtsNumber, DateEnrolled
+                                    GROUP BY PatientPK, SiteCode, HtsNumber, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
                                     AND p.HtsNumber = s.HtsNumber                                   
-                                    AND p.DateEnrolled = s.DateEnrolled                                    
+                                    AND p.RecordUUID = s.RecordUUID                                    
                             )
                         ";
 
                 var existingRecords = await connection.QueryAsync<HtsClientLinkage>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string HtsNumber,  DateTime? DateEnrolled)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.HtsNumber,  x.DateEnrolled)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string HtsNumber,  string? RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.HtsNumber,  x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageClientLinkage
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.HtsNumber,  x.DateEnrolled)) && x.ManifestId == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.HtsNumber,  x.RecordUUID)) && x.ManifestId == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageClientLinkage, existingRecords);
@@ -130,13 +132,12 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
         private async Task InsertNewDataFromStaging(List<StageHtsClientLinkage> uniqueStageExtracts)
         {
             try
-            {
-                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+            {                
                 var latestRecordsDict = new Dictionary<string, StageHtsClientLinkage>();
 
-                foreach (var extract in sortedExtracts)
+                foreach (var extract in uniqueStageExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.HtsNumber}_{extract.DateEnrolled}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.HtsNumber}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -161,7 +162,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageDrug
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.HtsNumber, x.DateEnrolled })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.HtsNumber, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.FirstOrDefault()
@@ -170,7 +171,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.HtsNumber, existingExtract.DateEnrolled },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.HtsNumber, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -178,7 +179,38 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     HtsClientLinkages
+
+                               SET                                  
+                                    DateEnrolled = @DateEnrolled,
+                                    FacilityName = @FacilityName,
+                                    EnrolledFacilityName = @EnrolledFacilityName,
+                                    ReferralDate = @ReferralDate,
+                                    DatePrefferedToBeEnrolled = @DatePrefferedToBeEnrolled,
+                                    FacilityReferredTo = @FacilityReferredTo,
+                                    HandedOverTo = @HandedOverTo,
+                                    HandedOverToCadre = @HandedOverToCadre,
+                                    ReportedCCCNumber = @ReportedCCCNumber,
+                                    ReportedStartARTDate = @ReportedStartARTDate,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND HtsNumber = @HtsNumber
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

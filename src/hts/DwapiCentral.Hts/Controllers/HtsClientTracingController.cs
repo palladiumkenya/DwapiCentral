@@ -1,4 +1,6 @@
 ﻿using DwapiCentral.Hts.Application.Commands;
+using DwapiCentral.Hts.Domain.Events;
+using DwapiCentral.Hts.Domain.Repository;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,16 +12,18 @@ namespace DwapiCentral.Hts.Controllers
     public class HtsClientTracingController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
 
 
-        public HtsClientTracingController(IMediator mediator)
+        public HtsClientTracingController(IMediator mediator, IManifestRepository manifestRepository)
         {
             _mediator = mediator;
+            _manifestRepository = manifestRepository;
         }
 
         // POST api/Hts/HtsClientTracings
         [HttpPost("api/Hts/HtsClientTracings")]
-        public IActionResult ProcessTracings([FromBody] MergeHtsClientTracingCommand client)
+        public async Task<IActionResult> ProcessTracings([FromBody] MergeHtsClientTracingCommand client)
         {
             if (null == client)
                 return BadRequest();
@@ -27,6 +31,12 @@ namespace DwapiCentral.Hts.Controllers
             try
             {
                 var id = BackgroundJob.Enqueue(() => SaveClientTracingJob(client));
+
+                var manifestId = await _manifestRepository.GetManifestId(client.ClientTracing.FirstOrDefault().SiteCode);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.ClientTracing.Count(), ManifestId = manifestId, SiteCode = client.ClientTracing.First().SiteCode, ExtractName = "HtsClientTracing" };
+
+                await _mediator.Publish(notification);
 
                 return Ok(new
                 {

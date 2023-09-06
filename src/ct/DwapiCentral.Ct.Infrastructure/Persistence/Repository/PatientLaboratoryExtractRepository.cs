@@ -5,6 +5,7 @@ using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using DwapiCentral.Shared.Domain.Enums;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -108,7 +109,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
 
                 connection.Close();
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = patientLabExtract.Count, ManifestId = manifestId, SiteCode = patientLabExtract.First().SiteCode, ExtractName = "PatientLabExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = patientLabExtract.Count, ManifestId = manifestId, SiteCode = patientLabExtract.First().SiteCode, ExtractName = "PatientLabExtract", UploadMode= UploadMode.DifferentialLoad};
                 await _mediator.Publish(notification);
 
                 

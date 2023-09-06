@@ -44,8 +44,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClientTest" };
-                await _mediator.Publish(notification);
+               
 
                 var pks = extracts.Select(x => x.Id).ToList();
 
@@ -53,6 +52,9 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 await MergeExtracts(manifestId, extracts);
 
                 await UpdateLivestage(manifestId, pks);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClientTest" };
+                await _mediator.Publish(notification);
             }
             catch (Exception e)
             {
@@ -81,32 +83,32 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, HtsNumber, EncounterId, TestDate
+                                    SELECT PatientPK, SiteCode, HtsNumber, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         ManifestId = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, HtsNumber, EncounterId, TestDate
+                                    GROUP BY PatientPK, SiteCode, HtsNumber, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
                                     AND p.HtsNumber = s.HtsNumber
-                                    AND p.EncounterId = s.EncounterId
-                                    AND p.TestDate = s.TestDate                                    
+                                    AND p.RecordUUID = s.RecordUUID
+                                                                   
                             )
                         ";
 
                 var existingRecords = await connection.QueryAsync<HtsClientTest>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string HtsNumber, int EncounterId, DateTime? TestDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.HtsNumber, x.EncounterId,x.TestDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string HtsNumber, string? RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.HtsNumber, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageClientTest
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.HtsNumber, x.EncounterId, x.TestDate)) && x.ManifestId == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.HtsNumber, x.RecordUUID)) && x.ManifestId == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageClientTest, existingRecords);
@@ -131,13 +133,12 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
         private async Task InsertNewDataFromStaging(List<StageHtsClientTest> uniqueStageExtracts)
         {
             try
-            {
-                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+            {                
                 var latestRecordsDict = new Dictionary<string, StageHtsClientTest>();
 
-                foreach (var extract in sortedExtracts)
+                foreach (var extract in uniqueStageExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.HtsNumber}_{extract.EncounterId}_{extract.TestDate}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.HtsNumber}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -162,7 +163,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageDrug
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.HtsNumber, x.EncounterId,x.TestDate })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.HtsNumber, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.FirstOrDefault()
@@ -171,7 +172,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.HtsNumber, existingExtract.EncounterId,existingExtract.TestDate },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.HtsNumber, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -179,7 +180,53 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     HtsClientTests
+
+                               SET                                  
+                                    EncounterId = @EncounterId,
+                                    TestDate = @TestDate,
+                                    FacilityName = @FacilityName,
+                                    Processed = @Processed,
+                                    Status = @Status,
+                                    StatusDate = @StatusDate,
+                                    DateExtracted = @DateExtracted,
+                                    EverTestedForHiv = @EverTestedForHiv,
+                                    MonthsSinceLastTest = @MonthsSinceLastTest,
+                                    ClientTestedAs = @ClientTestedAs,
+                                    EntryPoint = @EntryPoint,
+                                    TestStrategy = @TestStrategy,
+                                    TestResult1 = @TestResult1,
+                                    TestResult2 = @TestResult2,
+                                    FinalTestResult = @FinalTestResult,
+                                    PatientGivenResult = @PatientGivenResult,
+                                    TbScreening = @TbScreening,
+                                    ClientSelfTested = @ClientSelfTested,
+                                    CoupleDiscordant = @CoupleDiscordant,
+                                    TestType = @TestType,
+                                    Consent = @Consent,
+                                    Setting = @Setting,
+                                    Approach = @Approach,
+                                    HtsRiskCategory = @HtsRiskCategory,
+                                    HtsRiskScore = @HtsRiskScore,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND HtsNumber = @HtsNumber
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

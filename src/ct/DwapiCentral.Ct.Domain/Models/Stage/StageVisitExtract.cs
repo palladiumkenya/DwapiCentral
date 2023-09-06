@@ -76,8 +76,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
-        public string ZScore { get; set; }
+        public string? ZScore { get; set; }
         public int? ZScoreAbsolute { get; set; }
-        public string PaedsDisclosure { get; set; }
+        public string? PaedsDisclosure { get; set; }
     }
 }

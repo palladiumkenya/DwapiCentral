@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using DwapiCentral.Shared.Domain.Enums;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace DwapiCentral.Ct.Domain.Events
         public string ExtractName { get; set; }
 
         public int TotalExtractsStaged { get; set; }
+
+        public UploadMode UploadMode { get; set; }
 
         public int TotalExtractsProcessed { get; set; }
     }

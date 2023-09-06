@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230905081905__InitialCt")]
+    [Migration("20230906091241__InitialCt")]
     partial class _InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -962,8 +962,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("RiskFactors")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("RiskScore")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("RiskScore")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
@@ -2168,7 +2168,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PaedsDisclosure")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -2266,7 +2265,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ZScore")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ZScoreAbsolute")
@@ -3791,8 +3789,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("RiskFactors")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("RiskScore")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("RiskScore")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
@@ -4737,7 +4735,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PaedsDisclosure")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -4841,7 +4838,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ZScore")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ZScoreAbsolute")
