@@ -143,6 +143,10 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Context
                 .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                 .IsRequired();
 
+            modelBuilder.Entity<StagePatientMnchExtract>()
+              .HasKey(m => new { m.PatientPk, m.SiteCode });
+
+
 
 
             DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
@@ -155,7 +159,9 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<PatientMnchExtract>()
                 .Key(x => new { x.PatientPk, x.SiteCode })
                 .Table($"{nameof(MnchPatients)}");
-            DapperPlusManager.Entity<PatientMnchExtract>()
+
+
+            DapperPlusManager.Entity<StagePatientMnchExtract>()
                 .Key(x => new { x.PatientPk, x.SiteCode })
                 .Table($"{nameof(StageMnchPatients)}");
 

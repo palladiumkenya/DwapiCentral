@@ -39,35 +39,34 @@ public static class RegisterStartupServices
                DisableGlobalLocks = true
            }));
 
-         #region hangfire
-        try
-        {
-            Hangfire.GlobalConfiguration.Configuration.UseBatches(TimeSpan.FromDays(30));
-            ConfigureWorkers(builder.Configuration, builder.Services);
-            GlobalJobFilters.Filters.Add(new ProlongExpirationTimeAttribute());
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute() { Attempts = 3 });
-        }
-        catch (Exception e)
-        {
-            Log.Fatal(e, "Hangfire is down !");
-        }
+        #region hangfire
+        Hangfire.GlobalConfiguration.Configuration.UseBatches(TimeSpan.FromDays(30));
+
+        var queues = new List<string>
+            {
+                 "manifest","patientmnch", "ancvisit", "cwcenrollment","cwcvisit", "hei","matvisit","mnchart","mnchenrollment",
+                  "immunization", "mnchlab","motherbabypair","pncvisit"
+            };
+        queues.ForEach(queue => ConfigureWorkers(builder.Configuration, builder.Services, new[] { queue.ToLower() }));
+
         #endregion
 
 
 
-        builder.Services.RegisterCtApp(builder.Configuration);
+        builder.Services.RegisterMnchApp(builder.Configuration);
             
             return builder;
         }
 
-    private static void ConfigureWorkers(IConfiguration configuration,IServiceCollection services)
+    private static void ConfigureWorkers(IConfiguration configuration, IServiceCollection services, string[] queues)
     {
 
         var hangfireQueueOptions = new BackgroundJobServerOptions
         {
-            ServerName = "DWAPIMNCHMAIN",
-            WorkerCount = 1,
-           
+            ServerName = $"{Environment.MachineName}:{queues[0].ToUpper()}",
+            WorkerCount = 5,
+            Queues = queues,
+            ShutdownTimeout = TimeSpan.FromMinutes(2),
         };
 
         services.AddHangfireServer(options =>
@@ -77,8 +76,9 @@ public static class RegisterStartupServices
             options.Queues = hangfireQueueOptions.Queues;
             options.ShutdownTimeout = hangfireQueueOptions.ShutdownTimeout;
         });
-        
+
     }
 
-    
+
+
 }

@@ -45,9 +45,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "MnchPatients" };
-                await _mediator.Publish(notification);
-
                 var pks = extracts.Select(x => new StagePatientMnchExtract { PatientPk = x.PatientPk, SiteCode = x.SiteCode}).ToList();
 
                 //create new records or update the existing patientRecords
@@ -55,6 +52,11 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
 
 
                 await UpdateLivestage(manifestId, pks);
+
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "MnchPatients" };
+                await _mediator.Publish(notification);
+
             }
             catch (Exception e)
             {
@@ -78,7 +80,8 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                                       ManifestId = @manifestId AND
                                       LiveStage = @livestage AND
                                       PatientPk = @patientPk AND
-                                      SiteCode = @siteCode";
+                                      SiteCode = @siteCode AND 
+                                      RecordUUID = @recordUUID";
                                        
 
                 foreach (StagePatientMnchExtract stagePatient in stageMnchPatients)
@@ -92,7 +95,8 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                         livestage = LiveStage.Rest,
                         patientPk = stagePatient.PatientPk,
                         siteCode = stagePatient.SiteCode,
-                        
+                        recordUUID = stagePatient.RecordUUID,
+
                     }).AsList();
 
                     // Step 2: Check if each record exists in the central table
@@ -140,7 +144,8 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                                     ManifestId = @manifestId AND 
                                     LiveStage= @livestage AND
                                     PatientPk = @patientPk AND 
-                                    SiteCode = @siteCode ";
+                                    SiteCode = @siteCode AND
+                                    RecordUUID = @recordUUID";
             try
             {
 
@@ -162,8 +167,9 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                                     livestage = LiveStage.Rest,
                                     nextlivestage = LiveStage.Assigned,
                                     patientPk = pk.PatientPk,
-                                    siteCode = pk.SiteCode
-                                    
+                                    siteCode = pk.SiteCode,
+                                    recordUUID = pk.RecordUUID
+
                                 }, transaction, 0);
                         }
                         transaction.Commit();
@@ -179,7 +185,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
 
         private bool CheckRecordExistence(SqlConnection connection, StagePatientMnchExtract stageRecord)
         {
-            string selectQuery = "SELECT COUNT(*) FROM MnchPatients WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode";
+            string selectQuery = "SELECT COUNT(*) FROM MnchPatients WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND RecordUUID = @RecordUUID";
 
             int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
             return count > 0;

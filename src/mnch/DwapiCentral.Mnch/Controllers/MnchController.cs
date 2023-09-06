@@ -79,7 +79,9 @@ namespace DwapiCentral.Mnch.Controllers
             else return BadRequest(validFacility.Error.ToString());
         }
 
-      
+        [Queue("manifest")]
+        [AutomaticRetry(Attempts = 3)]
+        [DisplayName("{0}")]
         public async Task SaveManifestJob(ProcessManifestCommand saveCommandManifest)
         {
             await _mediator.Send(saveCommandManifest);

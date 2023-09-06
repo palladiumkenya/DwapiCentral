@@ -44,15 +44,17 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "MotherBabyPairs" };
-                await _mediator.Publish(notification);
-
                 var pks = extracts.Select(x => x.Id).ToList();
 
                 // Merge
                 await MergeExtracts(manifestId, extracts);
 
                 await UpdateLivestage(manifestId, pks);
+
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "MotherBabyPairs" };
+                await _mediator.Publish(notification);
+
             }
             catch (Exception e)
             {
@@ -81,15 +83,16 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode
+                                    SELECT PatientPK, SiteCode, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         ManifestId = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode
+                                    GROUP BY PatientPK, SiteCode, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
+                                    AND p.RecordUUID = s.RecordUUID
                                                            
                                                                    
                             )
@@ -98,14 +101,14 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<MotherBabyPair>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode,string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode,x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageMotherBabyPair
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode)) && x.ManifestId == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.ManifestId == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageMotherBabyPair, existingRecords);
@@ -135,7 +138,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in uniqueStageExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -160,7 +163,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageDrug
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.FirstOrDefault()
@@ -169,7 +172,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode,existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -196,7 +199,8 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                                     Voided = @Voided                      
 
                              WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode";
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
 
                 using var connection = new SqlConnection(cons);
                 if (connection.State != ConnectionState.Open)

@@ -53,12 +53,6 @@ public static class DependencyInjection
         services.AddScoped<IStagePatientMnchRepository, StagePatientMnchRepository>();
         services.AddScoped<IStagePncVisitRepository, StagePncVisitRepository>();
 
-
-
-
-
-
-
         try
         {
             DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "218460a6-02d0-c26b-9add-e6b8d13ccbf4");
