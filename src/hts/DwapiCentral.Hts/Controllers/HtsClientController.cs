@@ -31,8 +31,11 @@ namespace DwapiCentral.Hts.Controllers
 
             try
             {
-                var id = BackgroundJob.Enqueue(() => SaveClientsJob(client));
-
+                var id = BatchJob.StartNew(x =>
+                    {
+                        x.Enqueue(() => SaveClientsJob(client));
+                    });
+               
                 var manifestId = await _manifestRepository.GetManifestId(client.Clients.FirstOrDefault().SiteCode);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.Clients.Count(), ManifestId = manifestId, SiteCode = client.Clients.First().SiteCode, ExtractName = "HtsClients" };

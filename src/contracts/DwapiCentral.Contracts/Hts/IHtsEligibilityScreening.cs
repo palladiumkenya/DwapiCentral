@@ -82,6 +82,7 @@ namespace DwapiCentral.Contracts.Hts
          string? HIVRiskCategory { get; set; }
          string? ReasonRefferredForTesting { get; set; }
          string? ReasonNotReffered { get; set; }
+         string? HtsRiskScore { get; set; }
 
     }
 }

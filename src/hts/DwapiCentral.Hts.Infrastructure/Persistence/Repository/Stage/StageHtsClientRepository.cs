@@ -44,14 +44,11 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-               
-                var pks = extracts.Select(x => new StageHtsClient { PatientPk = x.PatientPk, SiteCode = x.SiteCode, HtsNumber = x.HtsNumber }).ToList();
-
                 //create new records or update the existing patientRecords
-                await Merge(manifestId, pks);
+                await Merge(manifestId, extracts);
 
 
-                await UpdateLivestage(manifestId, pks);
+                await UpdateLivestage(manifestId, extracts);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClients" };
                 await _mediator.Publish(notification);

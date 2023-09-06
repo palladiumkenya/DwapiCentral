@@ -29,7 +29,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
         private readonly IMediator _mediator;
         private readonly string _stageName;
 
-        public StageHtsClientLinkageRepository(HtsDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageHtsClientLinkage)}s")
+        public StageHtsClientLinkageRepository(HtsDbContext context, IMapper mapper, IMediator mediator, string stageName = "StageClientLinkages")
         {
             _context = context;
             _mapper = mapper;

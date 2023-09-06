@@ -16,7 +16,7 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string HtsNumber { get; set; }
-        public string EncounterId { get; set; }
+        public string? EncounterId { get; set; }
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
         public string? PopulationType { get; set; }
@@ -83,6 +83,8 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public string? HTSEntryPoint { get; set; }
         public string? HIVRiskCategory { get; set; }
         public string? ReasonRefferredForTesting { get; set; }
+        public string? HtsRiskScore { get; set; }
+
         public string? ReasonNotReffered { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
@@ -91,6 +93,14 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+     
+
+
+
+        
+     
+  
 
         public Guid? ManifestId { get; set; }
         public LiveStage LiveStage { get; set; }

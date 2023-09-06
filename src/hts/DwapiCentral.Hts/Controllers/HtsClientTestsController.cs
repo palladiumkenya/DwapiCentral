@@ -32,8 +32,8 @@ namespace DwapiCentral.Hts.Controllers
 
             try
             {
-                // var id = BackgroundJob.Enqueue(() => SaveClientTestsJob(client));
-                await _mediator.Send(new MergeHtsClientTestCommand(client.ClientTests));
+                 var id = BackgroundJob.Enqueue(() => SaveClientTestsJob(client));
+               
                 var manifestId = await _manifestRepository.GetManifestId(client.ClientTests.FirstOrDefault().SiteCode);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.ClientTests.Count(), ManifestId = manifestId, SiteCode = client.ClientTests.First().SiteCode, ExtractName = "HtsClientTest" };
