@@ -15,7 +15,7 @@ namespace DwapiCentral.Mnch.Domain.Model
         public string? FacilityName { get; set; }
         public string? Pkv { get; set; }
         public string PatientMnchID { get; set; }
-        public string PatientHeiID { get; set; }
+        public string? PatientHeiID { get; set; }
         public string? Gender { get; set; }
         public DateTime? DOB { get; set; }
         public DateTime? FirstEnrollmentAtMnch { get; set; }
@@ -34,6 +34,7 @@ namespace DwapiCentral.Mnch.Domain.Model
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
 
         public virtual ICollection<MnchEnrolment> MnchEnrolmentExtracts { get; set; } = new List<MnchEnrolment>();
         public virtual ICollection<MnchArt> MnchArtExtracts { get; set; } = new List<MnchArt>();

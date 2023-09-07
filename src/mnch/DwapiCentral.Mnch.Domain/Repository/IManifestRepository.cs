@@ -1,4 +1,5 @@
 ﻿using DwapiCentral.Mnch.Domain.Model;
+using DwapiCentral.Shared.Domain.Model.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace DwapiCentral.Mnch.Domain.Repository
         int GetPatientCount(Guid id);
         IEnumerable<Manifest> GetStaged(int sitecode);
         void updateCount(Guid id, int clientCount);
+
     }
 }

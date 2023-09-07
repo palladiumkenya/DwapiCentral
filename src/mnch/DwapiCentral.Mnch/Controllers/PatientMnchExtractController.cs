@@ -23,18 +23,21 @@ namespace DwapiCentral.Mnch.Controllers
         }
 
 
-        [HttpPost("api/Mnch/PatientMnch")]
-        public async Task<IActionResult> ProcessPatientMnch(MnchExtractsDto extract)
+        [HttpPost]
+        [Route("api/Mnch/PatientMnch")]
+        public async Task<IActionResult> ProcessPatientMnch([FromBody] MnchExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try
             {
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePatientMnchExtractCommand(extract.PatientMnchExtracts)));
-                var manifestId = await _manifestRepository.GetManifestId(extract.AncVisitExtracts.FirstOrDefault().SiteCode);
+
+                var manifestId = await _manifestRepository.GetManifestId(extract.PatientMnchExtracts.FirstOrDefault().SiteCode);
+
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extract.PatientMnchExtracts.Count, ManifestId = manifestId, SiteCode = extract.PatientMnchExtracts.First().SiteCode, ExtractName = "MnchPatients" };
                 await _mediator.Publish(notification);
-                return Ok(new { BatchKey = id });
+                return Ok();
             }
             catch (Exception e)
             {

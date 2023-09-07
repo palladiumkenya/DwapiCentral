@@ -25,14 +25,14 @@ namespace DwapiCentral.Mnch.Controllers
 
 
         [HttpPost("api/Mnch/MnchArt")]
-        public async Task<IActionResult> ProcessMnchArt(MnchExtractsDto extract)
+        public async Task<IActionResult> ProcessMnchArt([FromBody] MnchExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try
             {
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeMnchArtCommand(extract.MnchArtExtracts)));
-                var manifestId = await _manifestRepository.GetManifestId(extract.AncVisitExtracts.FirstOrDefault().SiteCode);
+                var manifestId = await _manifestRepository.GetManifestId(extract.MnchArtExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extract.MnchArtExtracts.Count, ManifestId = manifestId, SiteCode = extract.MnchArtExtracts.First().SiteCode, ExtractName = "MnchArts" };
                 await _mediator.Publish(notification);
 

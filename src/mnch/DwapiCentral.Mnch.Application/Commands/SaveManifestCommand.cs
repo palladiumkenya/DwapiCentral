@@ -19,11 +19,11 @@ namespace DwapiCentral.Mnch.Application.Commands;
 
 public class SaveManifestCommand : IRequest<Result>
 {
-    public Manifest manifest { get; set; }
+    public Manifest Manifest { get; set; }
 
     public SaveManifestCommand(Manifest manifest)
     {
-        this.manifest = manifest;
+        Manifest = manifest;
     }
 }
 
@@ -45,34 +45,77 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
     {
         try
         {
-
-
-            var facility = await _facilityRepository.GetByCode(request.manifest.SiteCode);
+            var facility = await _facilityRepository.GetByCode(request.Manifest.SiteCode);
             if (null == facility)
-                throw new SiteNotEnrolledException(request.manifest.SiteCode);
+                throw new SiteNotEnrolledException(request.Manifest.SiteCode);
 
-            
-            await _manifestRepository.Save(request.manifest);
 
-            // notify spot => manifest
-            var notification = new ManifestReceivedEvent
-            {
-                ManifestId = request.manifest.Id,
-                SiteCode = request.manifest.SiteCode,
-                Docket = request.manifest.Docket,
-                Status = request.manifest.Status,
-                EmrSetup = request.manifest.EmrSetup,
-                EmrVersion = request.manifest.EmrVersion,
-                DwapiVersion = request.manifest.DwapiVersion,
-                Metrics = request.manifest.Cargoes
-            };
-            await _mediator.Publish(notification, cancellationToken);
+                var communityManifests = request.Manifest.EmrSetup == EmrSetup.Community;
 
-           
+                var otherManifests = request.Manifest.EmrSetup != EmrSetup.Community;
 
+                try
+                {
+                    if (otherManifests != null)
+                        _manifestRepository.ClearFacility(request.Manifest.SiteCode);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Clear MANIFEST ERROR ", e);
+                }
+                try
+                {
+                    if (communityManifests != null)
+                        _manifestRepository.ClearFacility(request.Manifest.SiteCode, "IRDO");
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Clear COMMUNITY MANIFEST ERROR ", e);
+                }
+                    request.Manifest.Recieved = request.Manifest.Cargoes
+                    .Where(cargo => cargo.Type == 0)
+                    .SelectMany(cargo => cargo.Items.Split(','))
+                    .Count();
+
+                    try
+                    {
+                        // Notify Spot
+                        var metricDtos = MetricDto.Generate(request.Manifest);
+                        if (metricDtos.Any())
+                        {
+                            var metrics = new MnchMetricsEvent
+                            {
+                                MnchMetricExtracts = metricDtos,
+
+                            };
+                            await _mediator.Publish(metrics, cancellationToken);
+                        }
+
+                        await _manifestRepository.Save(request.Manifest);
+
+                        // notify spot => manifest
+                        var notification = new ManifestReceivedEvent
+                        {
+                            ManifestId = request.Manifest.Id,
+                            SiteCode = request.Manifest.SiteCode,
+                            Docket = request.Manifest.Docket,
+                            Status = request.Manifest.Status,
+                            EmrSetup = request.Manifest.EmrSetup,
+                            EmrVersion = request.Manifest.EmrVersion,
+                            DwapiVersion = request.Manifest.DwapiVersion,                            
+                            Metrics = request.Manifest.Cargoes
+                        };
+                        await _mediator.Publish(notification, cancellationToken);
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e.Message);
+                    }
             return Result.Success();
+
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             Log.Error(e, "save manifest error");
             return Result.Failure(e.Message);

@@ -1,5 +1,7 @@
 ﻿using DwapiCentral.Mnch.Application.Commands;
 using DwapiCentral.Mnch.Application.DTOs;
+using DwapiCentral.Mnch.Application.Events;
+using DwapiCentral.Mnch.Domain.Repository;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -13,11 +15,13 @@ namespace DwapiCentral.Mnch.Controllers
     public class MnchController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
 
 
-        public MnchController(IMediator mediator)
+        public MnchController(IMediator mediator, IManifestRepository manifestRepository)
         {
             _mediator = mediator;
+            _manifestRepository = manifestRepository;
         }
 
         [HttpPost("api/Mnch/verify")]
@@ -37,6 +41,37 @@ namespace DwapiCentral.Mnch.Controllers
                 return StatusCode(500, e.Message);
             }
             
+        }
+
+        [HttpPost]
+        [Route("api/Mnch/Handshake")]
+        public async Task<IActionResult> Post(Guid session)
+        {
+            try
+            {
+                var responce = await _mediator.Send(new ProcessHandshakeCommand(session));
+
+                if (responce.IsSuccess)
+                {
+                    var message = new
+                    {
+                        session
+
+                    };
+
+                    return Ok(message);
+                }
+                else return BadRequest(responce);
+
+
+               
+          
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "handshake error");
+                return StatusCode(500, e.Message);
+            }
         }
 
 
@@ -60,14 +95,11 @@ namespace DwapiCentral.Mnch.Controllers
 
                 try
                 {
-                    var manifest = new SaveManifestCommand(manifestDto.Manifest);
+                    var id = BackgroundJob.Enqueue(() => SaveManifestJob(new SaveManifestCommand(manifestDto.Manifest)));
 
-                    var faciliyKey = await _mediator.Send(manifest, HttpContext.RequestAborted);
-
-                    BackgroundJob.Enqueue(() => SaveManifestJob(new ProcessManifestCommand(manifestDto.Manifest.SiteCode)));
                     return Ok(new
                     {
-                        FacilityKey = faciliyKey
+                        id
                     });
                 }
                 catch (Exception e)
@@ -82,7 +114,7 @@ namespace DwapiCentral.Mnch.Controllers
         [Queue("manifest")]
         [AutomaticRetry(Attempts = 3)]
         [DisplayName("{0}")]
-        public async Task SaveManifestJob(ProcessManifestCommand saveCommandManifest)
+        public async Task SaveManifestJob(SaveManifestCommand saveCommandManifest)
         {
             await _mediator.Send(saveCommandManifest);
 

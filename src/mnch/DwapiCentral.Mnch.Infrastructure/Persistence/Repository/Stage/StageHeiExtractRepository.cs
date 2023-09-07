@@ -184,8 +184,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                            UPDATE 
                                      Heis
 
-                               SET                                  
-                                    DateExtracted = @Date_Extracted,                                   
+                               SET                                
                                     FacilityName = @FacilityName,                                   
                                     DNAPCR1Date = @DNAPCR1Date,
                                     DNAPCR2Date = @DNAPCR2Date,

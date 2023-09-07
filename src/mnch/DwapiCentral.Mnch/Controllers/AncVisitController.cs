@@ -26,12 +26,12 @@ namespace DwapiCentral.Mnch.Controllers
 
 
         [HttpPost("api/Mnch/AncVisit")]
-        public async Task<IActionResult> ProcessAncVisit(MnchExtractsDto extract)
+        public async Task<IActionResult> ProcessAncVisit([FromBody] MnchExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try
             {
-                
+
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeAncVisitCommand(extract.AncVisitExtracts)));
 
                 var manifestId = await _manifestRepository.GetManifestId(extract.AncVisitExtracts.FirstOrDefault().SiteCode);

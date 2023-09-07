@@ -15,8 +15,8 @@ namespace DwapiCentral.Mnch.Domain.Model.Stage
         public string RecordUUID { get ; set ; }
         public string? FacilityName { get ; set ; }
         public string? Pkv { get ; set ; }
-        public string PatientMnchID { get ; set ; }
-        public string PatientHeiID { get ; set ; }
+        public string? PatientMnchID { get ; set ; }
+        public string? PatientHeiID { get ; set ; }
         public string? Gender { get ; set ; }
         public DateTime? DOB { get ; set ; }
         public DateTime? FirstEnrollmentAtMnch { get ; set ; }

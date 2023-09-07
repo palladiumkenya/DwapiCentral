@@ -48,7 +48,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                 var pks = extracts.Select(x => new StagePatientMnchExtract { PatientPk = x.PatientPk, SiteCode = x.SiteCode}).ToList();
 
                 //create new records or update the existing patientRecords
-                await Merge(manifestId, pks);
+                await Merge(manifestId, extracts);
 
 
                 await UpdateLivestage(manifestId, pks);
@@ -139,7 +139,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                             SET 
                                     LiveStage= @nextlivestage 
                             FROM 
-                                    StageClients 
+                                    StageMnchPatients 
                             WHERE 
                                     ManifestId = @manifestId AND 
                                     LiveStage= @livestage AND

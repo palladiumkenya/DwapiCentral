@@ -25,14 +25,14 @@ namespace DwapiCentral.Mnch.Controllers
 
 
         [HttpPost("api/Mnch/MotherBabyPair")]
-        public async Task<IActionResult> ProcessMotherBabyPair(MnchExtractsDto extract)
+        public async Task<IActionResult> ProcessMotherBabyPair([FromBody] MnchExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try
             {
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeMotherBabyPairCommand(extract.MotherBabyPairExtracts)));
-                var manifestId = await _manifestRepository.GetManifestId(extract.AncVisitExtracts.FirstOrDefault().SiteCode);
+                var manifestId = await _manifestRepository.GetManifestId(extract.MotherBabyPairExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.MotherBabyPairExtracts.Count, ManifestId = manifestId, SiteCode = extract.MotherBabyPairExtracts.First().SiteCode, ExtractName = "MotherBabyPairs" };
                 await _mediator.Publish(notification);
                 return Ok(new { BatchKey = id });

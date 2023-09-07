@@ -1,11 +1,14 @@
-﻿using DwapiCentral.Mnch.Domain.Model;
+﻿using CSharpFunctionalExtensions;
+using DwapiCentral.Mnch.Domain.Model;
 using DwapiCentral.Mnch.Domain.Repository;
 using DwapiCentral.Mnch.Infrastructure.Persistence.Context;
 using DwapiCentral.Shared.Exceptions;
 using MediatR;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,19 +24,17 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository
             _context = context;
         }
 
-        public Task<Docket?> GetDocketId(string docket)
+        public  Task<Docket?> GetDocketId(string docket)
         {
-            try
-            {
-                return _context.Dockets
+
+            
+                var Result =  _context.Dockets
                        .Include(x => x.Subscribers)
                        .AsTracking()
                        .FirstOrDefaultAsync(x => x.Id == docket);
-            }
-            catch (Exception ex)
-            {
-                throw new DocketNotFoundException(docket);
-            }
+
+                return Result;
+
         }
     }
 }

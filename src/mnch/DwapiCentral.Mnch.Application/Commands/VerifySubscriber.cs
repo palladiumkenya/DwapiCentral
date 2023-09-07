@@ -36,18 +36,25 @@ public class VerifySubscriberHandler : IRequestHandler<VerifySubscriber, Verific
 
     public async Task<VerificationResponse> Handle(VerifySubscriber request, CancellationToken cancellationToken)
     {
-        var docket = await _repository.GetDocketId(request.DocketId);
+        try
+        {
+            var docket = await _repository.GetDocketId(request.DocketId);
 
-        if (null == docket)
-            throw new DocketNotFoundException(request.DocketId);
+            if (null == docket)
+                throw new DocketNotFoundException(request.DocketId);
 
-        if (!docket.SubscriberExists(request.SubscriberId))
-            throw new SubscriberNotFoundException(request.SubscriberId);
+            if (!docket.SubscriberExists(request.SubscriberId))
+                throw new SubscriberNotFoundException(request.SubscriberId);
 
-        if (docket.SubscriberAuthorized(request.SubscriberId, request.AuthToken))
-            return new VerificationResponse(docket.Name, true);
+            if (docket.SubscriberAuthorized(request.SubscriberId, request.AuthToken))
+                return new VerificationResponse(docket.Name, true);
 
-        throw new SubscriberNotAuthorizedException(request.SubscriberId);
+            throw new SubscriberNotAuthorizedException(request.SubscriberId);
+        }
+        catch(Exception ex)
+        {
+            throw (ex);
+        }
     }
 }
 

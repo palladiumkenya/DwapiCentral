@@ -25,14 +25,14 @@ namespace DwapiCentral.Mnch.Controllers
 
 
         [HttpPost("api/Mnch/Hei")]
-        public async Task<IActionResult> ProcessHei(MnchExtractsDto extract)
+        public async Task<IActionResult> ProcessHei([FromBody] MnchExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try
             {
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeHeiExtractCommand(extract.HeiExtracts)));
-                var manifestId = await _manifestRepository.GetManifestId(extract.AncVisitExtracts.FirstOrDefault().SiteCode);
+                var manifestId = await _manifestRepository.GetManifestId(extract.HeiExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extract.HeiExtracts.Count, ManifestId = manifestId, SiteCode = extract.HeiExtracts.First().SiteCode, ExtractName = "Heis" };
                 await _mediator.Publish(notification);
 

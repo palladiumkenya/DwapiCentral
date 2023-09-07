@@ -1,6 +1,6 @@
 using System;
 
-namespace DwapiCentral.Mnch.Application.DTOs
+namespace DwapiCentral.Shared.Domain.Model.Common
 {
     public class HandshakeDto
     {

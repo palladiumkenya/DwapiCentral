@@ -24,14 +24,14 @@ namespace DwapiCentral.Mnch.Controllers
 
 
         [HttpPost("api/Mnch/CwcEnrolment")]
-        public async Task<IActionResult> ProcessCwcEnrolment(MnchExtractsDto extract)
+        public async Task<IActionResult> ProcessCwcEnrolment([FromBody] MnchExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try
             {
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeCwcEnrolmentCommand(extract.CwcEnrolmentExtracts)));
-                var manifestId = await _manifestRepository.GetManifestId(extract.AncVisitExtracts.FirstOrDefault().SiteCode);
+                var manifestId = await _manifestRepository.GetManifestId(extract.CwcEnrolmentExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extract.CwcEnrolmentExtracts.Count, ManifestId = manifestId, SiteCode = extract.CwcEnrolmentExtracts.First().SiteCode, ExtractName = "CwcEnrolments" };
                 await _mediator.Publish(notification);
 

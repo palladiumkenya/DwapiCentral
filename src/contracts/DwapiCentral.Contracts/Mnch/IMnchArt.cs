@@ -8,7 +8,7 @@ namespace DwapiCentral.Contracts.Mnch
 
         string? Pkv { get; set; }
         string PatientMnchID { get; set; }
-        string PatientHeiID { get; set; }
+        string? PatientHeiID { get; set; }
         string? FacilityName { get; set; }
         DateTime? RegistrationAtCCC { get; set; }
         DateTime? StartARTDate { get; set; }

@@ -1,14 +1,17 @@
 ﻿using Dapper;
+using DwapiCentral.Mnch.Application.DTOs;
 using DwapiCentral.Mnch.Domain.Model;
 using DwapiCentral.Mnch.Domain.Repository;
 using DwapiCentral.Mnch.Infrastructure.Persistence.Context;
 using DwapiCentral.Shared.Domain.Enums;
+using DwapiCentral.Shared.Domain.Model.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -118,11 +121,11 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository
             var sql = @"
                         SELECT TOP 1 Id 
                         FROM Manifests 
-                        WHERE SiteCode = @siteCode AND ManifestStatus = @status
+                        WHERE SiteCode = @siteCode
                         ORDER BY DateArrived DESC;
                     ";
 
-            var parameters = new { siteCode, status = ManifestStatus.Staged };
+            var parameters = new { siteCode, status = ManifestStatus.Processed };
 
             try
             {
@@ -144,35 +147,118 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository
 
         public int GetPatientCount(Guid id)
         {
-            
-            var cargo = _context.Cargoes.FirstOrDefault(x => x.ManifestId == id && x.Type == CargoType.Patient);
-            if (null != cargo)
-                return cargo.Items.Split(",").Length;
+            try
+            {
+                var cons = _context.Database.GetDbConnection();
 
-            return 0;
+                using (var transaction = cons.BeginTransaction())
+                {
+                    var cargo = _context.Database.GetDbConnection().QueryFirstOrDefault<Cargo>(
+
+                    "SELECT * FROM Cargoes WHERE ManifestId = @ManifestId AND Type = @Type",
+
+                    new { ManifestId = id, Type = CargoType.Patient },
+                    transaction);
+
+                    if (cargo != null)
+                    {
+                        var itemCount = cargo.Items.Split(',').Length;
+                        transaction.Commit();
+                        return itemCount;
+                    }
+
+                    transaction.Commit();
+                    return 0;
+                }
+            }
+            catch(Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
+          
         }
 
 
         public IEnumerable<Manifest> GetStaged(int siteCode)
         {
-           
-            var manifests = _context.Manifests.AsNoTracking().Where(x => x.ManifestStatus == ManifestStatus.Staged && x.SiteCode == siteCode)
-                .ToList();
-
-            foreach (var manifest in manifests)
+            var cons = _context.Database.GetConnectionString();
+            using (var connection = new SqlConnection(cons))
             {
-                manifest.Cargoes = _context.Cargoes.AsNoTracking()
-                    .Where(x => x.Type != CargoType.Patient && x.ManifestId == manifest.Id).ToList();
-            }
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
 
-            return manifests;
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        var manifests = connection.Query<Manifest>(
+                            "SELECT * FROM Manifests WHERE ManifestStatus = @Status AND SiteCode = @SiteCode",
+                            new { Status = ManifestStatus.Staged, SiteCode = siteCode },
+                            transaction: transaction);
+
+                        foreach (var manifest in manifests)
+                        {
+                            manifest.Cargoes = connection.Query<Cargo>(
+                                "SELECT * FROM Cargoes WHERE Type != @CargoType AND ManifestId = @ManifestId",
+                                new { CargoType = CargoType.Patient, ManifestId = manifest.Id },
+                                transaction: transaction).ToList();
+                        }
+
+                        transaction.Commit();
+                        return manifests;
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e.Message);
+                        throw;
+                    }
+                }
+            }
         }
         public void updateCount(Guid id, int clientCount)
         {
-            var sql =
-                $"UPDATE {nameof(_context.Manifests)} SET [{nameof(Manifest.Recieved)}]=@clientCount WHERE [{nameof(Manifest.Id)}]=@id";
-            _context.Database.GetDbConnection().Execute(sql, new { id, clientCount });
+            var cons = _context.Database.GetConnectionString();
+            var sql = @"
+                            UPDATE 
+                                    Manifests
+                            SET 
+                                    Recieved= @recieved ,
+                                    ManifestStatus = @manifestStatus                           
+                            WHERE 
+                                    Id = @id";
+            try
+            {
+                using (var connection = new SqlConnection(cons))
+                {
+                    if (connection.State != ConnectionState.Open)
+                        connection.Open();
+
+                    using (var transaction = connection.BeginTransaction())
+                    {
+
+
+                        connection.ExecuteAsync($"{sql}",
+                            new
+                            {
+                               
+                                recieved = clientCount,
+                                manifestStatus = ManifestStatus.Processed
+                               
+
+                            }, transaction, 0);
+
+                        transaction.Commit();
+                    }
+                }
+            }catch(Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
+                   
         }
+
 
         public async Task Save(Manifest manifest)
         {

@@ -14,7 +14,7 @@ public class ManifestReceivedEvent : INotification
     public EmrSetup EmrSetup { get; set; }
     public string EmrVersion { get; set; }
     public string DwapiVersion { get; set; }
-    public string Status { get; set; }
+    public string Status { get; set; }   
     public ICollection<Cargo> Metrics { get; set; }
 
 }
