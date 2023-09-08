@@ -14,6 +14,8 @@ namespace DwapiCentral.Prep.Domain.Models
         public Docket()
         {
         }
+
+        
         public bool SubscriberExists(string name)
         {
             return Subscribers.Any(x => x.Name.IsSameAs(name));

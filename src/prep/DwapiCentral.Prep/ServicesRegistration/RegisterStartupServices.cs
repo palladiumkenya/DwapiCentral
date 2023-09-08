@@ -29,7 +29,7 @@ public static class RegisterStartupServices
            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
            .UseSimpleAssemblyNameTypeSerializer()
            .UseRecommendedSerializerSettings()
-           .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+           .UseSqlServerStorage(builder.Configuration.GetConnectionString("LiveConnection"), new SqlServerStorageOptions
            {
                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
@@ -39,32 +39,30 @@ public static class RegisterStartupServices
            }));
 
         #region hangfire
-        try
-        {
-            Hangfire.GlobalConfiguration.Configuration.UseBatches(TimeSpan.FromDays(30));
-            ConfigureWorkers(builder.Configuration, builder.Services);
-            GlobalJobFilters.Filters.Add(new ProlongExpirationTimeAttribute());
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute() { Attempts = 3 });
-        }
-        catch (Exception e)
-        {
-            Log.Fatal(e, "Hangfire is down !");
-        }
+        Hangfire.GlobalConfiguration.Configuration.UseBatches(TimeSpan.FromDays(30));
+
+        var queues = new List<string>
+            {
+                 "manifest","patientprep", "prepadversevent", "prepbehaviour","prepcaretermination", "preplab","preppharmacy","prepvisit"
+            };
+        queues.ForEach(queue => ConfigureWorkers(builder.Configuration, builder.Services, new[] { queue.ToLower() }));
+
         #endregion
 
-        builder.Services.RegisterCtApp(builder.Configuration);
+        builder.Services.RegisterPrepApp(builder.Configuration);
             
             return builder;
         }
 
-    private static void ConfigureWorkers(IConfiguration configuration, IServiceCollection services)
+    private static void ConfigureWorkers(IConfiguration configuration, IServiceCollection services, string[] queues)
     {
 
         var hangfireQueueOptions = new BackgroundJobServerOptions
         {
-            ServerName = "DWAPIPREPMAIN",
-            WorkerCount = 1,
-
+            ServerName = $"{Environment.MachineName}:{queues[0].ToUpper()}",
+            WorkerCount = 5,
+            Queues = queues,
+            ShutdownTimeout = TimeSpan.FromMinutes(2),
         };
 
         services.AddHangfireServer(options =>

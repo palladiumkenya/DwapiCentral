@@ -1,20 +1,26 @@
-﻿using DwapiCentral.Prep.Application.Commands;
+﻿using DwapiCentral.Contracts.Common;
+using DwapiCentral.Prep.Application.Commands;
 using DwapiCentral.Prep.Application.DTOs;
+using DwapiCentral.Prep.Domain.Events;
+using DwapiCentral.Prep.Domain.Repository;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.ComponentModel;
 
 namespace DwapiCentral.Prep.Controllers
 {
     public class PrepLabController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
 
 
-        public PrepLabController(IMediator mediator)
+        public PrepLabController(IMediator mediator, IManifestRepository manifestRepository)
         {
             _mediator = mediator;
+           _manifestRepository= manifestRepository;
         }
 
 
@@ -26,6 +32,10 @@ namespace DwapiCentral.Prep.Controllers
             {
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepLabCommand(extract.PrepLabExtracts)));
+                var manifestId = await _manifestRepository.GetManifestId(extract.PrepLabExtracts.FirstOrDefault().SiteCode);
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepLabExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepLabExtracts.First().SiteCode, ExtractName = "PrepLabs" };
+                await _mediator.Publish(notification);
+
                 return Ok(new { BatchKey = id });
             }
             catch (Exception e)
@@ -35,7 +45,9 @@ namespace DwapiCentral.Prep.Controllers
             }
         }
 
-
+        [Queue("preplab")]
+        [AutomaticRetry(Attempts = 3)]
+        [DisplayName("{0}")]
         public async Task ProcessExtractCommand(MergePrepLabCommand saveExtractCommand)
         {
             await _mediator.Send(saveExtractCommand);

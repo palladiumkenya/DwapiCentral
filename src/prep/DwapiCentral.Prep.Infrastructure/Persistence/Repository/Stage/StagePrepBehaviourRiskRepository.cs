@@ -44,15 +44,17 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PrepBehaviourRisks" };
-                await _mediator.Publish(notification);
-
                 var pks = extracts.Select(x => x.Id).ToList();
 
                 // Merge
                 await MergeExtracts(manifestId, extracts);
 
                 await UpdateLivestage(manifestId, pks);
+
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PrepBehaviourRisks" };
+                await _mediator.Publish(notification);
+
             }
             catch (Exception e)
             {
@@ -81,16 +83,17 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, PrepNumber
+                                    SELECT PatientPK, SiteCode, PrepNumber,RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         ManifestId = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, PrepNumber
+                                    GROUP BY PatientPK, SiteCode, PrepNumber, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
-                                    AND p.PrepNumber = s.PrepNumber                                   
+                                    AND p.PrepNumber = s.PrepNumber  
+                                    AND p.RecordUUID = s.RecordUUID
                                                                    
                             )
                         ";
@@ -98,14 +101,14 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<PrepBehaviourRisk>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string PatientMnchID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.PrepNumber)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string PrepNumber,string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.PrepNumber,x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stagePrepBehavior
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.PrepNumber)) && x.ManifestId == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.PrepNumber,x.RecordUUID)) && x.ManifestId == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stagePrepBehavior, existingRecords);
@@ -131,12 +134,12 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+               
                 var latestRecordsDict = new Dictionary<string, StagePrepBehaviourRisk>();
 
-                foreach (var extract in sortedExtracts)
+                foreach (var extract in uniqueStageExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.PrepNumber}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.PrepNumber}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -161,7 +164,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageDrug
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.PrepNumber })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.PrepNumber ,x.RecordUUID})
                          .ToDictionary(
                              g => g.Key,
                              g => g.FirstOrDefault()
@@ -170,7 +173,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.PrepNumber },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.PrepNumber ,existingExtract.RecordUUID},
                         out var stageExtract)
                     )
                     {
@@ -184,7 +187,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                                      PrepBehaviourRisks
 
                                SET                                  
-                                    DateExtracted = @DateExtracted,                                   
+                                                               
                                     FacilityName = @FacilityName,                                   
                                     HtsNumber = @HtsNumber,
                                     VisitDate = @VisitDate,
@@ -215,7 +218,8 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
 
                              WHERE  PatientPk = @PatientPK
                                     AND SiteCode = @SiteCode
-                                    AND PrepNumber = @PrepNumber";
+                                    AND PrepNumber = @PrepNumber
+                                    AND RecordUUID = @RecordUUID";
 
                 using var connection = new SqlConnection(cons);
                 if (connection.State != ConnectionState.Open)

@@ -7,7 +7,7 @@ namespace DwapiCentral.Prep.ServicesRegistration;
 
 public static class RegisterAppServices
 {
-    public static IServiceCollection RegisterCtApp(this IServiceCollection services,IConfiguration configuration)
+    public static IServiceCollection RegisterPrepApp(this IServiceCollection services,IConfiguration configuration)
     {
         services.AddApplication(configuration);
         services.AddInfrastructure(configuration);

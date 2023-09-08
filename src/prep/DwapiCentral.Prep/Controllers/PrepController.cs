@@ -60,15 +60,13 @@ namespace DwapiCentral.Prep.Controllers
 
                 try
                 {
-                    var manifest = new SaveManifestCommand(manifestDto.Manifest);
+                    var id = BackgroundJob.Enqueue(() => SaveManifestJob(new SaveManifestCommand(manifestDto.Manifest)));
 
-                    var faciliyKey = await _mediator.Send(manifest, HttpContext.RequestAborted);
-
-                    BackgroundJob.Enqueue(() => SaveManifestJob(new ProcessManifestCommand(manifestDto.Manifest.SiteCode)));
                     return Ok(new
                     {
-                        FacilityKey = faciliyKey
+                        id
                     });
+
                 }
                 catch (Exception e)
                 {
@@ -79,7 +77,38 @@ namespace DwapiCentral.Prep.Controllers
             else return BadRequest(validFacility.Error.ToString());
         }
 
-        
+        [HttpPost]
+        [Route("api/Mnch/Handshake")]
+        public async Task<IActionResult> Post(Guid session)
+        {
+            try
+            {
+                var responce = await _mediator.Send(new ProcessHandshakeCommand(session));
+
+                if (responce.IsSuccess)
+                {
+                    var message = new
+                    {
+                        session
+
+                    };
+
+                    return Ok(message);
+                }
+                else return BadRequest(responce);
+
+
+
+
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "handshake error");
+                return StatusCode(500, e.Message);
+            }
+        }
+
+
         [HttpGet("api/Prep/Status")]
         public IActionResult GetStatus()
         {
@@ -101,8 +130,10 @@ namespace DwapiCentral.Prep.Controllers
             }
         }
 
-
-        public async Task SaveManifestJob(ProcessManifestCommand saveCommandManifest)
+        [Queue("manifest")]
+        [AutomaticRetry(Attempts = 3)]
+        [DisplayName("{0}")]
+        public async Task SaveManifestJob(SaveManifestCommand saveCommandManifest)
         {
             await _mediator.Send(saveCommandManifest);
 

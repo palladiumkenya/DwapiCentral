@@ -56,6 +56,9 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
             modelBuilder.Entity<PatientPrep>()
                 .HasKey(m => new { m.PatientPk, m.SiteCode, m.PrepNumber });
 
+            modelBuilder.Entity<StagePatientPrep>()
+                .HasKey(m => new { m.PatientPk, m.SiteCode, m.PrepNumber });
+
             modelBuilder.Entity<PatientPrep>()
                 .HasMany(c => c.PrepAdverseEvents)
                 .WithOne()
@@ -105,6 +108,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<PatientPrep>()
                .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber})
                .Table($"{nameof(PrepPatients)}");
+
             DapperPlusManager.Entity<StagePatientPrep>()
                 .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber})
                 .Table($"{nameof(StagePrepPatients)}");
@@ -128,9 +132,9 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
 
         public virtual void EnsureSeeded()
         {
-            SeedFromCsv<Docket>("DwapiCentral.Mnch.Infrastructure.Persistence.Seed.Docket.csv");
-            SeedFromCsv<Subscriber>("DwapiCentral.Mnch.Infrastructure.Persistence.Seed.Subscriber.csv");
-
+            SeedFromCsv<Docket>("DwapiCentral.Prep.Infrastructure.Persistence.Seed.Docket.csv");
+            SeedFromCsv<Subscriber>("DwapiCentral.Prep.Infrastructure.Persistence.Seed.Subscriber.csv");
+            //SeedFromCsv<MasterFacility>("DwapiCentral.Prep.Infrastructure.Persistence.Seed.MasterFacility.csv");
 
             SaveChanges();
 

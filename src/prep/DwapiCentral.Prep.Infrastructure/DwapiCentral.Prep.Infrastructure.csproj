@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Persistence\Seed\Docket.csv" />
+    <None Remove="Persistence\Seed\MasterFacility.csv" />
+    <None Remove="Persistence\Seed\Subscriber.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Persistence\Seed\Docket.csv" />
+    <EmbeddedResource Include="Persistence\Seed\MasterFacility.csv" />
+    <EmbeddedResource Include="Persistence\Seed\Subscriber.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.21" />

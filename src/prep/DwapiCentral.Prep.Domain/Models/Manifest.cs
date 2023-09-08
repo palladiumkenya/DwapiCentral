@@ -41,6 +41,18 @@ namespace DwapiCentral.Prep.Domain.Models
 
         }
 
+        public void SetHandshake()
+        {
+            End = DateTime.Now;
+            UpdateStatus("Complete");
+        }
+
+        public void UpdateStatus(string status)
+        {
+            Status = status;
+            StatusDate = DateTime.Now;
+        }
+
         public bool IsValid()
         {
             return SiteCode > 0 && Cargoes.Count > 0;
