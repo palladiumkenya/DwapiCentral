@@ -52,6 +52,7 @@ public class ProcessManifestCommandHandler : IRequestHandler<ProcessHandshakeCom
                 throw new ManifestNotFoundException(request.Session);
 
             // update handshake 
+            manifest.SetHandshake();
 
             await _manifestRepository.Update(manifest);
 

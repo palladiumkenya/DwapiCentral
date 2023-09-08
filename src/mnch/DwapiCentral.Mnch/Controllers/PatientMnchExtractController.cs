@@ -35,7 +35,7 @@ namespace DwapiCentral.Mnch.Controllers
 
                 var manifestId = await _manifestRepository.GetManifestId(extract.PatientMnchExtracts.FirstOrDefault().SiteCode);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extract.PatientMnchExtracts.Count, ManifestId = manifestId, SiteCode = extract.PatientMnchExtracts.First().SiteCode, ExtractName = "MnchPatients" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PatientMnchExtracts.Count, ManifestId = manifestId, SiteCode = extract.PatientMnchExtracts.First().SiteCode, ExtractName = "PatientMnchExtract" };
                 await _mediator.Publish(notification);
                 return Ok();
             }

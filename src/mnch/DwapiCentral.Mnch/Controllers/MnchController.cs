@@ -62,10 +62,6 @@ namespace DwapiCentral.Mnch.Controllers
                     return Ok(message);
                 }
                 else return BadRequest(responce);
-
-
-               
-          
             }
             catch (Exception e)
             {

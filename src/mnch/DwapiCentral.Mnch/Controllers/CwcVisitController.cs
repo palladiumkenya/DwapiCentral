@@ -34,7 +34,7 @@ namespace DwapiCentral.Mnch.Controllers
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeCwcVisitCommand(extract.CwcVisitExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.CwcVisitExtracts.FirstOrDefault().SiteCode);
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.CwcVisitExtracts.Count, ManifestId = manifestId, SiteCode = extract.CwcVisitExtracts.First().SiteCode, ExtractName = "CwcVisits" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.CwcVisitExtracts.Count, ManifestId = manifestId, SiteCode = extract.CwcVisitExtracts.First().SiteCode, ExtractName = "CwcVisitExtract" };
                 await _mediator.Publish(notification);
                 return Ok(new { BatchKey = id });
             }

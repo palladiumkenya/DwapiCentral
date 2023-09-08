@@ -33,7 +33,7 @@ namespace DwapiCentral.Mnch.Controllers
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeMnchImmunizationCommand(extract.MnchImmunizationExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.MnchImmunizationExtracts.FirstOrDefault().SiteCode);
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.MnchImmunizationExtracts.Count, ManifestId = manifestId, SiteCode = extract.MnchImmunizationExtracts.First().SiteCode, ExtractName = "MnchImmunizations" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.MnchImmunizationExtracts.Count, ManifestId = manifestId, SiteCode = extract.MnchImmunizationExtracts.First().SiteCode, ExtractName = "MnchImmunizationExtract" };
                 await _mediator.Publish(notification);
 
                 return Ok(new { BatchKey = id });
