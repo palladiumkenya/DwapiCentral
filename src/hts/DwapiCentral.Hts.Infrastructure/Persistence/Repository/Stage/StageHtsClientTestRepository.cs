@@ -53,7 +53,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClientTest" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClientTests" };
                 await _mediator.Publish(notification);
             }
             catch (Exception e)
@@ -264,6 +264,9 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                     }, null, 0);
 
             }
+
+
+
             catch (Exception e)
             {
                 Log.Error(e);

@@ -29,7 +29,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
         private readonly IMediator _mediator;
         private readonly string _stageName;
 
-        public StageHtsClientTracingRepository(HtsDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageHtsClientTracing)}s")
+        public StageHtsClientTracingRepository(HtsDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageHtsClientTracing)}")
         {
             _context = context;
             _mapper = mapper;
@@ -242,6 +242,11 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                     }, null, 0);
 
             }
+
+
+
+
+
             catch (Exception e)
             {
                 Log.Error(e);
