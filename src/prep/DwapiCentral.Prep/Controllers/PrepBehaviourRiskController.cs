@@ -24,7 +24,7 @@ namespace DwapiCentral.Prep.Controllers
         }
 
 
-        [HttpPost("api/Mnch/PrepBehaviourRisk")]
+        [HttpPost("api/Prep/PrepBehaviourRisk")]
         public async Task<IActionResult> ProcessPrepBehaviourRisk(PrepExtractsDto extract)
         {
             if (null == extract) return BadRequest();
@@ -33,7 +33,7 @@ namespace DwapiCentral.Prep.Controllers
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepBehaviourRiskCommand(extract.PrepBehaviourRiskExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.PrepBehaviourRiskExtracts.FirstOrDefault().SiteCode);
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepBehaviourRiskExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepBehaviourRiskExtracts.First().SiteCode, ExtractName = "PrepBehaviourRisks" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepBehaviourRiskExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepBehaviourRiskExtracts.First().SiteCode, ExtractName = "PrepBehaviourRiskExtract" };
                 await _mediator.Publish(notification);
                 return Ok(new { BatchKey = id });
             }

@@ -24,7 +24,7 @@ namespace DwapiCentral.Prep.Controllers
         }
 
 
-        [HttpPost("api/Mnch/PrepAdverseEvent")]
+        [HttpPost("api/Prep/PrepAdverseEvent")]
         public async Task<IActionResult> ProcessPrepAdverseEvent(PrepExtractsDto extract)
         {
             if (null == extract) return BadRequest();
@@ -33,7 +33,7 @@ namespace DwapiCentral.Prep.Controllers
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepAdverseEventCommand(extract.PrepAdverseEventExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.PrepAdverseEventExtracts.FirstOrDefault().SiteCode);
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepAdverseEventExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepAdverseEventExtracts.First().SiteCode, ExtractName = "PrepAdverseEvents" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepAdverseEventExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepAdverseEventExtracts.First().SiteCode, ExtractName = "PrepAdverseEventExtract" };
                 await _mediator.Publish(notification);
 
                 return Ok(new { BatchKey = id });

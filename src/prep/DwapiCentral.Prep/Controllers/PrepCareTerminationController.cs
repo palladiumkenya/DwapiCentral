@@ -25,7 +25,7 @@ namespace DwapiCentral.Prep.Controllers
         }
 
 
-        [HttpPost("api/Mnch/PrepCareTermination")]
+        [HttpPost("api/Prep/PrepCareTermination")]
         public async Task<IActionResult> ProcessPrepCt(PrepExtractsDto extract)
         {
             if (null == extract) return BadRequest();
@@ -34,7 +34,7 @@ namespace DwapiCentral.Prep.Controllers
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepCareTerminationCommand(extract.PrepCareTerminationExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.PrepCareTerminationExtracts.FirstOrDefault().SiteCode);
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepCareTerminationExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepCareTerminationExtracts.First().SiteCode, ExtractName = "PrepCareTerminations" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepCareTerminationExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepCareTerminationExtracts.First().SiteCode, ExtractName = "PrepCareTerminationExtract" };
                 await _mediator.Publish(notification);
 
                 return Ok(new { BatchKey = id });

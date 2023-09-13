@@ -52,7 +52,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                 await UpdateLivestage(manifestId, pks);
 
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PrepVisits" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PrepVisitExtract" };
                 await _mediator.Publish(notification);
 
             }

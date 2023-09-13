@@ -54,7 +54,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PrepPatients" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientPrepExtract" };
                 await _mediator.Publish(notification);
             }
             catch (Exception e)
@@ -100,7 +100,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                     }).AsList();
 
                     // Step 2: Check if each record exists in the central table
-                    List<PatientPrep> newRecords = new List<PatientPrep>();
+                    List<PatientPrepExtract> newRecords = new List<PatientPrepExtract>();
 
                     foreach (StagePatientPrep stageRecord in stageData)
                     {
@@ -138,15 +138,11 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                                     StagePrepPatients
                             SET 
                                     LiveStage= @nextlivestage 
-                            FROM 
-                                    StagePrepPatients 
+                           
                             WHERE 
                                     ManifestId = @manifestId AND 
-                                    LiveStage= @livestage AND
-                                    PatientPk = @patientPk AND 
-                                    SiteCode = @siteCode AND
-                                    PrepNumber = @prepNumber AND
-                                    RecordUUID = @recordUUID";
+                                    LiveStage= @livestage AND                                    
+                                    RecordUUID = @recordUUIDs";
             try
             {
 
@@ -158,22 +154,18 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
 
                     using (var transaction = connection.BeginTransaction())
                     {
-                        foreach (var pk in pks)
-                        {
+                        var recordUUIDs = pks.Select(pk => pk.RecordUUID).ToList();
 
-                            await connection.ExecuteAsync($"{sql}",
+                        await connection.ExecuteAsync($"{sql}",
                                 new
                                 {
                                     manifestId,
                                     livestage = LiveStage.Rest,
                                     nextlivestage = LiveStage.Assigned,
-                                    patientPk = pk.PatientPk,
-                                    siteCode = pk.SiteCode,
-                                    prepNumber = pk.PrepNumber,
-                                    recordUUID = pk.RecordUUID
+                                    recordUUIDs
 
                                 }, transaction, 0);
-                        }
+                        
                         transaction.Commit();
                     }
                 }
@@ -195,13 +187,13 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
         private void UpdateRecordInCentral(SqlConnection connection, StagePatientPrep stageRecord)
         {
 
-            PatientPrep updateRecord = _mapper.Map<PatientPrep>(stageRecord);
+            PatientPrepExtract updateRecord = _mapper.Map<PatientPrepExtract>(stageRecord);
             _context.Database.GetDbConnection().BulkMerge(updateRecord);
         }
 
         private void InsertRecordIntoCentral(SqlConnection connection, StagePatientPrep stageRecord)
         {
-            PatientPrep newRecord = _mapper.Map<PatientPrep>(stageRecord);
+            PatientPrepExtract newRecord = _mapper.Map<PatientPrepExtract>(stageRecord);
 
             _context.Database.GetDbConnection().BulkInsert(newRecord);
         }

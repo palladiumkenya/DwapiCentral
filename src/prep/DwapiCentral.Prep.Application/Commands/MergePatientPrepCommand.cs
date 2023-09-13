@@ -15,9 +15,9 @@ namespace DwapiCentral.Prep.Application.Commands;
 
 public class MergePatientPrepCommand : IRequest<Result>
 {
-    public IEnumerable<PatientPrep> PatientPreps { get; set; }
+    public IEnumerable<PatientPrepExtract> PatientPreps { get; set; }
 
-    public MergePatientPrepCommand(IEnumerable<PatientPrep> patientPreps)
+    public MergePatientPrepCommand(IEnumerable<PatientPrepExtract> patientPreps)
     {
         PatientPreps = patientPreps;
     }

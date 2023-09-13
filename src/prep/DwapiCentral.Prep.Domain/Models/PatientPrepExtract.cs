@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Prep.Domain.Models
 {
-    public class PatientPrep : IPatientPrep
+    public class PatientPrepExtract : IPatientPrep
     {
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
@@ -47,6 +47,8 @@ namespace DwapiCentral.Prep.Domain.Models
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+
         
 
         public virtual ICollection<PrepAdverseEvent> PrepAdverseEvents { get; set; } = new List<PrepAdverseEvent>();

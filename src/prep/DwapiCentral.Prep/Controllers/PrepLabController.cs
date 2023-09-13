@@ -24,7 +24,7 @@ namespace DwapiCentral.Prep.Controllers
         }
 
 
-        [HttpPost("api/Mnch/PrepLab")]
+        [HttpPost("api/Prep/PrepLab")]
         public async Task<IActionResult> ProcessPrepLab(PrepExtractsDto extract)
         {
             if (null == extract) return BadRequest();
@@ -33,7 +33,7 @@ namespace DwapiCentral.Prep.Controllers
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepLabCommand(extract.PrepLabExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.PrepLabExtracts.FirstOrDefault().SiteCode);
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepLabExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepLabExtracts.First().SiteCode, ExtractName = "PrepLabs" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepLabExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepLabExtracts.First().SiteCode, ExtractName = "PrepLabExtract" };
                 await _mediator.Publish(notification);
 
                 return Ok(new { BatchKey = id });

@@ -26,7 +26,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
         public DbSet<Docket> Dockets { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
 
-        public DbSet<PatientPrep> PrepPatients { get; set; }
+        public DbSet<PatientPrepExtract> PrepPatients { get; set; }
         public DbSet<PrepAdverseEvent> PrepAdverseEvents { get; set; }
         public DbSet<PrepBehaviourRisk> PrepBehaviourRisks { get; set; }
         public DbSet<PrepCareTermination> PrepCareTerminations { get; set; }
@@ -53,44 +53,44 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<PatientPrep>()
+            modelBuilder.Entity<PatientPrepExtract>()
                 .HasKey(m => new { m.PatientPk, m.SiteCode, m.PrepNumber });
 
             modelBuilder.Entity<StagePatientPrep>()
                 .HasKey(m => new { m.PatientPk, m.SiteCode, m.PrepNumber });
 
-            modelBuilder.Entity<PatientPrep>()
+            modelBuilder.Entity<PatientPrepExtract>()
                 .HasMany(c => c.PrepAdverseEvents)
                 .WithOne()
                 .HasForeignKey(f => new { f.PatientPk, f.SiteCode ,f.PrepNumber})
                 .IsRequired();
 
 
-            modelBuilder.Entity<PatientPrep>()
+            modelBuilder.Entity<PatientPrepExtract>()
                 .HasMany(c => c.PrepBehaviourRisks)
                 .WithOne()
                 .HasForeignKey(f => new { f.PatientPk, f.SiteCode,f.PrepNumber })
                 .IsRequired();
 
-            modelBuilder.Entity<PatientPrep>()
+            modelBuilder.Entity<PatientPrepExtract>()
                .HasMany(c => c.PrepCareTerminations)
                .WithOne()
                .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
                .IsRequired();
 
-            modelBuilder.Entity<PatientPrep>()
+            modelBuilder.Entity<PatientPrepExtract>()
                .HasMany(c => c.PrepLabs)
                .WithOne()
                .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
                .IsRequired();
 
-            modelBuilder.Entity<PatientPrep>()
+            modelBuilder.Entity<PatientPrepExtract>()
                .HasMany(c => c.PrepPharmacies)
                .WithOne()
                .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
                .IsRequired();
 
-            modelBuilder.Entity<PatientPrep>()
+            modelBuilder.Entity<PatientPrepExtract>()
                .HasMany(c => c.PrepVisits)
                .WithOne()
                .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
@@ -105,7 +105,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<Subscriber>().Key(x => x.Id).Table($"{nameof(Subscribers)}");
             DapperPlusManager.Entity<Manifest>().Key(x => x.Id).Table($"{nameof(Manifests)}");
 
-            DapperPlusManager.Entity<PatientPrep>()
+            DapperPlusManager.Entity<PatientPrepExtract>()
                .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber})
                .Table($"{nameof(PrepPatients)}");
 

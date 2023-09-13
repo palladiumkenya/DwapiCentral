@@ -15,7 +15,7 @@ namespace DwapiCentral.Prep.Application.Mappings
         public MappingProfile()
         {
             //central => stage
-            CreateMap<PatientPrep, StagePatientPrep>();
+            CreateMap<PatientPrepExtract, StagePatientPrep>();
             CreateMap<PrepAdverseEvent, StagePrepAdverseEvent>();
             CreateMap<PrepBehaviourRisk, StagePrepBehaviourRisk>();
             CreateMap<PrepCareTermination, StagePrepCareTermination>();
@@ -25,7 +25,7 @@ namespace DwapiCentral.Prep.Application.Mappings
 
 
             //stage => centralDb
-            CreateMap<StagePatientPrep, PatientPrep>();
+            CreateMap<StagePatientPrep, PatientPrepExtract>();
             CreateMap<StagePrepAdverseEvent, PrepAdverseEvent>();
             CreateMap<StagePrepBehaviourRisk, PrepBehaviourRisk>();
             CreateMap<StagePrepCareTermination, PrepCareTermination>();
