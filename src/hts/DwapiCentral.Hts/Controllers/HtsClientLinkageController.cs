@@ -35,7 +35,7 @@ namespace DwapiCentral.Hts.Controllers
                 
                 var manifestId = await _manifestRepository.GetManifestId(client.ClientLinkage.FirstOrDefault().SiteCode);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.ClientLinkage.Count(), ManifestId = manifestId, SiteCode = client.ClientLinkage.First().SiteCode, ExtractName = "HtsClientLinkageExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.ClientLinkage.Count(), ManifestId = manifestId, SiteCode = client.ClientLinkage.First().SiteCode, ExtractName = "HtsClientLinkage" };
 
                 await _mediator.Publish(notification);
 
