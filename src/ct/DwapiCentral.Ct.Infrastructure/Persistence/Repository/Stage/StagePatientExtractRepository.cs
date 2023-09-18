@@ -127,7 +127,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var pks = extracts.Select(x => new StagePatientExtract {PatientPk= x.PatientPk,SiteCode= x.SiteCode }).ToList();
+                var pks = extracts.Select(x => new StagePatientExtract {PatientPk= x.PatientPk,SiteCode= x.SiteCode,RecordUUID= x.RecordUUID }).ToList();
                
                 //update livestage from rest to assigned
                 await AssignAll(manifestId, pks);
@@ -264,18 +264,16 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
             var cons = _context.Database.GetConnectionString();
 
-            var sql = @"
+            var sql = $@"
                             UPDATE 
                                     StagePatientExtracts
                             SET 
                                     LiveStage= @nextlivestage 
-                            FROM 
-                                    StagePatientExtracts 
+                            
                             WHERE 
                                     LiveSession = @manifestId AND 
                                     LiveStage= @livestage AND
-                                    PatientPk = @patientPk AND 
-                                    SiteCode = @siteCode"; 
+                                    RecordUUID IN @recordUUIDs "; 
             try
             {
 
@@ -287,19 +285,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                     using (var transaction = connection.BeginTransaction())
                     {
-                        foreach (var pk in pks)
-                        {
+                        var recordUUIDs = pks.Select(pk => pk.RecordUUID).ToList();
 
-                            await connection.ExecuteAsync($"{sql}",
+                        await connection.ExecuteAsync($"{sql}",
                                 new
                                 {
                                     manifestId,
                                     livestage = LiveStage.Assigned,
                                     nextlivestage = LiveStage.Merged,
-                                    patientPk = pk.PatientPk,
-                                    siteCode = pk.SiteCode
+                                    recordUUIDs
                                 }, transaction, 0);
-                        }
+                        
                         transaction.Commit();
                     }
                 }
