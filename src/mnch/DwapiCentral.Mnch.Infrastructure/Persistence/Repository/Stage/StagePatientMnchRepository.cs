@@ -45,13 +45,11 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var pks = extracts.Select(x => new StagePatientMnchExtract { PatientPk = x.PatientPk, SiteCode = x.SiteCode}).ToList();
-
                 //create new records or update the existing patientRecords
                 await Merge(manifestId, extracts);
 
 
-                await UpdateLivestage(manifestId, pks);
+                await UpdateLivestage(manifestId, extracts);
 
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientMnchExtract" };
@@ -138,14 +136,10 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                                     StageMnchPatients
                             SET 
                                     LiveStage= @nextlivestage 
-                            FROM 
-                                    StageMnchPatients 
-                            WHERE 
+                           WHERE 
                                     ManifestId = @manifestId AND 
-                                    LiveStage= @livestage AND
-                                    PatientPk = @patientPk AND 
-                                    SiteCode = @siteCode AND
-                                    RecordUUID = @recordUUID";
+                                    LiveStage= @livestage AND                                   
+                                    RecordUUID IN @recordUUIDs";
             try
             {
 
@@ -157,21 +151,18 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
 
                     using (var transaction = connection.BeginTransaction())
                     {
-                        foreach (var pk in pks)
-                        {
+                        var recordUUIDs = pks.Select(pk => pk.RecordUUID).ToList();
 
-                            await connection.ExecuteAsync($"{sql}",
+                        await connection.ExecuteAsync($"{sql}",
                                 new
                                 {
                                     manifestId,
                                     livestage = LiveStage.Rest,
                                     nextlivestage = LiveStage.Assigned,
-                                    patientPk = pk.PatientPk,
-                                    siteCode = pk.SiteCode,
-                                    recordUUID = pk.RecordUUID
+                                    recordUUIDs
 
                                 }, transaction, 0);
-                        }
+                        
                         transaction.Commit();
                     }
                 }
