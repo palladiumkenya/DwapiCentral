@@ -41,7 +41,7 @@ namespace DwapiCentral.Hts.Controllers
         }
 
         [HttpPost]
-        [Route("api/Handshake")]
+        [Route("api/Hts/Handshake")]
         public async Task<IActionResult> Post(Guid session)
         {
             try
