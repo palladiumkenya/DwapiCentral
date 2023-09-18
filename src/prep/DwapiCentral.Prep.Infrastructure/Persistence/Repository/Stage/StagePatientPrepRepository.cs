@@ -46,7 +46,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
 
               
 
-                var pks = extracts.Select(x => new StagePatientPrep { PatientPk = x.PatientPk, SiteCode = x.SiteCode }).ToList();
+                var pks = extracts.Select(x => new StagePatientPrep { PatientPk = x.PatientPk, SiteCode = x.SiteCode, PrepNumber=x.PrepNumber, RecordUUID = x.RecordUUID }).ToList();
 
                 //create new records or update the existing patientRecords
                 await Merge(manifestId, pks);
@@ -130,10 +130,9 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
 
         private async Task UpdateLivestage(Guid manifestId, List<StagePatientPrep> pks)
         {
-
             var cons = _context.Database.GetConnectionString();
 
-            var sql = @"
+            var sql = $@"
                             UPDATE 
                                     StagePrepPatients
                             SET 
@@ -141,8 +140,9 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                            
                             WHERE 
                                     ManifestId = @manifestId AND 
-                                    LiveStage= @livestage AND                                    
-                                    RecordUUID = @recordUUIDs";
+                                    LiveStage = @livestage AND   
+                                    RecordUUID IN @recordUUIDs";
+                                    
             try
             {
 
@@ -157,7 +157,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                         var recordUUIDs = pks.Select(pk => pk.RecordUUID).ToList();
 
                         await connection.ExecuteAsync($"{sql}",
-                                new
+                               new
                                 {
                                     manifestId,
                                     livestage = LiveStage.Rest,

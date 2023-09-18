@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Prep.Infrastructure.Migrations
 {
-    public partial class _InitialPReP : Migration
+    public partial class _InitialPrep : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,7 +43,6 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sent = table.Column<int>(type: "int", nullable: false),
                     Recieved = table.Column<int>(type: "int", nullable: false),
                     DateLogged = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateArrived = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -55,7 +54,6 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     Start = table.Column<DateTime>(type: "datetime2", nullable: false),
                     End = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Tag = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ManifestStatus = table.Column<int>(type: "int", nullable: false),
                     Docket = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DwapiVersion = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -277,7 +275,6 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),

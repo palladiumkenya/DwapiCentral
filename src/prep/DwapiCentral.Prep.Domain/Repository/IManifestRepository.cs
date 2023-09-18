@@ -18,7 +18,7 @@ namespace DwapiCentral.Prep.Domain.Repository
         Task ClearFacility(int siteCode);
         Task ClearFacility(int siteCode, string project);
         int GetPatientCount(Guid id);
-        IEnumerable<Manifest> GetStaged(int sitecode);
+       
         void updateCount(Guid id, int clientCount);
     }
 }

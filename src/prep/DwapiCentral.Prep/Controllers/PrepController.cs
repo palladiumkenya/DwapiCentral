@@ -78,7 +78,7 @@ namespace DwapiCentral.Prep.Controllers
         }
 
         [HttpPost]
-        [Route("api/Mnch/Handshake")]
+        [Route("api/prep/Handshake")]
         public async Task<IActionResult> Post(Guid session)
         {
             try

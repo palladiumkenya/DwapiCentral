@@ -25,7 +25,7 @@ namespace DwapiCentral.Prep.Controllers
 
 
         [HttpPost("api/Prep/PrepLab")]
-        public async Task<IActionResult> ProcessPrepLab(PrepExtractsDto extract)
+        public async Task<IActionResult> ProcessPrepLab([FromBody] PrepExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try

@@ -25,7 +25,7 @@ namespace DwapiCentral.Prep.Controllers
 
 
         [HttpPost("api/Prep/PrepAdverseEvent")]
-        public async Task<IActionResult> ProcessPrepAdverseEvent(PrepExtractsDto extract)
+        public async Task<IActionResult> ProcessPrepAdverseEvent( [FromBody] PrepExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try

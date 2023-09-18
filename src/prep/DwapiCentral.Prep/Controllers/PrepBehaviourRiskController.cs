@@ -25,7 +25,7 @@ namespace DwapiCentral.Prep.Controllers
 
 
         [HttpPost("api/Prep/PrepBehaviourRisk")]
-        public async Task<IActionResult> ProcessPrepBehaviourRisk(PrepExtractsDto extract)
+        public async Task<IActionResult> ProcessPrepBehaviourRisk([FromBody] PrepExtractsDto extract)
         {
             if (null == extract) return BadRequest();
             try

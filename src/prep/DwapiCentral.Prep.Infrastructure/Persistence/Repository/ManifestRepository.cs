@@ -141,20 +141,6 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository
         }
 
 
-        public IEnumerable<Manifest> GetStaged(int siteCode)
-        {
-           
-            var manifests = _context.Manifests.AsNoTracking().Where(x => x.ManifestStatus == ManifestStatus.Staged && x.SiteCode == siteCode)
-                .ToList();
-
-            foreach (var manifest in manifests)
-            {
-                manifest.Cargoes = _context.Cargoes.AsNoTracking()
-                    .Where(x => x.Type != CargoType.Patient && x.ManifestId == manifest.Id).ToList();
-            }
-
-            return manifests;
-        }
         public void updateCount(Guid id, int clientCount)
         {
             var sql =

@@ -121,9 +121,6 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<DateTime?>("End")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ManifestStatus")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -132,9 +129,6 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Recieved")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sent")
                         .HasColumnType("int");
 
                     b.Property<Guid>("Session")
@@ -180,7 +174,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.ToTable("MasterFacilities");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PatientPrep", b =>
+            modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", b =>
                 {
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -943,9 +937,6 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<string>("HtsNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Inschool")
                         .HasColumnType("nvarchar(max)");
 
@@ -1666,7 +1657,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepAdverseEvent", b =>
                 {
-                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrep", null)
+                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepAdverseEvents")
                         .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1675,7 +1666,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepBehaviourRisk", b =>
                 {
-                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrep", null)
+                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepBehaviourRisks")
                         .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1684,7 +1675,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepCareTermination", b =>
                 {
-                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrep", null)
+                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepCareTerminations")
                         .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1693,7 +1684,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepLab", b =>
                 {
-                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrep", null)
+                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepLabs")
                         .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1702,7 +1693,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepPharmacy", b =>
                 {
-                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrep", null)
+                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepPharmacies")
                         .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1711,7 +1702,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepVisit", b =>
                 {
-                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrep", null)
+                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepVisits")
                         .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1737,7 +1728,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Navigation("Cargoes");
                 });
 
-            modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PatientPrep", b =>
+            modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", b =>
                 {
                     b.Navigation("PrepAdverseEvents");
 

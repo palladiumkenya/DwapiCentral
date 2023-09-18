@@ -10,7 +10,7 @@ namespace DwapiCentral.Prep.Domain.Models.Stage
 {
     public class StagePatientPrep : IPatientPrep
     {
-        public Guid Id { get; set; }
+        
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string RecordUUID { get; set; }

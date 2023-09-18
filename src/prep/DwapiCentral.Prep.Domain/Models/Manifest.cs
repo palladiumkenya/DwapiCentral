@@ -13,7 +13,7 @@ namespace DwapiCentral.Prep.Domain.Models
     {
         public int SiteCode { get; set; }
         public string Name { get; set; }
-        public int Sent { get; set; }
+        
         public int Recieved { get; set; }
         public DateTime DateLogged { get; set; }
         public DateTime DateArrived { get; set; } = DateTime.Now;       
@@ -25,7 +25,7 @@ namespace DwapiCentral.Prep.Domain.Models
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
         public string Tag { get; set; }
-        public ManifestStatus ManifestStatus { get; set; }
+        
         public List<Cargo> Cargoes { get; set; } = new List<Cargo>();
 
         public Guid Id { get; set; }
