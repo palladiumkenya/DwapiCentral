@@ -51,7 +51,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsPartnerTracing" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsPartnerTracingExtract" };
                 await _mediator.Publish(notification);
             }
             catch (Exception e)
