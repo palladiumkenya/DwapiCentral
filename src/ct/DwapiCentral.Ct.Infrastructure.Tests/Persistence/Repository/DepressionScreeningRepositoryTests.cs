@@ -32,11 +32,11 @@ public class DepressionScreeningRepositoryTests
 
 
         //Act
-        await _depressionScreeningRepository.MergeAsync(depressionScreening);
+        await _depressionScreeningRepository.InsertExtract(depressionScreening);
 
 
         //Assert
-        var savedPatientDepressionScreeningExtracts = _context.DepressionScreeningExtracts.ToList();
+        var savedPatientDepressionScreeningExtracts = _context.DepressionScreeningExtract.ToList();
         Assert.IsNotNull(savedPatientDepressionScreeningExtracts);
 
     }

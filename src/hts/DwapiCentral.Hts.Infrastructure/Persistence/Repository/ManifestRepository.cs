@@ -34,7 +34,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
 
         delete  from StageClients WHERE  SiteCode = @SiteCode;
         delete  from StageClientLinkages WHERE  SiteCode = @SiteCode;
-        delete  from StageClientPartners WHERE  SiteCode = @SiteCode;
+        delete  from StageHtsEligibilityExtract WHERE  SiteCode = @SiteCode;
         delete  from StageHtsClientTests WHERE  SiteCode = @SiteCode;
         delete  from StageHtsClientTracing WHERE  SiteCode = @SiteCode;
         delete  from StageHtsPartnerNotificationServices WHERE  SiteCode = @SiteCode;
@@ -71,7 +71,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
 
         delete  from StageClients WHERE  SiteCode = @SiteCode AND Project = @project;
         delete  from StageClientLinkages WHERE  SiteCode = @SiteCode AND Project = @project;
-        delete  from StageClientPartners WHERE  SiteCode = @SiteCode AND Project = @project;
+        delete  from StageHtsEligibilityExtract WHERE  SiteCode = @SiteCode AND Project = @project;
         delete  from StageHtsClientTests WHERE  SiteCode = @SiteCode AND Project = @project;
         delete  from StageHtsClientTracing WHERE  SiteCode = @SiteCode AND Project = @project;
         delete  from StageHtsPartnerNotificationServices WHERE  SiteCode = @SiteCode AND Project = @project;

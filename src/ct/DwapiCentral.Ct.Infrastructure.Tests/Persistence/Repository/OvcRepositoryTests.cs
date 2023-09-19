@@ -32,11 +32,11 @@ public class OvcRepositoryTests
 
 
         //Act
-        await _ovcRepository.MergeAsync(ovcExtracts);
+        await _ovcRepository.InsertExtract(ovcExtracts);
 
 
         //Assert
-        var savedPatientOvcExtracts = _context.OvcExtracts.ToList();
+        var savedPatientOvcExtracts = _context.OvcExtract.ToList();
         Assert.IsNotNull(savedPatientOvcExtracts);
 
     }

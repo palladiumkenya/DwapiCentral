@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
 
 namespace DwapiCentral.Ct.Application.Interfaces.Repository
 {

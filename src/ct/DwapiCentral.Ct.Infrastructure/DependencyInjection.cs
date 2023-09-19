@@ -44,7 +44,7 @@ public static class DependencyInjection
         services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
         services.AddScoped<IPatientPharmacyRepository, PatientPharmacyRepository>();
         services.AddScoped<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>();
-        services.AddScoped<IPatientArtExtractRepositorycs, PatientArtExtractRepository>();
+        services.AddScoped<IPatientArtExtractRepository, PatientArtExtractRepository>();
         services.AddScoped<IAllergiesChronicIllnessRepository,AllergiesChronicIllnessRepository>();
         services.AddScoped<IContactListingRepository, ContactListingRepository>();
         services.AddScoped<ICovidRepository, CovidRepository>();
@@ -59,7 +59,9 @@ public static class DependencyInjection
         services.AddScoped<IPatientAdverseEventRepository, PatientAdverseEventRepository>();
         services.AddScoped<IPatientBaseLinesRepository, PatientBaseLinesRepository>();
         services.AddScoped<IPatientStatusRepository, PatientStatusRepository>();
-        
+        services.AddScoped<ICervicalCancerScreeningRepository, CervicalCancerScreeningRepository>();
+        services.AddScoped<IIITRiskScoreRepository, IITRiskScoreRepository>();
+
 
         services.AddScoped<IStagePatientExtractRepository, StagePatientExtractRepository>();
         services.AddScoped<IStageVisitExtractRepository, StageVisitExtractRepository>();

@@ -2,7 +2,7 @@ using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Shared.Domain.Entities.Ct;
 using System.ComponentModel.DataAnnotations;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
     public class EnhancedAdherenceCounsellingExtract : IEnhancedAdherenceCounselling
     {

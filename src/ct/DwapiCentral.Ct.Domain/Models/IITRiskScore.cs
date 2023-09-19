@@ -17,7 +17,7 @@ namespace DwapiCentral.Ct.Domain.Models
         public string SourceSysUUID { get; set; }
         public string? RecordUUID { get; set; }
         public string? FacilityName { get; set; }
-        public decimal? RiskScore { get; set; }
+        public string? RiskScore { get; set; }
         public string? RiskFactors { get; set; }
         public string? RiskDescription { get; set; }
         public DateTime? RiskEvaluationDate { get; set; }

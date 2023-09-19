@@ -1,4 +1,4 @@
-﻿using DwapiCentral.Ct.Domain.Models.Extracts;
+﻿using DwapiCentral.Ct.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,9 @@ namespace DwapiCentral.Ct.Domain.Repository
 {
     public interface IPatientLaboratoryExtractRepository
     {
-        Task MergeLaboratoryExtracts(IEnumerable<PatientLaboratoryExtract> patientLabs);
+
+        Task<PatientLaboratoryExtract> GetPatientLabExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID);
+        Task UpdatePatientLabExtract(List<PatientLaboratoryExtract> patientLabExtract);
+        Task InsertPatientLabExtract(List<PatientLaboratoryExtract> patientLabExtract);
     }
 }

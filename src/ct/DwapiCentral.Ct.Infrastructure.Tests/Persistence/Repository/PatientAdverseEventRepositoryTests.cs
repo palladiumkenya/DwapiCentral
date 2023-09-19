@@ -31,11 +31,11 @@ public class PatientAdverseEventRepositoryTests
 
 
         //Act
-        await _patientAdverseRepository.MergeAsync(patientAdverseEvent);
+        await _patientAdverseRepository.InsertExtract(patientAdverseEvent);
 
 
         //Assert
-        var savedPatientAdverseExtracts = _context.PatientAdverseEventExtracts.ToList();
+        var savedPatientAdverseExtracts = _context.PatientAdverseEventExtract.ToList();
         Assert.IsNotNull(savedPatientAdverseExtracts);
 
     }

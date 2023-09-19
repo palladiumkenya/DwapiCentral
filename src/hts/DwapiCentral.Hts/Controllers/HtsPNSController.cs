@@ -1,4 +1,6 @@
 ﻿using DwapiCentral.Hts.Application.Commands;
+using DwapiCentral.Hts.Domain.Events;
+using DwapiCentral.Hts.Domain.Repository;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,15 +12,17 @@ namespace DwapiCentral.Hts.Controllers
     public class HtsPNSController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
 
 
-        public HtsPNSController(IMediator mediator)
+        public HtsPNSController(IMediator mediator, IManifestRepository manifestRepository)
         {
             _mediator = mediator;
+            _manifestRepository = manifestRepository;
         }
         // POST api/Hts/Pns
         [HttpPost("api/Hts/Pns")]
-        public IActionResult ProcessPns([FromBody] MergeHtsPNSCommand client)
+        public async Task<IActionResult> ProcessPns([FromBody] MergeHtsPNSCommand client)
         {
             if (null == client)
                 return BadRequest();
@@ -26,6 +30,12 @@ namespace DwapiCentral.Hts.Controllers
             try
             {
                 var id = BackgroundJob.Enqueue(() => SavePNSJob(client));
+
+                var manifestId = await _manifestRepository.GetManifestId(client.PartnerNotificationServices.FirstOrDefault().SiteCode);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.PartnerNotificationServices.Count(), ManifestId = manifestId, SiteCode = client.PartnerNotificationServices.First().SiteCode, ExtractName = "HtsPartnerNotificationServices" };
+
+                await _mediator.Publish(notification);
 
                 return Ok(new
                 {

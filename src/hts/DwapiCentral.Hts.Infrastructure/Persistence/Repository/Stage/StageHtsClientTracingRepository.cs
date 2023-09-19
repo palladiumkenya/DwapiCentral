@@ -29,7 +29,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
         private readonly IMediator _mediator;
         private readonly string _stageName;
 
-        public StageHtsClientTracingRepository(HtsDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageHtsClientTracing)}s")
+        public StageHtsClientTracingRepository(HtsDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageHtsClientTracing)}")
         {
             _context = context;
             _mapper = mapper;
@@ -44,15 +44,15 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClientTracing" };
-                await _mediator.Publish(notification);
-
                 var pks = extracts.Select(x => x.Id).ToList();
 
                 // Merge
                 await MergeExtracts(manifestId, extracts);
 
                 await UpdateLivestage(manifestId, pks);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClientTracing" };
+                await _mediator.Publish(notification);
             }
             catch (Exception e)
             {
@@ -81,31 +81,31 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, HtsNumber,  MAX(TracingDate) AS MaxTracingDate
+                                    SELECT PatientPK, SiteCode, HtsNumber, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         ManifestId = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, HtsNumber
+                                    GROUP BY PatientPK, SiteCode, HtsNumber,RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
                                     AND p.HtsNumber = s.HtsNumber                                   
-                                    AND p.TracingDate = s.MaxTracingDate                                    
+                                    AND p.RecordUUID = s.RecordUUID                                    
                             )
                         ";
 
                 var existingRecords = await connection.QueryAsync<HtsClientTracing>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string HtsNumber, DateTime? TracingDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.HtsNumber, x.TracingDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string HtsNumber, string? RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.HtsNumber, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageClientTracing
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.HtsNumber, x.TracingDate)) && x.ManifestId == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.HtsNumber, x.HtsNumber)) && x.ManifestId == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageClientTracing, existingRecords);
@@ -131,12 +131,12 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
+               
                 var latestRecordsDict = new Dictionary<string, StageHtsClientTracing>();
 
-                foreach (var extract in sortedExtracts)
+                foreach (var extract in uniqueStageExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.HtsNumber}_{extract.TracingDate}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.HtsNumber}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -161,7 +161,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageDrug
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.HtsNumber, x.TracingDate })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.HtsNumber, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.FirstOrDefault()
@@ -170,7 +170,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.HtsNumber, existingExtract.TracingDate },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.HtsNumber, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -178,7 +178,32 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     HtsClientTracing
+
+                               SET                                  
+                                    TracingType = @TracingType,
+                                    FacilityName = @FacilityName,
+                                    TracingDate = @TracingDate,
+                                    TracingOutcome = @TracingOutcome,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND HtsNumber = @HtsNumber
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {
@@ -217,6 +242,11 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                     }, null, 0);
 
             }
+
+
+
+
+
             catch (Exception e)
             {
                 Log.Error(e);

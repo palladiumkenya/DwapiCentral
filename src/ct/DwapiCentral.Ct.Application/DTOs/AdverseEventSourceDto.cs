@@ -1,4 +1,5 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 
 
@@ -27,6 +28,47 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public AdverseEventSourceDto()
+        {
+        }
+
+
+        public AdverseEventSourceDto(PatientAdverseEventExtract patientStatusExtract)
+        {
+
+            AdverseEvent = patientStatusExtract.AdverseEvent;
+            AdverseEventStartDate = patientStatusExtract.AdverseEventStartDate;
+            AdverseEventEndDate = patientStatusExtract.AdverseEventEndDate;
+            Severity = patientStatusExtract.Severity;
+            AdverseEventClinicalOutcome = patientStatusExtract.AdverseEventClinicalOutcome;
+            AdverseEventActionTaken = patientStatusExtract.AdverseEventActionTaken;
+            AdverseEventIsPregnant = patientStatusExtract.AdverseEventIsPregnant;
+            VisitDate = patientStatusExtract.VisitDate;
+            AdverseEventRegimen = patientStatusExtract.AdverseEventRegimen;
+            AdverseEventCause = patientStatusExtract.AdverseEventCause;
+            PatientPk = patientStatusExtract.PatientPk;
+            SiteCode = patientStatusExtract.SiteCode;
+           
+            Date_Created = patientStatusExtract.Date_Created;
+            Date_Last_Modified = patientStatusExtract.Date_Last_Modified;
+            RecordUUID = patientStatusExtract.RecordUUID;
+
+        }
+
+
+
+        public IEnumerable<AdverseEventSourceDto> GeneratePatientAdverseEventExtractDtOs(
+            IEnumerable<PatientAdverseEventExtract> extracts)
+        {
+            var statusExtractDtos = new List<AdverseEventSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new AdverseEventSourceDto(e));
+            }
+
+            return statusExtractDtos;
+        }
 
         public virtual bool IsValid()
         {

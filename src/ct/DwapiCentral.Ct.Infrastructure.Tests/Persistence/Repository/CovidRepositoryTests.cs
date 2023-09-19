@@ -32,11 +32,11 @@ public class CovidRepositoryTests
 
 
         //Act
-        await _covidRepository.MergeAsync(covidExtract);
+        await _covidRepository.InsertExtract(covidExtract);
 
 
         //Assert
-        var savedCovidExtracts = _context.CovidExtracts.ToList();
+        var savedCovidExtracts = _context.CovidExtract.ToList();
         Assert.IsNotNull(savedCovidExtracts);
 
     }

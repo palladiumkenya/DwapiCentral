@@ -31,11 +31,11 @@ public class ContactListingRepositoryTests
 
 
         //Act
-        await _contactListingRepository.MergeAsync(contactListing);
+        await _contactListingRepository.InsertExtract(contactListing);
 
 
         //Assert
-        var savedContactListingExtracts = _context.contactListingExtracts.ToList();
+        var savedContactListingExtracts = _context.ContactListingExtract.ToList();
         Assert.IsNotNull(savedContactListingExtracts);
     }
 }

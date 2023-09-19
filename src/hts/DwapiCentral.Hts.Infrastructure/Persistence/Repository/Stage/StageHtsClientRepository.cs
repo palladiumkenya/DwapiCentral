@@ -44,16 +44,15 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClients" };
+                //create new records or update the existing patientRecords
+                await Merge(manifestId, extracts);
+
+
+                await UpdateLivestage(manifestId, extracts);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "HtsClient" };
                 await _mediator.Publish(notification);
 
-                var pks = extracts.Select(x => new StageHtsClient { PatientPk = x.PatientPk, SiteCode = x.SiteCode, HtsNumber = x.HtsNumber }).ToList();
-
-                //create new records or update the existing patientRecords
-                await Merge(manifestId, pks);
-
-
-                await UpdateLivestage(manifestId, pks);
             }
             catch (Exception e)
             {
@@ -78,7 +77,8 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                                       LiveStage = @livestage AND
                                       PatientPk = @patientPk AND
                                       SiteCode = @siteCode   AND
-                                      HtsNumber = @htsNumber ";
+                                      HtsNumber = @htsNumber AND 
+                                      RecordUUID = @recordUUID";
 
                 foreach (StageHtsClient stageClient in stageClients)
                 {
@@ -91,7 +91,8 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                         livestage = LiveStage.Rest,
                         patientPk = stageClient.PatientPk,
                         siteCode = stageClient.SiteCode,
-                        htsNumber = stageClient.HtsNumber
+                        htsNumber = stageClient.HtsNumber,
+                        recordUUID = stageClient.RecordUUID
                     }).AsList();
 
                     // Step 2: Check if each record exists in the central table
@@ -129,22 +130,18 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
             var cons = _context.Database.GetConnectionString();
 
             var sql = @"
-                            UPDATE 
-                                    StageClients
-                            SET 
-                                    LiveStage= @nextlivestage 
-                            FROM 
-                                    StageClients 
-                            WHERE 
-                                    ManifestId = @manifestId AND 
-                                    LiveStage= @livestage AND
-                                    PatientPk = @patientPk AND 
-                                    SiteCode = @siteCode AND
-                                    HtsNumber = @htsNumber ";
+                UPDATE 
+                    StageClients
+                SET 
+                    LiveStage = @nextlivestage 
+                WHERE 
+                    ManifestId = @manifestId AND 
+                    LiveStage = @livestage AND                                  
+                    RecordUUID = @recordUUIDs";
+
+
             try
             {
-
-
                 using (var connection = new SqlConnection(cons))
                 {
                     if (connection.State != ConnectionState.Open)
@@ -152,34 +149,35 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
 
                     using (var transaction = connection.BeginTransaction())
                     {
-                        foreach (var pk in pks)
-                        {
+                       
+                        var recordUUIDs = pks.Select(pk => pk.RecordUUID).ToList();
 
-                            await connection.ExecuteAsync($"{sql}",
-                                new
-                                {
-                                    manifestId,
-                                    livestage = LiveStage.Rest,
-                                    nextlivestage = LiveStage.Assigned,
-                                    patientPk = pk.PatientPk,
-                                    siteCode = pk.SiteCode,
-                                    htsNumber = pk.HtsNumber
-                                }, transaction, 0);
-                        }
+                        await connection.ExecuteAsync($"{sql}",
+                            new
+                           {
+                               manifestId,
+                               livestage = LiveStage.Rest,
+                               nextlivestage = LiveStage.Assigned,
+                               recordUUIDs
+                           }, transaction, 0);
+
                         transaction.Commit();
                     }
                 }
+
+
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 throw;
             }
+            
         }
 
         private bool CheckRecordExistence(SqlConnection connection, StageHtsClient stageRecord)
         {
-            string selectQuery = "SELECT COUNT(*) FROM HtsClients WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND HtsNumber = @HtsNumber";
+            string selectQuery = "SELECT COUNT(*) FROM HtsClients WITH (NOLOCK) WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND HtsNumber = @HtsNumber AND RecordUUID= @RecordUUID";
 
             int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
             return count > 0;

@@ -9,7 +9,7 @@ using AutoMapper;
 using Dapper;
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Ct.Domain.Events;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -127,12 +127,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 //stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count,ManifestId=manifestId, SiteCode=extracts.First().SiteCode,ExtractName="PatientExtract" };
-                await _mediator.Publish(notification);
-
-                var pks = extracts.Select(x => new StagePatientExtract {PatientPk= x.PatientPk,SiteCode= x.SiteCode }).ToList();
+                var pks = extracts.Select(x => new StagePatientExtract {PatientPk= x.PatientPk,SiteCode= x.SiteCode,RecordUUID= x.RecordUUID }).ToList();
                
-                //update livestage var from rest to assigned
+                //update livestage from rest to assigned
                 await AssignAll(manifestId, pks);
 
                 //create new patientrecords or update the existing patientRecords
@@ -140,6 +137,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 
                 await UpdateLivestage(manifestId, pks);
+
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientExtract" };
+                await _mediator.Publish(notification);
+
             }
             catch (Exception e)
             {
@@ -262,18 +264,16 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
             var cons = _context.Database.GetConnectionString();
 
-            var sql = @"
+            var sql = $@"
                             UPDATE 
                                     StagePatientExtracts
                             SET 
                                     LiveStage= @nextlivestage 
-                            FROM 
-                                    StagePatientExtracts 
+                            
                             WHERE 
                                     LiveSession = @manifestId AND 
                                     LiveStage= @livestage AND
-                                    PatientPk = @patientPk AND 
-                                    SiteCode = @siteCode"; 
+                                    RecordUUID IN @recordUUIDs "; 
             try
             {
 
@@ -285,19 +285,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                     using (var transaction = connection.BeginTransaction())
                     {
-                        foreach (var pk in pks)
-                        {
+                        var recordUUIDs = pks.Select(pk => pk.RecordUUID).ToList();
 
-                            await connection.ExecuteAsync($"{sql}",
+                        await connection.ExecuteAsync($"{sql}",
                                 new
                                 {
                                     manifestId,
                                     livestage = LiveStage.Assigned,
                                     nextlivestage = LiveStage.Merged,
-                                    patientPk = pk.PatientPk,
-                                    siteCode = pk.SiteCode
+                                    recordUUIDs
                                 }, transaction, 0);
-                        }
+                        
                         transaction.Commit();
                     }
                 }
@@ -311,7 +309,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         private bool CheckRecordExistence(SqlConnection connection, StagePatientExtract stageRecord)
         {
-            string selectQuery = "SELECT COUNT(*) FROM PatientExtracts WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND @RecordUUID = RecordUUID";
+            string selectQuery = "SELECT COUNT(*) FROM PatientExtract WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND @RecordUUID = RecordUUID";
 
             int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
             return count > 0;

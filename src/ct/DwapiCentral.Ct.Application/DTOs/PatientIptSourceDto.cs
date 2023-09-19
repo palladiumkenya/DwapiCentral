@@ -1,4 +1,5 @@
 ﻿using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,57 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public PatientIptSourceDto()
+        {
+        }
+
+        public PatientIptSourceDto(IptExtract IptExtract)
+        {
+            FacilityName = IptExtract.FacilityName;
+            VisitID = IptExtract.VisitID;
+            VisitDate = IptExtract.VisitDate;
+            OnTBDrugs = IptExtract.OnTBDrugs;
+            OnIPT = IptExtract.OnIPT;
+            EverOnIPT = IptExtract.EverOnIPT;
+            Cough = IptExtract.Cough;
+            Fever = IptExtract.Fever;
+            NoticeableWeightLoss = IptExtract.NoticeableWeightLoss;
+            NightSweats = IptExtract.NightSweats;
+            Lethargy = IptExtract.Lethargy;
+            ICFActionTaken = IptExtract.ICFActionTaken;
+            TestResult = IptExtract.TestResult;
+            TBClinicalDiagnosis = IptExtract.TBClinicalDiagnosis;
+            ContactsInvited = IptExtract.ContactsInvited;
+            EvaluatedForIPT = IptExtract.EvaluatedForIPT;
+            StartAntiTBs = IptExtract.StartAntiTBs;
+            TBRxStartDate = IptExtract.TBRxStartDate;
+            TBScreening = IptExtract.TBScreening;
+            IPTClientWorkUp = IptExtract.IPTClientWorkUp;
+            StartIPT = IptExtract.StartIPT;
+            IndicationForIPT = IptExtract.IndicationForIPT;
+        
+
+            SiteCode = IptExtract.SiteCode;
+            PatientPk = IptExtract.PatientPk;
+          
+            Date_Created = IptExtract.Date_Created;
+            Date_Last_Modified = IptExtract.Date_Last_Modified;
+            RecordUUID = IptExtract.RecordUUID;
+
+        }
+
+
+
+        public IEnumerable<PatientIptSourceDto> GenerateIptExtractDtOs(IEnumerable<IptExtract> extracts)
+        {
+            var statusExtractDtos = new List<PatientIptSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new PatientIptSourceDto(e));
+            }
+            return statusExtractDtos;
+        }
 
         public virtual bool IsValid()
         {

@@ -91,5 +91,6 @@ namespace DwapiCentral.Hts.Domain.Model
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
+        public string? HtsRiskScore { get; set ; }
     }
 }

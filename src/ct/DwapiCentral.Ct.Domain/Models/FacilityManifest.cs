@@ -1,4 +1,5 @@
-﻿using DwapiCentral.Shared.Domain.Enums;
+﻿using DwapiCentral.Ct.Domain.Custom;
+using DwapiCentral.Shared.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -32,6 +33,22 @@ namespace DwapiCentral.Ct.Domain.Models
         public string Items => string.Join(",", PatientPKs);
 
         public string Info(string action) => $"{SiteCode}-{Name} [{PatientCount}] {action} Manifest";
+
+        public bool IsValid()
+        {
+            return SiteCode > 0 && PatientPKs.Count > 0;
+        }
+
+        public List<string> GetBatchPatientPKsJoined(int batchCount)
+        {
+            var list = new List<string>();
+            var batches = PatientPKs.Split(batchCount).ToList();
+            foreach (var batch in batches)
+            {
+                list.Add(string.Join(",", batch));
+            }
+            return list;
+        }
 
     }
 }

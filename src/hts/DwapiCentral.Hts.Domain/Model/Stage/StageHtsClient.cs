@@ -17,7 +17,7 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string? HtsNumber { get; set; }
-        public string Pkv { get; set; }
+        public string? Pkv { get; set; }
         public string? Occupation { get; set; }
         public string? PriorityPopulationType { get; set; }
         public string? HtsRecencyId { get; set; }        
@@ -27,7 +27,7 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public int? EncounterId { get; set; }
         public DateTime? VisitDate { get; set; }
         public DateTime? Dob { get; set; }
-        public string Gender { get; set; }
+        public string? Gender { get; set; }
         public string? MaritalStatus { get; set; }
         public string? KeyPopulationType { get; set; }
         public string? PopulationType { get; set; }

@@ -9,14 +9,14 @@ namespace DwapiCentral.Contracts.Hts
 {
       public interface IHtsClients : IExtract
     {
-         string HtsNumber { get; set; }
-         string FacilityName { get; set; }
+         string HtsNumber { get; set; }        
+         string? FacilityName { get; set; }
          string? Serial { get; set; }
          DateTime? StatusDate { get; set; }
          int? EncounterId { get; set; }
          DateTime? VisitDate { get; set; }
          DateTime? Dob { get; set; }
-         string Gender { get; set; }
+         string? Gender { get; set; }
          string? MaritalStatus { get; set; }
          string? KeyPopulationType { get; set; }
          string? PopulationType { get; set; }
@@ -25,10 +25,12 @@ namespace DwapiCentral.Contracts.Hts
          string? SubCounty { get; set; }
          string? Ward { get; set; }
          string? NUPI { get; set; }
-         string Pkv { get; set; }
+         string? Pkv { get; set; }
         string? Occupation { get; set; }
         string? PriorityPopulationType { get; set; }
         string? HtsRecencyId { get; set; }
+        
+
 
 
 

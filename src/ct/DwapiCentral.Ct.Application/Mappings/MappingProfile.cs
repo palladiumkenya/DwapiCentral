@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DwapiCentral.Ct.Application.DTOs;
 using DwapiCentral.Ct.Domain.Models;
-using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using System;
 using System.Collections.Generic;

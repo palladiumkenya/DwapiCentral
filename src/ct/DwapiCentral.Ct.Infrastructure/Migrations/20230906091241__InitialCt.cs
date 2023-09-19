@@ -64,7 +64,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientExtracts",
+                name: "PatientExtract",
                 columns: table => new
                 {
                     PatientPk = table.Column<int>(type: "int", nullable: false),
@@ -113,11 +113,12 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Processed = table.Column<bool>(type: "bit", nullable: false),
                     Voided = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientExtracts", x => new { x.PatientPk, x.SiteCode });
+                    table.PrimaryKey("PK_PatientExtract", x => new { x.PatientPk, x.SiteCode });
                 });
 
             migrationBuilder.CreateTable(
@@ -694,7 +695,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SourceSysUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RiskScore = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RiskScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskFactors = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskEvaluationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -790,6 +791,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1105,6 +1107,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
+                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1144,7 +1149,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AllergiesChronicIllnessExtracts",
+                name: "AllergiesChronicIllnessExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1179,17 +1184,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AllergiesChronicIllnessExtracts", x => x.Id);
+                    table.PrimaryKey("PK_AllergiesChronicIllnessExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AllergiesChronicIllnessExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_AllergiesChronicIllnessExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CervicalCancerScreeningExtracts",
+                name: "CervicalCancerScreeningExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1219,17 +1224,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CervicalCancerScreeningExtracts", x => x.Id);
+                    table.PrimaryKey("PK_CervicalCancerScreeningExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CervicalCancerScreeningExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_CervicalCancerScreeningExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "contactListingExtracts",
+                name: "ContactListingExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1259,17 +1264,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_contactListingExtracts", x => x.Id);
+                    table.PrimaryKey("PK_ContactListingExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_contactListingExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_ContactListingExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CovidExtracts",
+                name: "CovidExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1319,17 +1324,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CovidExtracts", x => x.Id);
+                    table.PrimaryKey("PK_CovidExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CovidExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_CovidExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DefaulterTracingExtracts",
+                name: "DefaulterTracingExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1358,17 +1363,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DefaulterTracingExtracts", x => x.Id);
+                    table.PrimaryKey("PK_DefaulterTracingExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DefaulterTracingExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_DefaulterTracingExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DepressionScreeningExtracts",
+                name: "DepressionScreeningExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1399,17 +1404,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DepressionScreeningExtracts", x => x.Id);
+                    table.PrimaryKey("PK_DepressionScreeningExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DepressionScreeningExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_DepressionScreeningExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DrugAlcoholScreeningExtracts",
+                name: "DrugAlcoholScreeningExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1432,17 +1437,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DrugAlcoholScreeningExtracts", x => x.Id);
+                    table.PrimaryKey("PK_DrugAlcoholScreeningExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DrugAlcoholScreeningExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_DrugAlcoholScreeningExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EnhancedAdherenceCounsellingExtracts",
+                name: "EnhancedAdherenceCounsellingExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1504,17 +1509,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EnhancedAdherenceCounsellingExtracts", x => x.Id);
+                    table.PrimaryKey("PK_EnhancedAdherenceCounsellingExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EnhancedAdherenceCounsellingExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_EnhancedAdherenceCounsellingExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GbvScreeningExtracts",
+                name: "GbvScreeningExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1539,17 +1544,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GbvScreeningExtracts", x => x.Id);
+                    table.PrimaryKey("PK_GbvScreeningExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GbvScreeningExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_GbvScreeningExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "IITRiskScoresExtracts",
+                name: "IITRiskScoresExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1558,7 +1563,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     SourceSysUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RiskScore = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RiskScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskFactors = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiskEvaluationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1572,17 +1577,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IITRiskScoresExtracts", x => x.Id);
+                    table.PrimaryKey("PK_IITRiskScoresExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_IITRiskScoresExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_IITRiskScoresExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "IptExtracts",
+                name: "IptExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1621,17 +1626,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IptExtracts", x => x.Id);
+                    table.PrimaryKey("PK_IptExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_IptExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_IptExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OtzExtracts",
+                name: "OtzExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1659,17 +1664,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OtzExtracts", x => x.Id);
+                    table.PrimaryKey("PK_OtzExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OtzExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_OtzExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OvcExtracts",
+                name: "OvcExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1696,17 +1701,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OvcExtracts", x => x.Id);
+                    table.PrimaryKey("PK_OvcExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OvcExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_OvcExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientAdverseEventExtracts",
+                name: "PatientAdverseEventExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1733,17 +1738,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientAdverseEventExtracts", x => x.Id);
+                    table.PrimaryKey("PK_PatientAdverseEventExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientAdverseEventExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_PatientAdverseEventExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientArtExtracts",
+                name: "PatientArtExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1785,17 +1790,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientArtExtracts", x => x.Id);
+                    table.PrimaryKey("PK_PatientArtExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientArtExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_PatientArtExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientBaselinesExtracts",
+                name: "PatientBaselinesExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1834,17 +1839,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientBaselinesExtracts", x => x.Id);
+                    table.PrimaryKey("PK_PatientBaselinesExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientBaselinesExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_PatientBaselinesExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientLaboratoryExtracts",
+                name: "PatientLaboratoryExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1861,6 +1866,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     SampleType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1869,17 +1875,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientLaboratoryExtracts", x => x.Id);
+                    table.PrimaryKey("PK_PatientLaboratoryExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientLaboratoryExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_PatientLaboratoryExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientPharmacyExtracts",
+                name: "PatientPharmacyExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1910,17 +1916,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientPharmacyExtracts", x => x.Id);
+                    table.PrimaryKey("PK_PatientPharmacyExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientPharmacyExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_PatientPharmacyExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientStatusExtracts",
+                name: "PatientStatusExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1947,17 +1953,17 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientStatusExtracts", x => x.Id);
+                    table.PrimaryKey("PK_PatientStatusExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientStatusExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_PatientStatusExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientVisitExtracts",
+                name: "PatientVisitExtract",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -2028,72 +2034,75 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
+                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientVisitExtracts", x => x.Id);
+                    table.PrimaryKey("PK_PatientVisitExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PatientVisitExtracts_PatientExtracts_PatientPk_SiteCode",
+                        name: "FK_PatientVisitExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
-                        principalTable: "PatientExtracts",
+                        principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AllergiesChronicIllnessExtracts_PatientPk_SiteCode",
-                table: "AllergiesChronicIllnessExtracts",
+                name: "IX_AllergiesChronicIllnessExtract_PatientPk_SiteCode",
+                table: "AllergiesChronicIllnessExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CervicalCancerScreeningExtracts_PatientPk_SiteCode",
-                table: "CervicalCancerScreeningExtracts",
+                name: "IX_CervicalCancerScreeningExtract_PatientPk_SiteCode",
+                table: "CervicalCancerScreeningExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_contactListingExtracts_PatientPk_SiteCode",
-                table: "contactListingExtracts",
+                name: "IX_ContactListingExtract_PatientPk_SiteCode",
+                table: "ContactListingExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CovidExtracts_PatientPk_SiteCode",
-                table: "CovidExtracts",
+                name: "IX_CovidExtract_PatientPk_SiteCode",
+                table: "CovidExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DefaulterTracingExtracts_PatientPk_SiteCode",
-                table: "DefaulterTracingExtracts",
+                name: "IX_DefaulterTracingExtract_PatientPk_SiteCode",
+                table: "DefaulterTracingExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DepressionScreeningExtracts_PatientPk_SiteCode",
-                table: "DepressionScreeningExtracts",
+                name: "IX_DepressionScreeningExtract_PatientPk_SiteCode",
+                table: "DepressionScreeningExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DrugAlcoholScreeningExtracts_PatientPk_SiteCode",
-                table: "DrugAlcoholScreeningExtracts",
+                name: "IX_DrugAlcoholScreeningExtract_PatientPk_SiteCode",
+                table: "DrugAlcoholScreeningExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_EnhancedAdherenceCounsellingExtracts_PatientPk_SiteCode",
-                table: "EnhancedAdherenceCounsellingExtracts",
+                name: "IX_EnhancedAdherenceCounsellingExtract_PatientPk_SiteCode",
+                table: "EnhancedAdherenceCounsellingExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GbvScreeningExtracts_PatientPk_SiteCode",
-                table: "GbvScreeningExtracts",
+                name: "IX_GbvScreeningExtract_PatientPk_SiteCode",
+                table: "GbvScreeningExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_IITRiskScoresExtracts_PatientPk_SiteCode",
-                table: "IITRiskScoresExtracts",
+                name: "IX_IITRiskScoresExtract_PatientPk_SiteCode",
+                table: "IITRiskScoresExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_IptExtracts_PatientPk_SiteCode",
-                table: "IptExtracts",
+                name: "IX_IptExtract_PatientPk_SiteCode",
+                table: "IptExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
@@ -2102,88 +2111,88 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 column: "ManifestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OtzExtracts_PatientPk_SiteCode",
-                table: "OtzExtracts",
+                name: "IX_OtzExtract_PatientPk_SiteCode",
+                table: "OtzExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OvcExtracts_PatientPk_SiteCode",
-                table: "OvcExtracts",
+                name: "IX_OvcExtract_PatientPk_SiteCode",
+                table: "OvcExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientAdverseEventExtracts_PatientPk_SiteCode",
-                table: "PatientAdverseEventExtracts",
+                name: "IX_PatientAdverseEventExtract_PatientPk_SiteCode",
+                table: "PatientAdverseEventExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientArtExtracts_PatientPk_SiteCode",
-                table: "PatientArtExtracts",
+                name: "IX_PatientArtExtract_PatientPk_SiteCode",
+                table: "PatientArtExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientBaselinesExtracts_PatientPk_SiteCode",
-                table: "PatientBaselinesExtracts",
+                name: "IX_PatientBaselinesExtract_PatientPk_SiteCode",
+                table: "PatientBaselinesExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientLaboratoryExtracts_PatientPk_SiteCode",
-                table: "PatientLaboratoryExtracts",
+                name: "IX_PatientLaboratoryExtract_PatientPk_SiteCode",
+                table: "PatientLaboratoryExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientPharmacyExtracts_PatientPk_SiteCode",
-                table: "PatientPharmacyExtracts",
+                name: "IX_PatientPharmacyExtract_PatientPk_SiteCode",
+                table: "PatientPharmacyExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientStatusExtracts_PatientPk_SiteCode",
-                table: "PatientStatusExtracts",
+                name: "IX_PatientStatusExtract_PatientPk_SiteCode",
+                table: "PatientStatusExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PatientVisitExtracts_PatientPk_SiteCode",
-                table: "PatientVisitExtracts",
+                name: "IX_PatientVisitExtract_PatientPk_SiteCode",
+                table: "PatientVisitExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AllergiesChronicIllnessExtracts");
+                name: "AllergiesChronicIllnessExtract");
 
             migrationBuilder.DropTable(
-                name: "CervicalCancerScreeningExtracts");
+                name: "CervicalCancerScreeningExtract");
 
             migrationBuilder.DropTable(
-                name: "contactListingExtracts");
+                name: "ContactListingExtract");
 
             migrationBuilder.DropTable(
-                name: "CovidExtracts");
+                name: "CovidExtract");
 
             migrationBuilder.DropTable(
-                name: "DefaulterTracingExtracts");
+                name: "DefaulterTracingExtract");
 
             migrationBuilder.DropTable(
-                name: "DepressionScreeningExtracts");
+                name: "DepressionScreeningExtract");
 
             migrationBuilder.DropTable(
-                name: "DrugAlcoholScreeningExtracts");
+                name: "DrugAlcoholScreeningExtract");
 
             migrationBuilder.DropTable(
-                name: "EnhancedAdherenceCounsellingExtracts");
+                name: "EnhancedAdherenceCounsellingExtract");
 
             migrationBuilder.DropTable(
                 name: "Facilities");
 
             migrationBuilder.DropTable(
-                name: "GbvScreeningExtracts");
+                name: "GbvScreeningExtract");
 
             migrationBuilder.DropTable(
-                name: "IITRiskScoresExtracts");
+                name: "IITRiskScoresExtract");
 
             migrationBuilder.DropTable(
-                name: "IptExtracts");
+                name: "IptExtract");
 
             migrationBuilder.DropTable(
                 name: "MasterFacilities");
@@ -2192,31 +2201,31 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 name: "Metrics");
 
             migrationBuilder.DropTable(
-                name: "OtzExtracts");
+                name: "OtzExtract");
 
             migrationBuilder.DropTable(
-                name: "OvcExtracts");
+                name: "OvcExtract");
 
             migrationBuilder.DropTable(
-                name: "PatientAdverseEventExtracts");
+                name: "PatientAdverseEventExtract");
 
             migrationBuilder.DropTable(
-                name: "PatientArtExtracts");
+                name: "PatientArtExtract");
 
             migrationBuilder.DropTable(
-                name: "PatientBaselinesExtracts");
+                name: "PatientBaselinesExtract");
 
             migrationBuilder.DropTable(
-                name: "PatientLaboratoryExtracts");
+                name: "PatientLaboratoryExtract");
 
             migrationBuilder.DropTable(
-                name: "PatientPharmacyExtracts");
+                name: "PatientPharmacyExtract");
 
             migrationBuilder.DropTable(
-                name: "PatientStatusExtracts");
+                name: "PatientStatusExtract");
 
             migrationBuilder.DropTable(
-                name: "PatientVisitExtracts");
+                name: "PatientVisitExtract");
 
             migrationBuilder.DropTable(
                 name: "StageAdverseEventExtracts");
@@ -2285,7 +2294,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 name: "Manifests");
 
             migrationBuilder.DropTable(
-                name: "PatientExtracts");
+                name: "PatientExtract");
         }
     }
 }

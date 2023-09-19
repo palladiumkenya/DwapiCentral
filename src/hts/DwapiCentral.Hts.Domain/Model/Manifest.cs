@@ -40,6 +40,18 @@ namespace DwapiCentral.Hts.Domain.Model
 
         }
 
+        public void SetHandshake()
+        {
+            End = DateTime.Now;
+            UpdateStatus("Queued");
+        }
+
+        public void UpdateStatus(string status)
+        {
+            Status = status;
+            StatusDate = DateTime.Now;
+        }
+
         public bool IsValid()
         {
             return SiteCode > 0 && Cargoes.Count > 0;

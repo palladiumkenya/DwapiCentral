@@ -18,8 +18,13 @@ public static class RegisterStartupServices
                 .AddJsonFile("serilog.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"serilog.{environment}.json", optional: true, reloadOnChange: true);
             
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
+            
+        builder.Services.AddControllers()
+             .AddJsonOptions(options =>
+             {
+                 options.JsonSerializerOptions.PropertyNamingPolicy = null; 
+             });
+        builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

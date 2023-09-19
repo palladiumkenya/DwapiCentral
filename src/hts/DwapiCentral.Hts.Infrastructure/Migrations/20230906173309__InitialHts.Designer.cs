@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Hts.Infrastructure.Migrations
 {
     [DbContext(typeof(HtsDbContext))]
-    [Migration("20230816124224__InitialHts_Updaterecorduuid")]
-    partial class _InitialHts_Updaterecorduuid
+    [Migration("20230906173309__InitialHts")]
+    partial class _InitialHts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,6 +112,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
 
@@ -119,11 +122,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsRecencyId")
@@ -148,7 +149,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Pkv")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PopulationType")
@@ -174,6 +174,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Ward")
                         .HasColumnType("nvarchar(max)");
@@ -205,6 +208,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EnrolledFacilityName")
@@ -294,7 +300,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EncounterId")
+                    b.Property<int?>("EncounterId")
                         .HasColumnType("int");
 
                     b.Property<string>("EntryPoint")
@@ -304,11 +310,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FinalTestResult")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsNumber")
@@ -499,6 +503,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Department")
                         .HasColumnType("nvarchar(max)");
 
@@ -551,6 +558,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("HtsNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("HtsRiskScore")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IsHealthWorker")
                         .HasColumnType("nvarchar(max)");
@@ -1057,6 +1067,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
 
@@ -1070,7 +1083,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsNumber")
@@ -1104,7 +1116,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Pkv")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PopulationType")
@@ -1167,6 +1178,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EnrolledFacilityName")
@@ -1260,7 +1274,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EncounterId")
+                    b.Property<int?>("EncounterId")
                         .HasColumnType("int");
 
                     b.Property<string>("EntryPoint")
@@ -1270,11 +1284,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacilityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FinalTestResult")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsNumber")
@@ -1473,6 +1485,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Department")
                         .HasColumnType("nvarchar(max)");
 
@@ -1486,7 +1501,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EncounterId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EverHadSTI")
@@ -1524,6 +1538,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HtsRiskScore")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IsHealthWorker")

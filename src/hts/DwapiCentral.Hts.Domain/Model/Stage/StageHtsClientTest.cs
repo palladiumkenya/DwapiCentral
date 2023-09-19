@@ -15,9 +15,9 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string HtsNumber { get; set; }
-        public int EncounterId { get; set; }
+        public int? EncounterId { get; set; }
         public DateTime? TestDate { get; set; }
-        public string FacilityName { get; set; }
+        public string? FacilityName { get; set; }
         public bool? Processed { get; set; }
         public string? Status { get; set; }
         public DateTime? StatusDate { get; set; }
@@ -29,7 +29,7 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public string? TestStrategy { get; set; }
         public string? TestResult1 { get; set; }
         public string? TestResult2 { get; set; }
-        public string FinalTestResult { get; set; }
+        public string? FinalTestResult { get; set; }
         public string? PatientGivenResult { get; set; }
         public string? TbScreening { get; set; }
         public string? ClientSelfTested { get; set; }

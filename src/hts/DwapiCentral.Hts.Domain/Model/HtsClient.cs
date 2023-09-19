@@ -11,17 +11,17 @@ namespace DwapiCentral.Hts.Domain.Model
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string HtsNumber { get; set; }
-        public string Pkv { get; set; }
+        public string? Pkv { get; set; }
         public string? Occupation { get; set; }
         public string? PriorityPopulationType { get; set; }
         public string? HtsRecencyId { get; set; }
-        public string FacilityName { get; set; }
+        public string? FacilityName { get; set; }
         public string? Serial { get; set; }
         public DateTime? StatusDate { get; set; }
         public int? EncounterId { get; set; }
         public DateTime? VisitDate { get; set; }
         public DateTime? Dob { get; set; }
-        public string Gender { get; set; }
+        public string? Gender { get; set; }
         public string? MaritalStatus { get; set; }        
         public string? KeyPopulationType { get; set; }
         public string? PopulationType { get; set; }
@@ -36,7 +36,7 @@ namespace DwapiCentral.Hts.Domain.Model
         public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
-        bool? IExtract.Voided { get; set; }
+        public bool? Voided { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
 

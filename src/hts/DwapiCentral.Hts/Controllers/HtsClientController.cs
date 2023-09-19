@@ -1,4 +1,7 @@
 ﻿using DwapiCentral.Hts.Application.Commands;
+using DwapiCentral.Hts.Domain.Events;
+using DwapiCentral.Hts.Domain.Repository;
+using DwapiCentral.Hts.Domain.Repository.Stage;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +14,15 @@ namespace DwapiCentral.Hts.Controllers
     {
 
         private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
+        private readonly IStageHtsClientRepository _stageRepository;
 
 
-        public HtsClientController(IMediator mediator)
+        public HtsClientController(IMediator mediator, IManifestRepository manifestRepository, IStageHtsClientRepository stageHtsClientRepository)
         {
             _mediator = mediator;
+            _manifestRepository = manifestRepository;
+            _stageRepository = stageHtsClientRepository;
         }
 
         // POST api/Hts/Clients
@@ -27,8 +34,21 @@ namespace DwapiCentral.Hts.Controllers
 
             try
             {
-              var id = BackgroundJob.Enqueue(() => SaveClientsJob(client));
-              
+
+                //satge Data
+
+                
+                var id = BatchJob.StartNew(x =>
+                    {
+                        x.Enqueue(() => SaveClientsJob(client));
+                    });
+               
+                var manifestId = await _manifestRepository.GetManifestId(client.Clients.FirstOrDefault().SiteCode);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.Clients.Count(), ManifestId = manifestId, SiteCode = client.Clients.First().SiteCode, ExtractName = "HtsClient" };
+
+                await _mediator.Publish(notification);
+
                 return Ok(new
                 {
                     BatchKey = id

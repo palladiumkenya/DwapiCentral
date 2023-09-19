@@ -4,7 +4,7 @@ using System.Reflection;
 using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -41,9 +41,6 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientPharmacyExtract" };
-                await _mediator.Publish(notification);
-
                 var pks = extracts.Select(x=>x.Id).ToList();
 
                 // assign > Assigned
@@ -54,6 +51,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientPharmacyExtract" };
+                await _mediator.Publish(notification);
 
             }
             catch (Exception e)
@@ -78,7 +78,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 };
                 var query = $@"
                             SELECT p.*
-                            FROM PatientPharmacyExtracts p 
+                            FROM PatientPharmacyExtract p 
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
@@ -180,7 +180,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var cons = _context.Database.GetConnectionString();
                 var sql = $@"
                            UPDATE 
-                                     PatientPharmacyExtracts
+                                     PatientPharmacyExtract
 
                                SET
                                     VisitID = @VisitID,

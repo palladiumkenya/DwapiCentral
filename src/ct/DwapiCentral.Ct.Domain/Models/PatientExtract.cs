@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Shared.Domain.Entities.Ct;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
 
     public class PatientExtract : IPatient
@@ -55,6 +55,7 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
+        public virtual bool Processed { get; set; }
         public bool? Voided { get; set; }
 
         public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();

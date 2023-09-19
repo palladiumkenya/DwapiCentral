@@ -1,4 +1,5 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 
 
@@ -50,6 +51,64 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
+
+        public CovidSourceDto()
+        {
+        }
+
+        public CovidSourceDto(CovidExtract CovidExtract)
+        {
+            FacilityName = CovidExtract.FacilityName;
+            VisitID = CovidExtract.VisitID;
+            Covid19AssessmentDate = CovidExtract.Covid19AssessmentDate;
+            ReceivedCOVID19Vaccine = CovidExtract.ReceivedCOVID19Vaccine;
+            DateGivenFirstDose = CovidExtract.DateGivenFirstDose;
+            FirstDoseVaccineAdministered = CovidExtract.FirstDoseVaccineAdministered;
+            DateGivenSecondDose = CovidExtract.DateGivenSecondDose;
+            SecondDoseVaccineAdministered = CovidExtract.SecondDoseVaccineAdministered;
+            VaccinationStatus = CovidExtract.VaccinationStatus;
+            VaccineVerification = CovidExtract.VaccineVerification;
+            BoosterGiven = CovidExtract.BoosterGiven;
+            BoosterDose = CovidExtract.BoosterDose;
+            BoosterDoseDate = CovidExtract.BoosterDoseDate;
+            EverCOVID19Positive = CovidExtract.EverCOVID19Positive;
+            COVID19TestDate = CovidExtract.COVID19TestDate;
+            PatientStatus = CovidExtract.PatientStatus;
+            AdmissionStatus = CovidExtract.AdmissionStatus;
+            AdmissionUnit = CovidExtract.AdmissionUnit;
+            MissedAppointmentDueToCOVID19 = CovidExtract.MissedAppointmentDueToCOVID19;
+            COVID19PositiveSinceLasVisit = CovidExtract.COVID19PositiveSinceLasVisit;
+            COVID19TestDateSinceLastVisit = CovidExtract.COVID19TestDateSinceLastVisit;
+            PatientStatusSinceLastVisit = CovidExtract.PatientStatusSinceLastVisit;
+            AdmissionStatusSinceLastVisit = CovidExtract.AdmissionStatusSinceLastVisit;
+            AdmissionStartDate = CovidExtract.AdmissionStartDate;
+            AdmissionEndDate = CovidExtract.AdmissionEndDate;
+            AdmissionUnitSinceLastVisit = CovidExtract.AdmissionUnitSinceLastVisit;
+            SupplementalOxygenReceived = CovidExtract.SupplementalOxygenReceived;
+            PatientVentilated = CovidExtract.PatientVentilated;
+            TracingFinalOutcome = CovidExtract.TracingFinalOutcome;
+            CauseOfDeath = CovidExtract.CauseOfDeath;
+            COVID19TestResult = CovidExtract.COVID19TestResult;
+            Sequence = CovidExtract.Sequence;
+            BoosterDoseVerified = CovidExtract.BoosterDoseVerified;
+            Date_Created = CovidExtract.Date_Created;
+            Date_Last_Modified = CovidExtract.Date_Last_Modified;
+            RecordUUID = CovidExtract.RecordUUID;
+
+            SiteCode = CovidExtract.SiteCode;
+            PatientPk= CovidExtract.PatientPk;
+        }
+
+        public IEnumerable<CovidSourceDto> GenerateCovidExtractDtOs(IEnumerable<CovidExtract> extracts)
+        {
+            var statusExtractDtos = new List<CovidSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new CovidSourceDto(e));
+            }
+            return statusExtractDtos;
+        }
+
 
         public virtual bool IsValid()
         {

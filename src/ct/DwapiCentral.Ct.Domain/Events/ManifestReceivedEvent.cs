@@ -17,9 +17,5 @@ public class ManifestReceivedEvent : INotification
     public string Status { get; set; }
     public ICollection<Metric> Metrics { get; set; }
 
-    //public ManifestReceivedEvent(Guid manifestId, int siteCode)
-    //{
-    //    ManifestId = manifestId;
-    //    SiteCode = siteCode;
-    //}
+   
 }

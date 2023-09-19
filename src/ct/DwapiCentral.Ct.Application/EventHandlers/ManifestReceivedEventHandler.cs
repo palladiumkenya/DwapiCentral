@@ -1,4 +1,5 @@
-﻿using DwapiCentral.Ct.Domain.Events;
+﻿using DwapiCentral.Ct.Application.Events;
+using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Shared.Domain.Model.Common;
 using MediatR;
 using Newtonsoft.Json;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Application.EventHandlers
 {
-    public class ManifestReceivedEventHandler : INotificationHandler<ManifestReceivedEvent>
+    public class ManifestReceivedEventHandler : INotificationHandler<ManifestDtoEvent>
     {
         private readonly IModel _channel;
         private readonly RabbitOptions _rabbitOptions;
@@ -23,7 +24,7 @@ namespace DwapiCentral.Ct.Application.EventHandlers
 
         }
 
-        public Task Handle(ManifestReceivedEvent notification, CancellationToken cancellationToken)
+        public Task Handle(ManifestDtoEvent notification, CancellationToken cancellationToken)
         {
             var message = JsonConvert.SerializeObject(notification);
             var body = Encoding.UTF8.GetBytes(message);

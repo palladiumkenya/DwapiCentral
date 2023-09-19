@@ -1,4 +1,6 @@
 ﻿using DwapiCentral.Hts.Application.Commands;
+using DwapiCentral.Hts.Domain.Events;
+using DwapiCentral.Hts.Domain.Repository;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,16 +12,17 @@ namespace DwapiCentral.Hts.Controllers
     public class HtsTestKitController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
 
-
-        public HtsTestKitController(IMediator mediator)
+        public HtsTestKitController(IMediator mediator, IManifestRepository manifestRepository)
         {
             _mediator = mediator;
+            _manifestRepository = manifestRepository;
         }
 
         // POST api/Hts/HtsTestKits
         [HttpPost("api/Hts/HtsTestKits")]
-        public IActionResult ProcessKits([FromBody] MergeHtsTestKitCommand client)
+        public async Task<IActionResult> ProcessKits([FromBody] MergeHtsTestKitCommand client)
         {
             if (null == client)
                 return BadRequest();
@@ -27,6 +30,13 @@ namespace DwapiCentral.Hts.Controllers
             try
             {
                 var id = BackgroundJob.Enqueue(() => SaveTestKitJob(client));
+
+                var manifestId = await _manifestRepository.GetManifestId(client.TestKits.FirstOrDefault().SiteCode);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.TestKits.Count(), ManifestId = manifestId, SiteCode = client.TestKits.First().SiteCode, ExtractName = "HtsTestKits" };
+
+                await _mediator.Publish(notification);
+
 
                 return Ok(new
                 {

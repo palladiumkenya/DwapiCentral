@@ -31,14 +31,14 @@ public class PatientPharmacyRepositoryTest
 
         //act
 
-        await _patientPharmacyRepository.MergePharmacyExtractsAsync(patientPharmacy);
+        await _patientPharmacyRepository.InsertExtract(patientPharmacy);
 
         
 
 
 
         //assert
-        var PharmacyExtractsAdded = _context.PatientPharmacyExtracts.ToList();
+        var PharmacyExtractsAdded = _context.PatientPharmacyExtract.ToList();
         Assert.NotNull(PharmacyExtractsAdded);
 
 

@@ -33,11 +33,11 @@ public class EnhancedAdherenceCounsellingRepositoryTests
 
 
         //Act
-        await _enhancedAdheranceCouncellingRepository.MergeAsync(enhancedAdheranceScreening);
+        await _enhancedAdheranceCouncellingRepository.InsertExtract(enhancedAdheranceScreening);
 
 
         //Assert
-        var savedPatientEnhanceAdhExtracts = _context.EnhancedAdherenceCounsellingExtracts.ToList();
+        var savedPatientEnhanceAdhExtracts = _context.EnhancedAdherenceCounsellingExtract.ToList();
         Assert.IsNotNull(savedPatientEnhanceAdhExtracts);
 
     }

@@ -34,11 +34,11 @@ public class IptRepositoryTests
 
 
         //Act
-        await _iptRepository.MergeAsync(iptExtracts);
+        await _iptRepository.InsertExtract(iptExtracts);
 
 
         //Assert
-        var savedPatientIptExtracts = _context.IptExtracts.ToList();
+        var savedPatientIptExtracts = _context.IptExtract.ToList();
         Assert.IsNotNull(savedPatientIptExtracts);
 
     }

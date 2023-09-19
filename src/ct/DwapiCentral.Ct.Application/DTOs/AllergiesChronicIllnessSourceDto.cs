@@ -1,4 +1,5 @@
 ﻿using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,49 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public AllergiesChronicIllnessSourceDto()
+        {
+        }
+
+
+        public AllergiesChronicIllnessSourceDto(AllergiesChronicIllnessExtract AllergiesChronicIllnessExtract)
+        {
+            FacilityName = AllergiesChronicIllnessExtract.FacilityName;
+            VisitID = AllergiesChronicIllnessExtract.VisitID;
+            VisitDate = AllergiesChronicIllnessExtract.VisitDate;
+            ChronicIllness = AllergiesChronicIllnessExtract.ChronicIllness;
+            ChronicOnsetDate = AllergiesChronicIllnessExtract.ChronicOnsetDate;
+            knownAllergies = AllergiesChronicIllnessExtract.knownAllergies;
+            AllergyCausativeAgent = AllergiesChronicIllnessExtract.AllergyCausativeAgent;
+            AllergicReaction = AllergiesChronicIllnessExtract.AllergicReaction;
+            AllergySeverity = AllergiesChronicIllnessExtract.AllergySeverity;
+            AllergyOnsetDate = AllergiesChronicIllnessExtract.AllergyOnsetDate;
+            Skin = AllergiesChronicIllnessExtract.Skin;
+            Eyes = AllergiesChronicIllnessExtract.Eyes;
+            ENT = AllergiesChronicIllnessExtract.ENT;
+            Chest = AllergiesChronicIllnessExtract.Chest;
+            CVS = AllergiesChronicIllnessExtract.CVS;
+            Abdomen = AllergiesChronicIllnessExtract.Abdomen;
+            CNS = AllergiesChronicIllnessExtract.CNS;
+            Genitourinary = AllergiesChronicIllnessExtract.Genitourinary;
+           
+            Date_Created = AllergiesChronicIllnessExtract.Date_Created;
+            Date_Last_Modified = AllergiesChronicIllnessExtract.Date_Last_Modified;
+            RecordUUID = AllergiesChronicIllnessExtract.RecordUUID;
+
+
+        }
+
+        public IEnumerable<AllergiesChronicIllnessSourceDto> GenerateAllergiesChronicIllnessExtractDtOs(IEnumerable<AllergiesChronicIllnessExtract> extracts)
+        {
+            var statusExtractDtos = new List<AllergiesChronicIllnessSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                statusExtractDtos.Add(new AllergiesChronicIllnessSourceDto(e));
+            }
+            return statusExtractDtos;
+        }
 
         public virtual bool IsValid()
         {
