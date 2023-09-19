@@ -69,10 +69,15 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+        public string? ZScore { get; set; }
+        public int? ZScoreAbsolute { get; set; }
+        public string? PaedsDisclosure { get; set; }
     }
 }

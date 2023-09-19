@@ -7,4 +7,5 @@ public interface IManifestRepository
     Task<Manifest> GetById(Guid id);
     Task Save(Manifest manifest);
     Task Update(Manifest manifest);
-   }
+    Task<Guid> GetManifestId(int siteCode);
+}

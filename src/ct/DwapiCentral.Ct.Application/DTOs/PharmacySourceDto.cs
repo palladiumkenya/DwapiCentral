@@ -1,4 +1,5 @@
 using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 
 
@@ -7,6 +8,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class PharmacySourceDto : IPharmacy
     {        
         public Guid Id { get; set; }
+        public string RecordUUID { get; set; }
         public int? VisitID { get; set; }
         public string? Drug { get; set; }
         public string? Provider { get; set; }
@@ -24,11 +26,54 @@ namespace DwapiCentral.Ct.Application.DTOs
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+
+        public PharmacySourceDto()
+        {
+
+        }
+
+        public PharmacySourceDto(PatientPharmacyExtract patientPharmacyExtract)
+        {
+            VisitID = patientPharmacyExtract.VisitID;
+            Drug = patientPharmacyExtract.Drug;
+            Provider = patientPharmacyExtract.Provider;
+            DispenseDate = patientPharmacyExtract.DispenseDate;
+            Duration = patientPharmacyExtract.Duration;
+            ExpectedReturn = patientPharmacyExtract.ExpectedReturn;
+            TreatmentType = patientPharmacyExtract.TreatmentType;
+            PeriodTaken = patientPharmacyExtract.PeriodTaken;
+            RegimenLine = patientPharmacyExtract.RegimenLine;
+            PeriodTaken = patientPharmacyExtract.PeriodTaken;
+            ProphylaxisType = patientPharmacyExtract.ProphylaxisType;
+            SiteCode = patientPharmacyExtract.SiteCode;
+            PatientPk = patientPharmacyExtract.PatientPk;
+           
+
+            RegimenChangedSwitched = patientPharmacyExtract.RegimenChangedSwitched;
+            RegimenChangeSwitchReason = patientPharmacyExtract.RegimenChangeSwitchReason;
+            StopRegimenReason = patientPharmacyExtract.StopRegimenReason;
+            StopRegimenDate = patientPharmacyExtract.StopRegimenDate;
+            Date_Created = patientPharmacyExtract.Date_Created;
+            Date_Last_Modified = patientPharmacyExtract.Date_Last_Modified;
+            RecordUUID = patientPharmacyExtract.RecordUUID;
+
+        }
+
+        public IEnumerable<PharmacySourceDto> GeneratePatientPharmacyExtractDtOs(IEnumerable<PatientPharmacyExtract> extracts)
+        {
+            var pharmacyExtractDtos = new List<PharmacySourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                pharmacyExtractDtos.Add(new PharmacySourceDto(e));
+            }
+            return pharmacyExtractDtos;
+        }
 
         public virtual bool IsValid()
         {

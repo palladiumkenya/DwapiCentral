@@ -1,4 +1,4 @@
-﻿using DwapiCentral.Ct.Domain.Models.Extracts;
+﻿using DwapiCentral.Ct.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace DwapiCentral.Ct.Domain.Repository
 {
     public interface IOvcRepository 
     {
-        Task MergeAsync(IEnumerable<OvcExtract> ovcExtracts);
+        Task<OvcExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID); Task UpdateExtract(List<OvcExtract> patientLabExtract); Task InsertExtract(List<OvcExtract> patientLabExtract);
     }
 }

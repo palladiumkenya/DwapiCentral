@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using DwapiCentral.Contracts.Ct;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
     public class PatientVisitExtract : IVisit
     {
         [Key]
-        public Guid Id{ get; set; }
+        public Guid Id { get; set; }
+        public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public int VisitId { get; set; }
@@ -36,9 +37,9 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public decimal? GestationAge { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
         public string? StabilityAssessment { get; set; }
-        public string?  DifferentiatedCare { get; set; }
+        public string? DifferentiatedCare { get; set; }
         public string? PopulationType { get; set; }
-        public string? KeyPopulationType { get; set; }       
+        public string? KeyPopulationType { get; set; }
         public string? VisitBy { get; set; }
         public decimal? Temp { get; set; }
         public int? PulseRate { get; set; }
@@ -68,14 +69,15 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? Genitourinary { get; set; }
         public DateTime? RefillDate { get; set; }
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
-        public DateTime? Created { get; set; }=DateTime.Now;
-        public DateTime? Updated { get; set;}
+        public DateTime? Created { get; set; } = DateTime.Now;
+        public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
-
-
-
-
+        public string? ZScore { get; set; }
+        public int? ZScoreAbsolute { get; set; }
+        public string? PaedsDisclosure { get; set; }
     }
 }

@@ -32,11 +32,11 @@ public class DefaulterTracingRepositoryTests
 
 
         //Act
-        await _defaulterTracingRepository.MergeAsync(defaulterTracing);
+        await _defaulterTracingRepository.InsertExtract(defaulterTracing);
 
 
         //Assert
-        var savedDefaulterTracingExtracts = _context.DefaulterTracingExtracts.ToList();
+        var savedDefaulterTracingExtracts = _context.DefaulterTracingExtract.ToList();
         Assert.IsNotNull(savedDefaulterTracingExtracts);
 
     }

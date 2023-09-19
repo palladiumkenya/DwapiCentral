@@ -35,10 +35,10 @@ public class PatientVisitExtractRepositoryTests
         var existingPatientVisits = TestHelper.GetTestPatientVisitExtractsUpdates();
 
         //Act
-        await _patientVisitExtractRepository.MergeAsync(existingPatientVisits);
+        await _patientVisitExtractRepository.InsertExtract(existingPatientVisits);
 
         //Assert
-        var patientVisits = _context.PatientVisitExtracts.ToList();
+        var patientVisits = _context.PatientVisitExtract.ToList();
         Assert.AreEqual(6,patientVisits.Count);
         
     }

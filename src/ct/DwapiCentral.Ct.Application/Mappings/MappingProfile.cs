@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DwapiCentral.Ct.Application.DTOs;
 using DwapiCentral.Ct.Domain.Models;
-using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using System;
 using System.Collections.Generic;
@@ -37,6 +36,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<AllergiesChronicIllnessSourceDto,AllergiesChronicIllnessExtract>();
             CreateMap<AdverseEventSourceDto,PatientAdverseEventExtract>();
             CreateMap<CervicalCancerScreeningSourceDto, CervicalCancerScreeningExtract>();
+            CreateMap<IITRiskScoreSourceDto, IITRiskScore>();
 
             //stage >> Extract
             CreateMap<StagePatientExtract, PatientExtract>();
@@ -59,6 +59,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<StageStatusExtract, PatientStatusExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
             CreateMap<StageVisitExtract, PatientVisitExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
             CreateMap<StageCervicalCancerScreeningExtract, CervicalCancerScreeningExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageIITRiskScore, IITRiskScore>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
 
             //DTO >> Stage
             CreateMap<PatientSourceDto, StagePatientExtract>();
@@ -81,6 +82,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<CovidSourceDto, StageCovidExtract>();
             CreateMap<DefaulterTracingSourceDto, StageDefaulterTracingExtract>();
             CreateMap<CervicalCancerScreeningSourceDto, StageCervicalCancerScreeningExtract>();
+            CreateMap<IITRiskScoreSourceDto, StageIITRiskScore>();
         }
     }
 }

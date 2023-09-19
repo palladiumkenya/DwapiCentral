@@ -1,6 +1,5 @@
 using Dapper;
 using DwapiCentral.Ct.Domain.Models;
-using DwapiCentral.Ct.Domain.Models.Extracts;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
 using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
@@ -33,7 +32,7 @@ public class PatientExtractRepositoryTests
         await _patientExtractRepository.MergeAsync(newPatients);
         
         // Assert
-        var savedPatient = _context.PatientExtracts.Find(3, -10000);
+        var savedPatient = _context.PatientExtract.Find(3, -10000);
         Assert.NotNull(savedPatient);
     }
     
@@ -52,7 +51,7 @@ public class PatientExtractRepositoryTests
         
         //var savedPatient = _context.Database.GetDbConnection().Query<PatientExtract>("write sql").FirstOrDefault();
         
-        var savedPatient = _context.PatientExtracts.Find(1, -10000);
+        var savedPatient = _context.PatientExtract.Find(1, -10000);
         Assert.AreEqual("xC01",savedPatient.CccNumber);
         Assert.AreEqual("N01",savedPatient.Nupi);
     }

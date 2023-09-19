@@ -10,6 +10,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StagePatientExtract : IStage, IPatient
     {
+        public string RecordUUID { get; set; }
         public string? CccNumber { get; set; }
         public string? Nupi { get; set; }
         public string? MpiId { get; set; }
@@ -50,6 +51,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; }

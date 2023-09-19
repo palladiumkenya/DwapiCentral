@@ -1,6 +1,6 @@
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Ct.Domain.Models;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+
 using DwapiCentral.Ct.Domain.Models.Stage;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -24,26 +24,27 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public DbSet<Facility> Facilities { get; set; }
         public DbSet<Manifest> Manifests { get; set; }
         public DbSet<Metric> Metrics { get; set; }
-        public DbSet<PatientExtract> PatientExtracts { get; set; }  
-        public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
-        public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
-        public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }
-        public DbSet<PatientArtExtract> PatientArtExtracts { get; set; }
-        public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
-        public DbSet<ContactListingExtract> contactListingExtracts { get; set; }
-        public DbSet<CovidExtract> CovidExtracts { get; set; }
-        public DbSet<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; }
-        public DbSet<DepressionScreeningExtract> DepressionScreeningExtracts { get; set; }
-        public DbSet<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; } 
-        public DbSet<EnhancedAdherenceCounsellingExtract> EnhancedAdherenceCounsellingExtracts { get; set; }
-        public DbSet<GbvScreeningExtract> GbvScreeningExtracts { get; set; }
-        public DbSet<IptExtract> IptExtracts { get; set; }
-        public DbSet<OvcExtract> OvcExtracts { get; set; }
-        public DbSet<OtzExtract> OtzExtracts { get; set; }
-        public DbSet<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } 
-        public DbSet<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; }
-        public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
-        public DbSet<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; }
+        public DbSet<PatientExtract> PatientExtract { get; set; }  
+        public DbSet<PatientVisitExtract> PatientVisitExtract { get; set; }
+        public DbSet<PatientPharmacyExtract> PatientPharmacyExtract { get; set; }
+        public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtract { get; set; }
+        public DbSet<PatientArtExtract> PatientArtExtract { get; set; }
+        public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtract { get; set; }
+        public DbSet<ContactListingExtract> ContactListingExtract { get; set; }
+        public DbSet<CovidExtract> CovidExtract { get; set; }
+        public DbSet<DefaulterTracingExtract> DefaulterTracingExtract { get; set; }
+        public DbSet<DepressionScreeningExtract> DepressionScreeningExtract { get; set; }
+        public DbSet<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtract { get; set; } 
+        public DbSet<EnhancedAdherenceCounsellingExtract> EnhancedAdherenceCounsellingExtract { get; set; }
+        public DbSet<GbvScreeningExtract> GbvScreeningExtract { get; set; }
+        public DbSet<IptExtract> IptExtract { get; set; }
+        public DbSet<OvcExtract> OvcExtract { get; set; }
+        public DbSet<OtzExtract> OtzExtract { get; set; }
+        public DbSet<PatientAdverseEventExtract> PatientAdverseEventExtract { get; set; } 
+        public DbSet<PatientBaselinesExtract> PatientBaselinesExtract { get; set; }
+        public DbSet<PatientStatusExtract> PatientStatusExtract { get; set; }
+        public DbSet<CervicalCancerScreeningExtract> CervicalCancerScreeningExtract { get; set; }
+        public virtual DbSet<IITRiskScore> IITRiskScoresExtract { get; set; }
 
         public virtual DbSet<StagePatientExtract> StagePatientExtracts { get; set; }
         public virtual DbSet<StageVisitExtract> StageVisitExtracts { get; set; }
@@ -65,7 +66,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
         public virtual DbSet<StageStatusExtract> StageStatusExtracts { get; set; }
         public virtual DbSet<StageGbvScreeningExtract> StageGbvScreeningExtracts { get; set; }
         public virtual DbSet<StageCervicalCancerScreeningExtract> StageCervicalCancerScreeningExtracts { get; set; }
-        //public virtual DbSet<SmartActionRegister> SmartActionRegisters { get; set; }
+        public virtual DbSet<StageIITRiskScore> StageIITRiskScoresExtracts { get; set; }
 
         public CtDbContext(DbContextOptions<CtDbContext> options) : base(options)
         {
@@ -196,6 +197,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
                 .IsRequired();
 
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.IITRiskScoresExtracts)
+               .WithOne()
+                .HasForeignKey(p => new { p.PatientPk, p.SiteCode })
+                .IsRequired();
+
             DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
 
             DapperPlusManager.Entity<Facility>().Key(x => x.Code).Table($"{nameof(Facilities)}");
@@ -204,83 +211,88 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             
             DapperPlusManager.Entity<PatientExtract>()
                 .Key(x => new { x.PatientPk, x.SiteCode })
-                .Table($"{nameof(PatientExtracts)}");
+                .Table($"{nameof(PatientExtract)}");
             
             DapperPlusManager.Entity<PatientVisitExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(PatientVisitExtracts)}");
+                .Table($"{nameof(PatientVisitExtract)}");
 
             DapperPlusManager.Entity<PatientPharmacyExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(PatientPharmacyExtracts)}");
+                .Table($"{nameof(PatientPharmacyExtract)}");
 
             DapperPlusManager.Entity<PatientLaboratoryExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(PatientLaboratoryExtracts)}");
+                .Table($"{nameof(PatientLaboratoryExtract)}");
 
             DapperPlusManager.Entity<PatientArtExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(PatientArtExtracts)}");
+                .Table($"{nameof(PatientArtExtract)}");
 
             DapperPlusManager.Entity<AllergiesChronicIllnessExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(AllergiesChronicIllnessExtracts)}");
+                .Table($"{nameof(AllergiesChronicIllnessExtract)}");
 
             DapperPlusManager.Entity<ContactListingExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(contactListingExtracts)}");
+                .Table($"{nameof(ContactListingExtract)}");
 
             DapperPlusManager.Entity<CovidExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(CovidExtracts)}");
+                .Table($"{nameof(CovidExtract)}");
 
             DapperPlusManager.Entity<DefaulterTracingExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(DefaulterTracingExtracts)}");
+                .Table($"{nameof(DefaulterTracingExtract)}");
 
             DapperPlusManager.Entity<DepressionScreeningExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(DepressionScreeningExtracts)}");
+                .Table($"{nameof(DepressionScreeningExtract)}");
 
             DapperPlusManager.Entity<DrugAlcoholScreeningExtract>()
                 .Key(x => x.Id)
-                .Table($"{nameof(DrugAlcoholScreeningExtracts)}");
+                .Table($"{nameof(DrugAlcoholScreeningExtract)}");
 
             DapperPlusManager.Entity<EnhancedAdherenceCounsellingExtract>()
                .Key(x => x.Id)
-               .Table($"{nameof(EnhancedAdherenceCounsellingExtracts)}");
+               .Table($"{nameof(EnhancedAdherenceCounsellingExtract)}");
 
             DapperPlusManager.Entity<GbvScreeningExtract>()
                .Key(x => x.Id)
-               .Table($"{nameof(GbvScreeningExtracts)}");
+               .Table($"{nameof(GbvScreeningExtract)}");
 
             DapperPlusManager.Entity<IptExtract>()
                .Key(x => x.Id)
-               .Table($"{nameof(IptExtracts)}");
+               .Table($"{nameof(IptExtract)}");
 
             DapperPlusManager.Entity<OvcExtract>()
               .Key(x => x.Id)
-              .Table($"{nameof(OvcExtracts)}");
+              .Table($"{nameof(OvcExtract)}");
 
             DapperPlusManager.Entity<OtzExtract>()
               .Key(x => x.Id)
-              .Table($"{nameof(OtzExtracts)}");
+              .Table($"{nameof(OtzExtract)}");
 
             DapperPlusManager.Entity<PatientAdverseEventExtract>()
               .Key(x => x.Id)
-              .Table($"{nameof(PatientAdverseEventExtracts)}");
+              .Table($"{nameof(PatientAdverseEventExtract)}");
 
             DapperPlusManager.Entity<PatientBaselinesExtract>()
               .Key(x => x.Id)
-              .Table($"{nameof(PatientBaselinesExtracts)}");
+              .Table($"{nameof(PatientBaselinesExtract)}");
 
             DapperPlusManager.Entity<PatientStatusExtract>()
               .Key(x => x.Id)
-              .Table($"{nameof(PatientStatusExtracts)}");
+              .Table($"{nameof(PatientStatusExtract)}");
 
             DapperPlusManager.Entity<CervicalCancerScreeningExtract>()
               .Key(x => x.Id)
-              .Table($"{nameof(CervicalCancerScreeningExtracts)}");
+              .Table($"{nameof(CervicalCancerScreeningExtract)}");
+
+            DapperPlusManager.Entity<IITRiskScore>()
+                .Key(x => x.Id)
+               .Table($"{nameof(IITRiskScoresExtract)}");
+
 
             DapperPlusManager.Entity<StagePatientExtract>()
                 .Key(x => new { x.PatientPk, x.SiteCode })
@@ -361,6 +373,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<StageCervicalCancerScreeningExtract>()
                 .Key(x => x.Id)
                 .Table($"{nameof(StageCervicalCancerScreeningExtracts)}");
+
+            DapperPlusManager.Entity<StageIITRiskScore>().Key(x => x.Id)
+              .Table($"{nameof(StageIITRiskScoresExtracts)}");
         }
 
         
@@ -384,168 +399,168 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 });
             }
 
-            if (!PatientExtracts.Any())
+            if (!PatientExtract.Any())
             {
-                PatientExtracts.AddRange(new List<PatientExtract>
+                PatientExtract.AddRange(new List<PatientExtract>
                 {
                     new PatientExtract() { PatientPk = 1, SiteCode = -10000, CccNumber = "C01" ,Gender="F"},
                     new PatientExtract() { PatientPk = 2, SiteCode = -10000, CccNumber = "C02" ,Gender="M" }
                 });
             }
             
-            if (!PatientVisitExtracts.Any())
+            if (!PatientVisitExtract.Any())
             {
-                PatientVisitExtracts.AddRange(new List<PatientVisitExtract>
+                PatientVisitExtract.AddRange(new List<PatientVisitExtract>
                 {
                     new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitId=001,VisitDate=DateTime.Today.AddDays(-9)},
                     new PatientVisitExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AEA2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=002,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
-            if (!PatientPharmacyExtracts.Any())
+            if (!PatientPharmacyExtract.Any())
             {
-                PatientPharmacyExtracts.AddRange(new List<PatientPharmacyExtract>
+                PatientPharmacyExtract.AddRange(new List<PatientPharmacyExtract>
                 {
                     new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=001,DispenseDate=DateTime.Today.AddDays(-9)},
                     new PatientPharmacyExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=002,DispenseDate=DateTime.Today.AddDays(-8)}
                 });
             }
-            if (!PatientLaboratoryExtracts.Any())
+            if (!PatientLaboratoryExtract.Any())
             {
-                PatientLaboratoryExtracts.AddRange(new List<PatientLaboratoryExtract>
+                PatientLaboratoryExtract.AddRange(new List<PatientLaboratoryExtract>
                 {
                     new PatientLaboratoryExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitId=101,OrderedByDate=DateTime.Today.AddDays(-9)},
                     new PatientLaboratoryExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitId=102,OrderedByDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!PatientArtExtracts.Any())
+            if (!PatientArtExtract.Any())
             {
-                PatientArtExtracts.AddRange(new List<PatientArtExtract>
+                PatientArtExtract.AddRange(new List<PatientArtExtract>
                 {
                     new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,LastARTDate=DateTime.Today.AddDays(-9)},
                     new PatientArtExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,LastARTDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!AllergiesChronicIllnessExtracts.Any())
+            if (!AllergiesChronicIllnessExtract.Any())
             {
-                AllergiesChronicIllnessExtracts.AddRange(new List<AllergiesChronicIllnessExtract>
+                AllergiesChronicIllnessExtract.AddRange(new List<AllergiesChronicIllnessExtract>
                 {
                     new AllergiesChronicIllnessExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new AllergiesChronicIllnessExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!contactListingExtracts.Any())
+            if (!ContactListingExtract.Any())
             {
-                contactListingExtracts.AddRange(new List<ContactListingExtract>
+                ContactListingExtract.AddRange(new List<ContactListingExtract>
                 {
                     new ContactListingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
                     new ContactListingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000}
                 });
             }
 
-            if (!CovidExtracts.Any())
+            if (!CovidExtract.Any())
             {
-                CovidExtracts.AddRange(new List<CovidExtract>
+                CovidExtract.AddRange(new List<CovidExtract>
                 {
                     new CovidExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,Covid19AssessmentDate=DateTime.Today.AddDays(-9)},
                     new CovidExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,Covid19AssessmentDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!DefaulterTracingExtracts.Any())
+            if (!DefaulterTracingExtract.Any())
             {
-                DefaulterTracingExtracts.AddRange(new List<DefaulterTracingExtract>
+                DefaulterTracingExtract.AddRange(new List<DefaulterTracingExtract>
                 {
                     new DefaulterTracingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new DefaulterTracingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!DepressionScreeningExtracts.Any())
+            if (!DepressionScreeningExtract.Any())
             {
-                DepressionScreeningExtracts.AddRange(new List<DepressionScreeningExtract>
+                DepressionScreeningExtract.AddRange(new List<DepressionScreeningExtract>
                 {
                     new DepressionScreeningExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new DepressionScreeningExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!DrugAlcoholScreeningExtracts.Any())
+            if (!DrugAlcoholScreeningExtract.Any())
             {
-                DrugAlcoholScreeningExtracts.AddRange(new List<DrugAlcoholScreeningExtract>
+                DrugAlcoholScreeningExtract.AddRange(new List<DrugAlcoholScreeningExtract>
                 {
                     new DrugAlcoholScreeningExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new DrugAlcoholScreeningExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
-            if (!EnhancedAdherenceCounsellingExtracts.Any())
+            if (!EnhancedAdherenceCounsellingExtract.Any())
             {
-                EnhancedAdherenceCounsellingExtracts.AddRange(new List<EnhancedAdherenceCounsellingExtract>
+                EnhancedAdherenceCounsellingExtract.AddRange(new List<EnhancedAdherenceCounsellingExtract>
                 {
                     new EnhancedAdherenceCounsellingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new EnhancedAdherenceCounsellingExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!GbvScreeningExtracts.Any())
+            if (!GbvScreeningExtract.Any())
             {
-                GbvScreeningExtracts.AddRange(new List<GbvScreeningExtract>
+                GbvScreeningExtract.AddRange(new List<GbvScreeningExtract>
                 {
                     new GbvScreeningExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new GbvScreeningExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!IptExtracts.Any())
+            if (!IptExtract.Any())
             {
-                IptExtracts.AddRange(new List<IptExtract>
+                IptExtract.AddRange(new List<IptExtract>
                 {
                     new IptExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new IptExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!OvcExtracts.Any())
+            if (!OvcExtract.Any())
             {
-                OvcExtracts.AddRange(new List<OvcExtract>
+                OvcExtract.AddRange(new List<OvcExtract>
                 {
                     new OvcExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new OvcExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!OtzExtracts.Any())
+            if (!OtzExtract.Any())
             {
-                OtzExtracts.AddRange(new List<OtzExtract>
+                OtzExtract.AddRange(new List<OtzExtract>
                 {
                     new OtzExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000,VisitID=101,VisitDate=DateTime.Today.AddDays(-9)},
                     new OtzExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000,VisitID=102,VisitDate=DateTime.Today.AddDays(-8)}
                 });
             }
 
-            if (!PatientAdverseEventExtracts.Any())
+            if (!PatientAdverseEventExtract.Any())
             {
-                PatientAdverseEventExtracts.AddRange(new List<PatientAdverseEventExtract>
+                PatientAdverseEventExtract.AddRange(new List<PatientAdverseEventExtract>
                 {
                     new PatientAdverseEventExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
                     new PatientAdverseEventExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000}
                 });
             }
 
-            if (!PatientBaselinesExtracts.Any())
+            if (!PatientBaselinesExtract.Any())
             {
-                PatientBaselinesExtracts.AddRange(new List<PatientBaselinesExtract>
+                PatientBaselinesExtract.AddRange(new List<PatientBaselinesExtract>
                 {
                     new PatientBaselinesExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
                     new PatientBaselinesExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000}
                 });
             }
 
-            if (!PatientStatusExtracts.Any())
+            if (!PatientStatusExtract.Any())
             {
-                PatientStatusExtracts.AddRange(new List<PatientStatusExtract>
+                PatientStatusExtract.AddRange(new List<PatientStatusExtract>
                 {
                     new PatientStatusExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE1-C680C13AC8E8"), PatientPk = 1, SiteCode = -10000},
                     new PatientStatusExtract() {Id=new Guid("017EC6FE-A65F-4F3E-AAE2-C680C13AC8E8"), PatientPk = 2, SiteCode = -10000 }

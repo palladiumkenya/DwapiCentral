@@ -32,11 +32,11 @@ public class DrugAlcoholScreeningRepositoryTest
 
 
         //Act
-        await _drugAlcoholScreening.MergeAsync(drugAlcoholScreening);
+        await _drugAlcoholScreening.InsertExtract(drugAlcoholScreening);
 
 
         //Assert
-        var savedPatientDrugAlcoholExtracts = _context.DrugAlcoholScreeningExtracts.ToList();
+        var savedPatientDrugAlcoholExtracts = _context.DrugAlcoholScreeningExtract.ToList();
         Assert.IsNotNull(savedPatientDrugAlcoholExtracts);
 
     }

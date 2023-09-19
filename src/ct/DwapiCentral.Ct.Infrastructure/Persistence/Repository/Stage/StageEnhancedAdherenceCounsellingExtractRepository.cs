@@ -3,7 +3,7 @@ using System.Reflection;
 using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -40,9 +40,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "EnhancedAdherenceCounsellingExtract" };
-                await _mediator.Publish(notification);
-
+              
                 var pks = extracts.Select(x => x.Id).ToList();
 
                 // assign > Assigned
@@ -52,6 +50,9 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 await MergeExtracts(manifestId, extracts);
 
                 await UpdateLivestage(manifestId, pks);
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "EnhancedAdherenceCounsellingExtract" };
+                await _mediator.Publish(notification);
 
             }
             catch (Exception e)
@@ -76,21 +77,20 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 };
                 var query = $@"
                             SELECT p.*
-                            FROM EnhancedAdherenceCounsellingExtracts p 
+                            FROM EnhancedAdherenceCounsellingExtract p 
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, VisitID, VisitDate, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, VisitID, VisitDate
+                                    GROUP BY PatientPK, SiteCode, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
-                                    AND p.VisitID = s.VisitID
-                                    AND p.VisitDate = s.VisitDate
+                                    AND p.RecordUUID = s.RecordUUID                                  
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )
                         ";
@@ -99,14 +99,14 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 var existingRecords = await connection.QueryAsync<EnhancedAdherenceCounsellingExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageEnhancedAdherance
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageEnhancedAdherance, existingRecords);
@@ -135,7 +135,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.VisitID}_{extract.VisitDate}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -160,7 +160,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageEnhancedAdherance
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
@@ -169,7 +169,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -177,7 +177,71 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     EnhancedAdherenceCounsellingExtract
+
+                               SET                                  
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,
+                                    SessionNumber = @SessionNumber,
+                                    DateOfFirstSession = @DateOfFirstSession,
+                                    PillCountAdherence = @PillCountAdherence,
+                                    MMAS4_1 = @MMAS4_1,
+                                    MMAS4_2 = @MMAS4_2,
+                                    MMAS4_3 = @MMAS4_3,
+                                    MMAS4_4 = @MMAS4_4,
+                                    MMSA8_1 = @MMSA8_1,
+                                    MMSA8_2 = @MMSA8_2,
+                                    MMSA8_3 = @MMSA8_3,
+                                    MMSA8_4 = @MMSA8_4,
+                                    MMSAScore = @MMSAScore,
+                                    EACRecievedVL = @EACRecievedVL,
+                                    EACVL = @EACVL,
+                                    EACVLConcerns = @EACVLConcerns,
+                                    EACVLThoughts = @EACVLThoughts,
+                                    EACWayForward = @EACWayForward,
+                                    EACCognitiveBarrier = @EACCognitiveBarrier,
+                                    EACBehaviouralBarrier_1 = @EACBehaviouralBarrier_1,
+                                    EACBehaviouralBarrier_2 = @EACBehaviouralBarrier_2,
+                                    EACBehaviouralBarrier_3 = @EACBehaviouralBarrier_3,
+                                    EACBehaviouralBarrier_4 = @EACBehaviouralBarrier_4,
+                                    EACBehaviouralBarrier_5 = @EACBehaviouralBarrier_5,
+                                    EACEmotionalBarriers_1 = @EACEmotionalBarriers_1,
+                                    EACEmotionalBarriers_2 = @EACEmotionalBarriers_2,
+                                    EACEconBarrier_1 = @EACEconBarrier_1,
+                                    EACEconBarrier_2 = @EACEconBarrier_2,
+                                    EACEconBarrier_3 = @EACEconBarrier_3,
+                                    EACEconBarrier_4 = @EACEconBarrier_4,
+                                    EACEconBarrier_5 = @EACEconBarrier_5,
+                                    EACEconBarrier_6 = @EACEconBarrier_6,
+                                    EACEconBarrier_7 = @EACEconBarrier_7,
+                                    EACEconBarrier_8 = @EACEconBarrier_8,
+                                    EACReviewImprovement = @EACReviewImprovement,
+                                    EACReviewMissedDoses = @EACReviewMissedDoses,
+                                    EACReviewStrategy = @EACReviewStrategy,
+                                    EACReferral = @EACReferral,
+                                    EACReferralApp = @EACReferralApp,
+                                    EACReferralExperience = @EACReferralExperience,
+                                    EACHomevisit = @EACHomevisit,
+                                    EACAdherencePlan = @EACAdherencePlan,
+                                    EACFollowupDate = @EACFollowupDate,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

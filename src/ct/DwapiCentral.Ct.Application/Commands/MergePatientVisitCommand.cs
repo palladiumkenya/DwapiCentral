@@ -2,7 +2,7 @@
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Application.Interfaces.Repository.Base;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
 using DwapiCentral.Ct.Domain.Repository.Stage;

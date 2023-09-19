@@ -3,7 +3,7 @@ using System.Reflection;
 using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -39,9 +39,6 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "contactListingExtract" };
-                await _mediator.Publish(notification);
-
                 var pks = extracts.Select(x => x.Id).ToList();
 
                 // assign > Assigned
@@ -51,6 +48,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await MergeExtracts(manifestId, extracts);
 
                 await UpdateLivestage(manifestId, pks);
+
+
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "ContactListingExtract" };
+
+                await _mediator.Publish(notification);
 
 
             }
@@ -78,19 +80,20 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 var query = $@"
                             SELECT p.*
-                            FROM contactListingExtracts p
+                            FROM contactListingExtract p
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT PatientPK, SiteCode,RecordUUID, MAX(Date_Created) AS MaxCreatedTime
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode
+                                    GROUP BY PatientPK, SiteCode, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode 
+                                    AND p.RecordUUID = s.RecordUUID
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )
                         ";
@@ -99,14 +102,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
               var existingRecords = await connection.QueryAsync<ContactListingExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode,string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode,x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageContactListing
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageContactListing, existingRecords);
@@ -138,7 +141,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -163,7 +166,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageContactListing
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
@@ -172,7 +175,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode,existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -180,7 +183,40 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     ContactListingExtract
+
+                               SET     
+                                                                        
+                                    PartnerPersonID = @PartnerPersonID,
+                                    ContactAge = @ContactAge,
+                                    ContactSex = @ContactSex,
+                                    ContactMaritalStatus = @ContactMaritalStatus,
+                                    RelationshipWithPatient = @RelationshipWithPatient,
+                                    ScreenedForIpv = @ScreenedForIpv,
+                                    IpvScreening = @IpvScreening,
+                                    IPVScreeningOutcome = @IPVScreeningOutcome,
+                                    CurrentlyLivingWithIndexClient = @CurrentlyLivingWithIndexClient,
+                                    KnowledgeOfHivStatus = @KnowledgeOfHivStatus,
+                                    PnsApproach = @PnsApproach,
+                                    ContactPatientPK = @ContactPatientPK,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

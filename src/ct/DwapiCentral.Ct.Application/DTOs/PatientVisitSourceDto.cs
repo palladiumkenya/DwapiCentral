@@ -1,15 +1,18 @@
 ﻿using DwapiCentral.Contracts.Ct;
+using DwapiCentral.Ct.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace DwapiCentral.Ct.Application.DTOs
 {
     public class PatientVisitSourceDto :IVisit
     {
         public Guid Id { get ; set ; }
+        public string RecordUUID { get; set; }
         public int VisitId { get ; set ; }
         public DateTime VisitDate { get ; set ; }
         public string? Service { get ; set ; }
@@ -71,11 +74,79 @@ namespace DwapiCentral.Ct.Application.DTOs
         public int PatientPk { get ; set ; }
         public int SiteCode { get ; set ; }
         public DateTime? Date_Created { get ; set ; }
+        public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
+        public string? ZScore { get ; set ; }
+        public int? ZScoreAbsolute { get ; set ; }
+        public string? PaedsDisclosure { get ; set ; }
+
+        public PatientVisitSourceDto()
+        {
+
+        }
+
+        public PatientVisitSourceDto(PatientVisitExtract patientVisitExtract)
+        {
+            VisitId = patientVisitExtract.VisitId;
+            VisitDate = patientVisitExtract.VisitDate;
+            Service = patientVisitExtract.Service;
+            VisitType = patientVisitExtract.VisitType;
+            WHOStage = patientVisitExtract.WHOStage;
+            WABStage = patientVisitExtract.WABStage;
+            Pregnant = patientVisitExtract.Pregnant;
+            LMP = patientVisitExtract.LMP;
+            EDD = patientVisitExtract.EDD;
+            Height = patientVisitExtract.Height;
+            Weight = patientVisitExtract.Weight;
+            BP = patientVisitExtract.BP;
+            OI = patientVisitExtract.OI;
+            OIDate = patientVisitExtract.OIDate;
+            SubstitutionFirstlineRegimenDate = patientVisitExtract.SubstitutionFirstlineRegimenDate;
+            SubstitutionFirstlineRegimenReason = patientVisitExtract.SubstitutionFirstlineRegimenReason;
+            SubstitutionSecondlineRegimenDate = patientVisitExtract.SubstitutionSecondlineRegimenDate;
+            SubstitutionSecondlineRegimenReason = patientVisitExtract.SubstitutionSecondlineRegimenReason;
+            SecondlineRegimenChangeDate = patientVisitExtract.SecondlineRegimenChangeDate;
+            SecondlineRegimenChangeReason = patientVisitExtract.SecondlineRegimenChangeReason;
+            Adherence = patientVisitExtract.Adherence;
+            AdherenceCategory = patientVisitExtract.AdherenceCategory;
+            FamilyPlanningMethod = patientVisitExtract.FamilyPlanningMethod;
+            PwP = patientVisitExtract.PwP;
+            GestationAge = patientVisitExtract.GestationAge;
+            NextAppointmentDate = patientVisitExtract.NextAppointmentDate;
+            SiteCode = patientVisitExtract.SiteCode;
+           
+            PatientPk = patientVisitExtract.PatientPk;
+            StabilityAssessment = patientVisitExtract.StabilityAssessment;
+            DifferentiatedCare = patientVisitExtract.DifferentiatedCare;
+            PopulationType = patientVisitExtract.PopulationType;
+            KeyPopulationType = patientVisitExtract.KeyPopulationType;
+            RefillDate = patientVisitExtract.RefillDate;
+            ZScore = patientVisitExtract.ZScore;
+            ZScoreAbsolute = patientVisitExtract.ZScoreAbsolute;
+            PaedsDisclosure = patientVisitExtract.PaedsDisclosure;
+            Date_Created = patientVisitExtract.Date_Created;
+            Date_Last_Modified = patientVisitExtract.Date_Last_Modified;
+            RecordUUID = patientVisitExtract.RecordUUID;
+
+        }
+
+
+
+        public IEnumerable<PatientVisitSourceDto> GeneratePatientVisitExtractDtOs(
+            IEnumerable<PatientVisitExtract> extracts)
+        {
+            var visitExtractDtos = new List<PatientVisitSourceDto>();
+            foreach (var e in extracts.ToList())
+            {
+                visitExtractDtos.Add(new PatientVisitSourceDto(e));
+            }
+
+            return visitExtractDtos;
+        }
 
         public virtual bool IsValid()
         {

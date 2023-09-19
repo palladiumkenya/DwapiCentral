@@ -18,8 +18,13 @@ public static class RegisterStartupServices
                 .AddJsonFile("serilog.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"serilog.{environment}.json", optional: true, reloadOnChange: true);
             
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
+            
+        builder.Services.AddControllers()
+             .AddJsonOptions(options =>
+             {
+                 options.JsonSerializerOptions.PropertyNamingPolicy = null; 
+             });
+        builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -45,7 +50,7 @@ public static class RegisterStartupServices
                 "manifest", "patient", "patientart", "patientpharmacy", "patientvisits", "patientstatus",
                 "covid","defaultertracing", "patientlabs", "patientbaselines", "patientadverseevents", "otz", "ovc",
                 "depressionscreening", "drugalcoholscreening", "enhancedadherencecounselling", "gbvscreening", "ipt",
-                "allergieschronicillness", "contactlisting", "default", "cervicalcancerscreening"
+                "allergieschronicillness", "contactlisting", "default", "cervicalcancerscreening", "iitriskscores"
             };
         queues.ForEach(queue => ConfigureWorkers(builder.Configuration,builder.Services,new[] { queue.ToLower() }));
 

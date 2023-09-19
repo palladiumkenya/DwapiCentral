@@ -4,12 +4,13 @@ using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Shared.Domain.Entities.Ct;
 
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
     public class PatientAdverseEventExtract : IPatientAdverse
     {
         [Key]
         public Guid Id { get ; set ; }
+        public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public DateTime VisitDate { get ; set ; }
@@ -23,6 +24,8 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? AdverseEventRegimen { get ; set ; }
         public string? AdverseEventCause { get ; set ; }             
         public DateTime? Date_Created { get ; set ; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get; set; } = DateTime.Now;

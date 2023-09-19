@@ -4,7 +4,7 @@ using AutoMapper;
 using Dapper;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
@@ -41,8 +41,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 // stage > Rest
                 _context.Database.GetDbConnection().BulkInsert(extracts);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "DefaulterTracingExtract" };
-                await _mediator.Publish(notification);
+              
 
                 var pks = extracts.Select(x => x.Id).ToList();
 
@@ -54,6 +53,9 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "DefaulterTracingExtract" };
+
+                await _mediator.Publish(notification);
             }
             catch (Exception e)
             {
@@ -78,21 +80,20 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 };
                 var query = $@"
                             SELECT p.*
-                            FROM DefaulterTracingExtracts p
+                            FROM DefaulterTracingExtract p
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, VisitID, VisitDate, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, VisitID, VisitDate
+                                    GROUP BY PatientPK, SiteCode, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
-                                    AND p.VisitID = s.VisitID
-                                    AND p.VisitDate = s.VisitDate
+                                    AND p.RecordUUID = s.RecordUUID                                    
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )
                         ";
@@ -102,14 +103,14 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
 
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, int? VisitID, DateTime VisitDate)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageDefaulter
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageDefaulter, existingRecords);
@@ -138,7 +139,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.VisitID}_{extract.VisitDate}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -163,7 +164,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
             {
                 //Update existing data
                 var stageDictionary = stageDefaulter
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.VisitID, x.VisitDate })
+                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                          .ToDictionary(
                              g => g.Key,
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
@@ -172,7 +173,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.VisitID, existingExtract.VisitDate },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
@@ -180,7 +181,38 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                     }
                 }
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     DefaulterTracingExtract
+
+                               SET                                  
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,                                   
+                                    EncounterId = @EncounterId,
+                                    TracingType = @TracingType,
+                                    TracingOutcome = @TracingOutcome,
+                                    AttemptNumber = @AttemptNumber,
+                                    IsFinalTrace = @IsFinalTrace,
+                                    TrueStatus = @TrueStatus,
+                                    CauseOfDeath = @CauseOfDeath,
+                                    Comments = @Comments,
+                                    BookingDate = @BookingDate,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

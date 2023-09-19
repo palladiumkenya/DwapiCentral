@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.Commands;
+using DwapiCentral.Ct.Application.Commands.DifferentialCommands;
 using DwapiCentral.Ct.Application.DTOs.Source;
+using DwapiCentral.Ct.Application.Profiles;
+using DwapiCentral.Ct.Domain.Events;
+using DwapiCentral.Shared.Custom;
 using Hangfire;
-using Infrastracture.Custom;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -50,6 +53,11 @@ namespace DwapiCentral.Ct.Controllers
                             x.Enqueue(() => Send($"{sourceBag}", new MergeCovidExtractsCommand(sourceBag)));
                         }, $"{sourceBag}");
                     }
+
+                    var notification = new ExtractsReceivedEvent { TotalExtractsStaged = sourceBag.Extracts.Count, ManifestId = sourceBag.ManifestId, SiteCode = sourceBag.Extracts.First().SiteCode, ExtractName = "CovidExtract" };
+
+                    await _mediator.Publish(notification);
+
                     var successMessage = new
                     {
                         JobId = jobId,
@@ -68,6 +76,41 @@ namespace DwapiCentral.Ct.Controllers
             }
 
             return BadRequest($"The expected '{new CovidSourceBag().GetType().Name}' is null");
+        }
+
+        [HttpPost]
+        [Route("api/v2/Covid")]
+        public async Task<IActionResult> PostBatchNew([FromBody] List<CovidProfile> patientProfile)
+        {
+            if (null != patientProfile && patientProfile.Any())
+            {
+                try
+                {
+                    BackgroundJob.Enqueue(() => SaveDiffData(new MergeDifferentialCovidCommand(patientProfile)));
+
+
+                    var successMessage = new
+                    {
+                        BatchKey = new List<Guid>() { LiveGuid.NewGuid() }
+                    };
+                    return Ok(successMessage);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(new string('*', 30));
+                    Log.Error(nameof(CovidProfile), ex);
+                    Log.Error(new string('*', 30));
+                    return BadRequest(ex);
+                }
+            }
+            return BadRequest($"The expected '{new CovidProfile().GetType().Name}' is null");
+        }
+
+
+        public async Task SaveDiffData(MergeDifferentialCovidCommand saveDiffCommand)
+        {
+            await _mediator.Send(saveDiffCommand);
+
         }
 
         [Queue("covid")]        

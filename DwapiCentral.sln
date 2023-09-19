@@ -29,13 +29,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwapiCentral.Ct.Infrastruct
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwapiCentral.Ct", "src\ct\DwapiCentral.Ct\DwapiCentral.Ct.csproj", "{65F4632B-6085-4378-9B9C-84699F07D30B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Hts", "src\hts\DwapiCentral.Hts\DwapiCentral.Hts.csproj", "{5ABBDD15-9A79-4B6B-91CD-AC842F0973AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwapiCentral.Hts", "src\hts\DwapiCentral.Hts\DwapiCentral.Hts.csproj", "{5ABBDD15-9A79-4B6B-91CD-AC842F0973AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Ct.Infrastructure.Tests", "src\ct\DwapiCentral.Ct.Infrastructure.Tests\DwapiCentral.Ct.Infrastructure.Tests.csproj", "{EF1E7A86-7583-4880-BB52-61943A6CFCF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwapiCentral.Ct.Infrastructure.Tests", "src\ct\DwapiCentral.Ct.Infrastructure.Tests\DwapiCentral.Ct.Infrastructure.Tests.csproj", "{EF1E7A86-7583-4880-BB52-61943A6CFCF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Ct.Application.Tests", "src\ct\DwapiCentral.Ct.Application.Tests\DwapiCentral.Ct.Application.Tests.csproj", "{9D63AA37-F85B-421A-A295-5DCC94018115}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwapiCentral.Ct.Application.Tests", "src\ct\DwapiCentral.Ct.Application.Tests\DwapiCentral.Ct.Application.Tests.csproj", "{9D63AA37-F85B-421A-A295-5DCC94018115}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DwapiCentral.Ct.Domain.Tests", "src\ct\DwapiCentral.Ct.Domain.Tests\DwapiCentral.Ct.Domain.Tests.csproj", "{5AE4E5BB-7B0B-4AEC-A5E2-F927E236FDA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DwapiCentral.Ct.Domain.Tests", "src\ct\DwapiCentral.Ct.Domain.Tests\DwapiCentral.Ct.Domain.Tests.csproj", "{5AE4E5BB-7B0B-4AEC-A5E2-F927E236FDA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mnch", "mnch", "{6D8C39DF-BF4A-40CD-BE13-7D6E3DA24498}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

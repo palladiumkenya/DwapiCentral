@@ -3,12 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Shared.Domain.Entities.Ct;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
     public class IptExtract : IIpt
     {
         [Key]
         public Guid Id { get ; set ; }
+        public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public int? VisitID { get ; set ; }
@@ -34,6 +35,8 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? StartIPT { get ; set ; }
         public string? IndicationForIPT { get ; set ; }           
         public DateTime? Date_Created { get ; set ; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get ; set ; }
         public DateTime? DateExtracted { get ; set ; }
         public DateTime? Created { get ; set ; }

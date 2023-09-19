@@ -33,11 +33,11 @@ public class GbvScreeningRepositoryTest
 
 
         //Act
-        await _gbvScreeningRepository.MergeAsync(gbvScreeningExtracts);
+        await _gbvScreeningRepository.InsertExtract(gbvScreeningExtracts);
 
 
         //Assert
-        var savedPatientGbvExtracts = _context.GbvScreeningExtracts.ToList();
+        var savedPatientGbvExtracts = _context.GbvScreeningExtract.ToList();
         Assert.IsNotNull(savedPatientGbvExtracts);
 
     }

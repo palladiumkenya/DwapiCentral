@@ -3,16 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Shared.Domain.Entities.Ct;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
 
     public class PatientExtract : IPatient
     {
-        
-        public int PatientPk { get; set; }
-        
-        public int SiteCode { get; set; }
-        
+        public string RecordUUID { get; set; }
+        public int PatientPk { get; set; }        
+        public int SiteCode { get; set; }        
         public string? CccNumber { get; set; }
         public string? Nupi { get; set; }
         public string? MpiId { get; set; }
@@ -50,12 +48,14 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
         public string? Occupation { get; set; }
-
         public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
+
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
+        public virtual bool Processed { get; set; }
         public bool? Voided { get; set; }
 
         public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
@@ -77,5 +77,6 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public virtual ICollection<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventExtract>();
         public virtual ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
         public virtual ICollection<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; } = new List<CervicalCancerScreeningExtract>();
+        public virtual ICollection<IITRiskScore> IITRiskScoresExtracts { get; set; } = new List<IITRiskScore>();
     }
 }
