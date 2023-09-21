@@ -100,7 +100,16 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
         catch (Exception e)
         {
             Log.Error(e,"save manifest error");
+           
+            var indicators = new HangfireJobFailNotificationEvent
+            {
+                Message = $"save manifest error. {e.InnerException.Message}"
+
+            };
+            await _mediator.Publish(indicators, cancellationToken);
+
             return Result.Failure(e.Message);
+
         }
 
     }

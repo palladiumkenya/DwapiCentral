@@ -3,6 +3,8 @@ using Hangfire;
 using Serilog;
 using Owin;
 using DwapiCentral.Shared.Domain.Model.Common;
+using DwapiCentral.Ct.Filters;
+using MediatR;
 
 namespace DwapiCentral.Ct.ServicesRegistration;
 
@@ -42,9 +44,11 @@ public static class RegisterStartupServices
                UseRecommendedIsolationLevel = true,
                DisableGlobalLocks = true
            }));
+        
+        var mediator = builder.Services.BuildServiceProvider().GetService<IMediator>();
 
         Hangfire.GlobalConfiguration.Configuration.UseBatches(TimeSpan.FromDays(30));
-        
+        GlobalJobFilters.Filters.Add(new SendNotificationOnJobFailureFilter(mediator));
         var queues = new List<string>
             {
                 "manifest", "patient", "patientart", "patientpharmacy", "patientvisits", "patientstatus",
