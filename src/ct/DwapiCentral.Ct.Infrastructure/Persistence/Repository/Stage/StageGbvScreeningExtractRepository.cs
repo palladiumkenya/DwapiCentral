@@ -178,34 +178,35 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     GbvScreeningExtract
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     GbvScreeningExtract
 
-                               SET                                  
-                                    VisitID = @VisitID,
-                                    VisitDate = @VisitDate,                                   
-                                    IPV = @IPV,
-                                    PhysicalIPV = @PhysicalIPV,
-                                    EmotionalIPV = @EmotionalIPV,
-                                    SexualIPV = @SexualIPV,
-                                    IPVRelationship = @IPVRelationship,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
+                //               SET                                  
+                //                    VisitID = @VisitID,
+                //                    VisitDate = @VisitDate,                                   
+                //                    IPV = @IPV,
+                //                    PhysicalIPV = @PhysicalIPV,
+                //                    EmotionalIPV = @EmotionalIPV,
+                //                    SexualIPV = @SexualIPV,
+                //                    IPVRelationship = @IPVRelationship,
+                //                    Date_Created = @Date_Created,
+                //                    DateLastModified = @DateLastModified,
+                //                    DateExtracted = @DateExtracted,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided                          
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

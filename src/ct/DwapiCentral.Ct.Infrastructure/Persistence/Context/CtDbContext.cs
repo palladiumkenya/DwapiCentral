@@ -214,19 +214,19 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .Table($"{nameof(PatientExtract)}");
             
             DapperPlusManager.Entity<PatientVisitExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(PatientVisitExtract)}");
 
             DapperPlusManager.Entity<PatientPharmacyExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(PatientPharmacyExtract)}");
 
             DapperPlusManager.Entity<PatientLaboratoryExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(PatientLaboratoryExtract)}");
 
             DapperPlusManager.Entity<PatientArtExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(PatientArtExtract)}");
 
             DapperPlusManager.Entity<AllergiesChronicIllnessExtract>()
@@ -258,11 +258,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                .Table($"{nameof(EnhancedAdherenceCounsellingExtract)}");
 
             DapperPlusManager.Entity<GbvScreeningExtract>()
-               .Key(x => x.Id)
+               .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                .Table($"{nameof(GbvScreeningExtract)}");
 
             DapperPlusManager.Entity<IptExtract>()
-               .Key(x => x.Id)
+               .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                .Table($"{nameof(IptExtract)}");
 
             DapperPlusManager.Entity<OvcExtract>()
@@ -299,7 +299,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .Table($"{nameof(StagePatientExtracts)}");
 
             DapperPlusManager.Entity<StageVisitExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(StageVisitExtracts)}");
 
             DapperPlusManager.Entity<StageAdverseEventExtract>()
@@ -311,7 +311,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .Table($"{nameof(StageAllergiesChronicIllnessExtracts)}");
 
             DapperPlusManager.Entity<StageArtExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(StageArtExtracts)}");
 
             DapperPlusManager.Entity<StageBaselineExtract>()
@@ -343,11 +343,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .Table($"{nameof(StageEnhancedAdherenceCounsellingExtracts)}");
 
             DapperPlusManager.Entity<StageIptExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(StageIptExtracts)}");
 
             DapperPlusManager.Entity<StageLaboratoryExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(StageLaboratoryExtracts)}");
 
             DapperPlusManager.Entity<StageOtzExtract>()
@@ -359,7 +359,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .Table($"{nameof(StageOvcExtracts)}");
 
             DapperPlusManager.Entity<StagePharmacyExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(StagePharmacyExtracts)}");
 
             DapperPlusManager.Entity<StageStatusExtract>()
@@ -367,7 +367,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Context
                 .Table($"{nameof(StageStatusExtracts)}");
 
             DapperPlusManager.Entity<StageGbvScreeningExtract>()
-                .Key(x => x.Id)
+                .Key(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
                 .Table($"{nameof(StageGbvScreeningExtracts)}");
 
             DapperPlusManager.Entity<StageCervicalCancerScreeningExtract>()

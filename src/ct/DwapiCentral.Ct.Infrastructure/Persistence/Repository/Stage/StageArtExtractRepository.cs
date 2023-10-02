@@ -180,53 +180,53 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         _mapper.Map(stageExtract, existingExtract);
                     }
                 }
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     PatientArtExtract
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     PatientArtExtract
+                //               SET     
+                //                     LastARTDate  = @LastARTDate
+                //                    ,LastVisit  = @LastVisit
+                //                    ,DOB  = @DOB
+                //                    ,AgeEnrollment  = @AgeEnrollment
+                //                    ,AgeARTStart  = @AgeARTStart
+                //                    ,AgeLastVisit  = @AgeLastVisit
+                //                    ,RegistrationDate  = @RegistrationDate
+                //                    ,Gender  = @Gender
+                //                    ,PatientSource  = @PatientSource
+                //                    ,StartARTDate  = @StartARTDate
+                //                    ,PreviousARTStartDate  = @PreviousARTStartDate
+                //                    ,PreviousARTRegimen  = @PreviousARTRegimen
+                //                    ,StartARTAtThisFacility  = @StartARTAtThisFacility
+                //                    ,StartRegimen  = @StartRegimen
+                //                    ,StartRegimenLine  = @StartRegimenLine
+                //                    ,LastRegimen  = @LastRegimen
+                //                    ,LastRegimenLine  = @LastRegimenLine
+                //                    ,Duration  = @Duration
+                //                    ,ExpectedReturn  = @ExpectedReturn
+                //                    ,Provider  = @Provider
+                //                    ,ExitReason  = @ExitReason
+                //                    ,ExitDate  = @ExitDate
+                //                    ,PreviousARTUse  = @PreviousARTUse
+                //                    ,PreviousARTPurpose  = @PreviousARTPurpose
+                //                    ,DateLastUsed  = @DateLastUsed
+                //                    ,Date_Created = @Date_Created
+                //                    ,DateLastModified = @DateLastModified
+                //                    ,DateExtracted = @DateExtracted
+                //                    ,Created = @Created
+                //                    ,Updated = @Updated
+                //                    ,Voided = @Voided                          
 
-                               SET     
-                                     LastARTDate  = @LastARTDate
-                                    ,LastVisit  = @LastVisit
-                                    ,DOB  = @DOB
-                                    ,AgeEnrollment  = @AgeEnrollment
-                                    ,AgeARTStart  = @AgeARTStart
-                                    ,AgeLastVisit  = @AgeLastVisit
-                                    ,RegistrationDate  = @RegistrationDate
-                                    ,Gender  = @Gender
-                                    ,PatientSource  = @PatientSource
-                                    ,StartARTDate  = @StartARTDate
-                                    ,PreviousARTStartDate  = @PreviousARTStartDate
-                                    ,PreviousARTRegimen  = @PreviousARTRegimen
-                                    ,StartARTAtThisFacility  = @StartARTAtThisFacility
-                                    ,StartRegimen  = @StartRegimen
-                                    ,StartRegimenLine  = @StartRegimenLine
-                                    ,LastRegimen  = @LastRegimen
-                                    ,LastRegimenLine  = @LastRegimenLine
-                                    ,Duration  = @Duration
-                                    ,ExpectedReturn  = @ExpectedReturn
-                                    ,Provider  = @Provider
-                                    ,ExitReason  = @ExitReason
-                                    ,ExitDate  = @ExitDate
-                                    ,PreviousARTUse  = @PreviousARTUse
-                                    ,PreviousARTPurpose  = @PreviousARTPurpose
-                                    ,DateLastUsed  = @DateLastUsed
-                                    ,Date_Created = @Date_Created
-                                    ,DateLastModified = @DateLastModified
-                                    ,DateExtracted = @DateExtracted
-                                    ,Created = @Created
-                                    ,Updated = @Updated
-                                    ,Voided = @Voided                          
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
-
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

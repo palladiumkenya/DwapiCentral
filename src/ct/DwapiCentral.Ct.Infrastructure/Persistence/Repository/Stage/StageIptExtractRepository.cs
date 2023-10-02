@@ -176,48 +176,50 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     IptExtract
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
 
-                               SET
-                                    VisitID = @VisitID,
-                                    VisitDate = @VisitDate,                                    
-                                    OnTBDrugs = @OnTBDrugs,
-                                    OnIPT = @OnIPT,
-                                    EverOnIPT = @EverOnIPT,
-                                    Cough = @Cough,
-                                    Fever = @Fever,
-                                    NoticeableWeightLoss = @NoticeableWeightLoss,
-                                    NightSweats = @NightSweats,
-                                    Lethargy = @Lethargy,
-                                    ICFActionTaken = @ICFActionTaken,
-                                    TestResult = @TestResult,
-                                    TBClinicalDiagnosis = @TBClinicalDiagnosis,
-                                    ContactsInvited = @ContactsInvited,
-                                    EvaluatedForIPT = @EvaluatedForIPT,
-                                    StartAntiTBs = @StartAntiTBs,
-                                    TBRxStartDate = @TBRxStartDate,
-                                    TBScreening = @TBScreening,
-                                    IPTClientWorkUp = @IPTClientWorkUp,
-                                    StartIPT = @StartIPT,
-                                    IndicationForIPT = @IndicationForIPT,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     IptExtract
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
+                //               SET
+                //                    VisitID = @VisitID,
+                //                    VisitDate = @VisitDate,                                    
+                //                    OnTBDrugs = @OnTBDrugs,
+                //                    OnIPT = @OnIPT,
+                //                    EverOnIPT = @EverOnIPT,
+                //                    Cough = @Cough,
+                //                    Fever = @Fever,
+                //                    NoticeableWeightLoss = @NoticeableWeightLoss,
+                //                    NightSweats = @NightSweats,
+                //                    Lethargy = @Lethargy,
+                //                    ICFActionTaken = @ICFActionTaken,
+                //                    TestResult = @TestResult,
+                //                    TBClinicalDiagnosis = @TBClinicalDiagnosis,
+                //                    ContactsInvited = @ContactsInvited,
+                //                    EvaluatedForIPT = @EvaluatedForIPT,
+                //                    StartAntiTBs = @StartAntiTBs,
+                //                    TBRxStartDate = @TBRxStartDate,
+                //                    TBScreening = @TBScreening,
+                //                    IPTClientWorkUp = @IPTClientWorkUp,
+                //                    StartIPT = @StartIPT,
+                //                    IndicationForIPT = @IndicationForIPT,
+                //                    Date_Created = @Date_Created,
+                //                    DateLastModified = @DateLastModified,
+                //                    DateExtracted = @DateExtracted,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided                          
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
+
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {
