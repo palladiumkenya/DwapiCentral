@@ -106,7 +106,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository
             var sql = @"
                         SELECT TOP 1 Id 
                         FROM Manifests 
-                        WHERE SiteCode = @siteCode AND ManifestStatus = @status
+                        WHERE SiteCode = @siteCode
                         ORDER BY DateArrived DESC;
                     ";
 
