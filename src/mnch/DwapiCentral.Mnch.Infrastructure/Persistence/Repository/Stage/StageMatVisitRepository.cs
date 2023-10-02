@@ -181,82 +181,84 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     MatVisits
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
 
-                               SET                                  
-                                    DateExtracted = @DateExtracted,                                   
-                                    FacilityName = @FacilityName,
-                                    VisitID = @VisitID,
-                                    VisitDate = @VisitDate,
-                                    AdmissionNumber = @AdmissionNumber,
-                                    ANCVisits = @ANCVisits,
-                                    DateOfDelivery = @DateOfDelivery,
-                                    DurationOfDelivery = @DurationOfDelivery,
-                                    GestationAtBirth = @GestationAtBirth,
-                                    ModeOfDelivery = @ModeOfDelivery,
-                                    PlacentaComplete = @PlacentaComplete,
-                                    UterotonicGiven = @UterotonicGiven,
-                                    VaginalExamination = @VaginalExamination,
-                                    BloodLoss = @BloodLoss,
-                                    BloodLossVisual = @BloodLossVisual,
-                                    ConditonAfterDelivery = @ConditonAfterDelivery,
-                                    MaternalDeath = @MaternalDeath,
-                                    DeliveryComplications = @DeliveryComplications,
-                                    NoBabiesDelivered = @NoBabiesDelivered,
-                                    BabyBirthNumber = @BabyBirthNumber,
-                                    SexBaby = @SexBaby,
-                                    BirthWeight = @BirthWeight,
-                                    BirthOutcome = @BirthOutcome,
-                                    BirthWithDeformity = @BirthWithDeformity,
-                                    TetracyclineGiven = @TetracyclineGiven,
-                                    InitiatedBF = @InitiatedBF,
-                                    ApgarScore1 = @ApgarScore1,
-                                    ApgarScore5 = @ApgarScore5,
-                                    ApgarScore10 = @ApgarScore10,
-                                    KangarooCare = @KangarooCare,
-                                    ChlorhexidineApplied = @ChlorhexidineApplied,
-                                    VitaminKGiven = @VitaminKGiven,
-                                    StatusBabyDischarge = @StatusBabyDischarge,
-                                    MotherDischargeDate = @MotherDischargeDate,
-                                    SyphilisTestResults = @SyphilisTestResults,
-                                    HIVStatusLastANC = @HIVStatusLastANC,
-                                    HIVTestingDone = @HIVTestingDone,
-                                    HIVTest1 = @HIVTest1,
-                                    HIV1Results = @HIV1Results,
-                                    HIVTest2 = @HIVTest2,
-                                    HIV2Results = @HIV2Results,
-                                    HIVTestFinalResult = @HIVTestFinalResult,
-                                    OnARTANC = @OnARTANC,
-                                    BabyGivenProphylaxis = @BabyGivenProphylaxis,
-                                    MotherGivenCTX = @MotherGivenCTX,
-                                    PartnerHIVTestingMAT = @PartnerHIVTestingMAT,
-                                    PartnerHIVStatusMAT = @PartnerHIVStatusMAT,
-                                    CounselledOn = @CounselledOn,
-                                    ReferredFrom = @ReferredFrom,
-                                    ReferredTo = @ReferredTo,
-                                    ClinicalNotes = @ClinicalNotes,                                    
-                                    EDD = @EDD,
-                                    LMP = @LMP,
-                                    MaternalDeathAudited = @MaternalDeathAudited,
-                                    OnARTMat = @OnARTMat,
-                                    ReferralReason = @ReferralReason,
-                                    Date_Created = @Date_Created,
-                                    Date_Last_Modified = @Date_Last_Modified,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided         
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     MatVisits
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
+                //               SET                                  
+                //                    DateExtracted = @DateExtracted,                                   
+                //                    FacilityName = @FacilityName,
+                //                    VisitID = @VisitID,
+                //                    VisitDate = @VisitDate,
+                //                    AdmissionNumber = @AdmissionNumber,
+                //                    ANCVisits = @ANCVisits,
+                //                    DateOfDelivery = @DateOfDelivery,
+                //                    DurationOfDelivery = @DurationOfDelivery,
+                //                    GestationAtBirth = @GestationAtBirth,
+                //                    ModeOfDelivery = @ModeOfDelivery,
+                //                    PlacentaComplete = @PlacentaComplete,
+                //                    UterotonicGiven = @UterotonicGiven,
+                //                    VaginalExamination = @VaginalExamination,
+                //                    BloodLoss = @BloodLoss,
+                //                    BloodLossVisual = @BloodLossVisual,
+                //                    ConditonAfterDelivery = @ConditonAfterDelivery,
+                //                    MaternalDeath = @MaternalDeath,
+                //                    DeliveryComplications = @DeliveryComplications,
+                //                    NoBabiesDelivered = @NoBabiesDelivered,
+                //                    BabyBirthNumber = @BabyBirthNumber,
+                //                    SexBaby = @SexBaby,
+                //                    BirthWeight = @BirthWeight,
+                //                    BirthOutcome = @BirthOutcome,
+                //                    BirthWithDeformity = @BirthWithDeformity,
+                //                    TetracyclineGiven = @TetracyclineGiven,
+                //                    InitiatedBF = @InitiatedBF,
+                //                    ApgarScore1 = @ApgarScore1,
+                //                    ApgarScore5 = @ApgarScore5,
+                //                    ApgarScore10 = @ApgarScore10,
+                //                    KangarooCare = @KangarooCare,
+                //                    ChlorhexidineApplied = @ChlorhexidineApplied,
+                //                    VitaminKGiven = @VitaminKGiven,
+                //                    StatusBabyDischarge = @StatusBabyDischarge,
+                //                    MotherDischargeDate = @MotherDischargeDate,
+                //                    SyphilisTestResults = @SyphilisTestResults,
+                //                    HIVStatusLastANC = @HIVStatusLastANC,
+                //                    HIVTestingDone = @HIVTestingDone,
+                //                    HIVTest1 = @HIVTest1,
+                //                    HIV1Results = @HIV1Results,
+                //                    HIVTest2 = @HIVTest2,
+                //                    HIV2Results = @HIV2Results,
+                //                    HIVTestFinalResult = @HIVTestFinalResult,
+                //                    OnARTANC = @OnARTANC,
+                //                    BabyGivenProphylaxis = @BabyGivenProphylaxis,
+                //                    MotherGivenCTX = @MotherGivenCTX,
+                //                    PartnerHIVTestingMAT = @PartnerHIVTestingMAT,
+                //                    PartnerHIVStatusMAT = @PartnerHIVStatusMAT,
+                //                    CounselledOn = @CounselledOn,
+                //                    ReferredFrom = @ReferredFrom,
+                //                    ReferredTo = @ReferredTo,
+                //                    ClinicalNotes = @ClinicalNotes,                                    
+                //                    EDD = @EDD,
+                //                    LMP = @LMP,
+                //                    MaternalDeathAudited = @MaternalDeathAudited,
+                //                    OnARTMat = @OnARTMat,
+                //                    ReferralReason = @ReferralReason,
+                //                    Date_Created = @Date_Created,
+                //                    Date_Last_Modified = @Date_Last_Modified,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided         
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
+
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

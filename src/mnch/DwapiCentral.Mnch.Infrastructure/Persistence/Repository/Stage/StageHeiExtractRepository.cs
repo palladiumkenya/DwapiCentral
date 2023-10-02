@@ -179,43 +179,45 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     Heis
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
 
-                               SET                                
-                                    FacilityName = @FacilityName,                                   
-                                    DNAPCR1Date = @DNAPCR1Date,
-                                    DNAPCR2Date = @DNAPCR2Date,
-                                    DNAPCR3Date = @DNAPCR3Date,
-                                    ConfirmatoryPCRDate = @ConfirmatoryPCRDate,
-                                    BasellineVLDate = @BasellineVLDate,
-                                    FinalyAntibodyDate = @FinalyAntibodyDate,
-                                    DNAPCR1 = @DNAPCR1,
-                                    DNAPCR2 = @DNAPCR2,
-                                    DNAPCR3 = @DNAPCR3,
-                                    ConfirmatoryPCR = @ConfirmatoryPCR,
-                                    BasellineVL = @BasellineVL,
-                                    FinalyAntibody = @FinalyAntibody,
-                                    HEIExitDate = @HEIExitDate,
-                                    HEIHIVStatus = @HEIHIVStatus,
-                                    HEIExitCritearia = @HEIExitCritearia,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                  
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     Heis
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
+                //               SET                                
+                //                    FacilityName = @FacilityName,                                   
+                //                    DNAPCR1Date = @DNAPCR1Date,
+                //                    DNAPCR2Date = @DNAPCR2Date,
+                //                    DNAPCR3Date = @DNAPCR3Date,
+                //                    ConfirmatoryPCRDate = @ConfirmatoryPCRDate,
+                //                    BasellineVLDate = @BasellineVLDate,
+                //                    FinalyAntibodyDate = @FinalyAntibodyDate,
+                //                    DNAPCR1 = @DNAPCR1,
+                //                    DNAPCR2 = @DNAPCR2,
+                //                    DNAPCR3 = @DNAPCR3,
+                //                    ConfirmatoryPCR = @ConfirmatoryPCR,
+                //                    BasellineVL = @BasellineVL,
+                //                    FinalyAntibody = @FinalyAntibody,
+                //                    HEIExitDate = @HEIExitDate,
+                //                    HEIHIVStatus = @HEIHIVStatus,
+                //                    HEIExitCritearia = @HEIExitCritearia,
+                //                    Date_Created = @Date_Created,
+                //                    DateLastModified = @DateLastModified,
+                //                    DateExtracted = @DateExtracted,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided                  
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
+
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

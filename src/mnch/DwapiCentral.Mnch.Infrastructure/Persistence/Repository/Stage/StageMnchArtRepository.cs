@@ -182,39 +182,41 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     MnchArts
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
 
-                               SET                                  
-                                    DateExtracted = @DateExtracted,
-                                    Pkv = @Pkv,
-                                    PatientHeiID = @PatientHeiID,
-                                    FacilityName = @FacilityName,
-                                    RegistrationAtCCC = @RegistrationAtCCC,
-                                    StartARTDate = @StartARTDate,
-                                    StartRegimen = @StartRegimen,
-                                    StartRegimenLine = @StartRegimenLine,
-                                    StatusAtCCC = @StatusAtCCC,
-                                    LastARTDate = @LastARTDate,
-                                    LastRegimen = @LastRegimen,
-                                    LastRegimenLine = @LastRegimenLine,
-                                    FacilityReceivingARTCare = @FacilityReceivingARTCare,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,                                    
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided     
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     MnchArts
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
+                //               SET                                  
+                //                    DateExtracted = @DateExtracted,
+                //                    Pkv = @Pkv,
+                //                    PatientHeiID = @PatientHeiID,
+                //                    FacilityName = @FacilityName,
+                //                    RegistrationAtCCC = @RegistrationAtCCC,
+                //                    StartARTDate = @StartARTDate,
+                //                    StartRegimen = @StartRegimen,
+                //                    StartRegimenLine = @StartRegimenLine,
+                //                    StatusAtCCC = @StatusAtCCC,
+                //                    LastARTDate = @LastARTDate,
+                //                    LastRegimen = @LastRegimen,
+                //                    LastRegimenLine = @LastRegimenLine,
+                //                    FacilityReceivingARTCare = @FacilityReceivingARTCare,
+                //                    Date_Created = @Date_Created,
+                //                    DateLastModified = @DateLastModified,                                    
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided     
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
+
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

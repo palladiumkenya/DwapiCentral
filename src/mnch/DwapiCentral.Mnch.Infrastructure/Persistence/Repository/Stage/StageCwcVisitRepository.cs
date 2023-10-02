@@ -179,60 +179,62 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     CwcVisits
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
 
-                               SET                                  
-                                    DateExtracted = @DateExtracted,                                   
-                                    FacilityName = @FacilityName,                                    
-                                    VisitDate = @VisitDate,
-                                    VisitID = @VisitID,
-                                    Height = @Height,
-                                    Weight = @Weight,
-                                    Temp = @Temp,
-                                    PulseRate = @PulseRate,
-                                    RespiratoryRate = @RespiratoryRate,
-                                    OxygenSaturation = @OxygenSaturation,
-                                    MUAC = @MUAC,
-                                    WeightCategory = @WeightCategory,
-                                    Stunted = @Stunted,
-                                    InfantFeeding = @InfantFeeding,
-                                    MedicationGiven = @MedicationGiven,
-                                    TBAssessment = @TBAssessment,
-                                    MNPsSupplementation = @MNPsSupplementation,
-                                    Immunization = @Immunization,
-                                    DangerSigns = @DangerSigns,
-                                    Milestones = @Milestones,
-                                    VitaminA = @VitaminA,
-                                    Disability = @Disability,
-                                    ReceivedMosquitoNet = @ReceivedMosquitoNet,
-                                    Dewormed = @Dewormed,
-                                    ReferredFrom = @ReferredFrom,
-                                    ReferredTo = @ReferredTo,
-                                    ReferralReasons = @ReferralReasons,
-                                    FollowUP = @FollowUP,
-                                    NextAppointment = @NextAppointment,
-                                    Date_Created = @Date_Created,
-                                    Date_Last_Modified = @Date_Last_Modified,
-                                    HeightLength = @HeightLength,
-                                    Refferred = @Refferred,
-                                    RevisitThisYear = @RevisitThisYear,
-                                    ZScore = @ZScore,
-                                    ZScoreAbsolute = @ZScoreAbsolute,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                    
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     CwcVisits
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
+                //               SET                                  
+                //                    DateExtracted = @DateExtracted,                                   
+                //                    FacilityName = @FacilityName,                                    
+                //                    VisitDate = @VisitDate,
+                //                    VisitID = @VisitID,
+                //                    Height = @Height,
+                //                    Weight = @Weight,
+                //                    Temp = @Temp,
+                //                    PulseRate = @PulseRate,
+                //                    RespiratoryRate = @RespiratoryRate,
+                //                    OxygenSaturation = @OxygenSaturation,
+                //                    MUAC = @MUAC,
+                //                    WeightCategory = @WeightCategory,
+                //                    Stunted = @Stunted,
+                //                    InfantFeeding = @InfantFeeding,
+                //                    MedicationGiven = @MedicationGiven,
+                //                    TBAssessment = @TBAssessment,
+                //                    MNPsSupplementation = @MNPsSupplementation,
+                //                    Immunization = @Immunization,
+                //                    DangerSigns = @DangerSigns,
+                //                    Milestones = @Milestones,
+                //                    VitaminA = @VitaminA,
+                //                    Disability = @Disability,
+                //                    ReceivedMosquitoNet = @ReceivedMosquitoNet,
+                //                    Dewormed = @Dewormed,
+                //                    ReferredFrom = @ReferredFrom,
+                //                    ReferredTo = @ReferredTo,
+                //                    ReferralReasons = @ReferralReasons,
+                //                    FollowUP = @FollowUP,
+                //                    NextAppointment = @NextAppointment,
+                //                    Date_Created = @Date_Created,
+                //                    Date_Last_Modified = @Date_Last_Modified,
+                //                    HeightLength = @HeightLength,
+                //                    Refferred = @Refferred,
+                //                    RevisitThisYear = @RevisitThisYear,
+                //                    ZScore = @ZScore,
+                //                    ZScoreAbsolute = @ZScoreAbsolute,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided                    
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
+
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

@@ -177,94 +177,95 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                     }
                 }
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     AncVisits
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     AncVisits
 
-                               SET                                  
-                                    VisitID = @VisitID,
-                                    VisitDate = @VisitDate,
-                                    ANCClinicNumber = @ANCClinicNumber,
-                                    ANCVisitNo = @ANCVisitNo,
-                                    GestationWeeks = @GestationWeeks,
-                                    Height = @Height,
-                                    Weight = @Weight,
-                                    Temp = @Temp,
-                                    PulseRate = @PulseRate,
-                                    RespiratoryRate = @RespiratoryRate,
-                                    OxygenSaturation = @OxygenSaturation,
-                                    MUAC = @MUAC,
-                                    BP = @BP,
-                                    BreastExam = @BreastExam,
-                                    AntenatalExercises = @AntenatalExercises,
-                                    FGM = @FGM,
-                                    FGMComplications = @FGMComplications,
-                                    Haemoglobin = @Haemoglobin,
-                                    DiabetesTest = @DiabetesTest,
-                                    TBScreening = @TBScreening,
-                                    CACxScreen = @CACxScreen,
-                                    CACxScreenMethod = @CACxScreenMethod,
-                                    WHOStaging = @WHOStaging,
-                                    VLSampleTaken = @VLSampleTaken,
-                                    VLDate = @VLDate,
-                                    VLResult = @VLResult,
-                                    SyphilisTreatment = @SyphilisTreatment,
-                                    HIVStatusBeforeANC = @HIVStatusBeforeANC,
-                                    HIVTestingDone = @HIVTestingDone,
-                                    HIVTestType = @HIVTestType,
-                                    HIVTest1 = @HIVTest1,
-                                    HIVTest1Result = @HIVTest1Result,
-                                    HIVTest2 = @HIVTest2,
-                                    HIVTest2Result = @HIVTest2Result,
-                                    HIVTestFinalResult = @HIVTestFinalResult,
-                                    SyphilisTestDone = @SyphilisTestDone,
-                                    SyphilisTestType = @SyphilisTestType,
-                                    SyphilisTestResults = @SyphilisTestResults,
-                                    SyphilisTreated = @SyphilisTreated,
-                                    MotherProphylaxisGiven = @MotherProphylaxisGiven,
-                                    MotherGivenHAART = @MotherGivenHAART,
-                                    AZTBabyDispense = @AZTBabyDispense,
-                                    NVPBabyDispense = @NVPBabyDispense,
-                                    ChronicIllness = @ChronicIllness,
-                                    CounselledOn = @CounselledOn,
-                                    PartnerHIVTestingANC = @PartnerHIVTestingANC,
-                                    PartnerHIVStatusANC = @PartnerHIVStatusANC,
-                                    PostParturmFP = @PostParturmFP,
-                                    Deworming = @Deworming,
-                                    MalariaProphylaxis = @MalariaProphylaxis,
-                                    TetanusDose = @TetanusDose,
-                                    IronSupplementsGiven = @IronSupplementsGiven,
-                                    ReceivedMosquitoNet = @ReceivedMosquitoNet,
-                                    PreventiveServices = @PreventiveServices,
-                                    UrinalysisVariables = @UrinalysisVariables,
-                                    ReferredFrom = @ReferredFrom,
-                                    ReferredTo = @ReferredTo,
-                                    ReferralReasons = @ReferralReasons,
-                                    NextAppointmentANC = @NextAppointmentANC,
-                                    ClinicalNotes = @ClinicalNotes,
-                                    Date_Created = @Date_Created,
-                                    Date_Last_Modified = @Date_Last_Modified,
-                                    HepatitisBScreening = @HepatitisBScreening,
-                                    MiminumPackageOfCareReceived = @MiminumPackageOfCareReceived,
-                                    MiminumPackageOfCareServices = @MiminumPackageOfCareServices,
-                                    PresumptiveTreatmentDose = @PresumptiveTreatmentDose,
-                                    PresumptiveTreatmentGiven = @PresumptiveTreatmentGiven,
-                                    TreatedHepatitisB = @TreatedHepatitisB,                                   
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                       
+                //               SET                                  
+                //                    VisitID = @VisitID,
+                //                    VisitDate = @VisitDate,
+                //                    ANCClinicNumber = @ANCClinicNumber,
+                //                    ANCVisitNo = @ANCVisitNo,
+                //                    GestationWeeks = @GestationWeeks,
+                //                    Height = @Height,
+                //                    Weight = @Weight,
+                //                    Temp = @Temp,
+                //                    PulseRate = @PulseRate,
+                //                    RespiratoryRate = @RespiratoryRate,
+                //                    OxygenSaturation = @OxygenSaturation,
+                //                    MUAC = @MUAC,
+                //                    BP = @BP,
+                //                    BreastExam = @BreastExam,
+                //                    AntenatalExercises = @AntenatalExercises,
+                //                    FGM = @FGM,
+                //                    FGMComplications = @FGMComplications,
+                //                    Haemoglobin = @Haemoglobin,
+                //                    DiabetesTest = @DiabetesTest,
+                //                    TBScreening = @TBScreening,
+                //                    CACxScreen = @CACxScreen,
+                //                    CACxScreenMethod = @CACxScreenMethod,
+                //                    WHOStaging = @WHOStaging,
+                //                    VLSampleTaken = @VLSampleTaken,
+                //                    VLDate = @VLDate,
+                //                    VLResult = @VLResult,
+                //                    SyphilisTreatment = @SyphilisTreatment,
+                //                    HIVStatusBeforeANC = @HIVStatusBeforeANC,
+                //                    HIVTestingDone = @HIVTestingDone,
+                //                    HIVTestType = @HIVTestType,
+                //                    HIVTest1 = @HIVTest1,
+                //                    HIVTest1Result = @HIVTest1Result,
+                //                    HIVTest2 = @HIVTest2,
+                //                    HIVTest2Result = @HIVTest2Result,
+                //                    HIVTestFinalResult = @HIVTestFinalResult,
+                //                    SyphilisTestDone = @SyphilisTestDone,
+                //                    SyphilisTestType = @SyphilisTestType,
+                //                    SyphilisTestResults = @SyphilisTestResults,
+                //                    SyphilisTreated = @SyphilisTreated,
+                //                    MotherProphylaxisGiven = @MotherProphylaxisGiven,
+                //                    MotherGivenHAART = @MotherGivenHAART,
+                //                    AZTBabyDispense = @AZTBabyDispense,
+                //                    NVPBabyDispense = @NVPBabyDispense,
+                //                    ChronicIllness = @ChronicIllness,
+                //                    CounselledOn = @CounselledOn,
+                //                    PartnerHIVTestingANC = @PartnerHIVTestingANC,
+                //                    PartnerHIVStatusANC = @PartnerHIVStatusANC,
+                //                    PostParturmFP = @PostParturmFP,
+                //                    Deworming = @Deworming,
+                //                    MalariaProphylaxis = @MalariaProphylaxis,
+                //                    TetanusDose = @TetanusDose,
+                //                    IronSupplementsGiven = @IronSupplementsGiven,
+                //                    ReceivedMosquitoNet = @ReceivedMosquitoNet,
+                //                    PreventiveServices = @PreventiveServices,
+                //                    UrinalysisVariables = @UrinalysisVariables,
+                //                    ReferredFrom = @ReferredFrom,
+                //                    ReferredTo = @ReferredTo,
+                //                    ReferralReasons = @ReferralReasons,
+                //                    NextAppointmentANC = @NextAppointmentANC,
+                //                    ClinicalNotes = @ClinicalNotes,
+                //                    Date_Created = @Date_Created,
+                //                    Date_Last_Modified = @Date_Last_Modified,
+                //                    HepatitisBScreening = @HepatitisBScreening,
+                //                    MiminumPackageOfCareReceived = @MiminumPackageOfCareReceived,
+                //                    MiminumPackageOfCareServices = @MiminumPackageOfCareServices,
+                //                    PresumptiveTreatmentDose = @PresumptiveTreatmentDose,
+                //                    PresumptiveTreatmentGiven = @PresumptiveTreatmentGiven,
+                //                    TreatedHepatitisB = @TreatedHepatitisB,                                   
+                //                    DateLastModified = @DateLastModified,
+                //                    DateExtracted = @DateExtracted,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided                       
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

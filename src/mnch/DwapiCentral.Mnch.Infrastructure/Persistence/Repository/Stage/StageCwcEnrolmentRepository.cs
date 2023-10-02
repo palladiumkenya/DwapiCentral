@@ -179,58 +179,59 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                         _mapper.Map(stageExtract, existingExtract);
                     }
                 }
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     CwcEnrolments
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     CwcEnrolments
 
-                               SET                                  
-                                                                       
-                                    Pkv = @Pkv,
-                                    PatientIDCWC = @PatientIDCWC,
-                                    HEIID = @HEIID,
-                                    MothersPkv = @MothersPkv,
-                                    RegistrationAtCWC = @RegistrationAtCWC,
-                                    RegistrationAtHEI = @RegistrationAtHEI,
-                                    VisitID = @VisitID,
-                                    Gestation = @Gestation,
-                                    BirthWeight = @BirthWeight,
-                                    BirthLength = @BirthLength,
-                                    BirthOrder = @BirthOrder,
-                                    BirthType = @BirthType,
-                                    PlaceOfDelivery = @PlaceOfDelivery,
-                                    ModeOfDelivery = @ModeOfDelivery,
-                                    SpecialNeeds = @SpecialNeeds,
-                                    SpecialCare = @SpecialCare,
-                                    HEI = @HEI,
-                                    MotherAlive = @MotherAlive,
-                                    MothersCCCNo = @MothersCCCNo,
-                                    TransferIn = @TransferIn,
-                                    TransferInDate = @TransferInDate,
-                                    TransferredFrom = @TransferredFrom,
-                                    HEIDate = @HEIDate,
-                                    NVP = @NVP,
-                                    BreastFeeding = @BreastFeeding,
-                                    ReferredFrom = @ReferredFrom,
-                                    ARTMother = @ARTMother,
-                                    ARTRegimenMother = @ARTRegimenMother,
-                                    ARTStartDateMother = @ARTStartDateMother,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                       
+                //               SET                                  
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
+                //                    Pkv = @Pkv,
+                //                    PatientIDCWC = @PatientIDCWC,
+                //                    HEIID = @HEIID,
+                //                    MothersPkv = @MothersPkv,
+                //                    RegistrationAtCWC = @RegistrationAtCWC,
+                //                    RegistrationAtHEI = @RegistrationAtHEI,
+                //                    VisitID = @VisitID,
+                //                    Gestation = @Gestation,
+                //                    BirthWeight = @BirthWeight,
+                //                    BirthLength = @BirthLength,
+                //                    BirthOrder = @BirthOrder,
+                //                    BirthType = @BirthType,
+                //                    PlaceOfDelivery = @PlaceOfDelivery,
+                //                    ModeOfDelivery = @ModeOfDelivery,
+                //                    SpecialNeeds = @SpecialNeeds,
+                //                    SpecialCare = @SpecialCare,
+                //                    HEI = @HEI,
+                //                    MotherAlive = @MotherAlive,
+                //                    MothersCCCNo = @MothersCCCNo,
+                //                    TransferIn = @TransferIn,
+                //                    TransferInDate = @TransferInDate,
+                //                    TransferredFrom = @TransferredFrom,
+                //                    HEIDate = @HEIDate,
+                //                    NVP = @NVP,
+                //                    BreastFeeding = @BreastFeeding,
+                //                    ReferredFrom = @ReferredFrom,
+                //                    ARTMother = @ARTMother,
+                //                    ARTRegimenMother = @ARTRegimenMother,
+                //                    ARTStartDateMother = @ARTStartDateMother,
+                //                    Date_Created = @Date_Created,
+                //                    DateLastModified = @DateLastModified,
+                //                    DateExtracted = @DateExtracted,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided                       
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
+
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

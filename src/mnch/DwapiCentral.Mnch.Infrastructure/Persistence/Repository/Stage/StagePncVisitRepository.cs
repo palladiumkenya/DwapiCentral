@@ -181,90 +181,90 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                         _mapper.Map(stageExtract, existingExtract);
                     }
                 }
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     PncVisits
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     PncVisits
+                //               SET                                  
+                //                    DateExtracted = @DateExtracted,                                    
+                //                    VisitID = @VisitID,
+                //                    VisitDate = @VisitDate,
+                //                    PNCRegisterNumber = @PNCRegisterNumber,
+                //                    PNCVisitNo = @PNCVisitNo,
+                //                    DeliveryDate = @DeliveryDate,
+                //                    ModeOfDelivery = @ModeOfDelivery,
+                //                    PlaceOfDelivery = @PlaceOfDelivery,
+                //                    Height = @Height,
+                //                    Weight = @Weight,
+                //                    Temp = @Temp,
+                //                    PulseRate = @PulseRate,
+                //                    RespiratoryRate = @RespiratoryRate,
+                //                    OxygenSaturation = @OxygenSaturation,
+                //                    MUAC = @MUAC,
+                //                    BP = @BP,
+                //                    BreastExam = @BreastExam,
+                //                    GeneralCondition = @GeneralCondition,
+                //                    HasPallor = @HasPallor,
+                //                    Pallor = @Pallor,
+                //                    Breast = @Breast,
+                //                    PPH = @PPH,
+                //                    CSScar = @CSScar,
+                //                    UterusInvolution = @UterusInvolution,
+                //                    Episiotomy = @Episiotomy,
+                //                    Lochia = @Lochia,
+                //                    Fistula = @Fistula,
+                //                    MaternalComplications = @MaternalComplications,
+                //                    TBScreening = @TBScreening,
+                //                    ClientScreenedCACx = @ClientScreenedCACx,
+                //                    CACxScreenMethod = @CACxScreenMethod,
+                //                    CACxScreenResults = @CACxScreenResults,
+                //                    PriorHIVStatus = @PriorHIVStatus,
+                //                    HIVTestingDone = @HIVTestingDone,
+                //                    HIVTest1 = @HIVTest1,
+                //                    HIVTest1Result = @HIVTest1Result,
+                //                    HIVTest2 = @HIVTest2,
+                //                    HIVTest2Result = @HIVTest2Result,
+                //                    HIVTestFinalResult = @HIVTestFinalResult,
+                //                    InfantProphylaxisGiven = @InfantProphylaxisGiven,
+                //                    MotherProphylaxisGiven = @MotherProphylaxisGiven,
+                //                    CoupleCounselled = @CoupleCounselled,
+                //                    PartnerHIVTestingPNC = @PartnerHIVTestingPNC,
+                //                    PartnerHIVResultPNC = @PartnerHIVResultPNC,
+                //                    CounselledOnFP = @CounselledOnFP,
+                //                    ReceivedFP = @ReceivedFP,
+                //                    HaematinicsGiven = @HaematinicsGiven,
+                //                    DeliveryOutcome = @DeliveryOutcome,
+                //                    BabyConditon = @BabyConditon,
+                //                    BabyFeeding = @BabyFeeding,
+                //                    UmbilicalCord = @UmbilicalCord,
+                //                    Immunization = @Immunization,
+                //                    InfantFeeding = @InfantFeeding,
+                //                    PreventiveServices = @PreventiveServices,
+                //                    ReferredFrom = @ReferredFrom,
+                //                    ReferredTo = @ReferredTo,
+                //                    NextAppointmentPNC = @NextAppointmentPNC,
+                //                    ClinicalNotes = @ClinicalNotes,
+                //                    Date_Created = @Date_Created,
+                //                    Date_Last_Modified = @Date_Last_Modified,
+                //                    InfactCameForHAART = @InfactCameForHAART,
+                //                    MotherCameForHIVTest = @MotherCameForHIVTest,
+                //                    MotherGivenHAART = @MotherGivenHAART,
+                //                    VisitTimingBaby = @VisitTimingBaby,
+                //                    VisitTimingMother = @VisitTimingMother,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided  
 
-                               SET                                  
-                                    DateExtracted = @DateExtracted,                                    
-                                    VisitID = @VisitID,
-                                    VisitDate = @VisitDate,
-                                    PNCRegisterNumber = @PNCRegisterNumber,
-                                    PNCVisitNo = @PNCVisitNo,
-                                    DeliveryDate = @DeliveryDate,
-                                    ModeOfDelivery = @ModeOfDelivery,
-                                    PlaceOfDelivery = @PlaceOfDelivery,
-                                    Height = @Height,
-                                    Weight = @Weight,
-                                    Temp = @Temp,
-                                    PulseRate = @PulseRate,
-                                    RespiratoryRate = @RespiratoryRate,
-                                    OxygenSaturation = @OxygenSaturation,
-                                    MUAC = @MUAC,
-                                    BP = @BP,
-                                    BreastExam = @BreastExam,
-                                    GeneralCondition = @GeneralCondition,
-                                    HasPallor = @HasPallor,
-                                    Pallor = @Pallor,
-                                    Breast = @Breast,
-                                    PPH = @PPH,
-                                    CSScar = @CSScar,
-                                    UterusInvolution = @UterusInvolution,
-                                    Episiotomy = @Episiotomy,
-                                    Lochia = @Lochia,
-                                    Fistula = @Fistula,
-                                    MaternalComplications = @MaternalComplications,
-                                    TBScreening = @TBScreening,
-                                    ClientScreenedCACx = @ClientScreenedCACx,
-                                    CACxScreenMethod = @CACxScreenMethod,
-                                    CACxScreenResults = @CACxScreenResults,
-                                    PriorHIVStatus = @PriorHIVStatus,
-                                    HIVTestingDone = @HIVTestingDone,
-                                    HIVTest1 = @HIVTest1,
-                                    HIVTest1Result = @HIVTest1Result,
-                                    HIVTest2 = @HIVTest2,
-                                    HIVTest2Result = @HIVTest2Result,
-                                    HIVTestFinalResult = @HIVTestFinalResult,
-                                    InfantProphylaxisGiven = @InfantProphylaxisGiven,
-                                    MotherProphylaxisGiven = @MotherProphylaxisGiven,
-                                    CoupleCounselled = @CoupleCounselled,
-                                    PartnerHIVTestingPNC = @PartnerHIVTestingPNC,
-                                    PartnerHIVResultPNC = @PartnerHIVResultPNC,
-                                    CounselledOnFP = @CounselledOnFP,
-                                    ReceivedFP = @ReceivedFP,
-                                    HaematinicsGiven = @HaematinicsGiven,
-                                    DeliveryOutcome = @DeliveryOutcome,
-                                    BabyConditon = @BabyConditon,
-                                    BabyFeeding = @BabyFeeding,
-                                    UmbilicalCord = @UmbilicalCord,
-                                    Immunization = @Immunization,
-                                    InfantFeeding = @InfantFeeding,
-                                    PreventiveServices = @PreventiveServices,
-                                    ReferredFrom = @ReferredFrom,
-                                    ReferredTo = @ReferredTo,
-                                    NextAppointmentPNC = @NextAppointmentPNC,
-                                    ClinicalNotes = @ClinicalNotes,
-                                    Date_Created = @Date_Created,
-                                    Date_Last_Modified = @Date_Last_Modified,
-                                    InfactCameForHAART = @InfactCameForHAART,
-                                    MotherCameForHIVTest = @MotherCameForHIVTest,
-                                    MotherGivenHAART = @MotherGivenHAART,
-                                    VisitTimingBaby = @VisitTimingBaby,
-                                    VisitTimingMother = @VisitTimingMother,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided  
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
-
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

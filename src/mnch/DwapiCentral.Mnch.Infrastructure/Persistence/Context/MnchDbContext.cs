@@ -165,30 +165,30 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Context
                 .Key(x => new { x.PatientPk, x.SiteCode })
                 .Table($"{nameof(StageMnchPatients)}");
 
-            DapperPlusManager.Entity<MnchEnrolment>().Key(x => x.Id).Table($"{nameof(MnchEnrolments)}");
-            DapperPlusManager.Entity<MnchArt>().Key(x => x.Id).Table($"{nameof(MnchArts)}");
-            DapperPlusManager.Entity<AncVisit>().Key(x => x.Id).Table($"{nameof(AncVisits)}");
-            DapperPlusManager.Entity<MatVisit>().Key(x => x.Id).Table($"{nameof(MatVisits)}");
-            DapperPlusManager.Entity<PncVisit>().Key(x => x.Id).Table($"{nameof(PncVisits)}");
-            DapperPlusManager.Entity<MotherBabyPair>().Key(x => x.Id).Table($"{nameof(MotherBabyPairs)}");
-            DapperPlusManager.Entity<CwcEnrolment>().Key(x => x.Id).Table($"{nameof(CwcEnrolments)}");
-            DapperPlusManager.Entity<CwcVisit>().Key(x => x.Id).Table($"{nameof(CwcVisits)}");
-            DapperPlusManager.Entity<HeiExtract>().Key(x => x.Id).Table($"{nameof(Heis)}");
-            DapperPlusManager.Entity<MnchLab>().Key(x => x.Id).Table($"{nameof(MnchLabs)}");
-            DapperPlusManager.Entity<MnchImmunization>().Key(x => x.Id).Table($"{nameof(MnchImmunizations)}");
+            DapperPlusManager.Entity<MnchEnrolment>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(MnchEnrolments)}");
+            DapperPlusManager.Entity<MnchArt>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(MnchArts)}");
+            DapperPlusManager.Entity<AncVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(AncVisits)}");
+            DapperPlusManager.Entity<MatVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(MatVisits)}");
+            DapperPlusManager.Entity<PncVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(PncVisits)}");
+            DapperPlusManager.Entity<MotherBabyPair>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(MotherBabyPairs)}");
+            DapperPlusManager.Entity<CwcEnrolment>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(CwcEnrolments)}");
+            DapperPlusManager.Entity<CwcVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(CwcVisits)}");
+            DapperPlusManager.Entity<HeiExtract>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(Heis)}");
+            DapperPlusManager.Entity<MnchLab>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(MnchLabs)}");
+            DapperPlusManager.Entity<MnchImmunization>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(MnchImmunizations)}");
 
             //stage
-            DapperPlusManager.Entity<StageMnchEnrolment>().Key(x => x.Id).Table($"{nameof(StageMnchEnrolments)}");
-            DapperPlusManager.Entity<StageMnchArt>().Key(x => x.Id).Table($"{nameof(StageMnchArts)}");
-            DapperPlusManager.Entity<StageAncVisit>().Key(x => x.Id).Table($"{nameof(StageAncVisits)}");
-            DapperPlusManager.Entity<StageMatVisit>().Key(x => x.Id).Table($"{nameof(StageMatVisits)}");
-            DapperPlusManager.Entity<StagePncVisit>().Key(x => x.Id).Table($"{nameof(StagePncVisits)}");
-            DapperPlusManager.Entity<StageMotherBabyPair>().Key(x => x.Id).Table($"{nameof(StageMotherBabyPairs)}");
-            DapperPlusManager.Entity<StageCwcEnrolment>().Key(x => x.Id).Table($"{nameof(StageCwcEnrolments)}");
-            DapperPlusManager.Entity<StageCwcVisit>().Key(x => x.Id).Table($"{nameof(StageCwcVisits)}");
-            DapperPlusManager.Entity<StageHeiExtract>().Key(x => x.Id).Table($"{nameof(StageHeis)}");
-            DapperPlusManager.Entity<StageMnchLab>().Key(x => x.Id).Table($"{nameof(StageMnchLabs)}");
-            DapperPlusManager.Entity<StageMnchImmunization>().Key(x => x.Id).Table($"{nameof(StageMnchImmunizations)}");
+            DapperPlusManager.Entity<StageMnchEnrolment>().Key(x =>  new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageMnchEnrolments)}");
+            DapperPlusManager.Entity<StageMnchArt>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageMnchArts)}");
+            DapperPlusManager.Entity<StageAncVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageAncVisits)}");
+            DapperPlusManager.Entity<StageMatVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageMatVisits)}");
+            DapperPlusManager.Entity<StagePncVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StagePncVisits)}");
+            DapperPlusManager.Entity<StageMotherBabyPair>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageMotherBabyPairs)}");
+            DapperPlusManager.Entity<StageCwcEnrolment>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageCwcEnrolments)}");
+            DapperPlusManager.Entity<StageCwcVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageCwcVisits)}");
+            DapperPlusManager.Entity<StageHeiExtract>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageHeis)}");
+            DapperPlusManager.Entity<StageMnchLab>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageMnchLabs)}");
+            DapperPlusManager.Entity<StageMnchImmunization>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(StageMnchImmunizations)}");
 
 
 

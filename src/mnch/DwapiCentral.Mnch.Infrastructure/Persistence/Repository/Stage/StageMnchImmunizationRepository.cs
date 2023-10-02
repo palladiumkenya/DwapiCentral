@@ -181,57 +181,57 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                         _mapper.Map(stageExtract, existingExtract);
                     }
                 }
+                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                //var cons = _context.Database.GetConnectionString();
+                //var sql = $@"
+                //           UPDATE 
+                //                     MnchImmunizations
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     MnchImmunizations
+                //               SET                                  
+                //                    DateExtracted = @DateExtracted,                                   
+                //                    FacilityName = @FacilityName,                                   
+                //                    BCG = @BCG,
+                //                    OPVatBirth = @OPVatBirth,
+                //                    OPV1 = @OPV1,
+                //                    OPV2 = @OPV2,
+                //                    OPV3 = @OPV3,
+                //                    IPV = @IPV,
+                //                    DPTHepBHIB1 = @DPTHepBHIB1,
+                //                    DPTHepBHIB2 = @DPTHepBHIB2,
+                //                    DPTHepBHIB3 = @DPTHepBHIB3,
+                //                    PCV101 = @PCV101,
+                //                    PCV102 = @PCV102,
+                //                    PCV103 = @PCV103,
+                //                    ROTA1 = @ROTA1,
+                //                    MeaslesReubella1 = @MeaslesReubella1,
+                //                    YellowFever = @YellowFever,
+                //                    MeaslesReubella2 = @MeaslesReubella2,
+                //                    MeaslesAt6Months = @MeaslesAt6Months,
+                //                    ROTA2 = @ROTA2,
+                //                    DateOfNextVisit = @DateOfNextVisit,
+                //                    BCGScarChecked = @BCGScarChecked,
+                //                    DateChecked = @DateChecked,
+                //                    DateBCGrepeated = @DateBCGrepeated,
+                //                    VitaminAAt6Months = @VitaminAAt6Months,
+                //                    VitaminAAt1Yr = @VitaminAAt1Yr,
+                //                    VitaminAAt18Months = @VitaminAAt18Months,
+                //                    VitaminAAt2Years = @VitaminAAt2Years,
+                //                    VitaminAAt2To5Years = @VitaminAAt2To5Years,
+                //                    FullyImmunizedChild = @FullyImmunizedChild,
+                //                    Date_Created = @Date_Created,
+                //                    DateLastModified = @DateLastModified,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided   
 
-                               SET                                  
-                                    DateExtracted = @DateExtracted,                                   
-                                    FacilityName = @FacilityName,                                   
-                                    BCG = @BCG,
-                                    OPVatBirth = @OPVatBirth,
-                                    OPV1 = @OPV1,
-                                    OPV2 = @OPV2,
-                                    OPV3 = @OPV3,
-                                    IPV = @IPV,
-                                    DPTHepBHIB1 = @DPTHepBHIB1,
-                                    DPTHepBHIB2 = @DPTHepBHIB2,
-                                    DPTHepBHIB3 = @DPTHepBHIB3,
-                                    PCV101 = @PCV101,
-                                    PCV102 = @PCV102,
-                                    PCV103 = @PCV103,
-                                    ROTA1 = @ROTA1,
-                                    MeaslesReubella1 = @MeaslesReubella1,
-                                    YellowFever = @YellowFever,
-                                    MeaslesReubella2 = @MeaslesReubella2,
-                                    MeaslesAt6Months = @MeaslesAt6Months,
-                                    ROTA2 = @ROTA2,
-                                    DateOfNextVisit = @DateOfNextVisit,
-                                    BCGScarChecked = @BCGScarChecked,
-                                    DateChecked = @DateChecked,
-                                    DateBCGrepeated = @DateBCGrepeated,
-                                    VitaminAAt6Months = @VitaminAAt6Months,
-                                    VitaminAAt1Yr = @VitaminAAt1Yr,
-                                    VitaminAAt18Months = @VitaminAAt18Months,
-                                    VitaminAAt2Years = @VitaminAAt2Years,
-                                    VitaminAAt2To5Years = @VitaminAAt2To5Years,
-                                    FullyImmunizedChild = @FullyImmunizedChild,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided   
+                //             WHERE  PatientPk = @PatientPK
+                //                    AND SiteCode = @SiteCode
+                //                    AND RecordUUID = @RecordUUID";
 
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
-
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                //using var connection = new SqlConnection(cons);
+                //if (connection.State != ConnectionState.Open)
+                //    connection.Open();
+                //await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {

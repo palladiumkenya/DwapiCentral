@@ -79,16 +79,20 @@ namespace DwapiCentral.Mnch.Controllers
             var validFacility = await _mediator.Send(new ValidateSiteCommand(manifestDto.Manifest.SiteCode, manifestDto.Manifest.Name));
             if (validFacility.IsSuccess)
             {
-                string json = manifestDto.Manifest.Cargoes[1].Items;
 
-                dynamic data = JsonConvert.DeserializeObject(json);
+                if (manifestDto.Manifest.Cargoes.Count > 1)
+                {
+                    string json = manifestDto.Manifest.Cargoes[1].Items;
 
-                manifestDto.Manifest.EmrVersion = data.EmrVersion;
+                    dynamic data = JsonConvert.DeserializeObject(json);
 
-                dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifestDto.Manifest.Cargoes[2].Items);
+                    manifestDto.Manifest.EmrVersion = data.EmrVersion;
 
-                manifestDto.Manifest.DwapiVersion = dwapiVersiondata.Version;
+                    dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifestDto.Manifest.Cargoes[2].Items);
 
+                    manifestDto.Manifest.DwapiVersion = dwapiVersiondata.Version;
+                }
+               
                 try
                 {
                     var id = BackgroundJob.Enqueue(() => SaveManifestJob(new SaveManifestCommand(manifestDto.Manifest)));
