@@ -1,5 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using DwapiCentral.Hts.Application.Commands;
+using DwapiCentral.Hts.Domain.Exceptions;
+using DwapiCentral.Hts.Domain.Repository;
+using DwapiCentral.Shared.Domain.Enums;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -15,11 +18,14 @@ namespace DwapiCentral.Hts.Controllers
     {
 
         private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
+        private readonly IFacilityRepository _facilityRepository;
 
-
-        public HtsController(IMediator mediator)
+        public HtsController(IMediator mediator, IManifestRepository manifestRepository, IFacilityRepository facilityRepository)
         {
             _mediator = mediator;
+            _manifestRepository = manifestRepository;
+            _facilityRepository = facilityRepository;
         }
 
         [HttpPost("api/Hts/verify")]
@@ -90,7 +96,32 @@ namespace DwapiCentral.Hts.Controllers
                 }
                 try
                 {
-                  BackgroundJob.Enqueue(() => SaveManifestJob(manifest));
+                    //var facility = await _facilityRepository.GetByCode(manifest.manifest.SiteCode);
+                    //if (null == facility)
+                    //    throw new SiteNotEnrolledException(manifest.manifest.SiteCode);
+
+                    //try
+                    //{
+                    //    if (manifest.manifest.EmrSetup != EmrSetup.Community)
+                    //      await  _manifestRepository.ClearFacility(manifest.manifest.SiteCode);
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Log.Error("Clear MANIFEST ERROR ", e);
+                    //}
+
+                    //try
+                    //{
+                    //    if (manifest.manifest.EmrSetup == EmrSetup.Community)
+                    //        _manifestRepository.ClearFacility(manifest.manifest.SiteCode, "IRDO");
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Log.Error("Clear COMMUNITY MANIFEST ERROR ", e);
+                    //}
+
+
+                    BackgroundJob.Enqueue(() => SaveManifestJob(manifest));
                  
                     return Ok();
                 }

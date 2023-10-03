@@ -32,7 +32,7 @@ namespace DwapiCentral.Hts.Controllers
             try
             {
                // var id = BackgroundJob.Enqueue(() => SaveClientLinkageJob(client));
-                var id = BackgroundJob.Schedule(() => SaveClientLinkageJob(client), TimeSpan.FromSeconds(1));
+                var id = BackgroundJob.Schedule(() => SaveClientLinkageJob(client), TimeSpan.FromSeconds(5));
                 var manifestId = await _manifestRepository.GetManifestId(client.ClientLinkage.FirstOrDefault().SiteCode);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.ClientLinkage.Count(), ManifestId = manifestId, SiteCode = client.ClientLinkage.First().SiteCode, ExtractName = "HtsClientLinkage" };

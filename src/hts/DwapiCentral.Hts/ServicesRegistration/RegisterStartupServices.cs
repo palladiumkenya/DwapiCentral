@@ -49,7 +49,7 @@ public static class RegisterStartupServices
 
         queues.ForEach(queue =>
         {
-            var workerCount = queue.Equals("clients", StringComparison.OrdinalIgnoreCase) ? 5 : 1; // Assign 5 workers to 'clients', 1 worker to others
+            var workerCount = queue.Equals("clients", StringComparison.OrdinalIgnoreCase) ? 10 : 5; 
             ConfigureWorkers(builder.Configuration, builder.Services, new[] { queue.ToLower() }, workerCount);
         });
 
