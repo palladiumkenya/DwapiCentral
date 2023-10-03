@@ -29,8 +29,8 @@ namespace DwapiCentral.Hts.Controllers
 
             try
             {
-                var id = BackgroundJob.Enqueue(() => SaveTestKitJob(client));
-
+                //var id = BackgroundJob.Enqueue(() => SaveTestKitJob(client));
+                var id = BackgroundJob.Schedule(() => SaveTestKitJob(client), TimeSpan.FromSeconds(1));
                 var manifestId = await _manifestRepository.GetManifestId(client.TestKits.FirstOrDefault().SiteCode);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.TestKits.Count(), ManifestId = manifestId, SiteCode = client.TestKits.First().SiteCode, ExtractName = "HtsTestKits" };

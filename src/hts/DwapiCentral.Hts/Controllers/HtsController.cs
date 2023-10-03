@@ -76,16 +76,18 @@ namespace DwapiCentral.Hts.Controllers
             var validFacility = await _mediator.Send(new ValidateSiteCommand(manifest.manifest.SiteCode, manifest.manifest.Name));
             if (validFacility.IsSuccess)
             {
-                string json = manifest.manifest.Cargoes[1].Items;
+                if (manifest.manifest.Cargoes.Count > 1)
+                {
+                    string json = manifest.manifest.Cargoes[1].Items;
 
-                dynamic data = JsonConvert.DeserializeObject(json);
+                    dynamic data = JsonConvert.DeserializeObject(json);
 
-                manifest.manifest.EmrVersion = data.EmrVersion;
+                    manifest.manifest.EmrVersion = data.EmrVersion;
 
-                dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.manifest.Cargoes[2].Items);
+                    dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.manifest.Cargoes[2].Items);
 
-                manifest.manifest.DwapiVersion = dwapiVersiondata.Version;
-
+                    manifest.manifest.DwapiVersion = dwapiVersiondata.Version;
+                }
                 try
                 {
                   BackgroundJob.Enqueue(() => SaveManifestJob(manifest));

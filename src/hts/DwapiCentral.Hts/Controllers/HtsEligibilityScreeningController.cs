@@ -29,8 +29,8 @@ namespace DwapiCentral.Hts.Controllers
 
             try
             {
-                var id = BackgroundJob.Enqueue(() => SaveHtsEligibilityScreeningJob(client));
-
+                //var id = BackgroundJob.Enqueue(() => SaveHtsEligibilityScreeningJob(client));
+                var id = BackgroundJob.Schedule(() => SaveHtsEligibilityScreeningJob(client), TimeSpan.FromSeconds(1));
                 var manifestId = await _manifestRepository.GetManifestId(client.HtsEligibility.FirstOrDefault().SiteCode);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.HtsEligibility.Count(), ManifestId = manifestId, SiteCode = client.HtsEligibility.First().SiteCode, ExtractName = "HtsEligibilityExtract" };

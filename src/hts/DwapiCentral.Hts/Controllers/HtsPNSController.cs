@@ -29,8 +29,8 @@ namespace DwapiCentral.Hts.Controllers
 
             try
             {
-                var id = BackgroundJob.Enqueue(() => SavePNSJob(client));
-
+               // var id = BackgroundJob.Enqueue(() => SavePNSJob(client));
+                var id = BackgroundJob.Schedule(() => SavePNSJob(client), TimeSpan.FromSeconds(1));
                 var manifestId = await _manifestRepository.GetManifestId(client.PartnerNotificationServices.FirstOrDefault().SiteCode);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.PartnerNotificationServices.Count(), ManifestId = manifestId, SiteCode = client.PartnerNotificationServices.First().SiteCode, ExtractName = "HtsPartnerNotificationServices" };
