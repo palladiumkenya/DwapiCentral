@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20230906091241__InitialCt")]
-    partial class _InitialCt
+    [Migration("20231002111644__InitialMigration")]
+    partial class _InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

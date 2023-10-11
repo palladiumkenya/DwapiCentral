@@ -29,7 +29,11 @@ namespace DwapiCentral.Ct.Application.EventHandlers
         {
             var message = JsonConvert.SerializeObject(notification);
             var body = Encoding.UTF8.GetBytes(message);
+            var queueName = "indicator.queue";
 
+            _channel.QueueDeclare(queue: queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+
+            _channel.QueueBind(queueName, _rabbitOptions.ExchangeName, "indicator.route");
 
             _channel.BasicPublish(_rabbitOptions.ExchangeName, "indicator.route", null, body);
 

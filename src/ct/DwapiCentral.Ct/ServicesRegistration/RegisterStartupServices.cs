@@ -3,6 +3,7 @@ using Hangfire;
 using Serilog;
 using Owin;
 using DwapiCentral.Shared.Domain.Model.Common;
+using MediatR;
 
 namespace DwapiCentral.Ct.ServicesRegistration;
 
@@ -41,10 +42,10 @@ public static class RegisterStartupServices
                QueuePollInterval = TimeSpan.Zero,
                UseRecommendedIsolationLevel = true,
                DisableGlobalLocks = true
-           }));
-
-        Hangfire.GlobalConfiguration.Configuration.UseBatches(TimeSpan.FromDays(30));
+           }));        
         
+        Hangfire.GlobalConfiguration.Configuration.UseBatches(TimeSpan.FromDays(30));
+       
         var queues = new List<string>
             {
                 "manifest", "patient", "patientart", "patientpharmacy", "patientvisits", "patientstatus",
