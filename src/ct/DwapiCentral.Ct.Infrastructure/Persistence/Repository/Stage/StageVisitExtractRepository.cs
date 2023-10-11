@@ -165,7 +165,18 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
                          );
 
-                foreach (var existingExtract in existingRecords)
+                //foreach (var existingExtract in existingRecords)
+                //{
+                //    if (stageDictionary.TryGetValue(
+                //        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+                //        out var stageExtract)
+                //    )
+                //    {
+                //        _mapper.Map(stageExtract, existingExtract);
+                //    }
+                //}
+
+                var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
                         new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
@@ -174,102 +185,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     {
                         _mapper.Map(stageExtract, existingExtract);
                     }
-                }
+                }).ToList(); 
 
+                await Task.WhenAll(updateTasks);
+
+                // Bulk merge the updated records asynchronously
                 _context.Database.GetDbConnection().BulkMerge(existingRecords);
 
-                //var cons = _context.Database.GetConnectionString();
-                //var sql = $@"
-                //           UPDATE 
-                //                     PatientVisitExtract
-
-                //               SET
-                //                    VisitID = @VisitID,
-                //                    VisitDate = @VisitDate,                                    
-                //                    Service = @Service,
-                //                    VisitType = @VisitType,
-                //                    WHOStage = @WHOStage,
-                //                    WABStage = @WABStage,
-                //                    Pregnant = @Pregnant,
-                //                    LMP = @LMP,
-                //                    EDD = @EDD,
-                //                    Height = @Height,
-                //                    Weight = @Weight,
-                //                    BP = @BP,
-                //                    OI = @OI,
-                //                    OIDate = @OIDate,
-                //                    SubstitutionFirstlineRegimenDate = @SubstitutionFirstlineRegimenDate,
-                //                    SubstitutionFirstlineRegimenReason = @SubstitutionFirstlineRegimenReason,
-                //                    SubstitutionSecondlineRegimenDate = @SubstitutionSecondlineRegimenDate,
-                //                    SubstitutionSecondlineRegimenReason = @SubstitutionSecondlineRegimenReason,
-                //                    SecondlineRegimenChangeDate = @SecondlineRegimenChangeDate,
-                //                    SecondlineRegimenChangeReason = @SecondlineRegimenChangeReason,
-                //                    Adherence = @Adherence,
-                //                    AdherenceCategory = @AdherenceCategory,
-                //                    FamilyPlanningMethod = @FamilyPlanningMethod,
-                //                    PwP = @PwP,
-                //                    GestationAge = @GestationAge,
-                //                    NextAppointmentDate = @NextAppointmentDate,
-                //                    StabilityAssessment = @StabilityAssessment,
-                //                    DifferentiatedCare = @DifferentiatedCare,
-                //                    PopulationType = @PopulationType,
-                //                    KeyPopulationType = @KeyPopulationType,
-                //                    VisitBy = @VisitBy,
-                //                    Temp = @Temp,
-                //                    PulseRate = @PulseRate,
-                //                    RespiratoryRate = @RespiratoryRate,
-                //                    OxygenSaturation = @OxygenSaturation,
-                //                    Muac = @Muac,
-                //                    NutritionalStatus = @NutritionalStatus,
-                //                    EverHadMenses = @EverHadMenses,
-                //                    Breastfeeding = @Breastfeeding,
-                //                    Menopausal = @Menopausal,
-                //                    NoFPReason = @NoFPReason,
-                //                    ProphylaxisUsed = @ProphylaxisUsed,
-                //                    CTXAdherence = @CTXAdherence,
-                //                    CurrentRegimen = @CurrentRegimen,
-                //                    HCWConcern = @HCWConcern,
-                //                    TCAReason = @TCAReason,
-                //                    ClinicalNotes = @ClinicalNotes,
-                //                    GeneralExamination = @GeneralExamination,
-                //                    SystemExamination = @SystemExamination,
-                //                    Skin = @Skin,
-                //                    Eyes = @Eyes,
-                //                    ENT = @ENT,
-                //                    Chest = @Chest,
-                //                    CVS = @CVS,
-                //                    Abdomen = @Abdomen,
-                //                    CNS = @CNS,
-                //                    Genitourinary = @Genitourinary,
-                //                    RefillDate = @RefillDate,
-                //                    Date_Created = @Date_Created,
-                //                    DateLastModified = @DateLastModified,
-                //                    DateExtracted = @DateExtracted,
-                //                    Created = @Created,
-                //                    Updated = @Updated,
-                //                    Voided = @Voided                          
-
-                //             WHERE  PatientPk = @PatientPK
-                //                    AND SiteCode = @SiteCode
-                //                    AND RecordUUID = @RecordUUID";
-
-                //using var connection = new SqlConnection(cons);
-                //if (connection.State != ConnectionState.Open)
-                //    connection.Open();
-
-                //using var transaction = connection.BeginTransaction();
-
-                //try
-                //{
-                //    await connection.ExecuteAsync(sql, existingRecords, transaction: transaction, commandTimeout:300);
-                //    transaction.Commit();
-                //}
-                //catch (Exception ex)
-                //{
-                //    transaction.Rollback();
-                //    Log.Error(ex);
-                //    throw;
-                //}
+               
             }
             catch(Exception ex )
             {
