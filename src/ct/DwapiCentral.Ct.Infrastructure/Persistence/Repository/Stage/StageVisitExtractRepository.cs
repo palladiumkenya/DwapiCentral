@@ -190,7 +190,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await Task.WhenAll(updateTasks);
 
                 // Bulk merge the updated records asynchronously
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
 
                
             }

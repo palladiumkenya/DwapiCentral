@@ -163,6 +163,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
                          );
 
+
+
                 foreach (var existingExtract in existingRecords)
                 {
                     if (stageDictionary.TryGetValue(

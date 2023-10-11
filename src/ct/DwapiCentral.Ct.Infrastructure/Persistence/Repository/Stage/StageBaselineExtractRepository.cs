@@ -163,60 +163,20 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
                          );
 
-                foreach (var existingExtract in existingRecords)
+                var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode,existingExtract.RecordUUID },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
                         _mapper.Map(stageExtract, existingExtract);
                     }
-                }
+                }).ToList();
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     PatientBaselinesExtract
+                await Task.WhenAll(updateTasks);
 
-                               SET     
-                                                                        
-                                    bCD4Date = @bCD4Date,
-                                    bWAB = @bWAB,
-                                    bWABDate = @bWABDate,
-                                    bWHO = @bWHO,
-                                    bWHODate = @bWHODate,
-                                    eWAB = @eWAB,
-                                    eWABDate = @eWABDate,
-                                    eCD4 = @eCD4,
-                                    eCD4Date = @eCD4Date,
-                                    eWHO = @eWHO,
-                                    eWHODate = @eWHODate,
-                                    lastWHO = @lastWHO,
-                                    lastWHODate = @lastWHODate,
-                                    lastCD4 = @lastCD4,
-                                    lastCD4Date = @lastCD4Date,
-                                    lastWAB = @lastWAB,
-                                    lastWABDate = @lastWABDate,
-                                    m12CD4 = @m12CD4,
-                                    m12CD4Date = @m12CD4Date,
-                                    m6CD4 = @m6CD4,
-                                    m6CD4Date = @m6CD4Date,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
-
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
-
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
             }
             catch (Exception ex)
             {

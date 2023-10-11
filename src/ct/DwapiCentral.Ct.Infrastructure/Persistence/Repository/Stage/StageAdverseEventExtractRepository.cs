@@ -183,7 +183,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 var filteredExtracts = latestRecordsDict.Values.ToList();
                 var mappedExtracts = _mapper.Map<List<PatientAdverseEventExtract>>(filteredExtracts);
-                _context.Database.GetDbConnection().BulkInsert(mappedExtracts);
+                _context.Database.GetDbConnection().BulkInsert(mappedExtracts));
+                
             }
             catch (Exception ex)
             {
@@ -203,49 +204,22 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                          .ToDictionary(
                              g => g.Key,
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );  
+                         );
 
-                foreach (var existingExtract in existingRecords)
+                var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode,  existingExtract.RecordUUID },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
                         out var stageExtract)
                     )
                     {
                         _mapper.Map(stageExtract, existingExtract);
                     }
-                }
+                }).ToList();
 
-                var sql = $@"
-                           UPDATE 
-                                     PatientAdverseEventExtract
+                await Task.WhenAll(updateTasks);
 
-                               SET     
-                                      VisitDate = @VisitDate
-                                      ,AdverseEvent = @AdverseEvent
-                                      ,AdverseEventStartDate = @AdverseEventStartDate
-                                      ,AdverseEventEndDate = @AdverseEventEndDate
-                                      ,Severity = @Severity
-                                      ,AdverseEventClinicalOutcome = @AdverseEventClinicalOutcome
-                                      ,AdverseEventActionTaken = @AdverseEventActionTaken
-                                      ,AdverseEventIsPregnant = @AdverseEventIsPregnant
-                                      ,AdverseEventRegimen = @AdverseEventRegimen
-                                      ,AdverseEventCause = @AdverseEventCause
-                                      ,Date_Created = @Date_Created
-                                      ,DateLastModified = @DateLastModified
-                                      ,DateExtracted = @DateExtracted
-                                      ,Created = @Created
-                                      ,Updated = @Updated
-                                      ,Voided = @Voided                          
-
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
-
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
 
             }
             catch (Exception ex)

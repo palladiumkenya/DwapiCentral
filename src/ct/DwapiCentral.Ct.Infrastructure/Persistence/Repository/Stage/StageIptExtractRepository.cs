@@ -188,8 +188,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 await Task.WhenAll(updateTasks);
 
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
-
+                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
+            
+               
             }
             catch (Exception ex)
             {

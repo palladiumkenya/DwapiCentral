@@ -170,7 +170,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
                          );
 
-                foreach (var existingExtract in existingRecords)
+                var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
                         new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
@@ -179,40 +179,11 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                     {
                         _mapper.Map(stageExtract, existingExtract);
                     }
-                }
+                }).ToList();
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     DefaulterTracingExtract
+                await Task.WhenAll(updateTasks);
 
-                               SET                                  
-                                    VisitID = @VisitID,
-                                    VisitDate = @VisitDate,                                   
-                                    EncounterId = @EncounterId,
-                                    TracingType = @TracingType,
-                                    TracingOutcome = @TracingOutcome,
-                                    AttemptNumber = @AttemptNumber,
-                                    IsFinalTrace = @IsFinalTrace,
-                                    TrueStatus = @TrueStatus,
-                                    CauseOfDeath = @CauseOfDeath,
-                                    Comments = @Comments,
-                                    BookingDate = @BookingDate,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
-
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
-
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
             }
             catch (Exception ex)
             {
