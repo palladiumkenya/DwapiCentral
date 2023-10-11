@@ -80,16 +80,16 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
                 try
                 {
                     // Notify Spot
-                    var metricDtos = MetricDto.Generate(request.Manifest);
-                    if (metricDtos.Any())
-                    {
-                        var metrics = new PrepMetricsEvent
-                        {
-                            PrepMetricExtracts = metricDtos,
+                    //var metricDtos = MetricDto.Generate(request.Manifest);
+                    //if (metricDtos.Any())
+                    //{
+                    //    var metrics = new PrepMetricsEvent
+                    //    {
+                    //        PrepMetricExtracts = metricDtos,
 
-                        };
-                        await _mediator.Publish(metrics, cancellationToken);
-                    }
+                    //    };
+                    //    await _mediator.Publish(metrics, cancellationToken);
+                    //}
 
                     await _manifestRepository.Save(request.Manifest);
 
