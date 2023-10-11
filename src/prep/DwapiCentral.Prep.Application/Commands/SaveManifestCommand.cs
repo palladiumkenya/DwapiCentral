@@ -56,8 +56,8 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
 
                 try
                 {
-                    if (otherManifests != null)
-                        _manifestRepository.ClearFacility(request.Manifest.SiteCode);
+                    if (otherManifests)
+                       await _manifestRepository.ClearFacility(request.Manifest.SiteCode);
                 }
                 catch (Exception e)
                 {
@@ -65,8 +65,8 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
                 }
                 try
                 {
-                    if (communityManifests != null)
-                        _manifestRepository.ClearFacility(request.Manifest.SiteCode, "IRDO");
+                    if (communityManifests)
+                      await  _manifestRepository.ClearFacility(request.Manifest.SiteCode, "IRDO");
                 }
                 catch (Exception e)
                 {
