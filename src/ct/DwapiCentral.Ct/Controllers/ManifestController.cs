@@ -138,7 +138,17 @@ namespace DwapiCentral.Ct.Controllers
         [DisplayName("{0}")]
         public async Task Send(string jobName, IRequest<Result> command)
         {
-            await _mediator.Send(command);
+            try
+            {
+                await _mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                
+                Log.Error($"Error in job {jobName}: {ex}");
+               
+                throw;
+            }
         }
 
     }

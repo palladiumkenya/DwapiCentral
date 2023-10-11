@@ -165,7 +165,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                              g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
                          );
 
-                foreach (var existingExtract in existingRecords)
+                //foreach (var existingExtract in existingRecords)
+                //{
+                //    if (stageDictionary.TryGetValue(
+                //        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+                //        out var stageExtract)
+                //    )
+                //    {
+                //        _mapper.Map(stageExtract, existingExtract);
+                //    }
+                //}
+                var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
                         new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
@@ -174,50 +184,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     {
                         _mapper.Map(stageExtract, existingExtract);
                     }
-                }
+                }).ToList();
 
-                var cons = _context.Database.GetConnectionString();
-                var sql = $@"
-                           UPDATE 
-                                     IptExtract
+                await Task.WhenAll(updateTasks);
 
-                               SET
-                                    VisitID = @VisitID,
-                                    VisitDate = @VisitDate,                                    
-                                    OnTBDrugs = @OnTBDrugs,
-                                    OnIPT = @OnIPT,
-                                    EverOnIPT = @EverOnIPT,
-                                    Cough = @Cough,
-                                    Fever = @Fever,
-                                    NoticeableWeightLoss = @NoticeableWeightLoss,
-                                    NightSweats = @NightSweats,
-                                    Lethargy = @Lethargy,
-                                    ICFActionTaken = @ICFActionTaken,
-                                    TestResult = @TestResult,
-                                    TBClinicalDiagnosis = @TBClinicalDiagnosis,
-                                    ContactsInvited = @ContactsInvited,
-                                    EvaluatedForIPT = @EvaluatedForIPT,
-                                    StartAntiTBs = @StartAntiTBs,
-                                    TBRxStartDate = @TBRxStartDate,
-                                    TBScreening = @TBScreening,
-                                    IPTClientWorkUp = @IPTClientWorkUp,
-                                    StartIPT = @StartIPT,
-                                    IndicationForIPT = @IndicationForIPT,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
-
-                             WHERE  PatientPk = @PatientPK
-                                    AND SiteCode = @SiteCode
-                                    AND RecordUUID = @RecordUUID";
-
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-                await connection.ExecuteAsync(sql, existingRecords);
+                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
+            
+               
             }
             catch (Exception ex)
             {
