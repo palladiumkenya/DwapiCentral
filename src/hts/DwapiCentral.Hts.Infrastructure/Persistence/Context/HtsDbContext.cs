@@ -54,48 +54,48 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<HtsClient>()
-                 .HasKey(m => new { m.PatientPk, m.SiteCode,m.HtsNumber });
+                 .HasKey(m => new { m.PatientPk, m.SiteCode });
 
             modelBuilder.Entity<HtsClient>()
                 .HasMany(c => c.HtsClientLinkages)
                 .WithOne()
-                .HasForeignKey(f => new { f.PatientPk, f.SiteCode,f.HtsNumber })
+                .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
                .HasMany(c => c.HtsClientPartners)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
                .HasMany(c => c.HtsClientTestss)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
                .HasMany(c => c.HtsClientTracings)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
                .HasMany(c => c.HtsPartnerNotificationServicess)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
                .HasMany(c => c.HtsPartnerTracings)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<HtsClient>()
                .HasMany(c => c.HtsTestKitss)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.HtsNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
            
@@ -106,10 +106,10 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<Cargo>().Key(x => x.Id).Table($"{nameof(Cargoes)}");
 
             DapperPlusManager.Entity<HtsClient>()
-                .Key(x => new { x.PatientPk, x.SiteCode, x.HtsNumber })
+                .Key(x => new { x.PatientPk, x.SiteCode })
                 .Table($"{nameof(HtsClients)}");
             DapperPlusManager.Entity<StageHtsClient>()
-                .Key(x => new { x.PatientPk, x.SiteCode, x.HtsNumber })
+                .Key(x => new { x.PatientPk, x.SiteCode })
                 .Table($"{nameof(StageClients)}");
 
 
