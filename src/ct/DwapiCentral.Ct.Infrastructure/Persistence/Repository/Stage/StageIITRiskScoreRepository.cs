@@ -41,10 +41,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                // stage > Rest
-                _context.Database.GetDbConnection().BulkInsert(extracts);
-                            
                 var pks = extracts.Select(x => x.Id).ToList();
+
+                var result = await StageData(manifestId, pks);
+
+                if (result == 0)
+                {
+                    // stage > Rest
+                    _context.Database.GetDbConnection().BulkInsert(extracts);
+                }
                 // assign > Assigned
                 await AssignAll(manifestId, pks);
 
@@ -213,7 +218,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.SourceSysUUID, existingExtract.Date_Created },
                         out var stageExtract)
                     )
                     {
@@ -221,9 +226,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     }
                 }).ToList();
 
+
                 await Task.WhenAll(updateTasks);
 
-                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
+                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
             }
             catch (Exception ex)
             {
@@ -265,6 +271,43 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             catch (Exception e)
             {
                 Log.Error(e);
+                throw;
+            }
+        }
+
+        private async Task<int> StageData(Guid manifestId, List<Guid> ids)
+        {
+            var cons = _context.Database.GetConnectionString();
+            try
+            {
+                using var connection = new SqlConnection(cons);
+                await connection.OpenAsync();
+
+                var queryParameters = new
+                {
+                    manifestId,
+                    ids
+
+                };
+
+                var query = $@"
+                           
+                                    SELECT 1
+                                    FROM {_stageName} WITH (NOLOCK)
+                                    WHERE 
+                                        LiveSession = @manifestId 
+                                         AND Id IN @ids                                   
+                             
+                        ";
+
+                var result = await connection.QueryFirstOrDefaultAsync<int>(query, queryParameters);
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
                 throw;
             }
         }
