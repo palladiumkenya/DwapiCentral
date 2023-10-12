@@ -173,7 +173,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                              g => g.FirstOrDefault()
                          );
 
-                foreach (var existingExtract in existingRecords)
+                var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
                         new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
@@ -182,9 +182,11 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                     {
                         _mapper.Map(stageExtract, existingExtract);
                     }
-                }
+                }).ToList();
 
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                await Task.WhenAll(updateTasks);
+
+                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
 
                 //var cons = _context.Database.GetConnectionString();
                 //var sql = $@"

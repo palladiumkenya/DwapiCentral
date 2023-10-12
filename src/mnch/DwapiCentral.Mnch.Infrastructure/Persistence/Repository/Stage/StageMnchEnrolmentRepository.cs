@@ -175,7 +175,17 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                              g => g.FirstOrDefault()
                          );
 
-                foreach (var existingExtract in existingRecords)
+                //foreach (var existingExtract in existingRecords)
+                //{
+                //    if (stageDictionary.TryGetValue(
+                //        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+                //        out var stageExtract)
+                //    )
+                //    {
+                //        _mapper.Map(stageExtract, existingExtract);
+                //    }
+                //}
+                var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
                         new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
@@ -184,44 +194,46 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                     {
                         _mapper.Map(stageExtract, existingExtract);
                     }
-                }
+                }).ToList();
 
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                await Task.WhenAll(updateTasks);
 
-                //var cons = _context.Database.GetConnectionString();
-                //var sql = $@"
-                //           UPDATE 
-                //                     MnchEnrolments
 
-                //               SET                                  
-                //                    DateExtracted = @DateExtracted,                                   
-                //                    FacilityName = @FacilityName,
-                //                    ServiceType = @ServiceType,
-                //                    EnrollmentDateAtMnch = @EnrollmentDateAtMnch,
-                //                    MnchNumber = @MnchNumber,
-                //                    FirstVisitAnc = @FirstVisitAnc,
-                //                    Parity = @Parity,
-                //                    Gravidae = @Gravidae,
-                //                    LMP = @LMP,
-                //                    EDDFromLMP = @EDDFromLMP,
-                //                    HIVStatusBeforeANC = @HIVStatusBeforeANC,
-                //                    HIVTestDate = @HIVTestDate,
-                //                    PartnerHIVStatus = @PartnerHIVStatus,
-                //                    PartnerHIVTestDate = @PartnerHIVTestDate,
-                //                    BloodGroup = @BloodGroup,
-                //                    StatusAtMnch = @StatusAtMnch,                                   
-                //                    Created = @Created,
-                //                    Updated = @Updated,
-                //                    Voided = @Voided   
 
-                //             WHERE  PatientPk = @PatientPK
-                //                    AND SiteCode = @SiteCode
-                //                    AND RecordUUID = @RecordUUID";
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     MnchEnrolments
 
-                //using var connection = new SqlConnection(cons);
-                //if (connection.State != ConnectionState.Open)
-                //    connection.Open();
-                //await connection.ExecuteAsync(sql, existingRecords);
+                               SET                                  
+                                    DateExtracted = @DateExtracted,                                   
+                                    FacilityName = @FacilityName,
+                                    ServiceType = @ServiceType,
+                                    EnrollmentDateAtMnch = @EnrollmentDateAtMnch,
+                                    MnchNumber = @MnchNumber,
+                                    FirstVisitAnc = @FirstVisitAnc,
+                                    Parity = @Parity,
+                                    Gravidae = @Gravidae,
+                                    LMP = @LMP,
+                                    EDDFromLMP = @EDDFromLMP,
+                                    HIVStatusBeforeANC = @HIVStatusBeforeANC,
+                                    HIVTestDate = @HIVTestDate,
+                                    PartnerHIVStatus = @PartnerHIVStatus,
+                                    PartnerHIVTestDate = @PartnerHIVTestDate,
+                                    BloodGroup = @BloodGroup,
+                                    StatusAtMnch = @StatusAtMnch,                                   
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided   
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {
