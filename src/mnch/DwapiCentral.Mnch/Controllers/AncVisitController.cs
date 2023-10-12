@@ -35,6 +35,7 @@ namespace DwapiCentral.Mnch.Controllers
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeAncVisitCommand(extract.AncVisitExtracts)));
 
                 var manifestId = await _manifestRepository.GetManifestId(extract.AncVisitExtracts.FirstOrDefault().SiteCode);
+
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.AncVisitExtracts.Count, ManifestId = manifestId, SiteCode = extract.AncVisitExtracts.First().SiteCode, ExtractName = "AncVisitExtract" };
                 await _mediator.Publish(notification);
 
