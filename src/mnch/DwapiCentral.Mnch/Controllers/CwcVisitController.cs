@@ -31,8 +31,8 @@ namespace DwapiCentral.Mnch.Controllers
             if (null == extract) return BadRequest();
             try
             {
-
-                var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeCwcVisitCommand(extract.CwcVisitExtracts)));
+                var id = BackgroundJob.Schedule(() => ProcessExtractCommand(new MergeCwcVisitCommand(extract.CwcVisitExtracts)), TimeSpan.FromSeconds(5));
+              //  var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeCwcVisitCommand(extract.CwcVisitExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.CwcVisitExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.CwcVisitExtracts.Count, ManifestId = manifestId, SiteCode = extract.CwcVisitExtracts.First().SiteCode, ExtractName = "CwcVisitExtract" };
                 await _mediator.Publish(notification);
