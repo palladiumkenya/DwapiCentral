@@ -30,8 +30,8 @@ namespace DwapiCentral.Prep.Controllers
             if (null == extract) return BadRequest();
             try
             {
-
-                var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepAdverseEventCommand(extract.PrepAdverseEventExtracts)));
+                var id = BackgroundJob.Schedule(() => ProcessExtractCommand(new MergePrepAdverseEventCommand(extract.PrepAdverseEventExtracts)), TimeSpan.FromSeconds(5));
+               // var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepAdverseEventCommand(extract.PrepAdverseEventExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.PrepAdverseEventExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepAdverseEventExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepAdverseEventExtracts.First().SiteCode, ExtractName = "PrepAdverseEventExtract" };
                 await _mediator.Publish(notification);
