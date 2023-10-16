@@ -908,7 +908,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -3713,7 +3713,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")

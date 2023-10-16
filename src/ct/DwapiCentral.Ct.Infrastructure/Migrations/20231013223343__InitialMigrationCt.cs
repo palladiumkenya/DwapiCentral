@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
-    public partial class _InitialMigration : Migration
+    public partial class _InitialMigrationCt : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -656,7 +656,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VisitID = table.Column<int>(type: "int", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IPV = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -1526,7 +1526,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    VisitID = table.Column<int>(type: "int", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IPV = table.Column<string>(type: "nvarchar(max)", nullable: true),

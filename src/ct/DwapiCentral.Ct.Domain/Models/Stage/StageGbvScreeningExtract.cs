@@ -9,7 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageGbvScreeningExtract : StageExtract,IGbvScreening
     {
-        public int VisitID { get; set; }
+        public int? VisitID { get; set; }
         public DateTime VisitDate { get; set; }
         public string? FacilityName { get; set; }
         public string? IPV { get; set; }
