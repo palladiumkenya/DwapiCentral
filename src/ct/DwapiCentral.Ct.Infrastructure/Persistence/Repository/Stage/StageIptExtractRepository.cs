@@ -161,13 +161,77 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageIpt
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
+                // Map staging data to central data
+                var centralIpt = stageIpt.Select(_mapper.Map<StageIptExtract, IptExtract>).ToList();
+
+                // Identify existing records in central data
+                var existingIptIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+                // Identify records to be updated
+                var recordsToUpdate = centralIpt.Where(x => existingIptIds.Contains(x.RecordUUID)).ToList();
+
+                // Identify records to be inserted
+                var recordsToInsert = centralIpt.Where(x => !existingIptIds.Contains(x.RecordUUID)).ToList();
+
+                // Update existing records
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
+                {
+                    await connection.OpenAsync();
+
+                    var sql = $@"
+                           UPDATE 
+                                     IptExtract
+
+                               SET
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,                                    
+                                    OnTBDrugs = @OnTBDrugs,
+                                    OnIPT = @OnIPT,
+                                    EverOnIPT = @EverOnIPT,
+                                    Cough = @Cough,
+                                    Fever = @Fever,
+                                    NoticeableWeightLoss = @NoticeableWeightLoss,
+                                    NightSweats = @NightSweats,
+                                    Lethargy = @Lethargy,
+                                    ICFActionTaken = @ICFActionTaken,
+                                    TestResult = @TestResult,
+                                    TBClinicalDiagnosis = @TBClinicalDiagnosis,
+                                    ContactsInvited = @ContactsInvited,
+                                    EvaluatedForIPT = @EvaluatedForIPT,
+                                    StartAntiTBs = @StartAntiTBs,
+                                    TBRxStartDate = @TBRxStartDate,
+                                    TBScreening = @TBScreening,
+                                    IPTClientWorkUp = @IPTClientWorkUp,
+                                    StartIPT = @StartIPT,
+                                    IndicationForIPT = @IndicationForIPT,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+            
+            // try
+            // {
+            //     //Update existing data
+            //     var stageDictionary = stageIpt
+            //              .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //              .ToDictionary(
+            //                  g => g.Key,
+            //                  g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //              );
 
                 //foreach (var existingExtract in existingRecords)
                 //{
@@ -179,28 +243,28 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 //        _mapper.Map(stageExtract, existingExtract);
                 //    }
                 //}
-                var updateTasks = existingRecords.Select(async existingExtract =>
-                {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
+                    /*var updateTasks = existingRecords.Select(async existingExtract =>
                     {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                        if (stageDictionary.TryGetValue(
+                            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+                            out var stageExtract)
+                        )
+                        {
+                            _mapper.Map(stageExtract, existingExtract);
+                        }
+                    }).ToList();
 
-                await Task.WhenAll(updateTasks);
+                    await Task.WhenAll(updateTasks);
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
-            
-               
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
-            }
+                    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                
+                   
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    throw;
+                }*/
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

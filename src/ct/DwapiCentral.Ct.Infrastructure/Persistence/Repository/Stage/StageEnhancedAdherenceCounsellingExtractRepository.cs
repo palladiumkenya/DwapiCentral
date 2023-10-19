@@ -163,35 +163,117 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageEnhancedAdherance
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
 
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                var centraldata = stageEnhancedAdherance.Select(_mapper.Map<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingExtract>).ToList();
+
+
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                    await connection.OpenAsync();
+                    var sql = $@"
+                           UPDATE 
+                                     EnhancedAdherenceCounsellingExtract
 
-                await Task.WhenAll(updateTasks);
+                               SET                                  
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,
+                                    SessionNumber = @SessionNumber,
+                                    DateOfFirstSession = @DateOfFirstSession,
+                                    PillCountAdherence = @PillCountAdherence,
+                                    MMAS4_1 = @MMAS4_1,
+                                    MMAS4_2 = @MMAS4_2,
+                                    MMAS4_3 = @MMAS4_3,
+                                    MMAS4_4 = @MMAS4_4,
+                                    MMSA8_1 = @MMSA8_1,
+                                    MMSA8_2 = @MMSA8_2,
+                                    MMSA8_3 = @MMSA8_3,
+                                    MMSA8_4 = @MMSA8_4,
+                                    MMSAScore = @MMSAScore,
+                                    EACRecievedVL = @EACRecievedVL,
+                                    EACVL = @EACVL,
+                                    EACVLConcerns = @EACVLConcerns,
+                                    EACVLThoughts = @EACVLThoughts,
+                                    EACWayForward = @EACWayForward,
+                                    EACCognitiveBarrier = @EACCognitiveBarrier,
+                                    EACBehaviouralBarrier_1 = @EACBehaviouralBarrier_1,
+                                    EACBehaviouralBarrier_2 = @EACBehaviouralBarrier_2,
+                                    EACBehaviouralBarrier_3 = @EACBehaviouralBarrier_3,
+                                    EACBehaviouralBarrier_4 = @EACBehaviouralBarrier_4,
+                                    EACBehaviouralBarrier_5 = @EACBehaviouralBarrier_5,
+                                    EACEmotionalBarriers_1 = @EACEmotionalBarriers_1,
+                                    EACEmotionalBarriers_2 = @EACEmotionalBarriers_2,
+                                    EACEconBarrier_1 = @EACEconBarrier_1,
+                                    EACEconBarrier_2 = @EACEconBarrier_2,
+                                    EACEconBarrier_3 = @EACEconBarrier_3,
+                                    EACEconBarrier_4 = @EACEconBarrier_4,
+                                    EACEconBarrier_5 = @EACEconBarrier_5,
+                                    EACEconBarrier_6 = @EACEconBarrier_6,
+                                    EACEconBarrier_7 = @EACEconBarrier_7,
+                                    EACEconBarrier_8 = @EACEconBarrier_8,
+                                    EACReviewImprovement = @EACReviewImprovement,
+                                    EACReviewMissedDoses = @EACReviewMissedDoses,
+                                    EACReviewStrategy = @EACReviewStrategy,
+                                    EACReferral = @EACReferral,
+                                    EACReferralApp = @EACReferralApp,
+                                    EACReferralExperience = @EACReferralExperience,
+                                    EACHomevisit = @EACHomevisit,
+                                    EACAdherencePlan = @EACAdherencePlan,
+                                    EACFollowupDate = @EACFollowupDate,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
 
-                 _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                             WHERE   RecordUUID = @RecordUUID";
 
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageEnhancedAdherance
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //     _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

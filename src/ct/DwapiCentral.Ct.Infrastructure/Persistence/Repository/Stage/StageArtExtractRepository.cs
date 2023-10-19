@@ -167,33 +167,97 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             try
             {
 
-                //Update existing data
-                var stageDictionary = stageArt
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                var centraldata = stageArt.Select(_mapper.Map<StageArtExtract, PatientArtExtract>).ToList();
+
+
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                    await connection.OpenAsync();
 
-                await Task.WhenAll(updateTasks);
+                    var sql = $@"
+                           UPDATE 
+                                     PatientArtExtract
 
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
+                               SET     
+                                     LastARTDate  = @LastARTDate
+                                    ,LastVisit  = @LastVisit
+                                    ,DOB  = @DOB
+                                    ,AgeEnrollment  = @AgeEnrollment
+                                    ,AgeARTStart  = @AgeARTStart
+                                    ,AgeLastVisit  = @AgeLastVisit
+                                    ,RegistrationDate  = @RegistrationDate
+                                    ,Gender  = @Gender
+                                    ,PatientSource  = @PatientSource
+                                    ,StartARTDate  = @StartARTDate
+                                    ,PreviousARTStartDate  = @PreviousARTStartDate
+                                    ,PreviousARTRegimen  = @PreviousARTRegimen
+                                    ,StartARTAtThisFacility  = @StartARTAtThisFacility
+                                    ,StartRegimen  = @StartRegimen
+                                    ,StartRegimenLine  = @StartRegimenLine
+                                    ,LastRegimen  = @LastRegimen
+                                    ,LastRegimenLine  = @LastRegimenLine
+                                    ,Duration  = @Duration
+                                    ,ExpectedReturn  = @ExpectedReturn
+                                    ,Provider  = @Provider
+                                    ,ExitReason  = @ExitReason
+                                    ,ExitDate  = @ExitDate
+                                    ,PreviousARTUse  = @PreviousARTUse
+                                    ,PreviousARTPurpose  = @PreviousARTPurpose
+                                    ,DateLastUsed  = @DateLastUsed
+                                    ,Date_Created = @Date_Created
+                                    ,DateLastModified = @DateLastModified
+                                    ,DateExtracted = @DateExtracted
+                                    ,Created = @Created
+                                    ,Updated = @Updated
+                                    ,Voided = @Voided                          
+
+                             WHERE  RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+
+            //    //Update existing data
+            //    var stageDictionary = stageArt
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //    _context.Database.GetDbConnection().BulkMerge(existingRecords);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

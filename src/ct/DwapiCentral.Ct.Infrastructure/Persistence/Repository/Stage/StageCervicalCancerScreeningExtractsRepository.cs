@@ -167,34 +167,85 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageCancerScreening
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
 
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                var centraldata = stageCancerScreening.Select(_mapper.Map<StageCervicalCancerScreeningExtract, CervicalCancerScreeningExtract>).ToList();
+
+
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                    await connection.OpenAsync();
+                    var sql = $@"
+                           UPDATE 
+                                     CervicalCancerScreeningExtract
 
-                await Task.WhenAll(updateTasks);
+                               SET     
+                                                                        
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,                                    
+                                    VisitType = @VisitType,
+                                    ScreeningMethod = @ScreeningMethod,
+                                    TreatmentToday = @TreatmentToday,
+                                    ReferredOut = @ReferredOut,
+                                    NextAppointmentDate = @NextAppointmentDate,
+                                    ScreeningType = @ScreeningType,
+                                    ScreeningResult = @ScreeningResult,
+                                    PostTreatmentComplicationCause = @PostTreatmentComplicationCause,
+                                    OtherPostTreatmentComplication = @OtherPostTreatmentComplication,
+                                    ReferralReason = @ReferralReason,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                             WHERE   RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageCancerScreening
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

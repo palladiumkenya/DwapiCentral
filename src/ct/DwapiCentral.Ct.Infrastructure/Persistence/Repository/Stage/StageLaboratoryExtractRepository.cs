@@ -160,35 +160,81 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageLab
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
-
-                var updateTasks = existingRecords.Select(async existingExtract =>
-                {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
-
-                await Task.WhenAll(updateTasks);
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
-
                
+                var centraldata = stageLab.Select(_mapper.Map<StageLaboratoryExtract, PatientLaboratoryExtract>).ToList();
+
+                
+                var existingIptIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+              
+                var recordsToUpdate = centraldata.Where(x => existingIptIds.Contains(x.RecordUUID)).ToList();
+               
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
+                {
+                    await connection.OpenAsync();
+
+                    var sql = $@"
+                           UPDATE 
+                                     PatientLaboratoryExtract
+
+                               SET
+                                    VisitID = @VisitID,
+                                    OrderedByDate = @OrderedByDate,
+                                    ReportedByDate = @ReportedByDate,
+                                    TestName = @TestName,
+                                    EnrollmentTest = @EnrollmentTest,
+                                    TestResult = @TestResult,
+                                    DateSampleTaken = @DateSampleTaken,
+                                    SampleType = @SampleType,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageLab
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

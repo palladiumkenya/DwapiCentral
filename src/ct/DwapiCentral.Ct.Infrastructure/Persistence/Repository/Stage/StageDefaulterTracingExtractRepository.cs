@@ -165,34 +165,83 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageDefaulter
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
 
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                var centraldata = stageDefaulter.Select(_mapper.Map<StageDefaulterTracingExtract, DefaulterTracingExtract>).ToList();
+
+
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                    await connection.OpenAsync();
+                    var sql = $@"
+                           UPDATE 
+                                     DefaulterTracingExtract
 
-                await Task.WhenAll(updateTasks);
+                               SET                                  
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,                                   
+                                    EncounterId = @EncounterId,
+                                    TracingType = @TracingType,
+                                    TracingOutcome = @TracingOutcome,
+                                    AttemptNumber = @AttemptNumber,
+                                    IsFinalTrace = @IsFinalTrace,
+                                    TrueStatus = @TrueStatus,
+                                    CauseOfDeath = @CauseOfDeath,
+                                    Comments = @Comments,
+                                    BookingDate = @BookingDate,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                             WHERE  RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageDefaulter
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

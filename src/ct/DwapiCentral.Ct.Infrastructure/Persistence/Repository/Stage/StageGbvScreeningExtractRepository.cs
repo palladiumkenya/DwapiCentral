@@ -164,35 +164,83 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageGbvScreening
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
-
-                var updateTasks = existingRecords.Select(async existingExtract =>
-                {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
-
-                await Task.WhenAll(updateTasks);
-
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
                
+                var centraldata = stageGbvScreening.Select(_mapper.Map<StageGbvScreeningExtract, GbvScreeningExtract>).ToList();
+
+               
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+               
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
+                {
+                    await connection.OpenAsync();
+
+                    var sql = $@"
+                           UPDATE 
+                                     GbvScreeningExtract
+
+                               SET                                  
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,                                   
+                                    IPV = @IPV,
+                                    PhysicalIPV = @PhysicalIPV,
+                                    EmotionalIPV = @EmotionalIPV,
+                                    SexualIPV = @SexualIPV,
+                                    IPVRelationship = @IPVRelationship,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageGbvScreening
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //    _context.Database.GetDbConnection().BulkMerge(existingRecords);
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
+
+
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

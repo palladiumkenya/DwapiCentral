@@ -168,35 +168,77 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
+
+                var centraldata = stageDrug.Select(_mapper.Map<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningExtract>).ToList();
+
+
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
                 var cons = _context.Database.GetConnectionString();
-                //Update existing data
-                var stageDictionary = stageDrug
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
-
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                    await connection.OpenAsync();
+                    var sql = $@"
+                           UPDATE 
+                                     DrugAlcoholScreeningExtract
 
-                await Task.WhenAll(updateTasks);
+                               SET   VisitID = @VisitID                                
+                                    ,VisitDate = @VisitDate                               
+                                    ,DrinkingAlcohol = @DrinkingAlcohol
+                                    ,Smoking = @Smoking
+                                    ,DrugUse = @DrugUse
+                                    ,Date_Created = @Date_Created
+                                    ,DateLastModified = @DateLastModified
+                                    ,DateExtracted = @DateExtracted
+                                    ,Created = @Created
+                                    ,Updated = @Updated
+                                    ,Voided = @Voided                            
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                             WHERE   RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    var cons = _context.Database.GetConnectionString();
+            //    //Update existing data
+            //    var stageDictionary = stageDrug
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

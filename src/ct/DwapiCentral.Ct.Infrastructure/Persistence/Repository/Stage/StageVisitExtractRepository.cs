@@ -162,47 +162,143 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageVisits
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
 
-                //foreach (var existingExtract in existingRecords)
-                //{
-                //    if (stageDictionary.TryGetValue(
-                //        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                //        out var stageExtract)
-                //    )
-                //    {
-                //        _mapper.Map(stageExtract, existingExtract);
-                //    }
-                //}
+                var centraldata = stageVisits.Select(_mapper.Map<StageVisitExtract, PatientVisitExtract>).ToList();
 
-                var updateTasks = existingRecords.Select(async existingExtract =>
+
+                var existingIptIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+
+                var recordsToUpdate = centraldata.Where(x => existingIptIds.Contains(x.RecordUUID)).ToList();
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList(); 
+                    await connection.OpenAsync();
 
-                await Task.WhenAll(updateTasks);
+                    var sql = $@"
+                           UPDATE 
+                                     PatientVisitExtract
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                               SET
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,                                    
+                                    Service = @Service,
+                                    VisitType = @VisitType,
+                                    WHOStage = @WHOStage,
+                                    WABStage = @WABStage,
+                                    Pregnant = @Pregnant,
+                                    LMP = @LMP,
+                                    EDD = @EDD,
+                                    Height = @Height,
+                                    Weight = @Weight,
+                                    BP = @BP,
+                                    OI = @OI,
+                                    OIDate = @OIDate,
+                                    SubstitutionFirstlineRegimenDate = @SubstitutionFirstlineRegimenDate,
+                                    SubstitutionFirstlineRegimenReason = @SubstitutionFirstlineRegimenReason,
+                                    SubstitutionSecondlineRegimenDate = @SubstitutionSecondlineRegimenDate,
+                                    SubstitutionSecondlineRegimenReason = @SubstitutionSecondlineRegimenReason,
+                                    SecondlineRegimenChangeDate = @SecondlineRegimenChangeDate,
+                                    SecondlineRegimenChangeReason = @SecondlineRegimenChangeReason,
+                                    Adherence = @Adherence,
+                                    AdherenceCategory = @AdherenceCategory,
+                                    FamilyPlanningMethod = @FamilyPlanningMethod,
+                                    PwP = @PwP,
+                                    GestationAge = @GestationAge,
+                                    NextAppointmentDate = @NextAppointmentDate,
+                                    StabilityAssessment = @StabilityAssessment,
+                                    DifferentiatedCare = @DifferentiatedCare,
+                                    PopulationType = @PopulationType,
+                                    KeyPopulationType = @KeyPopulationType,
+                                    VisitBy = @VisitBy,
+                                    Temp = @Temp,
+                                    PulseRate = @PulseRate,
+                                    RespiratoryRate = @RespiratoryRate,
+                                    OxygenSaturation = @OxygenSaturation,
+                                    Muac = @Muac,
+                                    NutritionalStatus = @NutritionalStatus,
+                                    EverHadMenses = @EverHadMenses,
+                                    Breastfeeding = @Breastfeeding,
+                                    Menopausal = @Menopausal,
+                                    NoFPReason = @NoFPReason,
+                                    ProphylaxisUsed = @ProphylaxisUsed,
+                                    CTXAdherence = @CTXAdherence,
+                                    CurrentRegimen = @CurrentRegimen,
+                                    HCWConcern = @HCWConcern,
+                                    TCAReason = @TCAReason,
+                                    ClinicalNotes = @ClinicalNotes,
+                                    GeneralExamination = @GeneralExamination,
+                                    SystemExamination = @SystemExamination,
+                                    Skin = @Skin,
+                                    Eyes = @Eyes,
+                                    ENT = @ENT,
+                                    Chest = @Chest,
+                                    CVS = @CVS,
+                                    Abdomen = @Abdomen,
+                                    CNS = @CNS,
+                                    Genitourinary = @Genitourinary,
+                                    RefillDate = @RefillDate,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
 
-               
+                             WHERE  RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
-            catch(Exception ex )
+            catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageVisits
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    //foreach (var existingExtract in existingRecords)
+            //    //{
+            //    //    if (stageDictionary.TryGetValue(
+            //    //        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //    //        out var stageExtract)
+            //    //    )
+            //    //    {
+            //    //        _mapper.Map(stageExtract, existingExtract);
+            //    //    }
+            //    //}
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList(); 
+
+            //    await Task.WhenAll(updateTasks);
+
+            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+
+
+            //}
+            //catch(Exception ex )
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

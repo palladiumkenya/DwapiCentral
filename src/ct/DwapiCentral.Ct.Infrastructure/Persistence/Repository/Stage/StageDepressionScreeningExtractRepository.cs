@@ -162,34 +162,85 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageDepression
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
 
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                var centraldata = stageDepression.Select(_mapper.Map<StageDepressionScreeningExtract, DepressionScreeningExtract>).ToList();
+
+
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                    await connection.OpenAsync();
+                    var sql = $@"
+                           UPDATE 
+                                     DepressionScreeningExtract
 
-                await Task.WhenAll(updateTasks);
+                               SET                                  
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,
+                                    PHQ9_1 = @PHQ9_1,
+                                    PHQ9_2 = @PHQ9_2,
+                                    PHQ9_3 = @PHQ9_3,
+                                    PHQ9_4 = @PHQ9_4,
+                                    PHQ9_5 = @PHQ9_5,
+                                    PHQ9_6 = @PHQ9_6,
+                                    PHQ9_7 = @PHQ9_7,
+                                    PHQ9_8 = @PHQ9_8,
+                                    PHQ9_9 = @PHQ9_9,
+                                    PHQ_9_rating = @PHQ_9_rating,
+                                    DepressionAssesmentScore = @DepressionAssesmentScore,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                             WHERE RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageDepression
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)

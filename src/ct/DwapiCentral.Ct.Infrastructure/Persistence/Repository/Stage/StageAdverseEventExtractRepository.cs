@@ -202,36 +202,85 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
+               
+                var centraldata = stageAdverse.Select(_mapper.Map<StageAdverseEventExtract, PatientAdverseEventExtract>).ToList();
+
+               
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+                
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
                 var cons = _context.Database.GetConnectionString();
-                //Update existing data
-                var stageDictionary = stageAdverse
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
-
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                    await connection.OpenAsync();
 
-                await Task.WhenAll(updateTasks);
+                    var sql = $@"
+                           UPDATE 
+                                     PatientAdverseEventExtract
 
-                 _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                               SET     
+                                      VisitDate = @VisitDate
+                                      ,AdverseEvent = @AdverseEvent
+                                      ,AdverseEventStartDate = @AdverseEventStartDate
+                                      ,AdverseEventEndDate = @AdverseEventEndDate
+                                      ,Severity = @Severity
+                                      ,AdverseEventClinicalOutcome = @AdverseEventClinicalOutcome
+                                      ,AdverseEventActionTaken = @AdverseEventActionTaken
+                                      ,AdverseEventIsPregnant = @AdverseEventIsPregnant
+                                      ,AdverseEventRegimen = @AdverseEventRegimen
+                                      ,AdverseEventCause = @AdverseEventCause
+                                      ,Date_Created = @Date_Created
+                                      ,DateLastModified = @DateLastModified
+                                      ,DateExtracted = @DateExtracted
+                                      ,Created = @Created
+                                      ,Updated = @Updated
+                                      ,Voided = @Voided                          
 
+                             WHERE  RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    var cons = _context.Database.GetConnectionString();
+            //    //Update existing data
+            //    var stageDictionary = stageAdverse
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //     _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task UpdateLivestage(Guid manifestId, List<Guid> ids)

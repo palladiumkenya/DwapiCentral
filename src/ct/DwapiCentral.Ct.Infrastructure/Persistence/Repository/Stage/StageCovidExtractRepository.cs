@@ -165,34 +165,97 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageCovid
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
 
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                var centraldata = stageCovid.Select(_mapper.Map<StageCovidExtract, CovidExtract>).ToList();
+
+
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }).ToList();
+                    await connection.OpenAsync();
+                    var sql = $@"
+                           UPDATE 
+                                     CovidExtract
 
-                await Task.WhenAll(updateTasks);
+                               SET  VisitID = @VisitID,
+                                    Covid19AssessmentDate = @Covid19AssessmentDate,                                   
+                                    ReceivedCOVID19Vaccine = @ReceivedCOVID19Vaccine,                                    
+                                    FirstDoseVaccineAdministered = @FirstDoseVaccineAdministered,                                    
+                                    SecondDoseVaccineAdministered = @SecondDoseVaccineAdministered,
+                                    VaccinationStatus = @VaccinationStatus,
+                                    VaccineVerification = @VaccineVerification,
+                                    BoosterGiven = @BoosterGiven,
+                                    BoosterDose = @BoosterDose,                                    
+                                    EverCOVID19Positive = @EverCOVID19Positive,
+                                    COVID19TestDate = COALESCE(@COVID19TestDate, 1900-01-01),
+                                    PatientStatus = @PatientStatus,
+                                    AdmissionStatus = @AdmissionStatus,
+                                    AdmissionUnit = @AdmissionUnit,
+                                    MissedAppointmentDueToCOVID19 = @MissedAppointmentDueToCOVID19,                                    
+                                    COVID19TestDateSinceLastVisit = COALESCE(@COVID19TestDateSinceLastVisit,1900-01-01),
+                                    PatientStatusSinceLastVisit = @PatientStatusSinceLastVisit,
+                                    AdmissionStatusSinceLastVisit = @AdmissionStatusSinceLastVisit,                                   
+                                    AdmissionUnitSinceLastVisit = @AdmissionUnitSinceLastVisit,
+                                    SupplementalOxygenReceived = @SupplementalOxygenReceived,
+                                    PatientVentilated = @PatientVentilated,
+                                    TracingFinalOutcome = @TracingFinalOutcome,
+                                    CauseOfDeath = @CauseOfDeath,
+                                    COVID19TestResult = @COVID19TestResult,
+                                    Sequence = @Sequence,
+                                    BoosterDoseVerified = @BoosterDoseVerified,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = COALESCE(@DateLastModified,1900-01-01),
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
 
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                             WHERE   RecordUUID = @RecordUUID";
+
+                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
                 throw;
             }
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageCovid
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
