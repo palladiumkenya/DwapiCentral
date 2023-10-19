@@ -12,6 +12,7 @@ using log4net;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Z.Dapper.Plus;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
@@ -217,7 +218,16 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     await connection.OpenAsync();
 
-                    var sql = $@"
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        const int maxRetries = 3;
+
+                        for (var retry = 0; retry < maxRetries; retry++)
+                        {
+                            try
+                            {
+
+                                var sql = $@"
                            UPDATE 
                                      PatientAdverseEventExtract
 
@@ -242,13 +252,30 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                              WHERE  RecordUUID = @RecordUUID";
 
                     await connection.ExecuteAsync(sql, recordsToUpdate);
+                    break;
+                }
+                            catch (SqlException ex)
+            {
+                if (ex.Number == 1205)
+                {
+
+                    await Task.Delay(100);
+                }
+                else
+                {
+                    transaction.Rollback();
+                    throw;
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
+        }
+    }
+}
             }
+            catch (Exception ex)
+{
+    Log.Error(ex);
+    throw;
+}
             //try
             //{
             //    var cons = _context.Database.GetConnectionString();

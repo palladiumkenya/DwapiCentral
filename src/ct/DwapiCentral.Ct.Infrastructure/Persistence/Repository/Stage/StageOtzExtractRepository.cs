@@ -172,7 +172,16 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     await connection.OpenAsync();
 
-                    var sql = $@"
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        const int maxRetries = 3;
+
+                        for (var retry = 0; retry < maxRetries; retry++)
+                        {
+                            try
+                            {
+
+                                var sql = $@"
                            UPDATE 
                                      OtzExtract
 
@@ -197,6 +206,23 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                              WHERE  RecordUUID = @RecordUUID";
 
                     await connection.ExecuteAsync(sql, recordsToUpdate);
+                                break;
+                            }
+                            catch (SqlException ex)
+                            {
+                                if (ex.Number == 1205)
+                                {
+
+                                    await Task.Delay(100);
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    throw;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)

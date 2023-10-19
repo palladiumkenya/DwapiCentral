@@ -182,7 +182,19 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 }
 
                 var cons = _context.Database.GetConnectionString();
-                var sql = $@"
+                using (var connection = new SqlConnection(cons))
+                {
+                    await connection.OpenAsync();
+
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        const int maxRetries = 3;
+
+                        for (var retry = 0; retry < maxRetries; retry++)
+                        {
+                            try
+                            {
+                                var sql = $@"
                            UPDATE 
                                      PatientStatusExtract
 
@@ -208,10 +220,25 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                     AND SiteCode = @SiteCode
                                     AND RecordUUID = @RecordUUID";
 
-                using var connection = new SqlConnection(cons);
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
                 await connection.ExecuteAsync(sql, existingRecords);
+                                break;
+                            }
+                            catch (SqlException ex)
+                            {
+                                if (ex.Number == 1205)
+                                {
+
+                                    await Task.Delay(100);
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    throw;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {

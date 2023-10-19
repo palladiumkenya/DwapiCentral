@@ -176,7 +176,18 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     await connection.OpenAsync();
 
-                    var sql = $@"
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        const int maxRetries = 3; 
+
+                        for (var retry = 0; retry < maxRetries; retry++)
+                        {
+                            try
+                            {
+
+
+
+                                var sql = $@"
                            UPDATE 
                                      PatientVisitExtract
 
@@ -248,58 +259,79 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                              WHERE  RecordUUID = @RecordUUID";
 
-                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                               
+
+                                    await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
+                                
+
+                                break; 
+                            }
+                            catch (SqlException ex)
+                            {
+                                if (ex.Number == 1205) 
+                                {
+
+                                    await Task.Delay(100);
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    throw; 
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
+            catch(Exception ex) {
+             Log.Error(ex);
+            throw;
             }
-            //try
-            //{
-            //    //Update existing data
-            //    var stageDictionary = stageVisits
-            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-            //             .ToDictionary(
-            //                 g => g.Key,
-            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-            //             );
 
-            //    //foreach (var existingExtract in existingRecords)
-            //    //{
-            //    //    if (stageDictionary.TryGetValue(
-            //    //        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-            //    //        out var stageExtract)
-            //    //    )
-            //    //    {
-            //    //        _mapper.Map(stageExtract, existingExtract);
-            //    //    }
-            //    //}
+                        //try
+                        //{
+                        //    //Update existing data
+                        //    var stageDictionary = stageVisits
+                        //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+                        //             .ToDictionary(
+                        //                 g => g.Key,
+                        //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+                        //             );
 
-            //    var updateTasks = existingRecords.Select(async existingExtract =>
-            //    {
-            //        if (stageDictionary.TryGetValue(
-            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-            //            out var stageExtract)
-            //        )
-            //        {
-            //            _mapper.Map(stageExtract, existingExtract);
-            //        }
-            //    }).ToList(); 
+                        //    //foreach (var existingExtract in existingRecords)
+                        //    //{
+                        //    //    if (stageDictionary.TryGetValue(
+                        //    //        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+                        //    //        out var stageExtract)
+                        //    //    )
+                        //    //    {
+                        //    //        _mapper.Map(stageExtract, existingExtract);
+                        //    //    }
+                        //    //}
 
-            //    await Task.WhenAll(updateTasks);
+                        //    var updateTasks = existingRecords.Select(async existingExtract =>
+                        //    {
+                        //        if (stageDictionary.TryGetValue(
+                        //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+                        //            out var stageExtract)
+                        //        )
+                        //        {
+                        //            _mapper.Map(stageExtract, existingExtract);
+                        //        }
+                        //    }).ToList(); 
 
-            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                        //    await Task.WhenAll(updateTasks);
+
+                        //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
 
 
-            //}
-            //catch(Exception ex )
-            //{
-            //    Log.Error(ex);
-            //    throw;
-            //}
-        }
+                        //}
+                        //catch(Exception ex )
+                        //{
+                        //    Log.Error(ex);
+                        //    throw;
+                        //}
+                    }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
         {

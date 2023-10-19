@@ -1,5 +1,6 @@
 using System.Data;
 using System.Reflection;
+using System.Transactions;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using Dapper;
@@ -14,6 +15,7 @@ using log4net;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Z.Dapper.Plus;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -181,8 +183,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     await connection.OpenAsync();
 
-                    var sql = $@"
-                           UPDATE 
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        const int maxRetries = 3;
+
+                        for (var retry = 0; retry < maxRetries; retry++)
+                        {
+                            try
+                            {
+
+                                var sql = $@"
+                               UPDATE 
                                      PatientArtExtract
 
                                SET     
@@ -221,13 +232,30 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                              WHERE  RecordUUID = @RecordUUID";
 
                     await connection.ExecuteAsync(sql, recordsToUpdate);
+                    break;
+                }
+                            catch (SqlException ex)
+            {
+                if (ex.Number == 1205)
+                {
+
+                    await Task.Delay(100);
+                }
+                else
+                {
+                    transaction.Rollback();
+                    throw;
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
+        }
+    }
+}
             }
+            catch (Exception ex)
+{
+    Log.Error(ex);
+    throw;
+}
             //try
             //{
 
