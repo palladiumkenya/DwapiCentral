@@ -262,7 +262,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                
 
                                     await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
-                                
+                                    transaction.Commit();
 
                                 break; 
                             }

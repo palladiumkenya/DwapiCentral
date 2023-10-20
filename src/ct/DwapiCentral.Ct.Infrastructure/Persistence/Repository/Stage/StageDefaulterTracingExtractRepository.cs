@@ -213,7 +213,8 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
 
                              WHERE  RecordUUID = @RecordUUID";
 
-                    await connection.ExecuteAsync(sql, recordsToUpdate);
+                    await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
+                                transaction.Commit();
                                 break;
                             }
                             catch (SqlException ex)

@@ -160,26 +160,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageStatus
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
+                var centraldata = stageStatus.Select(_mapper.Map<StageStatusExtract, PatientStatusExtract>).ToList();
 
 
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
 
-                foreach (var existingExtract in existingRecords)
-                {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
-                    {
-                        _mapper.Map(stageExtract, existingExtract);
-                    }
-                }
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
 
                 var cons = _context.Database.GetConnectionString();
                 using (var connection = new SqlConnection(cons))
@@ -220,7 +207,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                     AND SiteCode = @SiteCode
                                     AND RecordUUID = @RecordUUID";
 
-                await connection.ExecuteAsync(sql, existingRecords);
+                await connection.ExecuteAsync(sql, existingRecords,transaction);
+                                transaction.Commit();
                                 break;
                             }
                             catch (SqlException ex)

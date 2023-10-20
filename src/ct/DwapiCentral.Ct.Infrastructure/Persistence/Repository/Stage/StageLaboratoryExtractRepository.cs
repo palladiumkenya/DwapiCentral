@@ -206,30 +206,32 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                              WHERE  RecordUUID = @RecordUUID";
 
-                    break;
-                }
+                                await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
+                                transaction.Commit();
+                                break;
+                            }
                             catch (SqlException ex)
-            {
-                if (ex.Number == 1205)
-                {
+                            {
+                                if (ex.Number == 1205)
+                                {
 
-                    await Task.Delay(100);
+                                    await Task.Delay(100);
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    throw;
+                                }
+                            }
+                        }
+                    }
                 }
-                else
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
-    }
-}
             }
             catch (Exception ex)
-{
-    Log.Error(ex);
-    throw;
-}
+            {
+                Log.Error(ex);
+                throw;
+            }
             //try
             //{
             //    //Update existing data

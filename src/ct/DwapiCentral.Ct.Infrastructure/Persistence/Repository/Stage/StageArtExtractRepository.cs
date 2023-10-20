@@ -231,31 +231,34 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                              WHERE  RecordUUID = @RecordUUID";
 
-                    await connection.ExecuteAsync(sql, recordsToUpdate);
-                    break;
-                }
-                            catch (SqlException ex)
-            {
-                if (ex.Number == 1205)
-                {
+                                await connection.ExecuteAsync(sql, recordsToUpdate,transaction);
+                                transaction.Commit();
 
-                    await Task.Delay(100);
+                                break;
+                            }
+                            catch (SqlException ex)
+                            {
+                                if (ex.Number == 1205)
+                                {
+
+                                    await Task.Delay(100);
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    throw;
+                                }
+                            }
+                        }
+                    }
                 }
-                else
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
-    }
-}
             }
             catch (Exception ex)
-{
-    Log.Error(ex);
-    throw;
-}
+            {
+                Log.Error(ex);
+                throw;
+            }
+
             //try
             //{
 
