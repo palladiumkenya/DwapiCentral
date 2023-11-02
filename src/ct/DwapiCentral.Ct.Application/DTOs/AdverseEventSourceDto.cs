@@ -9,7 +9,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     {
         public Guid Id { get; set; }
         public string RecordUUID { get; set; }
-        public DateTime VisitDate { get; set; }
+        public DateTime? VisitDate { get; set; }
         public string? AdverseEvent { get; set; }
         public DateTime? AdverseEventStartDate { get; set; }
         public DateTime? AdverseEventEndDate { get; set; }

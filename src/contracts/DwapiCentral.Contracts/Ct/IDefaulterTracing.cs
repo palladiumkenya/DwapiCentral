@@ -7,7 +7,7 @@ namespace DwapiCentral.Contracts.Ct
     {
         Guid Id { get; set; }
         int? VisitID { get; set; }
-        DateTime VisitDate { get; set; }
+        DateTime? VisitDate { get; set; }
         string? FacilityName { get; set; }
         int? EncounterId { get; set; }
         string? TracingType { get; set; }

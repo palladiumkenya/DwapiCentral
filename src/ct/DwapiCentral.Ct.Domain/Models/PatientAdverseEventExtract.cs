@@ -13,7 +13,7 @@ namespace DwapiCentral.Ct.Domain.Models
         public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public DateTime VisitDate { get ; set ; }
+        public DateTime? VisitDate { get ; set ; }
         public string? AdverseEvent { get ; set ; }
         public DateTime? AdverseEventStartDate { get ; set ; }
         public DateTime? AdverseEventEndDate { get ; set ; }

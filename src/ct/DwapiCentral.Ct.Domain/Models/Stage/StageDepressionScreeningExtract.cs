@@ -9,8 +9,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageDepressionScreeningExtract : StageExtract, IDepressionScreening
     {
-        public int VisitID { get; set; }
-        public DateTime VisitDate { get; set; }
+        public int? VisitID { get; set; }
+        public DateTime? VisitDate { get; set; }
         public string? FacilityName { get; set; }
         public string? PHQ9_1 { get; set; }
         public string? PHQ9_2 { get; set; }

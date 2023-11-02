@@ -12,7 +12,7 @@ namespace DwapiCentral.Ct.Domain.Models
         public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public DateTime ExitDate { get; set; }
+        public DateTime? ExitDate { get; set; }
         public DateTime? TOVerifiedDate { get; set; }
         public string? ExitDescription { get ; set ; }        
         public string? ExitReason { get ; set ; }       

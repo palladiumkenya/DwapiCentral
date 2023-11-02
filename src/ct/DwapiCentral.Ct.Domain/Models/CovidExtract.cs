@@ -11,8 +11,8 @@ namespace DwapiCentral.Ct.Domain.Models
         public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public int VisitID { get; set; }
-        public DateTime Covid19AssessmentDate { get; set; }
+        public int? VisitID { get; set; }
+        public DateTime? Covid19AssessmentDate { get; set; }
         public string? FacilityName { get ; set ; }      
         public string? ReceivedCOVID19Vaccine { get ; set ; }
         public DateTime? DateGivenFirstDose { get ; set ; }

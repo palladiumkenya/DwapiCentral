@@ -9,8 +9,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageDrugAlcoholScreeningExtract : StageExtract, IDrugAlcoholScreening
     {
-        public int VisitID { get ; set ; }
-        public DateTime VisitDate { get ; set ; }
+        public int? VisitID { get ; set ; }
+        public DateTime? VisitDate { get ; set ; }
         public string? FacilityName { get ; set ; }
         public string? DrinkingAlcohol { get ; set ; }
         public string? Smoking { get ; set ; }

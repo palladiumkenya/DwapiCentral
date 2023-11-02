@@ -57,6 +57,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
                 var manifestId = await _manifestRepository.GetManifestId(patientExtract.First().SiteCode);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = patientExtract.Count, ManifestId = manifestId, SiteCode = patientExtract.First().SiteCode, ExtractName = "IITRiskScoresExtract" };
+
                 await _mediator.Publish(notification);
 
                 connection.Close();

@@ -10,8 +10,8 @@ namespace DwapiCentral.Ct.Application.DTOs
     {
         public Guid Id { get; set; }
         public string RecordUUID { get; set; }
-        public int VisitId { get; set; }
-        public DateTime OrderedByDate { get; set; }
+        public int? VisitId { get; set; }
+        public DateTime? OrderedByDate { get; set; }
         public DateTime? ReportedByDate { get; set; }
         public string? TestName { get; set; }
         public int? EnrollmentTest { get; set; }
@@ -34,7 +34,7 @@ namespace DwapiCentral.Ct.Application.DTOs
 
         }
 
-        public LaboratorySourceDto(int visitId, DateTime orderedByDate, DateTime? reportedByDate, string testName, int? enrollmentTest, string testResult,  int sitecode, int patientpk,
+        public LaboratorySourceDto(int? visitId, DateTime? orderedByDate, DateTime? reportedByDate, string testName, int? enrollmentTest, string testResult,  int sitecode, int patientpk,
            DateTime? dateSampleTaken, string sampleType, DateTime? date_Created, DateTime? date_Last_Modified, string recordUUID
            )
         {

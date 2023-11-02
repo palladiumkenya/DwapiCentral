@@ -6,8 +6,8 @@ namespace DwapiCentral.Contracts.Ct
     public interface IVisit : IExtract
     {
         Guid Id { get; set; }
-        int VisitId { get; set; }
-        DateTime VisitDate { get; set; }
+        int? VisitId { get; set; }
+        DateTime? VisitDate { get; set; }
         string? Service { get; set; }
         string? VisitType { get; set; }
         int? WHOStage { get; set; }

@@ -7,8 +7,8 @@ namespace DwapiCentral.Contracts.Ct
     {
           Guid Id { get; set; }
           string? FacilityName { get; set; }
-          int VisitID { get; set; }
-          DateTime Covid19AssessmentDate { get; set; }
+          int? VisitID { get; set; }
+          DateTime? Covid19AssessmentDate { get; set; }
           string? ReceivedCOVID19Vaccine { get; set; }
           DateTime? DateGivenFirstDose { get; set; }
           string? FirstDoseVaccineAdministered { get; set; }

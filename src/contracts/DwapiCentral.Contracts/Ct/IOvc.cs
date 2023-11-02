@@ -6,8 +6,8 @@ namespace DwapiCentral.Contracts.Ct
      public interface IOvc : IExtract
     {
           Guid Id { get; set; }          
-          int VisitID { get; set; }
-          DateTime VisitDate { get; set; }
+          int? VisitID { get; set; }
+          DateTime? VisitDate { get; set; }
           string? FacilityName { get; set; }
           DateTime? OVCEnrollmentDate { get; set; }
           string? RelationshipToClient { get; set; }

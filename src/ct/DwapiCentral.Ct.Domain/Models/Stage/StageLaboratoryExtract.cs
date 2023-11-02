@@ -9,8 +9,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageLaboratoryExtract : StageExtract, ILab
     {
-        public int VisitId { get; set; }
-        public DateTime OrderedByDate { get; set; }
+        public int? VisitId { get; set; }
+        public DateTime? OrderedByDate { get; set; }
         public DateTime? ReportedByDate { get; set; }
         public string? TestName { get; set; }
         public int? EnrollmentTest { get; set; }

@@ -10,8 +10,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
     public class StageCovidExtract : StageExtract,  ICovid
     {
         public string? FacilityName { get ; set ; }
-        public int VisitID { get ; set ; }
-        public DateTime Covid19AssessmentDate { get ; set ; }
+        public int? VisitID { get ; set ; }
+        public DateTime? Covid19AssessmentDate { get ; set ; }
         public string? ReceivedCOVID19Vaccine { get ; set ; }
         public DateTime? DateGivenFirstDose { get ; set ; }
         public string? FirstDoseVaccineAdministered { get ; set ; }

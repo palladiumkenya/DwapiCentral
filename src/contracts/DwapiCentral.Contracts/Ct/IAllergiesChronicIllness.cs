@@ -10,8 +10,8 @@ namespace DwapiCentral.Contracts.Ct
     public interface IAllergiesChronicIllness : IExtract
     {
         Guid Id { get; set; }
-        int VisitID { get; set; }
-        DateTime VisitDate { get; set; }
+        int? VisitID { get; set; }
+        DateTime? VisitDate { get; set; }
         string? FacilityName { get; set; } 
         string? ChronicIllness { get; set; }
         DateTime? ChronicOnsetDate { get; set; }

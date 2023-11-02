@@ -15,8 +15,8 @@ namespace DwapiCentral.Ct.Domain.Models
         public string? Nupi { get; set; }
         public string? MpiId { get; set; }
         public string? Pkv { get; set; }
-        public string Gender { get; set; }
-        public DateTime DOB { get; set; }
+        public string? Gender { get; set; }
+        public DateTime? DOB { get; set; }
         public DateTime? RegistrationDate { get; set; }
         public DateTime? RegistrationAtCCC { get; set; }
         public DateTime? RegistrationATPMTCT { get; set; }

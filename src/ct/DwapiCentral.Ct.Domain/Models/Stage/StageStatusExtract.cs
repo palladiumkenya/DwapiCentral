@@ -9,7 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
     public class StageStatusExtract : StageExtract, IStatus
     {
         public string? ExitDescription { get ; set ; }
-        public DateTime ExitDate { get ; set ; }
+        public DateTime? ExitDate { get ; set ; }
         public string? ExitReason { get ; set ; }
         public string? TOVerified { get ; set ; }
         public DateTime? TOVerifiedDate { get ; set ; }

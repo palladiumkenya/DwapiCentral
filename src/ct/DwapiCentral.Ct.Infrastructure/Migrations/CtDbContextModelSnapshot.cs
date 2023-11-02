@@ -101,10 +101,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -337,7 +337,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("CauseOfDeath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Covid19AssessmentDate")
+                    b.Property<DateTime?>("Covid19AssessmentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Created")
@@ -416,7 +416,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("VaccineVerification")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -493,7 +493,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("VisitID")
@@ -579,10 +579,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -641,10 +641,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -820,10 +820,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -905,7 +905,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("VisitID")
@@ -1077,7 +1077,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("VisitID")
@@ -1271,10 +1271,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -1345,10 +1345,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -1422,7 +1422,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("Voided")
@@ -1486,7 +1486,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastARTDate")
+                    b.Property<DateTime?>("LastARTDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastRegimen")
@@ -1681,7 +1681,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DOB")
+                    b.Property<DateTime?>("DOB")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateConfirmedHIVPositive")
@@ -1706,7 +1706,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Inschool")
@@ -1844,7 +1843,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int?>("EnrollmentTest")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("OrderedByDate")
+                    b.Property<DateTime?>("OrderedByDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PatientPk")
@@ -1875,7 +1874,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitId")
+                    b.Property<int?>("VisitId")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -1909,7 +1908,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DispenseDate")
+                    b.Property<DateTime?>("DispenseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Drug")
@@ -2001,7 +2000,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("EffectiveDiscontinuationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ExitDate")
+                    b.Property<DateTime?>("ExitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ExitDescription")
@@ -2241,10 +2240,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("VisitBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitId")
+                    b.Property<int?>("VisitId")
                         .HasColumnType("int");
 
                     b.Property<string>("VisitType")
@@ -2360,7 +2359,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("Voided")
@@ -2474,10 +2473,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -2554,7 +2553,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Generated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("LastARTDate")
+                    b.Property<DateTime?>("LastARTDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastRegimen")
@@ -3025,7 +3024,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("CauseOfDeath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Covid19AssessmentDate")
+                    b.Property<DateTime?>("Covid19AssessmentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Created")
@@ -3128,7 +3127,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("VaccineVerification")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -3227,7 +3226,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("VisitID")
@@ -3335,10 +3334,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -3419,10 +3418,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -3620,10 +3619,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -3710,7 +3709,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("VisitID")
@@ -3926,7 +3925,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("VisitID")
@@ -3985,7 +3984,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("OrderedByDate")
+                    b.Property<DateTime?>("OrderedByDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PatientPk")
@@ -4022,7 +4021,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitId")
+                    b.Property<int?>("VisitId")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -4118,10 +4117,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -4214,10 +4213,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitID")
+                    b.Property<int?>("VisitID")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Voided")
@@ -4248,7 +4247,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<Guid?>("CurrentPatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DOB")
+                    b.Property<DateTime?>("DOB")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateConfirmedHIVPositive")
@@ -4276,7 +4275,6 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Generated")
@@ -4417,7 +4415,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DispenseDate")
+                    b.Property<DateTime?>("DispenseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Drug")
@@ -4534,7 +4532,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Emr")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExitDate")
+                    b.Property<DateTime?>("ExitDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ExitDescription")
@@ -4814,10 +4812,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("VisitBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("VisitDate")
+                    b.Property<DateTime?>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VisitId")
+                    b.Property<int?>("VisitId")
                         .HasColumnType("int");
 
                     b.Property<string>("VisitType")

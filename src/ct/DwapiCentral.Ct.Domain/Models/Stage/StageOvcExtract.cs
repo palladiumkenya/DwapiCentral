@@ -9,8 +9,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageOvcExtract : StageExtract, IOvc
     {
-        public int VisitID { get ; set ; }
-        public DateTime VisitDate { get ; set ; }
+        public int? VisitID { get ; set ; }
+        public DateTime? VisitDate { get ; set ; }
         public string? FacilityName { get ; set ; }
         public DateTime? OVCEnrollmentDate { get ; set ; }
         public string? RelationshipToClient { get ; set ; }

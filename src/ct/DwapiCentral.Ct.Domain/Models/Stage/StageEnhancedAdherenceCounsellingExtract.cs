@@ -9,8 +9,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageEnhancedAdherenceCounsellingExtract : StageExtract, IEnhancedAdherenceCounselling
     {
-        public int VisitID { get; set; }
-        public DateTime VisitDate { get; set; }
+        public int? VisitID { get; set; }
+        public DateTime? VisitDate { get; set; }
         public string? FacilityName { get; set; }
         public int? SessionNumber { get; set; }
         public DateTime? DateOfFirstSession { get; set; }

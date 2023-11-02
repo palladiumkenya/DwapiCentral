@@ -7,8 +7,8 @@ namespace DwapiCentral.Contracts.Ct
     {
           Guid Id { get; set; }
           string? FacilityName { get; set; }
-          int VisitID { get; set; }
-          DateTime VisitDate { get; set; }
+          int? VisitID { get; set; }
+          DateTime? VisitDate { get; set; }
           DateTime? OTZEnrollmentDate { get; set; }
           string? TransferInStatus { get; set; }
           string? ModulesPreviouslyCovered { get; set; }

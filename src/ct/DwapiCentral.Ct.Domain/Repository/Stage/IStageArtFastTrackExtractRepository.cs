@@ -1,6 +1,8 @@
+using DwapiCentral.Ct.Domain.Models.Stage;
+
 namespace DwapiCentral.Ct.Domain.Repository.Stage;
 
-public class IStageArtFastTrackExtractRepository
+public interface IStageArtFastTrackExtractRepository  : IStageExtractRepository<StageArtFastTrackExtract> 
 {
     
 }
