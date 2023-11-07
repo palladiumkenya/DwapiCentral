@@ -22,6 +22,7 @@ namespace DwapiCentral.Prep.Application.Mappings
             CreateMap<PrepLab, StagePrepLab>();
             CreateMap<PrepPharmacy, StagePrepPharmacy>();
             CreateMap<PrepVisit, StagePrepVisit>();
+            CreateMap<PrepMonthlyRefill, StagePrepMonthlyRefill>();
 
 
             //stage => centralDb
@@ -32,6 +33,7 @@ namespace DwapiCentral.Prep.Application.Mappings
             CreateMap<StagePrepLab, PrepLab>();
             CreateMap<StagePrepPharmacy, PrepPharmacy>();
             CreateMap<StagePrepVisit, PrepVisit>();
+            CreateMap<StagePrepMonthlyRefill, PrepMonthlyRefill>();
         }
     }
 }

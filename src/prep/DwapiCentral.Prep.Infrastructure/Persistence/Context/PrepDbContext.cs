@@ -33,6 +33,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
         public DbSet<PrepLab> PrepLabs { get; set; }
         public DbSet<PrepPharmacy> PrepPharmacys { get; set; }
         public DbSet<PrepVisit> PrepVisits { get; set; }
+        public DbSet<PrepMonthlyRefill> PrepMonthlyRefills { get; set; }
 
         //Stage
         public DbSet<StagePatientPrep> StagePrepPatients { get; set; }
@@ -42,6 +43,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
         public DbSet<StagePrepLab> StagePrepLabs { get; set; }
         public DbSet<StagePrepPharmacy> StagePrepPharmacys { get; set; }
         public DbSet<StagePrepVisit> StagePrepVisits { get; set; }
+        public DbSet<StagePrepMonthlyRefill> StagePrepMonthlyRefills { get; set; }
 
 
 
@@ -96,6 +98,12 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
                .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
                .IsRequired();
 
+            modelBuilder.Entity<PatientPrepExtract>()
+           .HasMany(c => c.PrepMonthlyRefills)
+           .WithOne()
+           .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
+           .IsRequired();
+
 
 
             DapperPlusManager.Entity<MasterFacility>().Key(x => x.Code).Table($"{nameof(MasterFacilities)}");
@@ -119,6 +127,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<PrepLab>().Key(x => x.Id).Table($"{nameof(PrepLabs)}");
             DapperPlusManager.Entity<PrepPharmacy>().Key(x => x.Id).Table($"{nameof(PrepPharmacys)}");
             DapperPlusManager.Entity<PrepVisit>().Key(x => x.Id).Table($"{nameof(PrepVisits)}");
+            DapperPlusManager.Entity<PrepMonthlyRefill>().Key(x => x.Id).Table($"{nameof(PrepMonthlyRefills)}");
 
             //stage
             DapperPlusManager.Entity<StagePrepAdverseEvent>().Key(x => x.Id).Table($"{nameof(StagePrepAdverseEvents)}");
@@ -127,6 +136,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<StagePrepLab>().Key(x => x.Id).Table($"{nameof(StagePrepLabs)}");
             DapperPlusManager.Entity<StagePrepPharmacy>().Key(x => x.Id).Table($"{nameof(StagePrepPharmacys)}");
             DapperPlusManager.Entity<StagePrepVisit>().Key(x => x.Id).Table($"{nameof(StagePrepVisits)}");
+            DapperPlusManager.Entity<StagePrepMonthlyRefill>().Key(x => x.Id).Table($"{nameof(StagePrepMonthlyRefills)}");
 
         }
 

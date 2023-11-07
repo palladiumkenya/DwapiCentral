@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Prep.Infrastructure.Migrations
 {
     [DbContext(typeof(PrepDbContext))]
-    [Migration("20230918075532__InitialPrep")]
-    partial class _InitialPrep
+    [Migration("20231107111944__InitialPrepMigration")]
+    partial class _InitialPrepMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -623,6 +623,114 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
 
                     b.ToTable("PrepLabs");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepMonthlyRefill", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdherenceCounsellingDone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BehaviorRiskAssessment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientGivenNextAppointment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CondomsIssued")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContraIndicationForPrEP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateOfLastPrepDose")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DispenseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("Duration")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HtsNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NumberOfCondomsIssued")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumberOfMonths")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PrepNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PrescribedPrepToday")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonForFailureToGiveAppointment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecordUUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegimenPrescribed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SexPartnerHIVStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SymptomsAcuteHIV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VisitDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
+
+                    b.ToTable("PrepMonthlyRefills");
                 });
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepPharmacy", b =>
@@ -1354,6 +1462,105 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.ToTable("StagePrepLabs");
                 });
 
+            modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.Stage.StagePrepMonthlyRefill", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdherenceCounsellingDone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BehaviorRiskAssessment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientGivenNextAppointment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CondomsIssued")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContraIndicationForPrEP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateOfLastPrepDose")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ManifestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("NumberOfCondomsIssued")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumberOfMonths")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PrepNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrescribedPrepToday")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonForFailureToGiveAppointment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecordUUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegimenPrescribed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SexPartnerHIVStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SymptomsAcuteHIV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VisitDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StagePrepMonthlyRefills");
+                });
+
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.Stage.StagePrepPharmacy", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1693,6 +1900,15 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepMonthlyRefill", b =>
+                {
+                    b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
+                        .WithMany("PrepMonthlyRefills")
+                        .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.PrepPharmacy", b =>
                 {
                     b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
@@ -1739,6 +1955,8 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Navigation("PrepCareTerminations");
 
                     b.Navigation("PrepLabs");
+
+                    b.Navigation("PrepMonthlyRefills");
 
                     b.Navigation("PrepPharmacies");
 

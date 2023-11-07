@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Prep.Infrastructure.Migrations
 {
-    public partial class _InitialPrep : Migration
+    public partial class _InitialPrepMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -266,6 +266,46 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StagePrepLabs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StagePrepMonthlyRefills",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisitDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BehaviorRiskAssessment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SexPartnerHIVStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SymptomsAcuteHIV = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdherenceCounsellingDone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContraIndicationForPrEP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PrescribedPrepToday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RegimenPrescribed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumberOfMonths = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CondomsIssued = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumberOfCondomsIssued = table.Column<int>(type: "int", nullable: true),
+                    ClientGivenNextAppointment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReasonForFailureToGiveAppointment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfLastPrepDose = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    LiveStage = table.Column<int>(type: "int", nullable: false),
+                    ManifestId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StagePrepMonthlyRefills", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -619,6 +659,54 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PrepMonthlyRefills",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
+                    RegimenPrescribed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DispenseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Duration = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    VisitDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BehaviorRiskAssessment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SexPartnerHIVStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SymptomsAcuteHIV = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdherenceCounsellingDone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContraIndicationForPrEP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PrescribedPrepToday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumberOfMonths = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CondomsIssued = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumberOfCondomsIssued = table.Column<int>(type: "int", nullable: true),
+                    ClientGivenNextAppointment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReasonForFailureToGiveAppointment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfLastPrepDose = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PrepMonthlyRefills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PrepMonthlyRefills_PrepPatients_PatientPk_SiteCode_PrepNumber",
+                        columns: x => new { x.PatientPk, x.SiteCode, x.PrepNumber },
+                        principalTable: "PrepPatients",
+                        principalColumns: new[] { "PatientPk", "SiteCode", "PrepNumber" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PrepPharmacys",
                 columns: table => new
                 {
@@ -754,6 +842,11 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_PrepMonthlyRefills_PatientPk_SiteCode_PrepNumber",
+                table: "PrepMonthlyRefills",
+                columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PrepPharmacys_PatientPk_SiteCode_PrepNumber",
                 table: "PrepPharmacys",
                 columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
@@ -793,6 +886,9 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 name: "PrepLabs");
 
             migrationBuilder.DropTable(
+                name: "PrepMonthlyRefills");
+
+            migrationBuilder.DropTable(
                 name: "PrepPharmacys");
 
             migrationBuilder.DropTable(
@@ -809,6 +905,9 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "StagePrepLabs");
+
+            migrationBuilder.DropTable(
+                name: "StagePrepMonthlyRefills");
 
             migrationBuilder.DropTable(
                 name: "StagePrepPatients");
