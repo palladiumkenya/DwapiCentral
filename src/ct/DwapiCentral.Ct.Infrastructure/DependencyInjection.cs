@@ -61,6 +61,8 @@ public static class DependencyInjection
         services.AddScoped<IPatientStatusRepository, PatientStatusRepository>();
         services.AddScoped<ICervicalCancerScreeningRepository, CervicalCancerScreeningRepository>();
         services.AddScoped<IIITRiskScoreRepository, IITRiskScoreRepository>();
+        services.AddScoped<IArtFastTrackRepository, ArtFastTrackRepository>();
+        services.AddScoped<ICancerScreeningRepository, CancerScreeningRepository>();
 
 
         services.AddScoped<IStagePatientExtractRepository, StagePatientExtractRepository>();
@@ -84,6 +86,8 @@ public static class DependencyInjection
         services.AddScoped<IStageStatusExtractRepository, StageStatusExtractRepository>();
         services.AddScoped<IStageCervicalCancerScreeningExtractsRepository, StageCervicalCancerScreeningExtractsRepository>();
         services.AddScoped<IStageIITRiskScoreRepository, StageIITRiskScoreRepository>();
+        services.AddScoped<IStageArtFastTrackExtractRepository, StageArtFastTrackRepository>();
+        services.AddScoped<IStageCancerScreeningExtractRepository, StageCancerScreeningExtractsRepository>();
 
 
         try

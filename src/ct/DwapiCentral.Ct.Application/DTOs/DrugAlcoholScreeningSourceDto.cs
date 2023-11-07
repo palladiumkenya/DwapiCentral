@@ -15,7 +15,7 @@ namespace DwapiCentral.Ct.Application.DTOs
         public string? DrinkingAlcohol { get; set; }
         public string? Smoking { get; set; }
         public string? DrugUse { get; set; }
-        public int PatientPk { get; set; }
+        public int? PatientPk { get; set; }
         public int SiteCode { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }

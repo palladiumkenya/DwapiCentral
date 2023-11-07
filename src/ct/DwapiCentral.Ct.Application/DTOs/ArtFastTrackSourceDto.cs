@@ -35,4 +35,11 @@ public class ArtFastTrackSourceDto : IArtFastTrack
     public string? ReasonNotOnFP { get; set; }
     public string? ReferredToClinic { get; set; }
     public DateTime? ReturnVisitDate { get; set; }
+    public string? FacilityName { get ; set ; }
+
+    public virtual bool IsValid()
+    {
+        return SiteCode > 0 &&
+               PatientPk > 0;
+    }
 }

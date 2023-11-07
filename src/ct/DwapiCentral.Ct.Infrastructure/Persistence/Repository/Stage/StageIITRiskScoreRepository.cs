@@ -59,6 +59,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await UpdateLivestage(manifestId, pks);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "IITRiskScoresExtract" };
+
                 await _mediator.Publish(notification);
 
             }
@@ -177,19 +178,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
                 var latestRecordsDict = new Dictionary<string, StageIITRiskScore>();
 
-                foreach (var extract in sortedExtracts)
+                foreach (var extract in uniqueStageExtracts)
                 {
                     var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.SourceSysUUID}_{extract.Date_Created}";
 
-
-                    if (!latestRecordsDict.ContainsKey(key))
+                    if (!latestRecordsDict.ContainsKey(key) ||
+                        extract.Date_Created > latestRecordsDict[key].Date_Created)
                     {
                         latestRecordsDict[key] = extract;
                     }
-                                    
                 }
 
                 var filteredExtracts = latestRecordsDict.Values.ToList();
@@ -207,29 +206,68 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                //Update existing data
-                var stageDictionary = stageAdverse
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.SourceSysUUID,x.Date_Created})
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
+                var centralIpt = stageAdverse.Select(_mapper.Map<StageIITRiskScore, IITRiskScore>).ToList();
 
-                var updateTasks = existingRecords.Select(async existingExtract =>
+
+                var existingIptIds = existingRecords.Select(x => x.SourceSysUUID).ToHashSet();
+
+
+                var recordsToUpdate = centralIpt.Where(x => existingIptIds.Contains(x.SourceSysUUID)).ToList();
+
+                var cons = _context.Database.GetConnectionString();
+                using (var connection = new SqlConnection(cons))
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.SourceSysUUID, existingExtract.Date_Created },
-                        out var stageExtract)
-                    )
+                    await connection.OpenAsync();
+
+                    using (var transaction = connection.BeginTransaction())
                     {
-                        _mapper.Map(stageExtract, existingExtract);
+                        const int maxRetries = 3;
+
+                        for (var retry = 0; retry < maxRetries; retry++)
+                        {
+                            try
+                            {
+                                var sql = $@"
+                               UPDATE 
+                                     IITRiskScoresExtract
+
+                               SET
+                                    RiskScore = @RiskScore,
+                                    RiskFactors = @RiskFactors,
+                                    RiskDescription = @RiskDescription,
+                                    RiskEvaluationDate = @RiskEvaluationDate,
+                                    Date_Last_Modified = @Date_Last_Modified,                                   
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                          
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND SourceSysUUID = @SourceSysUUID
+                                    AND Date_Created = @Date_Created";
+
+                                await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
+                                transaction.Commit();
+                                break;
+                            }
+                            catch (SqlException ex)
+                            {
+                                if (ex.Number == 1205)
+                                {
+
+                                    await Task.Delay(100);
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    throw;
+                                }
+                            }
+                        }
                     }
-                }).ToList();
-
-
-                await Task.WhenAll(updateTasks);
-
-                _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+                }
             }
             catch (Exception ex)
             {
@@ -238,7 +276,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             }
         }
 
-        private async Task UpdateLivestage(Guid manifestId, List<Guid> ids)
+    private async Task UpdateLivestage(Guid manifestId, List<Guid> ids)
         {
 
             var cons = _context.Database.GetConnectionString();

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20231024075145_InitialCt")]
-    partial class InitialCt
+    [Migration("20231107100905__InitialCtMigration")]
+    partial class _InitialCtMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,6 +120,340 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("AllergiesChronicIllnessExtract");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.ArtFastTrackExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ARTRefillModel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CTXDispensed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CondomsDistributed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cough")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DapsoneDispensed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Diarrhea")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FPMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FPStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fatigue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fever")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GenitalSoreOrDischarge")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MissedDoses")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NauseaOrVomiting")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OralContraceptivesDispensed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherSymptoms")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PregnancyStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonNotOnFP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecordUUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferredToClinic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ReturnVisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("VisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientPk", "SiteCode");
+
+                    b.ToTable("ArtFastTrackExtract");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CancerScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Biopsy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CBE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CancerType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Colonoscopy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Colposcopy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Cytology")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DRE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateTissueDiagnosis")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EUA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FamilyHistoryOfCa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FecalOccultBloodTest")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HIVStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HPVScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IfTissueDiagnosis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imaging")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("NextAppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("NumberCigarettesPerDay")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NumberYearsSmoked")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OtherFormTobacco")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherPostTreatmentComplication")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PAPSmearScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PSA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostTreatmentComplicationCause")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreviousCaTreatment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonForReferral")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonNotDone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecordUUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferalOrdered")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferralReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Referred")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferredOut")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RetinoblastomaGene")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SmokesCigarette")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SymptomsCa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TakesAlcohol")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentBiopsy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentCBE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentColonoscopy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentColposcopy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentCytology")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentDRE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentEUA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentHPV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentImaging")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentOccultBlood")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentPSA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentPapSmear")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentRetinoblastoma")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentToday")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentUltraSound")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentVE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ultrasound")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VIAVILIScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("VisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VisitType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VisualExamination")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientPk", "SiteCode");
+
+                    b.ToTable("CancerScreeningExtract");
                 });
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CervicalCancerScreeningExtract", b =>
@@ -627,7 +961,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientPk")
+                    b.Property<int?>("PatientPk")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("RecordUUID")
@@ -2633,6 +2968,138 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.ToTable("StageArtExtracts");
                 });
 
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Stage.StageArtFastTrackExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ARTRefillModel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CTXDispensed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CondomsDistributed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cough")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CurrentPatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DapsoneDispensed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Diarrhea")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Emr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FPMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FPStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fatigue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fever")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Generated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GenitalSoreOrDischarge")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("LiveSession")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MissedDoses")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NauseaOrVomiting")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OralContraceptivesDispensed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherSymptoms")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PregnancyStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Processed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Project")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonNotOnFP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecordUUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferredToClinic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ReturnVisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("VisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StageArtFastTrackExtracts");
+                });
+
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Stage.StageBaselineExtract", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2763,6 +3230,252 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StageBaselineExtracts");
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Stage.StageCancerScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Biopsy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CBE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CancerType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Colonoscopy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Colposcopy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CurrentPatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Cytology")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DRE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateExtracted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateTissueDiagnosis")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date_Last_Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EUA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Emr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FamilyHistoryOfCa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FecalOccultBloodTest")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Generated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HIVStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HPVScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IfTissueDiagnosis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imaging")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("LiveSession")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("NextAppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("NumberCigarettesPerDay")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NumberYearsSmoked")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OtherFormTobacco")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherPostTreatmentComplication")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PAPSmearScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PSA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostTreatmentComplicationCause")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreviousCaTreatment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Processed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Project")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonForReferral")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonNotDone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecordUUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferalOrdered")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferralReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Referred")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferredOut")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RetinoblastomaGene")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ScreeningType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SmokesCigarette")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SymptomsCa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TakesAlcohol")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentBiopsy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentCBE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentColonoscopy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentColposcopy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentCytology")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentDRE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentEUA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentHPV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentImaging")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentOccultBlood")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentPSA")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentPapSmear")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentRetinoblastoma")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentToday")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentUltraSound")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TreatmentVE")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ultrasound")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VIAVILIScreeningResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("VisitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VisitType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VisualExamination")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Voided")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StageCancerScreeningExtracts");
                 });
 
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.Stage.StageCervicalCancerScreeningExtract", b =>
@@ -3398,7 +4111,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
-                    b.Property<int>("PatientPk")
+                    b.Property<int?>("PatientPk")
                         .HasColumnType("int");
 
                     b.Property<bool>("Processed")
@@ -4855,6 +5568,24 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.ArtFastTrackExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("ArtFastTrackExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CancerScreeningExtract", b =>
+                {
+                    b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
+                        .WithMany("CancerScreeningExtracts")
+                        .HasForeignKey("PatientPk", "SiteCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.CervicalCancerScreeningExtract", b =>
                 {
                     b.HasOne("DwapiCentral.Ct.Domain.Models.PatientExtract", null)
@@ -5043,6 +5774,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
             modelBuilder.Entity("DwapiCentral.Ct.Domain.Models.PatientExtract", b =>
                 {
                     b.Navigation("AllergiesChronicIllnessExtracts");
+
+                    b.Navigation("ArtFastTrackExtracts");
+
+                    b.Navigation("CancerScreeningExtracts");
 
                     b.Navigation("CervicalCancerScreeningExtracts");
 

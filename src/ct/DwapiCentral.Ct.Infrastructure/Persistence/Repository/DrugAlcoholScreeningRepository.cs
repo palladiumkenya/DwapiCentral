@@ -33,12 +33,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository
             _manifestRepository = manifestRepository;
         }
 
-        public async Task<DrugAlcoholScreeningExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID)
+        public async Task<DrugAlcoholScreeningExtract> GetExtractByUniqueIdentifiers( int siteCode, string recordUUID)
         {
             // If not cached, retrieve the record from the database
-            var query = "SELECT * FROM DrugAlcoholScreeningExtract WHERE PatientPK = @PatientPK AND SiteCode = @SiteCode AND RecordUUID = @RecordUUID";
+            var query = "SELECT * FROM DrugAlcoholScreeningExtract WITH NO LOCK WHERE  SiteCode = @SiteCode AND RecordUUID = @RecordUUID";
 
-            var patientExtract = await _context.Database.GetDbConnection().QueryFirstOrDefaultAsync<DrugAlcoholScreeningExtract>(query, new { patientPK, siteCode, recordUUID });
+            var patientExtract = await _context.Database.GetDbConnection().QueryFirstOrDefaultAsync<DrugAlcoholScreeningExtract>(query, new {  siteCode, recordUUID });
 
             return patientExtract;
 

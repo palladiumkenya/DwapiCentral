@@ -1,38 +1,41 @@
 using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.Profiles;
+using DwapiCentral.Ct.Domain.Models;
+using DwapiCentral.Ct.Domain.Repository;
 using MediatR;
 
 namespace DwapiCentral.Ct.Application.Commands.DifferentialCommands;
 
-public class MergeDifferentialArtFastTrackCommand: IRequest<Result>
+public class MergeDifferentialArtFastTrackCommand : IRequest<Result>
 {
-    public List<PatientARTProfile> Patientprofile { get; set; }
+    public List<ARTFastTrackProfile>ArtFastTrackprofile { get; set; }
 
-    public MergeDifferentialArtCommand(List<PatientARTProfile> patientProfiles)
+    public MergeDifferentialArtFastTrackCommand(List<ARTFastTrackProfile> patientProfiles)
     {
-        Patientprofile = patientProfiles;
+        ArtFastTrackprofile = patientProfiles;
     }
 }
 
-public class MergeDifferentialArtCommandHandler : IRequestHandler<MergeDifferentialArtCommand, Result>
+public class MergeDifferentialArtFastTrackCommandHandler : IRequestHandler<MergeDifferentialArtFastTrackCommand, Result>
 {
 
-    private readonly IPatientArtExtractRepository _extractRepository;
+    private readonly IArtFastTrackRepository _extractRepository;
 
-    public MergeDifferentialArtCommandHandler(IPatientArtExtractRepository extractRepository)
+    public MergeDifferentialArtFastTrackCommandHandler(IArtFastTrackRepository extractRepository)
     {
         _extractRepository = extractRepository;
     }
 
-    public async Task<Result> Handle(MergeDifferentialArtCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(MergeDifferentialArtFastTrackCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var extractsToUpdate = new List<PatientArtExtract>();
-            var extractsToInsert = new List<PatientArtExtract>();
+            var extractsToUpdate = new List<ArtFastTrackExtract>();
+            var extractsToInsert = new List<ArtFastTrackExtract>();
 
-            foreach (var profile in request.Patientprofile)
+            foreach (var profile in request.ArtFastTrackprofile)
             {
-                foreach (var extract in profile.ArtExtracts)
+                foreach (var extract in profile.ArtFastTrackExtracts)
                 { // Check if the extract already exists in the database
                     var existingLabExtract = await _extractRepository.GetExtractByUniqueIdentifiers(
                         extract.PatientPk, extract.SiteCode, extract.RecordUUID);

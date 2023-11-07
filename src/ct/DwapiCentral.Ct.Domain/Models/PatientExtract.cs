@@ -78,5 +78,7 @@ namespace DwapiCentral.Ct.Domain.Models
         public virtual ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
         public virtual ICollection<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; } = new List<CervicalCancerScreeningExtract>();
         public virtual ICollection<IITRiskScore> IITRiskScoresExtracts { get; set; } = new List<IITRiskScore>();
+        public virtual ICollection<ArtFastTrackExtract> ArtFastTrackExtracts { get; set; } = new List<ArtFastTrackExtract>();
+        public virtual ICollection<CancerScreeningExtract> CancerScreeningExtracts { get; set; } = new List<CancerScreeningExtract>();
     }
 }

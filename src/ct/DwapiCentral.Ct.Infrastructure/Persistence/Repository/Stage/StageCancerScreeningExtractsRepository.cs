@@ -1,25 +1,27 @@
-using System.Collections.Generic;
-using System.Data;
-using System.Reflection;
-using AutoMapper;
-using Dapper;
-using DwapiCentral.Ct.Domain.Events;
-using DwapiCentral.Ct.Domain.Models;
+﻿using AutoMapper;
 using DwapiCentral.Ct.Domain.Models.Stage;
+using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
 using DwapiCentral.Shared.Domain.Enums;
 using log4net;
 using MediatR;
 using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Z.Dapper.Plus;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using DwapiCentral.Ct.Domain.Events;
+using Dapper;
 
 namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 {
-    public class StageDrugAlcoholScreeningExtractRepository :IStageDrugAlcoholScreeningExtractRepository
+    public class StageCancerScreeningExtractsRepository : IStageCancerScreeningExtractRepository
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly CtDbContext _context;
@@ -27,7 +29,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         private readonly IMediator _mediator;
         private readonly string _stageName;
 
-        public StageDrugAlcoholScreeningExtractRepository(CtDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageDrugAlcoholScreeningExtract)}s")
+        public StageCancerScreeningExtractsRepository(CtDbContext context, IMapper mapper, IMediator mediator, string stageName = $"{nameof(StageCancerScreeningExtract)}s")
         {
             _context = context;
             _mapper = mapper;
@@ -35,12 +37,10 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             _stageName = stageName;
         }
 
-        public async Task SyncStage(List<StageDrugAlcoholScreeningExtract> extracts, Guid manifestId)
+        public async Task SyncStage(List<StageCancerScreeningExtract> extracts, Guid manifestId)
         {
             try
             {
-
-
                 var pks = extracts.Select(x => x.Id).ToList();
 
                 var result = await StageData(manifestId, pks);
@@ -50,6 +50,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     // stage > Rest
                     _context.Database.GetDbConnection().BulkInsert(extracts);
                 }
+
                 // assign > Assigned
                 await AssignAll(manifestId, pks);
 
@@ -58,10 +59,9 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 await UpdateLivestage(manifestId, pks);
 
-                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "DrugAlcoholScreeningExtract" };
+                var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "CancerScreeningExtract" };
+
                 await _mediator.Publish(notification);
-
-
             }
             catch (Exception e)
             {
@@ -70,13 +70,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             }
         }
 
-        private async Task MergeExtracts(Guid manifestId, List<StageDrugAlcoholScreeningExtract> stageDrug)
+        private async Task MergeExtracts(Guid manifestId, List<StageCancerScreeningExtract> stageCancerScreening)
         {
             var cons = _context.Database.GetConnectionString();
             try
             {
                 using var connection = new SqlConnection(cons);
-                List<StageDrugAlcoholScreeningExtract> uniqueStageExtracts;
+                List<StageCancerScreeningExtract> uniqueStageExtracts;
                 await connection.OpenAsync();
 
                 var queryParameters = new
@@ -86,7 +86,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 };
                 var query = $@"
                             SELECT p.*
-                            FROM DrugAlcoholScreeningExtract p 
+                            FROM CancerScreeningExtract p
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
@@ -98,34 +98,32 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                     GROUP BY PatientPK, SiteCode, RecordUUID
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
-                                    AND p.SiteCode = s.SiteCode
-                                    AND p.RecordUUID = s.RecordUUID                                    
+                                    AND p.SiteCode = s.SiteCode                                    
+                                    AND p.RecordUUID = s.RecordUUID
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )
                         ";
-                
-                var existingRecords = await connection.QueryAsync<DrugAlcoholScreeningExtract>(query, queryParameters);
+
+                var existingRecords = await connection.QueryAsync<CancerScreeningExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int? PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
-                    uniqueStageExtracts = stageDrug
+                    uniqueStageExtracts = stageCancerScreening
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    await UpdateCentralDataWithStagingData(stageDrug, existingRecords);
-
+                    await UpdateCentralDataWithStagingData(stageCancerScreening, existingRecords);
                 }
                 else
                 {
-                    uniqueStageExtracts = stageDrug;
+                    uniqueStageExtracts = stageCancerScreening;
                 }
                 await InsertNewDataFromStaging(uniqueStageExtracts);
-
 
             }
             catch (Exception ex)
@@ -136,12 +134,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         }
 
-        private async Task InsertNewDataFromStaging(List<StageDrugAlcoholScreeningExtract> uniqueStageExtracts)
+        private async Task InsertNewDataFromStaging(List<StageCancerScreeningExtract> uniqueStageExtracts)
         {
             try
             {
                 var sortedExtracts = uniqueStageExtracts.OrderByDescending(e => e.Date_Created).ToList();
-                var latestRecordsDict = new Dictionary<string, StageDrugAlcoholScreeningExtract>();
+                var latestRecordsDict = new Dictionary<string, StageCancerScreeningExtract>();
 
                 foreach (var extract in sortedExtracts)
                 {
@@ -154,7 +152,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 }
 
                 var filteredExtracts = latestRecordsDict.Values.ToList();
-                var mappedExtracts = _mapper.Map<List<DrugAlcoholScreeningExtract>>(filteredExtracts);
+                var mappedExtracts = _mapper.Map<List<CancerScreeningExtract>>(filteredExtracts);
                 _context.Database.GetDbConnection().BulkInsert(mappedExtracts);
             }
             catch (Exception ex)
@@ -164,12 +162,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             }
         }
 
-        private async Task UpdateCentralDataWithStagingData(List<StageDrugAlcoholScreeningExtract> stageDrug, IEnumerable<DrugAlcoholScreeningExtract> existingRecords)
+        private async Task UpdateCentralDataWithStagingData(List<StageCancerScreeningExtract> stageCancerScreening, IEnumerable<CancerScreeningExtract> existingRecords)
         {
             try
             {
 
-                var centraldata = stageDrug.Select(_mapper.Map<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningExtract>).ToList();
+                var centraldata = stageCancerScreening.Select(_mapper.Map<StageCancerScreeningExtract, CancerScreeningExtract>).ToList();
 
 
                 var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
@@ -193,23 +191,80 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             {
                                 var sql = $@"
                            UPDATE 
-                                     DrugAlcoholScreeningExtract
+                                     CancerScreeningExtract
 
-                               SET   VisitID = @VisitID                                
-                                    ,VisitDate = @VisitDate                               
-                                    ,DrinkingAlcohol = @DrinkingAlcohol
-                                    ,Smoking = @Smoking
-                                    ,DrugUse = @DrugUse
-                                    ,Date_Created = @Date_Created
-                                    ,DateLastModified = @DateLastModified
-                                    ,DateExtracted = @DateExtracted
-                                    ,Created = @Created
-                                    ,Updated = @Updated
-                                    ,Voided = @Voided                            
+                               SET     
+                                                                        
+                                    FacilityName = @FacilityName,
+                                    VisitID = @VisitID,
+                                    VisitDate = @VisitDate,
+                                    VisitType = @VisitType,
+                                    ScreeningMethod = @ScreeningMethod,
+                                    TreatmentToday = @TreatmentToday,
+                                    ReferredOut = @ReferredOut,
+                                    NextAppointmentDate = @NextAppointmentDate,
+                                    ScreeningType = @ScreeningType,
+                                    ScreeningResult = @ScreeningResult,
+                                    PostTreatmentComplicationCause = @PostTreatmentComplicationCause,
+                                    OtherPostTreatmentComplication = @OtherPostTreatmentComplication,
+                                    ReferralReason = @ReferralReason,
+                                    SmokesCigarette = @SmokesCigarette,
+                                    NumberYearsSmoked = @NumberYearsSmoked,
+                                    NumberCigarettesPerDay = @NumberCigarettesPerDay,
+                                    OtherFormTobacco = @OtherFormTobacco,
+                                    TakesAlcohol = @TakesAlcohol,
+                                    HIVStatus = @HIVStatus,
+                                    FamilyHistoryOfCa = @FamilyHistoryOfCa,
+                                    PreviousCaTreatment = @PreviousCaTreatment,
+                                    SymptomsCa = @SymptomsCa,
+                                    CancerType = @CancerType,
+                                    FecalOccultBloodTest = @FecalOccultBloodTest,
+                                    TreatmentOccultBlood = @TreatmentOccultBlood,
+                                    Colonoscopy = @Colonoscopy,
+                                    TreatmentColonoscopy = @TreatmentColonoscopy,
+                                    EUA = @EUA,
+                                    TreatmentRetinoblastoma = @TreatmentRetinoblastoma,
+                                    RetinoblastomaGene = @RetinoblastomaGene,
+                                    TreatmentEUA = @TreatmentEUA,
+                                    DRE = @DRE,
+                                    TreatmentDRE = @TreatmentDRE,
+                                    PSA = @PSA,
+                                    TreatmentPSA = @TreatmentPSA,
+                                    VisualExamination = @VisualExamination,
+                                    TreatmentVE = @TreatmentVE,
+                                    Cytology = @Cytology,
+                                    TreatmentCytology = @TreatmentCytology,
+                                    Imaging = @Imaging,
+                                    TreatmentImaging = @TreatmentImaging,
+                                    Biopsy = @Biopsy,
+                                    TreatmentBiopsy = @TreatmentBiopsy,
+                                    HPVScreeningResult = @HPVScreeningResult,
+                                    TreatmentHPV = @TreatmentHPV,
+                                    VIAVILIScreeningResult = @VIAVILIScreeningResult,
+                                    PAPSmearScreeningResult = @PAPSmearScreeningResult,
+                                    TreatmentPapSmear = @TreatmentPapSmear,
+                                    ReferalOrdered = @ReferalOrdered,
+                                    Colposcopy = @Colposcopy,
+                                    TreatmentColposcopy = @TreatmentColposcopy,
+                                    CBE = @CBE,
+                                    TreatmentCBE = @TreatmentCBE,
+                                    Ultrasound = @Ultrasound,
+                                    TreatmentUltraSound = @TreatmentUltraSound,
+                                    IfTissueDiagnosis = @IfTissueDiagnosis,
+                                    DateTissueDiagnosis = @DateTissueDiagnosis,
+                                    ReasonNotDone = @ReasonNotDone,
+                                    Referred = @Referred,
+                                    ReasonForReferral = @ReasonForReferral,                                   
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    DateExtracted = @DateExtracted,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided                       
 
                              WHERE   RecordUUID = @RecordUUID";
 
-                    await connection.ExecuteAsync(sql, recordsToUpdate,transaction);
+                                await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
                                 transaction.Commit();
                                 break;
                             }
@@ -235,37 +290,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 Log.Error(ex);
                 throw;
             }
-            //try
-            //{
-            //    var cons = _context.Database.GetConnectionString();
-            //    //Update existing data
-            //    var stageDictionary = stageDrug
-            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-            //             .ToDictionary(
-            //                 g => g.Key,
-            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-            //             );
 
-            //    var updateTasks = existingRecords.Select(async existingExtract =>
-            //    {
-            //        if (stageDictionary.TryGetValue(
-            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-            //            out var stageExtract)
-            //        )
-            //        {
-            //            _mapper.Map(stageExtract, existingExtract);
-            //        }
-            //    }).ToList();
-
-            //    await Task.WhenAll(updateTasks);
-
-            //    _context.Database.GetDbConnection().BulkUpdate(existingRecords);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Error(ex);
-            //    throw;
-            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
@@ -374,6 +399,6 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 Log.Error(ex);
                 throw;
             }
-        }    
-}
+        }
+    }
 }

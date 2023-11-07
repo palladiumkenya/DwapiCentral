@@ -44,7 +44,7 @@ public class MergeDifferentialDrugCommandHandler : IRequestHandler<MergeDifferen
                 foreach (var extract in profile.DrugAlcoholScreeningExtracts)
                 { // Check if the extract already exists in the database
                     var existingLabExtract = await _extractRepository.GetExtractByUniqueIdentifiers(
-                        extract.PatientPk, extract.SiteCode, extract.RecordUUID);
+                         extract.SiteCode, extract.RecordUUID);
 
                     if (existingLabExtract != null)
                     {

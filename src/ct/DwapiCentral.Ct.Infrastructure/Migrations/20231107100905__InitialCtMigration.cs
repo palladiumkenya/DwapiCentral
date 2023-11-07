@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
-    public partial class InitialCt : Migration
+    public partial class _InitialCtMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -262,6 +262,57 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StageArtFastTrackExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    ARTRefillModel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CTXDispensed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DapsoneDispensed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CondomsDistributed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OralContraceptivesDispensed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MissedDoses = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Fatigue = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cough = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Fever = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NauseaOrVomiting = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GenitalSoreOrDischarge = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Diarrhea = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtherSymptoms = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PregnancyStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FPStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FPMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReasonNotOnFP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferredToClinic = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReturnVisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveStage = table.Column<int>(type: "int", nullable: false),
+                    Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Processed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StageArtFastTrackExtracts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StageBaselineExtracts",
                 columns: table => new
                 {
@@ -310,6 +361,95 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StageBaselineExtracts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StageCancerScreeningExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    VisitType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentToday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferredOut = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NextAppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ScreeningType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostTreatmentComplicationCause = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtherPostTreatmentComplication = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferralReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SmokesCigarette = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumberYearsSmoked = table.Column<int>(type: "int", nullable: true),
+                    NumberCigarettesPerDay = table.Column<int>(type: "int", nullable: true),
+                    OtherFormTobacco = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TakesAlcohol = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HIVStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FamilyHistoryOfCa = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PreviousCaTreatment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SymptomsCa = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CancerType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FecalOccultBloodTest = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentOccultBlood = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Colonoscopy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentColonoscopy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EUA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentRetinoblastoma = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RetinoblastomaGene = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentEUA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DRE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentDRE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PSA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentPSA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisualExamination = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentVE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cytology = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentCytology = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Imaging = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentImaging = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Biopsy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentBiopsy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HPVScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentHPV = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VIAVILIScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PAPSmearScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentPapSmear = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferalOrdered = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Colposcopy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentColposcopy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CBE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentCBE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ultrasound = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentUltraSound = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IfTissueDiagnosis = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateTissueDiagnosis = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReasonNotDone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Referred = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReasonForReferral = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveStage = table.Column<int>(type: "int", nullable: false),
+                    Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Processed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StageCancerScreeningExtracts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -553,7 +693,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DrinkingAlcohol = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Smoking = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DrugUse = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    PatientPk = table.Column<int>(type: "int", nullable: true),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1187,6 +1327,142 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     table.PrimaryKey("PK_AllergiesChronicIllnessExtract", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AllergiesChronicIllnessExtract_PatientExtract_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
+                        principalTable: "PatientExtract",
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ArtFastTrackExtract",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    ARTRefillModel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CTXDispensed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DapsoneDispensed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CondomsDistributed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OralContraceptivesDispensed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MissedDoses = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Fatigue = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cough = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Fever = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NauseaOrVomiting = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GenitalSoreOrDischarge = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Diarrhea = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtherSymptoms = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PregnancyStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FPStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FPMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReasonNotOnFP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferredToClinic = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReturnVisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArtFastTrackExtract", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ArtFastTrackExtract_PatientExtract_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
+                        principalTable: "PatientExtract",
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CancerScreeningExtract",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisitID = table.Column<int>(type: "int", nullable: true),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    VisitType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentToday = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferredOut = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NextAppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ScreeningType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostTreatmentComplicationCause = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtherPostTreatmentComplication = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferralReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SmokesCigarette = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumberYearsSmoked = table.Column<int>(type: "int", nullable: true),
+                    NumberCigarettesPerDay = table.Column<int>(type: "int", nullable: true),
+                    OtherFormTobacco = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TakesAlcohol = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HIVStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FamilyHistoryOfCa = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PreviousCaTreatment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SymptomsCa = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CancerType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FecalOccultBloodTest = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentOccultBlood = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Colonoscopy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentColonoscopy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EUA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentRetinoblastoma = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RetinoblastomaGene = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentEUA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DRE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentDRE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PSA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentPSA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisualExamination = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentVE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cytology = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentCytology = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Imaging = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentImaging = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Biopsy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentBiopsy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HPVScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentHPV = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VIAVILIScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PAPSmearScreeningResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentPapSmear = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReferalOrdered = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Colposcopy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentColposcopy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CBE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentCBE = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ultrasound = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TreatmentUltraSound = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IfTissueDiagnosis = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateTissueDiagnosis = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReasonNotDone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Referred = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReasonForReferral = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CancerScreeningExtract", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CancerScreeningExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
@@ -2056,6 +2332,16 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ArtFastTrackExtract_PatientPk_SiteCode",
+                table: "ArtFastTrackExtract",
+                columns: new[] { "PatientPk", "SiteCode" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CancerScreeningExtract_PatientPk_SiteCode",
+                table: "CancerScreeningExtract",
+                columns: new[] { "PatientPk", "SiteCode" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CervicalCancerScreeningExtract_PatientPk_SiteCode",
                 table: "CervicalCancerScreeningExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
@@ -2162,6 +2448,12 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 name: "AllergiesChronicIllnessExtract");
 
             migrationBuilder.DropTable(
+                name: "ArtFastTrackExtract");
+
+            migrationBuilder.DropTable(
+                name: "CancerScreeningExtract");
+
+            migrationBuilder.DropTable(
                 name: "CervicalCancerScreeningExtract");
 
             migrationBuilder.DropTable(
@@ -2237,7 +2529,13 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 name: "StageArtExtracts");
 
             migrationBuilder.DropTable(
+                name: "StageArtFastTrackExtracts");
+
+            migrationBuilder.DropTable(
                 name: "StageBaselineExtracts");
+
+            migrationBuilder.DropTable(
+                name: "StageCancerScreeningExtracts");
 
             migrationBuilder.DropTable(
                 name: "StageCervicalCancerScreeningExtracts");

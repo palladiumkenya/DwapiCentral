@@ -25,4 +25,10 @@ public interface IArtFastTrack : IExtract
     string? ReasonNotOnFP  { get; set; }
     string? ReferredToClinic  { get; set; }
     DateTime?  ReturnVisitDate  { get; set; }
+
+    string? FacilityName { get; set; }
+
+   
+
+   
 }

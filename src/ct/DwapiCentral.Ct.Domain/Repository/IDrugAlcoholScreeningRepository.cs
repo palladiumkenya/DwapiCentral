@@ -9,6 +9,8 @@ namespace DwapiCentral.Ct.Domain.Repository
 {
     public interface IDrugAlcoholScreeningRepository
     {
-        Task<DrugAlcoholScreeningExtract> GetExtractByUniqueIdentifiers(int patientPK, int siteCode, string recordUUID); Task UpdateExtract(List<DrugAlcoholScreeningExtract> patientLabExtract); Task InsertExtract(List<DrugAlcoholScreeningExtract> patientLabExtract);
+        Task<DrugAlcoholScreeningExtract> GetExtractByUniqueIdentifiers(int siteCode, string recordUUID); 
+        Task UpdateExtract(List<DrugAlcoholScreeningExtract> patientLabExtract);
+        Task InsertExtract(List<DrugAlcoholScreeningExtract> patientLabExtract);
     }
 }

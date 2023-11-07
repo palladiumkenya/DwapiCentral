@@ -37,5 +37,6 @@ public class StageArtFastTrackExtract : StageExtract, IArtFastTrack
     public string? ReasonNotOnFP { get; set; }
     public string? ReferredToClinic { get; set; }
     public DateTime? ReturnVisitDate { get; set; }
+    public string? FacilityName { get; set; }
 
 }
