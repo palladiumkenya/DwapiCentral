@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Prep.Infrastructure.Migrations
 {
     [DbContext(typeof(PrepDbContext))]
-    [Migration("20231107111944__InitialPrepMigration")]
-    partial class _InitialPrepMigration
+    [Migration("20231108055138__InitialPrep")]
+    partial class _InitialPrep
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -993,14 +993,9 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.Stage.StagePatientPrep", b =>
                 {
-                    b.Property<int>("PatientPk")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SiteCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PrepNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ClientPreviouslyonPrep")
                         .HasColumnType("nvarchar(max)");
@@ -1071,11 +1066,18 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<string>("NUPI")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
                     b.Property<string>("PopulationType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("PrepEnrollmentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PrepNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrevPrepReg")
                         .HasColumnType("nvarchar(max)");
@@ -1092,6 +1094,9 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("Sex")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
 
                     b.Property<string>("SubCounty")
                         .HasColumnType("nvarchar(max)");
@@ -1114,7 +1119,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<string>("Ward")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasKey("Id");
 
                     b.ToTable("StagePrepPatients");
                 });

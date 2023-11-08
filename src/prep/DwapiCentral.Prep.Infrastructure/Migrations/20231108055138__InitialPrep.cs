@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Prep.Infrastructure.Migrations
 {
-    public partial class _InitialPrepMigration : Migration
+    public partial class _InitialPrep : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -312,10 +312,11 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 name: "StagePrepPatients",
                 columns: table => new
                 {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrepEnrollmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -355,7 +356,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StagePrepPatients", x => new { x.PatientPk, x.SiteCode, x.PrepNumber });
+                    table.PrimaryKey("PK_StagePrepPatients", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
