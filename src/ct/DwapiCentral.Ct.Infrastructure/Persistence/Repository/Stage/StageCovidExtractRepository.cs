@@ -89,7 +89,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
@@ -99,7 +99,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
                                     AND p.RecordUUID = s.RecordUUID                                    
-                                    AND p.Date_Created = s.MaxCreatedTime                                    
+                                                                  
                             )
                         ";
 
@@ -115,13 +115,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    await UpdateCentralDataWithStagingData(stageCovid, existingRecords);
+                    await UpdateCentralDataWithStagingData(stageCovid, existingRecords,manifestId);
                 }
                 else
                 {
                     uniqueStageExtracts = stageCovid;
                 }
-                await InsertNewDataFromStaging(uniqueStageExtracts);
+                await InsertNewDataFromStaging(uniqueStageExtracts,manifestId);
 
 
             }
@@ -133,7 +133,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         }
 
-        private async Task InsertNewDataFromStaging(List<StageCovidExtract> uniqueStageExtracts)
+        private async Task InsertNewDataFromStaging(List<StageCovidExtract> uniqueStageExtracts,Guid manifestId)
         {
             try
             {
@@ -157,102 +157,131 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             catch (Exception ex)
             {
                 Log.Error(ex);
+                var notification = new OnErrorEvent { ExtractName = "CovidExtract", ManifestId = manifestId, SiteCode = uniqueStageExtracts.First().SiteCode, message = ex.Message };
+                await _mediator.Publish(notification);
                 throw;
             }
         }
 
-        private async Task UpdateCentralDataWithStagingData(List<StageCovidExtract> stageCovid, IEnumerable<CovidExtract> existingRecords)
+        private async Task UpdateCentralDataWithStagingData(List<StageCovidExtract> stageCovid, IEnumerable<CovidExtract> existingRecords, Guid manifestId)
         {
-            try
-            {
 
-                var centraldata = stageCovid.Select(_mapper.Map<StageCovidExtract, CovidExtract>).ToList();
-
-
-                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
-
-
-                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
-
-
-                var cons = _context.Database.GetConnectionString();
-                using (var connection = new SqlConnection(cons))
+                try
                 {
-                    await connection.OpenAsync();
+                    var centraldata = stageCovid.Select(_mapper.Map<StageCovidExtract, CovidExtract>).ToList();
 
-                    using (var transaction = connection.BeginTransaction())
+                    centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+
+                    var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+                    var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
+
+
+                    const int maxRetries = 3;
+
+                    for (var retry = 0; retry < maxRetries; retry++)
                     {
-                        const int maxRetries = 3;
-
-                        for (var retry = 0; retry < maxRetries; retry++)
+                        try
                         {
-                            try
+                        }
+                        catch (SqlException ex)
+                        {
+                            if (ex.Number == 1205)
                             {
-                                var sql = $@"
-                           UPDATE 
-                                     CovidExtract
-
-                               SET  VisitID = @VisitID,
-                                    Covid19AssessmentDate = @Covid19AssessmentDate,                                   
-                                    ReceivedCOVID19Vaccine = @ReceivedCOVID19Vaccine,                                    
-                                    FirstDoseVaccineAdministered = @FirstDoseVaccineAdministered,                                    
-                                    SecondDoseVaccineAdministered = @SecondDoseVaccineAdministered,
-                                    VaccinationStatus = @VaccinationStatus,
-                                    VaccineVerification = @VaccineVerification,
-                                    BoosterGiven = @BoosterGiven,
-                                    BoosterDose = @BoosterDose,                                    
-                                    EverCOVID19Positive = @EverCOVID19Positive,
-                                    COVID19TestDate = COALESCE(@COVID19TestDate, 1900-01-01),
-                                    PatientStatus = @PatientStatus,
-                                    AdmissionStatus = @AdmissionStatus,
-                                    AdmissionUnit = @AdmissionUnit,
-                                    MissedAppointmentDueToCOVID19 = @MissedAppointmentDueToCOVID19,                                    
-                                    COVID19TestDateSinceLastVisit = COALESCE(@COVID19TestDateSinceLastVisit,1900-01-01),
-                                    PatientStatusSinceLastVisit = @PatientStatusSinceLastVisit,
-                                    AdmissionStatusSinceLastVisit = @AdmissionStatusSinceLastVisit,                                   
-                                    AdmissionUnitSinceLastVisit = @AdmissionUnitSinceLastVisit,
-                                    SupplementalOxygenReceived = @SupplementalOxygenReceived,
-                                    PatientVentilated = @PatientVentilated,
-                                    TracingFinalOutcome = @TracingFinalOutcome,
-                                    CauseOfDeath = @CauseOfDeath,
-                                    COVID19TestResult = @COVID19TestResult,
-                                    Sequence = @Sequence,
-                                    BoosterDoseVerified = @BoosterDoseVerified,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = COALESCE(@DateLastModified,1900-01-01),
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
-
-                             WHERE   RecordUUID = @RecordUUID";
-
-                    await connection.ExecuteAsync(sql, recordsToUpdate,transaction);
-                                transaction.Commit();
-                                break;
+                                _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+                                await Task.Delay(100);
                             }
-                            catch (SqlException ex)
+                            else
                             {
-                                if (ex.Number == 1205)
-                                {
-
-                                    await Task.Delay(100);
-                                }
-                                else
-                                {
-                                    transaction.Rollback();
-                                    throw;
-                                }
+                                Log.Error(ex);
+                                var notification = new OnErrorEvent { ExtractName = "CovidExtract", ManifestId = manifestId, SiteCode = existingRecords.First().SiteCode, message = ex.Message };
+                                await _mediator.Publish(notification);
+                                throw;
                             }
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
-            }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    throw;
+                }
+
+
+
+                //var cons = _context.Database.GetConnectionString();
+                //using (var connection = new SqlConnection(cons))
+                //{
+                //    await connection.OpenAsync();
+
+                //    using (var transaction = connection.BeginTransaction())
+                //    {
+                //        const int maxRetries = 3;
+
+                //        for (var retry = 0; retry < maxRetries; retry++)
+                //        {
+                //            try
+                //            {
+                //                var sql = $@"
+                //           UPDATE 
+                //                     CovidExtract
+
+                //               SET  VisitID = @VisitID,
+                //                    Covid19AssessmentDate = @Covid19AssessmentDate,                                   
+                //                    ReceivedCOVID19Vaccine = @ReceivedCOVID19Vaccine,                                    
+                //                    FirstDoseVaccineAdministered = @FirstDoseVaccineAdministered,                                    
+                //                    SecondDoseVaccineAdministered = @SecondDoseVaccineAdministered,
+                //                    VaccinationStatus = @VaccinationStatus,
+                //                    VaccineVerification = @VaccineVerification,
+                //                    BoosterGiven = @BoosterGiven,
+                //                    BoosterDose = @BoosterDose,                                    
+                //                    EverCOVID19Positive = @EverCOVID19Positive,
+                //                    COVID19TestDate = COALESCE(@COVID19TestDate, 1900-01-01),
+                //                    PatientStatus = @PatientStatus,
+                //                    AdmissionStatus = @AdmissionStatus,
+                //                    AdmissionUnit = @AdmissionUnit,
+                //                    MissedAppointmentDueToCOVID19 = @MissedAppointmentDueToCOVID19,                                    
+                //                    COVID19TestDateSinceLastVisit = COALESCE(@COVID19TestDateSinceLastVisit,1900-01-01),
+                //                    PatientStatusSinceLastVisit = @PatientStatusSinceLastVisit,
+                //                    AdmissionStatusSinceLastVisit = @AdmissionStatusSinceLastVisit,                                   
+                //                    AdmissionUnitSinceLastVisit = @AdmissionUnitSinceLastVisit,
+                //                    SupplementalOxygenReceived = @SupplementalOxygenReceived,
+                //                    PatientVentilated = @PatientVentilated,
+                //                    TracingFinalOutcome = @TracingFinalOutcome,
+                //                    CauseOfDeath = @CauseOfDeath,
+                //                    COVID19TestResult = @COVID19TestResult,
+                //                    Sequence = @Sequence,
+                //                    BoosterDoseVerified = @BoosterDoseVerified,
+                //                    Date_Created = @Date_Created,
+                //                    DateLastModified = COALESCE(@DateLastModified,1900-01-01),
+                //                    DateExtracted = @DateExtracted,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided                          
+
+                //             WHERE   RecordUUID = @RecordUUID";
+
+                //    await connection.ExecuteAsync(sql, recordsToUpdate,transaction);
+                //                transaction.Commit();
+                //                break;
+                //            }
+                //            catch (SqlException ex)
+                //            {
+                //                if (ex.Number == 1205)
+                //                {
+
+                //                    await Task.Delay(100);
+                //                }
+                //                else
+                //                {
+                //                    transaction.Rollback();
+                //                    throw;
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
+         
             //try
             //{
             //    //Update existing data

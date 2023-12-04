@@ -91,7 +91,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
@@ -101,7 +101,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode                                    
                                     AND p.RecordUUID = s.RecordUUID
-                                    AND p.Date_Created = s.MaxCreatedTime                                    
+                                                                  
                             )
                         ";
                
@@ -117,7 +117,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    await UpdateCentralDataWithStagingData(stageArt, existingRecords);
+                    await UpdateCentralDataWithStagingData(stageArt, existingRecords,manifestId);
 
                 }
                 else
@@ -125,7 +125,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     uniqueStageExtracts = stageArt;
                 }
 
-                await InsertNewDataFromStaging(uniqueStageExtracts);
+                await InsertNewDataFromStaging(uniqueStageExtracts,manifestId);
 
             }
             catch(Exception ex)
@@ -136,7 +136,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             
         }
 
-        private async Task InsertNewDataFromStaging(List<StageArtExtract> uniqueStageExtracts)
+        private async Task InsertNewDataFromStaging(List<StageArtExtract> uniqueStageExtracts, Guid manifestId)
         {
             try
             {
@@ -160,104 +160,131 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             catch (Exception ex)
             {
                 Log.Error(ex);
+
+                var notification = new OnErrorEvent { ExtractName = "PatientArtExtract", ManifestId = manifestId, SiteCode = uniqueStageExtracts.First().SiteCode, message = ex.Message };
+                await _mediator.Publish(notification);
                 throw;
             }
         }
 
-        private async Task UpdateCentralDataWithStagingData(List<StageArtExtract> stageArt, IEnumerable<PatientArtExtract> existingRecords)
+        private async Task UpdateCentralDataWithStagingData(List<StageArtExtract> stageArt, IEnumerable<PatientArtExtract> existingRecords, Guid manifestId)
         {
-            try
-            {
-
-                var centraldata = stageArt.Select(_mapper.Map<StageArtExtract, PatientArtExtract>).ToList();
-
-
-                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
-
-
-                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
-
-
-                var cons = _context.Database.GetConnectionString();
-                using (var connection = new SqlConnection(cons))
+           
+                try
                 {
-                    await connection.OpenAsync();
+                    var centraldata = stageArt.Select(_mapper.Map<StageArtExtract, PatientArtExtract>).ToList();
 
-                    using (var transaction = connection.BeginTransaction())
+                    centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+
+                    var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+                    var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
+
+
+                    const int maxRetries = 3;
+
+                    for (var retry = 0; retry < maxRetries; retry++)
                     {
-                        const int maxRetries = 3;
-
-                        for (var retry = 0; retry < maxRetries; retry++)
+                        try
                         {
-                            try
+                        }
+                        catch (SqlException ex)
+                        {
+                            if (ex.Number == 1205)
                             {
-
-                                var sql = $@"
-                               UPDATE 
-                                     PatientArtExtract
-
-                               SET     
-                                     LastARTDate  = @LastARTDate
-                                    ,LastVisit  = @LastVisit
-                                    ,DOB  = @DOB
-                                    ,AgeEnrollment  = @AgeEnrollment
-                                    ,AgeARTStart  = @AgeARTStart
-                                    ,AgeLastVisit  = @AgeLastVisit
-                                    ,RegistrationDate  = @RegistrationDate
-                                    ,Gender  = @Gender
-                                    ,PatientSource  = @PatientSource
-                                    ,StartARTDate  = @StartARTDate
-                                    ,PreviousARTStartDate  = @PreviousARTStartDate
-                                    ,PreviousARTRegimen  = @PreviousARTRegimen
-                                    ,StartARTAtThisFacility  = @StartARTAtThisFacility
-                                    ,StartRegimen  = @StartRegimen
-                                    ,StartRegimenLine  = @StartRegimenLine
-                                    ,LastRegimen  = @LastRegimen
-                                    ,LastRegimenLine  = @LastRegimenLine
-                                    ,Duration  = @Duration
-                                    ,ExpectedReturn  = @ExpectedReturn
-                                    ,Provider  = @Provider
-                                    ,ExitReason  = @ExitReason
-                                    ,ExitDate  = @ExitDate
-                                    ,PreviousARTUse  = @PreviousARTUse
-                                    ,PreviousARTPurpose  = @PreviousARTPurpose
-                                    ,DateLastUsed  = @DateLastUsed
-                                    ,Date_Created = @Date_Created
-                                    ,DateLastModified = @DateLastModified
-                                    ,DateExtracted = @DateExtracted
-                                    ,Created = @Created
-                                    ,Updated = @Updated
-                                    ,Voided = @Voided                          
-
-                             WHERE  RecordUUID = @RecordUUID";
-
-                                await connection.ExecuteAsync(sql, recordsToUpdate,transaction);
-                                transaction.Commit();
-
-                                break;
+                                _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+                                await Task.Delay(100);
                             }
-                            catch (SqlException ex)
+                            else
                             {
-                                if (ex.Number == 1205)
-                                {
-
-                                    await Task.Delay(100);
-                                }
-                                else
-                                {
-                                    transaction.Rollback();
-                                    throw;
-                                }
+                                Log.Error(ex);
+                                var notification = new OnErrorEvent { ExtractName = "PatientArtExtract", ManifestId = manifestId, SiteCode = existingRecords.First().SiteCode, message = ex.Message };
+                                await _mediator.Publish(notification);
+                                throw;
                             }
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
-            }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    throw;
+                }
+                //using (var connection = new SqlConnection(cons))
+                //{
+                //    await connection.OpenAsync();
+
+                //    using (var transaction = connection.BeginTransaction())
+                //    {
+                //        const int maxRetries = 3;
+
+                //        for (var retry = 0; retry < maxRetries; retry++)
+                //        {
+                //            try
+                //            {
+
+                //                var sql = $@"
+                //               UPDATE ctr
+
+
+                //               SET     
+                //                     ctr.LastARTDate  = stg.LastARTDate
+                //                    ,ctr.LastVisit  = stg.LastVisit
+                //                    ,ctr.DOB  = stg.DOB
+                //                    ,ctr.AgeEnrollment  = stg.AgeEnrollment
+                //                    ,ctr.AgeARTStart  = stg.AgeARTStart
+                //                    ,ctr.AgeLastVisit  = stg.AgeLastVisit
+                //                    ,ctr.RegistrationDate  = stg.RegistrationDate
+                //                    ,ctr.Gender  = stg.Gender
+                //                    ,ctr.PatientSource  = stg.PatientSource
+                //                    ,ctr.StartARTDate  = stg.StartARTDate
+                //                    ,ctr.PreviousARTStartDate  = stg.PreviousARTStartDate
+                //                    ,ctr.PreviousARTRegimen  = stg.PreviousARTRegimen
+                //                    ,ctr.StartARTAtThisFacility  = stg.StartARTAtThisFacility
+                //                    ,ctr.StartRegimen  = stg.StartRegimen
+                //                    ,ctr.StartRegimenLine  = stg.StartRegimenLine
+                //                    ,ctr.LastRegimen  = stg.LastRegimen
+                //                    ,ctr.LastRegimenLine  = stg.LastRegimenLine
+                //                    ,ctr.Duration  = stg.Duration
+                //                    ,ctr.ExpectedReturn  = stg.ExpectedReturn
+                //                    ,ctr.Provider  = stg.Provider
+                //                    ,ctr.ExitReason  = stg.ExitReason
+                //                    ,ctr.ExitDate  = stg.ExitDate
+                //                    ,ctr.PreviousARTUse  = stg.PreviousARTUse
+                //                    ,ctr.PreviousARTPurpose  = stg.PreviousARTPurpose
+                //                    ,ctr.DateLastUsed  = stg.DateLastUsed
+                //                    ,ctr.Date_Created = stg.Date_Created
+                //                    ,ctr.DateLastModified = stg.DateLastModified
+                //                    ,ctr.DateExtracted = stg.DateExtracted
+                //                    ,ctr.Created = stg.Created
+                //                    ,ctr.Updated = stg.Updated
+                //                    ,ctr.Voided = stg.Voided
+                //             FROM PatientArtExtract ctr
+                //             JOIN {_stageName}  stg ON ctr.RecordUUID = stg.RecordUUID
+                //             WHERE  ctr.RecordUUID = @RecordUUID";
+
+                //                await connection.ExecuteAsync(sql, existingRecords, transaction);
+                //                transaction.Commit();
+
+                //                break;
+                //            }
+                //            catch (SqlException ex)
+                //            {
+                //                if (ex.Number == 1205)
+                //                {
+
+                //                    await Task.Delay(100);
+                //                }
+                //                else
+                //                {
+                //                    transaction.Rollback();
+                //                    throw;
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
+       
 
             //try
             //{

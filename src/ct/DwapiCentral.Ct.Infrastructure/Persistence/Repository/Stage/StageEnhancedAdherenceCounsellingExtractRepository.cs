@@ -86,7 +86,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
@@ -96,7 +96,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
                                     AND p.RecordUUID = s.RecordUUID                                  
-                                    AND p.Date_Created = s.MaxCreatedTime                                    
+                                                                      
                             )
                         ";
 
@@ -114,13 +114,13 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    await UpdateCentralDataWithStagingData(stageEnhancedAdherance, existingRecords);
+                    await UpdateCentralDataWithStagingData(stageEnhancedAdherance, existingRecords,manifestId);
                 }
                 else
                 {
                     uniqueStageExtracts = stageEnhancedAdherance;
                 }
-                await InsertNewDataFromStaging(uniqueStageExtracts);
+                await InsertNewDataFromStaging(uniqueStageExtracts,manifestId);
             }
             catch (Exception ex)
             {
@@ -130,7 +130,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
 
         }
 
-        private async Task InsertNewDataFromStaging(List<StageEnhancedAdherenceCounsellingExtract> uniqueStageExtracts)
+        private async Task InsertNewDataFromStaging(List<StageEnhancedAdherenceCounsellingExtract> uniqueStageExtracts,Guid manifestId)
         {
 
             try
@@ -155,121 +155,148 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
             catch (Exception ex)
             {
                 Log.Error(ex);
+                var notification = new OnErrorEvent { ExtractName = "EnhancedAdherenceCounsellingExtract", ManifestId = manifestId, SiteCode = uniqueStageExtracts.First().SiteCode, message = ex.Message };
+                await _mediator.Publish(notification);
                 throw;
             }
         }
 
-        private async Task UpdateCentralDataWithStagingData(List<StageEnhancedAdherenceCounsellingExtract> stageEnhancedAdherance, IEnumerable<EnhancedAdherenceCounsellingExtract> existingRecords)
+        private async Task UpdateCentralDataWithStagingData(List<StageEnhancedAdherenceCounsellingExtract> stageEnhancedAdherance, IEnumerable<EnhancedAdherenceCounsellingExtract> existingRecords,Guid manifestId)
         {
-            try
-            {
+           
 
-                var centraldata = stageEnhancedAdherance.Select(_mapper.Map<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingExtract>).ToList();
-
-
-                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
-
-
-                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
-
-
-                var cons = _context.Database.GetConnectionString();
-                using (var connection = new SqlConnection(cons))
+                try
                 {
-                    await connection.OpenAsync();
+                    var centraldata = stageEnhancedAdherance.Select(_mapper.Map<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingExtract>).ToList();
 
-                    using (var transaction = connection.BeginTransaction())
+                    centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+
+                    var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+                    var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
+
+
+                    const int maxRetries = 3;
+
+                    for (var retry = 0; retry < maxRetries; retry++)
                     {
-                        const int maxRetries = 3;
-
-                        for (var retry = 0; retry < maxRetries; retry++)
+                        try
                         {
-                            try
+                        }
+                        catch (SqlException ex)
+                        {
+                            if (ex.Number == 1205)
                             {
-                                var sql = $@"
-                           UPDATE 
-                                     EnhancedAdherenceCounsellingExtract
-
-                               SET                                  
-                                    VisitID = @VisitID,
-                                    VisitDate = @VisitDate,
-                                    SessionNumber = @SessionNumber,
-                                    DateOfFirstSession = @DateOfFirstSession,
-                                    PillCountAdherence = @PillCountAdherence,
-                                    MMAS4_1 = @MMAS4_1,
-                                    MMAS4_2 = @MMAS4_2,
-                                    MMAS4_3 = @MMAS4_3,
-                                    MMAS4_4 = @MMAS4_4,
-                                    MMSA8_1 = @MMSA8_1,
-                                    MMSA8_2 = @MMSA8_2,
-                                    MMSA8_3 = @MMSA8_3,
-                                    MMSA8_4 = @MMSA8_4,
-                                    MMSAScore = @MMSAScore,
-                                    EACRecievedVL = @EACRecievedVL,
-                                    EACVL = @EACVL,
-                                    EACVLConcerns = @EACVLConcerns,
-                                    EACVLThoughts = @EACVLThoughts,
-                                    EACWayForward = @EACWayForward,
-                                    EACCognitiveBarrier = @EACCognitiveBarrier,
-                                    EACBehaviouralBarrier_1 = @EACBehaviouralBarrier_1,
-                                    EACBehaviouralBarrier_2 = @EACBehaviouralBarrier_2,
-                                    EACBehaviouralBarrier_3 = @EACBehaviouralBarrier_3,
-                                    EACBehaviouralBarrier_4 = @EACBehaviouralBarrier_4,
-                                    EACBehaviouralBarrier_5 = @EACBehaviouralBarrier_5,
-                                    EACEmotionalBarriers_1 = @EACEmotionalBarriers_1,
-                                    EACEmotionalBarriers_2 = @EACEmotionalBarriers_2,
-                                    EACEconBarrier_1 = @EACEconBarrier_1,
-                                    EACEconBarrier_2 = @EACEconBarrier_2,
-                                    EACEconBarrier_3 = @EACEconBarrier_3,
-                                    EACEconBarrier_4 = @EACEconBarrier_4,
-                                    EACEconBarrier_5 = @EACEconBarrier_5,
-                                    EACEconBarrier_6 = @EACEconBarrier_6,
-                                    EACEconBarrier_7 = @EACEconBarrier_7,
-                                    EACEconBarrier_8 = @EACEconBarrier_8,
-                                    EACReviewImprovement = @EACReviewImprovement,
-                                    EACReviewMissedDoses = @EACReviewMissedDoses,
-                                    EACReviewStrategy = @EACReviewStrategy,
-                                    EACReferral = @EACReferral,
-                                    EACReferralApp = @EACReferralApp,
-                                    EACReferralExperience = @EACReferralExperience,
-                                    EACHomevisit = @EACHomevisit,
-                                    EACAdherencePlan = @EACAdherencePlan,
-                                    EACFollowupDate = @EACFollowupDate,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
-
-                             WHERE   RecordUUID = @RecordUUID";
-
-                    await connection.ExecuteAsync(sql, recordsToUpdate,transaction);
-                                transaction.Commit();
-                                break;
+                                _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+                                await Task.Delay(100);
                             }
-                            catch (SqlException ex)
+                            else
                             {
-                                if (ex.Number == 1205)
-                                {
-
-                                    await Task.Delay(100);
-                                }
-                                else
-                                {
-                                    transaction.Rollback();
-                                    throw;
-                                }
+                                Log.Error(ex);
+                                var notification = new OnErrorEvent { ExtractName = "EnhancedAdherenceCounsellingExtract", ManifestId = manifestId, SiteCode = existingRecords.First().SiteCode, message = ex.Message };
+                                await _mediator.Publish(notification);
+                                throw;
                             }
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
-            }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    throw;
+                }
+                //    var cons = _context.Database.GetConnectionString();
+                //    using (var connection = new SqlConnection(cons))
+                //    {
+                //        await connection.OpenAsync();
+
+                //        using (var transaction = connection.BeginTransaction())
+                //        {
+                //            const int maxRetries = 3;
+
+                //            for (var retry = 0; retry < maxRetries; retry++)
+                //            {
+                //                try
+                //                {
+                //                    var sql = $@"
+                //               UPDATE 
+                //                         EnhancedAdherenceCounsellingExtract
+
+                //                   SET                                  
+                //                        VisitID = @VisitID,
+                //                        VisitDate = @VisitDate,
+                //                        SessionNumber = @SessionNumber,
+                //                        DateOfFirstSession = @DateOfFirstSession,
+                //                        PillCountAdherence = @PillCountAdherence,
+                //                        MMAS4_1 = @MMAS4_1,
+                //                        MMAS4_2 = @MMAS4_2,
+                //                        MMAS4_3 = @MMAS4_3,
+                //                        MMAS4_4 = @MMAS4_4,
+                //                        MMSA8_1 = @MMSA8_1,
+                //                        MMSA8_2 = @MMSA8_2,
+                //                        MMSA8_3 = @MMSA8_3,
+                //                        MMSA8_4 = @MMSA8_4,
+                //                        MMSAScore = @MMSAScore,
+                //                        EACRecievedVL = @EACRecievedVL,
+                //                        EACVL = @EACVL,
+                //                        EACVLConcerns = @EACVLConcerns,
+                //                        EACVLThoughts = @EACVLThoughts,
+                //                        EACWayForward = @EACWayForward,
+                //                        EACCognitiveBarrier = @EACCognitiveBarrier,
+                //                        EACBehaviouralBarrier_1 = @EACBehaviouralBarrier_1,
+                //                        EACBehaviouralBarrier_2 = @EACBehaviouralBarrier_2,
+                //                        EACBehaviouralBarrier_3 = @EACBehaviouralBarrier_3,
+                //                        EACBehaviouralBarrier_4 = @EACBehaviouralBarrier_4,
+                //                        EACBehaviouralBarrier_5 = @EACBehaviouralBarrier_5,
+                //                        EACEmotionalBarriers_1 = @EACEmotionalBarriers_1,
+                //                        EACEmotionalBarriers_2 = @EACEmotionalBarriers_2,
+                //                        EACEconBarrier_1 = @EACEconBarrier_1,
+                //                        EACEconBarrier_2 = @EACEconBarrier_2,
+                //                        EACEconBarrier_3 = @EACEconBarrier_3,
+                //                        EACEconBarrier_4 = @EACEconBarrier_4,
+                //                        EACEconBarrier_5 = @EACEconBarrier_5,
+                //                        EACEconBarrier_6 = @EACEconBarrier_6,
+                //                        EACEconBarrier_7 = @EACEconBarrier_7,
+                //                        EACEconBarrier_8 = @EACEconBarrier_8,
+                //                        EACReviewImprovement = @EACReviewImprovement,
+                //                        EACReviewMissedDoses = @EACReviewMissedDoses,
+                //                        EACReviewStrategy = @EACReviewStrategy,
+                //                        EACReferral = @EACReferral,
+                //                        EACReferralApp = @EACReferralApp,
+                //                        EACReferralExperience = @EACReferralExperience,
+                //                        EACHomevisit = @EACHomevisit,
+                //                        EACAdherencePlan = @EACAdherencePlan,
+                //                        EACFollowupDate = @EACFollowupDate,
+                //                        Date_Created = @Date_Created,
+                //                        DateLastModified = @DateLastModified,
+                //                        DateExtracted = @DateExtracted,
+                //                        Created = @Created,
+                //                        Updated = @Updated,
+                //                        Voided = @Voided                          
+
+                //                 WHERE   RecordUUID = @RecordUUID";
+
+                //        await connection.ExecuteAsync(sql, recordsToUpdate,transaction);
+                //                    transaction.Commit();
+                //                    break;
+                //                }
+                //                catch (SqlException ex)
+                //                {
+                //                    if (ex.Number == 1205)
+                //                    {
+
+                //                        await Task.Delay(100);
+                //                    }
+                //                    else
+                //                    {
+                //                        transaction.Rollback();
+                //                        throw;
+                //                    }
+                //                }
+                //            }
+                //        }
+                //    }
+         
             //try
             //{
             //    //Update existing data

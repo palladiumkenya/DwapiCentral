@@ -83,7 +83,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
@@ -93,7 +93,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
                                     AND p.RecordUUID = s.RecordUUID                                   
-                                    AND p.Date_Created = s.MaxCreatedTime                                    
+                                                                   
                             )
                         ";
 
@@ -111,14 +111,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    await UpdateCentralDataWithStagingData(stageLab, existingRecords);
+                    await UpdateCentralDataWithStagingData(stageLab, existingRecords,manifestId);
 
                 }
                 else
                 {
                     uniqueStageExtracts = stageLab;
                 }
-                await InsertNewDataFromStaging(uniqueStageExtracts);
+                await InsertNewDataFromStaging(uniqueStageExtracts,manifestId);
 
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         }
 
-        private async Task InsertNewDataFromStaging(List<StageLaboratoryExtract> uniqueStageExtracts)
+        private async Task InsertNewDataFromStaging(List<StageLaboratoryExtract> uniqueStageExtracts,Guid manifestId)
         {
             try
             {
@@ -153,85 +153,112 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             catch (Exception ex)
             {
                 Log.Error(ex);
+                var notification = new OnErrorEvent { ExtractName = "PatientLabExtract", ManifestId = manifestId, SiteCode = uniqueStageExtracts.First().SiteCode, message = ex.Message };
+                await _mediator.Publish(notification);
                 throw;
             }
         }
 
-        private async Task UpdateCentralDataWithStagingData(List<StageLaboratoryExtract> stageLab, IEnumerable<PatientLaboratoryExtract> existingRecords)
+        private async Task UpdateCentralDataWithStagingData(List<StageLaboratoryExtract> stageLab, IEnumerable<PatientLaboratoryExtract> existingRecords,Guid manifestId)
         {
-            try
-            {
-               
-                var centraldata = stageLab.Select(_mapper.Map<StageLaboratoryExtract, PatientLaboratoryExtract>).ToList();
-
-                
-                var existingIptIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
-
-              
-                var recordsToUpdate = centraldata.Where(x => existingIptIds.Contains(x.RecordUUID)).ToList();
-               
-                var cons = _context.Database.GetConnectionString();
-                using (var connection = new SqlConnection(cons))
+                try
                 {
-                    await connection.OpenAsync();
+                    var centraldata = stageLab.Select(_mapper.Map<StageLaboratoryExtract, PatientLaboratoryExtract>).ToList();
 
-                    using (var transaction = connection.BeginTransaction())
+                    centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+
+                    var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+                    var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
+
+
+                    const int maxRetries = 3;
+
+                    for (var retry = 0; retry < maxRetries; retry++)
                     {
-                        const int maxRetries = 3;
-
-                        for (var retry = 0; retry < maxRetries; retry++)
+                        try
                         {
-                            try
+                        }
+                        catch (SqlException ex)
+                        {
+                            if (ex.Number == 1205)
                             {
-
-                                var sql = $@"
-                           UPDATE 
-                                     PatientLaboratoryExtract
-
-                               SET
-                                    VisitID = @VisitID,
-                                    OrderedByDate = @OrderedByDate,
-                                    ReportedByDate = @ReportedByDate,
-                                    TestName = @TestName,
-                                    EnrollmentTest = @EnrollmentTest,
-                                    TestResult = @TestResult,
-                                    DateSampleTaken = @DateSampleTaken,
-                                    SampleType = @SampleType,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
-
-                             WHERE  RecordUUID = @RecordUUID";
-
-                                await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
-                                transaction.Commit();
-                                break;
+                                _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+                                await Task.Delay(100);
                             }
-                            catch (SqlException ex)
+                            else
                             {
-                                if (ex.Number == 1205)
-                                {
-
-                                    await Task.Delay(100);
-                                }
-                                else
-                                {
-                                    transaction.Rollback();
-                                    throw;
-                                }
+                                Log.Error(ex);
+                                var notification = new OnErrorEvent { ExtractName = "PatientLabExtract", ManifestId = manifestId, SiteCode = existingRecords.First().SiteCode, message = ex.Message };
+                                await _mediator.Publish(notification);
+                                throw;
                             }
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
-            }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    throw;
+                }
+
+                //var cons = _context.Database.GetConnectionString();
+                //using (var connection = new SqlConnection(cons))
+                //{
+                //    await connection.OpenAsync();
+
+                //    using (var transaction = connection.BeginTransaction())
+                //    {
+                //        const int maxRetries = 3;
+
+                //        for (var retry = 0; retry < maxRetries; retry++)
+                //        {
+                //            try
+                //            {
+
+                //                var sql = $@"
+                //           UPDATE 
+                //                     PatientLaboratoryExtract
+
+                //               SET
+                //                    VisitID = @VisitID,
+                //                    OrderedByDate = @OrderedByDate,
+                //                    ReportedByDate = @ReportedByDate,
+                //                    TestName = @TestName,
+                //                    EnrollmentTest = @EnrollmentTest,
+                //                    TestResult = @TestResult,
+                //                    DateSampleTaken = @DateSampleTaken,
+                //                    SampleType = @SampleType,
+                //                    Date_Created = @Date_Created,
+                //                    DateLastModified = @DateLastModified,
+                //                    DateExtracted = @DateExtracted,
+                //                    Created = @Created,
+                //                    Updated = @Updated,
+                //                    Voided = @Voided                          
+
+                //             WHERE  RecordUUID = @RecordUUID";
+
+                //                await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
+                //                transaction.Commit();
+                //                break;
+                //            }
+                //            catch (SqlException ex)
+                //            {
+                //                if (ex.Number == 1205)
+                //                {
+
+                //                    await Task.Delay(100);
+                //                }
+                //                else
+                //                {
+                //                    transaction.Rollback();
+                //                    throw;
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
+          
             //try
             //{
             //    //Update existing data

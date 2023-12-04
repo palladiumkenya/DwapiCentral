@@ -89,7 +89,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
@@ -98,8 +98,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode                                    
-                                    AND p.RecordUUID = s.RecordUUID
-                                    AND p.Date_Created = s.MaxCreatedTime                                    
+                                    AND p.RecordUUID = s.RecordUUID                                                                     
                             )
                         ";
 
@@ -117,13 +116,13 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode,x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    await UpdateCentralDataWithStagingData(stagePharmacy, existingRecords);
+                    await UpdateCentralDataWithStagingData(stagePharmacy, existingRecords,manifestId);
                 }
                 else
                 {
                     uniqueStageExtracts = stagePharmacy;
                 }
-                await InsertNewDataFromStaging(uniqueStageExtracts);
+                await InsertNewDataFromStaging(uniqueStageExtracts,manifestId);
             }
             catch (Exception ex)
             {
@@ -133,7 +132,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         }
 
-        private async Task InsertNewDataFromStaging(List<StagePharmacyExtract> uniqueStageExtracts)
+        private async Task InsertNewDataFromStaging(List<StagePharmacyExtract> uniqueStageExtracts,Guid manifestId)
         {
             try
             {
@@ -157,89 +156,52 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             catch (Exception ex)
             {
                 Log.Error(ex);
+                var notification = new OnErrorEvent { ExtractName = "PatientPharmacyExtract", ManifestId = manifestId, SiteCode = uniqueStageExtracts.First().SiteCode, message = ex.Message };
+                await _mediator.Publish(notification);
                 throw;
             }
         }
 
-        private async Task UpdateCentralDataWithStagingData(List<StagePharmacyExtract> stagePharmacy, IEnumerable<PatientPharmacyExtract> existingRecords)
+        private async Task UpdateCentralDataWithStagingData(List<StagePharmacyExtract> stagePharmacy, IEnumerable<PatientPharmacyExtract> existingRecords,Guid manifestId)
         {
             try
             {
-
                 var centraldata = stagePharmacy.Select(_mapper.Map<StagePharmacyExtract, PatientPharmacyExtract>).ToList();
 
+                centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
 
-                var existingIptIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+                var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
 
+                var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
 
-                var recordsToUpdate = centraldata.Where(x => existingIptIds.Contains(x.RecordUUID)).ToList();
+               
+                const int maxRetries = 3;
 
-                var cons = _context.Database.GetConnectionString();
-                using (var connection = new SqlConnection(cons))
+                for (var retry = 0; retry < maxRetries; retry++)
                 {
-                    await connection.OpenAsync();
-
-                    using (var transaction = connection.BeginTransaction())
+                    try
                     {
-                        const int maxRetries = 3;
-
-                        for (var retry = 0; retry < maxRetries; retry++)
+                    }
+                    catch (SqlException ex)
+                    {
+                        if (ex.Number == 1205)
                         {
-                            try
-                            {
-
-                                var sql = $@"
-                               UPDATE 
-                                     PatientPharmacyExtract
-
-                               SET
-                                    VisitID = @VisitID,
-                                    DispenseDate = @DispenseDate,
-                                    Drug = @Drug,
-                                    Provider = @Provider,
-                                    Duration = @Duration,
-                                    ExpectedReturn = @ExpectedReturn,
-                                    TreatmentType = @TreatmentType,
-                                    RegimenLine = @RegimenLine,
-                                    PeriodTaken = @PeriodTaken,
-                                    ProphylaxisType = @ProphylaxisType,
-                                    RegimenChangedSwitched = @RegimenChangedSwitched,
-                                    RegimenChangeSwitchReason = @RegimenChangeSwitchReason,
-                                    StopRegimenReason = @StopRegimenReason,
-                                    StopRegimenDate = @StopRegimenDate,
-                                    Date_Created = @Date_Created,
-                                    DateLastModified = @DateLastModified,
-                                    DateExtracted = @DateExtracted,
-                                    Created = @Created,
-                                    Updated = @Updated,
-                                    Voided = @Voided                          
-
-                             WHERE   RecordUUID = @RecordUUID";
-
-                    await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
-                                transaction.Commit();
-                                break;
-                            }
-                            catch (SqlException ex)
-                            {
-                                if (ex.Number == 1205)
-                                {
-
-                                    await Task.Delay(100);
-                                }
-                                else
-                                {
-                                    transaction.Rollback();
-                                    throw;
-                                }
-                            }
+                            _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+                            await Task.Delay(100);
+                        }
+                        else
+                        {
+                            Log.Error(ex);
+                            var notification = new OnErrorEvent { ExtractName = "PatientPharmacyExtract", ManifestId = manifestId, SiteCode = existingRecords.First().SiteCode, message = ex.Message };
+                            await _mediator.Publish(notification);
+                            throw;
                         }
                     }
-                }
-            }
+                }                   
+              }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                Log.Error(ex);              
                 throw;
             }
 
