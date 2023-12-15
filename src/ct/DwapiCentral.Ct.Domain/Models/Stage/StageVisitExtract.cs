@@ -8,8 +8,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageVisitExtract : StageExtract, IVisit
     {
-        public int VisitId { get; set; }
-        public DateTime VisitDate { get; set; }
+        public int? VisitId { get; set; }
+        public DateTime? VisitDate { get; set; }
         public string? Service { get; set; }
         public string? VisitType { get; set; }
         public int? WHOStage { get; set; }

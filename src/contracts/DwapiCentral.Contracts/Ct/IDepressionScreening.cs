@@ -6,8 +6,8 @@ namespace DwapiCentral.Contracts.Ct
     public interface IDepressionScreening : IExtract
     {
         Guid Id { get; set; }       
-        int VisitID { get; set; }
-        DateTime VisitDate { get; set; }
+        int? VisitID { get; set; }
+        DateTime? VisitDate { get; set; }
         string? FacilityName { get; set; }
         string? PHQ9_1 { get; set; }
         string? PHQ9_2 { get; set; }

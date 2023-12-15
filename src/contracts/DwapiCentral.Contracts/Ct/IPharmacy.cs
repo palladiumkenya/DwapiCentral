@@ -9,7 +9,7 @@ namespace DwapiCentral.Contracts.Ct
           int? VisitID { get; set; }
           string? Drug { get; set; }
           string? Provider { get; set; }
-          DateTime DispenseDate { get; set; }
+          DateTime? DispenseDate { get; set; }
           decimal? Duration { get; set; }
           DateTime? ExpectedReturn { get; set; }
           string? TreatmentType { get; set; }

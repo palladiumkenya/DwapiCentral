@@ -2,6 +2,7 @@ using System.Data;
 using System.Reflection;
 using AutoMapper;
 using Dapper;
+using DwapiCentral.Contracts.Common;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
@@ -37,10 +38,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                // stage
-                _context.Database.GetDbConnection().BulkInsert(extracts);              
-
                 var pks = extracts.Select(x => x.Id).ToList();
+
+                var result = await StageData(manifestId, pks);
+
+                if (result == 0)
+                {
+                    // stage > Rest
+                    _context.Database.GetDbConnection().BulkInsert(extracts);
+                }
 
                 // assign > Assigned
                 await AssignAll(manifestId, pks);
@@ -52,6 +58,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await UpdateLivestage(manifestId, pks);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsProcessed = extracts.Count, ManifestId = manifestId, SiteCode = extracts.First().SiteCode, ExtractName = "PatientVisitExtract" };
+
                 await _mediator.Publish(notification);
             }
             catch (Exception e)
@@ -81,7 +88,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
@@ -91,7 +98,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
                                     AND p.RecordUUID = s.RecordUUID                                   
-                                    AND p.Date_Created = s.MaxCreatedTime                                    
+                                                                     
                             )
                         ";               
                 
@@ -106,7 +113,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    await UpdateCentralDataWithStagingData(stageVisits,existingRecords);
+                    await UpdateCentralDataWithStagingData(stageVisits,existingRecords,manifestId);
 
                 }
                 else
@@ -114,7 +121,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     uniqueStageExtracts = stageVisits;
                 }
 
-                await InsertNewDataFromStaging(uniqueStageExtracts);
+                await InsertNewDataFromStaging(uniqueStageExtracts,manifestId);
 
             }
             catch (Exception ex)
@@ -125,7 +132,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
         }
 
-        private async Task InsertNewDataFromStaging(List<StageVisitExtract> uniqueStageExtracts)
+        private async Task InsertNewDataFromStaging(List<StageVisitExtract> uniqueStageExtracts, Guid manifestId)
         {
             try
             {
@@ -149,56 +156,169 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             catch(Exception ex)
             {
                 Log.Error(ex);
+                var notification = new OnErrorEvent { ExtractName = "PatientVisitExtract", ManifestId = manifestId, SiteCode = uniqueStageExtracts.First().SiteCode, message = ex.Message };
+                await _mediator.Publish(notification);
                 throw;
             }
         }
 
-        private async Task UpdateCentralDataWithStagingData(List<StageVisitExtract> stageVisits, IEnumerable<PatientVisitExtract> existingRecords)
+        private async Task UpdateCentralDataWithStagingData(List<StageVisitExtract> stageVisits, IEnumerable<PatientVisitExtract> existingRecords, Guid manifestId)
         {
-            try
-            {
-                //Update existing data
-                var stageDictionary = stageVisits
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
-
-                //foreach (var existingExtract in existingRecords)
-                //{
-                //    if (stageDictionary.TryGetValue(
-                //        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                //        out var stageExtract)
-                //    )
-                //    {
-                //        _mapper.Map(stageExtract, existingExtract);
-                //    }
-                //}
-
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                try
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
+                var centraldata = stageVisits.Select(_mapper.Map<StageVisitExtract, PatientVisitExtract>).ToList();
+
+                centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+
+                 var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+                var recordsToUpdate = centraldata.Where(x => existingIds.Contains(x.RecordUUID)).ToList();
+
+
+                const int maxRetries = 3;
+
+                    for (var retry = 0; retry < maxRetries; retry++)
                     {
-                        _mapper.Map(stageExtract, existingExtract);
+                        try
+                        {
+                        }
+                        catch (SqlException ex)
+                        {
+                            if (ex.Number == 1205)
+                            {
+                                _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+                                await Task.Delay(100);
+                            }
+                            else
+                            {
+                                Log.Error(ex);
+                                var notification = new OnErrorEvent { ExtractName = "PatientVisitExtract", ManifestId = manifestId, SiteCode = existingRecords.First().SiteCode, message = ex.Message };
+                                await _mediator.Publish(notification);
+                                throw;
+                            }
+                        }
                     }
-                }).ToList(); 
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    throw;
+                }
 
-                await Task.WhenAll(updateTasks);
+                //var cons = _context.Database.GetConnectionString();
+                //using (var connection = new SqlConnection(cons))
+                //{
+                //    await connection.OpenAsync();
 
-                // Bulk merge the updated records asynchronously
-                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
+                //    using (var transaction = connection.BeginTransaction())
+                //    {
+                //        const int maxRetries = 3; 
 
-               
-            }
-            catch(Exception ex )
-            {
-                Log.Error(ex);
-                throw;
-            }
+                //        for (var retry = 0; retry < maxRetries; retry++)
+                //        {
+                //            try
+                //            {
+
+
+
+                //                var sql = $@"
+                //           UPDATE 
+                //                     pve 
+
+                //               SET
+                //                    pve.VisitID = sve.VisitID,
+                //                    pve.VisitDate = sve.VisitDate,                                    
+                //                    pve.Service = sve.Service,
+                //                    pve.VisitType = sve.VisitType,
+                //                    pve.WHOStage = sve.WHOStage,
+                //                    pve.WABStage = sve.WABStage,
+                //                    pve.Pregnant = sve.Pregnant,
+                //                    pve.LMP = sve.LMP,
+                //                    pve.EDD = sve.EDD,
+                //                    pve.Height = sve.Height,
+                //                    pve.Weight = sve.Weight,
+                //                    pve.BP = sve.BP,
+                //                    pve.OI = sve.OI,
+                //                    pve.OIDate = sve.OIDate,
+                //                    pve.SubstitutionFirstlineRegimenDate = sve.SubstitutionFirstlineRegimenDate,
+                //                    pve.SubstitutionFirstlineRegimenReason = sve.SubstitutionFirstlineRegimenReason,
+                //                    pve.SubstitutionSecondlineRegimenDate = sve.SubstitutionSecondlineRegimenDate,
+                //                    pve.SubstitutionSecondlineRegimenReason = sve.SubstitutionSecondlineRegimenReason,
+                //                    pve.SecondlineRegimenChangeDate = sve.SecondlineRegimenChangeDate,
+                //                    pve.SecondlineRegimenChangeReason = sve.SecondlineRegimenChangeReason,
+                //                    pve.Adherence = sve.Adherence,
+                //                    pve.AdherenceCategory = sve.AdherenceCategory,
+                //                    pve.FamilyPlanningMethod = sve.FamilyPlanningMethod,
+                //                    pve.PwP = sve.PwP,
+                //                    pve.GestationAge = sve.GestationAge,
+                //                    pve.NextAppointmentDate = sve.NextAppointmentDate,
+                //                    pve.StabilityAssessment = sve.StabilityAssessment,
+                //                    pve.DifferentiatedCare = sve.DifferentiatedCare,
+                //                    pve.PopulationType = sve.PopulationType,
+                //                    pve.KeyPopulationType = sve.KeyPopulationType,
+                //                    pve.VisitBy = sve.VisitBy,
+                //                    pve.Temp = sve.Temp,
+                //                    pve.PulseRate = sve.PulseRate,
+                //                    pve.RespiratoryRate = sve.RespiratoryRate,
+                //                    pve.OxygenSaturation = sve.OxygenSaturation,
+                //                    pve.Muac = sve.Muac,
+                //                    pve.NutritionalStatus = sve.NutritionalStatus,
+                //                    pve.EverHadMenses = sve.EverHadMenses,
+                //                    pve.Breastfeeding = sve.Breastfeeding,
+                //                    pve.Menopausal = sve.Menopausal,
+                //                    pve.NoFPReason = sve.NoFPReason,
+                //                    pve.ProphylaxisUsed = sve.ProphylaxisUsed,
+                //                    pve.CTXAdherence = sve.CTXAdherence,
+                //                    pve.CurrentRegimen = sve.CurrentRegimen,
+                //                    pve.HCWConcern = sve.HCWConcern,
+                //                    pve.TCAReason = sve.TCAReason,
+                //                    pve.ClinicalNotes = sve.ClinicalNotes,
+                //                    pve.GeneralExamination = sve.GeneralExamination,
+                //                    pve.SystemExamination = sve.SystemExamination,
+                //                    pve.Skin = sve.Skin,
+                //                    pve.Eyes = sve.Eyes,
+                //                    pve.ENT = sve.ENT,
+                //                    pve.Chest = sve.Chest,
+                //                    pve.CVS = sve.CVS,
+                //                    pve.Abdomen = sve.Abdomen,
+                //                    pve.CNS = sve.CNS,
+                //                    pve.Genitourinary = sve.Genitourinary,
+                //                    pve.RefillDate = sve.RefillDate,
+                //                    pve.Date_Created = sve.Date_Created,
+                //                    pve.DateLastModified = sve.DateLastModified,
+                //                    pve.DateExtracted = sve.DateExtracted,
+                //                    pve.Created = sve.Created,
+                //                    pve.Updated = sve.Updated,
+                //                    pve.Voided = sve.Voided                        
+
+                //        FROM PatientVisitExtract pve
+                //        JOIN {_stageName} spv ON pve.RecordUUID = spv.RecordUUID
+                //        WHERE pve.RecordUUID = @RecordUUID";
+
+
+
+                //                await connection.ExecuteAsync(sql, existingRecords, transaction);
+                //                    transaction.Commit();
+
+                //                break; 
+                //            }
+                //            catch (SqlException ex)
+                //            {
+                //                if (ex.Number == 1205) 
+                //                {
+
+                //                    await Task.Delay(100);
+                //                }
+                //                else
+                //                {
+                //                    transaction.Rollback();
+                //                    throw; 
+                //                }
+                //            }
+                //        }
+                //    }
+                //}           
+           
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
@@ -268,6 +388,43 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             catch (Exception e)
             {
                 Log.Error(e);
+                throw;
+            }
+        }
+
+        private async Task<int> StageData(Guid manifestId, List<Guid> ids)
+        {
+            var cons = _context.Database.GetConnectionString();
+            try
+            {
+                using var connection = new SqlConnection(cons);
+                await connection.OpenAsync();
+
+                var queryParameters = new
+                {
+                    manifestId,
+                    ids
+
+                };
+
+                var query = $@"
+                           
+                                    SELECT 1
+                                    FROM {_stageName} WITH (NOLOCK)
+                                    WHERE 
+                                        LiveSession = @manifestId 
+                                         AND Id IN @ids                                   
+                             
+                        ";
+
+                var result = await connection.QueryFirstOrDefaultAsync<int>(query, queryParameters);
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
                 throw;
             }
         }

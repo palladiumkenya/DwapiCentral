@@ -6,8 +6,8 @@ namespace DwapiCentral.Contracts.Ct
      public interface ILab : IExtract
     {
         Guid Id { get; set; }
-        int VisitId { get; set; }
-        DateTime OrderedByDate { get; set; }
+        int? VisitId { get; set; }
+        DateTime? OrderedByDate { get; set; }
         DateTime? ReportedByDate { get; set; }
         string? TestName { get; set; }
         int? EnrollmentTest { get; set; }

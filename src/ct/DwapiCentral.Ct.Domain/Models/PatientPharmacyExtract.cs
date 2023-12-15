@@ -13,7 +13,7 @@ namespace DwapiCentral.Ct.Domain.Models
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public int? VisitID { get; set; }
-        public DateTime DispenseDate { get; set; }
+        public DateTime? DispenseDate { get; set; }
         public string? Drug { get; set; }
         public string? Provider { get; set; }       
         public decimal? Duration { get; set; }

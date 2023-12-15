@@ -11,7 +11,7 @@ namespace DwapiCentral.Ct.Domain.Models
         public string RecordUUID { get; set; }
         public int PatientPk { get ; set ; }
         public int SiteCode { get ; set ; }
-        public DateTime LastARTDate { get; set; }
+        public DateTime? LastARTDate { get; set; }
         public DateTime? LastVisit { get ; set ; }
         public DateTime? DOB { get ; set ; }
         public decimal? AgeEnrollment { get ; set ; }

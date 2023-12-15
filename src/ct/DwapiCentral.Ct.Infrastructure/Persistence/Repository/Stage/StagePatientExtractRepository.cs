@@ -68,6 +68,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
         delete  from StageVisitExtracts WHERE  SiteCode = @SiteCode;
         delete  from StageCervicalCancerScreeningExtracts WHERE  SiteCode = @SiteCode;
         delete  from StageIITRiskScoresExtracts WHERE  SiteCode = @SiteCode;
+        delete  from StageArtFastTrackExtracts WHERE  SiteCode = @SiteCode;
+        delete  from CancerScreeningExtract WHERE  SiteCode = @SiteCode;
 
         ";
             try
@@ -200,7 +202,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
        
 
-        private Task Merge(Guid manifestId, List<StagePatientExtract> stagePatients)
+        private async Task Merge(Guid manifestId, List<StagePatientExtract> stagePatients)
         {
             var connectionString = _context.Database.GetConnectionString();
 
@@ -240,12 +242,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                         if (recordExists)
                         {
                             // Update existing record in the central table
-                            UpdateRecordInCentral(connection, stageRecord);
+                           await UpdateRecordInCentral(connection, stageRecord,manifestId);
                         }
                         else
                         {
                             // Insert new record into the central table
-                            InsertRecordIntoCentral(connection, stageRecord);
+                           await InsertRecordIntoCentral(connection, stageRecord,manifestId);
                         }
                     }
                 }
@@ -255,7 +257,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
             
 
-            return Task.CompletedTask;
+            
         }
 
 
@@ -314,18 +316,38 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
             return count > 0;
         }
-        private void UpdateRecordInCentral(SqlConnection connection, StagePatientExtract stageRecord)
+        private async Task UpdateRecordInCentral(SqlConnection connection, StagePatientExtract stageRecord,Guid manifestId)
         {
-            
-            PatientExtract updateRecord = _mapper.Map<PatientExtract>(stageRecord);
-            _context.Database.GetDbConnection().BulkMerge(updateRecord);
+            try
+            {
+                PatientExtract updateRecord = _mapper.Map<PatientExtract>(stageRecord);
+                _context.Database.GetDbConnection().BulkMerge(updateRecord);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                var notification = new OnErrorEvent { ExtractName = "PatientExtract", ManifestId = manifestId, SiteCode = stageRecord.SiteCode, message = e.Message };
+                await _mediator.Publish(notification);
+                throw;
+            }
         }
 
-        private void InsertRecordIntoCentral(SqlConnection connection, StagePatientExtract stageRecord)
+        private async Task InsertRecordIntoCentral(SqlConnection connection, StagePatientExtract stageRecord,Guid manifestId)
         {
-            PatientExtract newRecord = _mapper.Map<PatientExtract>(stageRecord);
+            try
+            {
+                PatientExtract newRecord = _mapper.Map<PatientExtract>(stageRecord);
 
-            _context.Database.GetDbConnection().BulkInsert(newRecord);
+                _context.Database.GetDbConnection().BulkInsert(newRecord);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                var notification = new OnErrorEvent { ExtractName = "PatientExtract", ManifestId = manifestId, SiteCode = stageRecord.SiteCode, message = e.Message };
+                await _mediator.Publish(notification);
+                throw;
+
+            }
         }
 
     }

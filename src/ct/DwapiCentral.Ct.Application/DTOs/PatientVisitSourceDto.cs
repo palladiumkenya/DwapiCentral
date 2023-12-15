@@ -13,8 +13,8 @@ namespace DwapiCentral.Ct.Application.DTOs
     {
         public Guid Id { get ; set ; }
         public string RecordUUID { get; set; }
-        public int VisitId { get ; set ; }
-        public DateTime VisitDate { get ; set ; }
+        public int? VisitId { get ; set ; }
+        public DateTime? VisitDate { get ; set ; }
         public string? Service { get ; set ; }
         public string? VisitType { get ; set ; }
         public int? WHOStage { get ; set ; }

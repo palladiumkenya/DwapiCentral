@@ -37,11 +37,16 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
         {
             try
             {
-                // stage > Rest
-                _context.Database.GetDbConnection().BulkInsert(extracts);
 
-              
                 var pks = extracts.Select(x => x.Id).ToList();
+
+                var result = await StageData(manifestId, pks);
+
+                if (result == 0)
+                {
+                    // stage > Rest
+                    _context.Database.GetDbConnection().BulkInsert(extracts);
+                }
 
                 // assign > Assigned
                 await AssignAll(manifestId, extracts.Select(x => x.Id).ToList());
@@ -81,7 +86,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
@@ -91,7 +96,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
                                     AND p.RecordUUID = s.RecordUUID                                  
-                                    AND p.Date_Created = s.MaxCreatedTime                                    
+                                                                      
                             )
                         ";
 
@@ -109,13 +114,13 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                         .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
-                    await UpdateCentralDataWithStagingData(stageEnhancedAdherance, existingRecords);
+                    await UpdateCentralDataWithStagingData(stageEnhancedAdherance, existingRecords,manifestId);
                 }
                 else
                 {
                     uniqueStageExtracts = stageEnhancedAdherance;
                 }
-                await InsertNewDataFromStaging(uniqueStageExtracts);
+                await InsertNewDataFromStaging(uniqueStageExtracts,manifestId);
             }
             catch (Exception ex)
             {
@@ -125,7 +130,7 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
 
         }
 
-        private async Task InsertNewDataFromStaging(List<StageEnhancedAdherenceCounsellingExtract> uniqueStageExtracts)
+        private async Task InsertNewDataFromStaging(List<StageEnhancedAdherenceCounsellingExtract> uniqueStageExtracts,Guid manifestId)
         {
 
             try
@@ -150,43 +155,179 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
             catch (Exception ex)
             {
                 Log.Error(ex);
+                var notification = new OnErrorEvent { ExtractName = "EnhancedAdherenceCounsellingExtract", ManifestId = manifestId, SiteCode = uniqueStageExtracts.First().SiteCode, message = ex.Message };
+                await _mediator.Publish(notification);
                 throw;
             }
         }
 
-        private async Task UpdateCentralDataWithStagingData(List<StageEnhancedAdherenceCounsellingExtract> stageEnhancedAdherance, IEnumerable<EnhancedAdherenceCounsellingExtract> existingRecords)
+        private async Task UpdateCentralDataWithStagingData(List<StageEnhancedAdherenceCounsellingExtract> stageEnhancedAdherance, IEnumerable<EnhancedAdherenceCounsellingExtract> existingRecords,Guid manifestId)
         {
-            try
-            {
-                //Update existing data
-                var stageDictionary = stageEnhancedAdherance
-                         .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
-                         .ToDictionary(
-                             g => g.Key,
-                             g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
-                         );
+           
 
-                var updateTasks = existingRecords.Select(async existingExtract =>
+                try
                 {
-                    if (stageDictionary.TryGetValue(
-                        new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
-                        out var stageExtract)
-                    )
+                    var centraldata = stageEnhancedAdherance.Select(_mapper.Map<StageEnhancedAdherenceCounsellingExtract, EnhancedAdherenceCounsellingExtract>).ToList();
+
+                    centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+
+                    var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+
+                    var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
+
+
+                    const int maxRetries = 3;
+
+                    for (var retry = 0; retry < maxRetries; retry++)
                     {
-                        _mapper.Map(stageExtract, existingExtract);
+                        try
+                        {
+                        }
+                        catch (SqlException ex)
+                        {
+                            if (ex.Number == 1205)
+                            {
+                                _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+                                await Task.Delay(100);
+                            }
+                            else
+                            {
+                                Log.Error(ex);
+                                var notification = new OnErrorEvent { ExtractName = "EnhancedAdherenceCounsellingExtract", ManifestId = manifestId, SiteCode = existingRecords.First().SiteCode, message = ex.Message };
+                                await _mediator.Publish(notification);
+                                throw;
+                            }
+                        }
                     }
-                }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    throw;
+                }
+                //    var cons = _context.Database.GetConnectionString();
+                //    using (var connection = new SqlConnection(cons))
+                //    {
+                //        await connection.OpenAsync();
 
-                await Task.WhenAll(updateTasks);
+                //        using (var transaction = connection.BeginTransaction())
+                //        {
+                //            const int maxRetries = 3;
 
-                await Task.Run(() => _context.Database.GetDbConnection().BulkMerge(existingRecords));
+                //            for (var retry = 0; retry < maxRetries; retry++)
+                //            {
+                //                try
+                //                {
+                //                    var sql = $@"
+                //               UPDATE 
+                //                         EnhancedAdherenceCounsellingExtract
 
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                throw;
-            }
+                //                   SET                                  
+                //                        VisitID = @VisitID,
+                //                        VisitDate = @VisitDate,
+                //                        SessionNumber = @SessionNumber,
+                //                        DateOfFirstSession = @DateOfFirstSession,
+                //                        PillCountAdherence = @PillCountAdherence,
+                //                        MMAS4_1 = @MMAS4_1,
+                //                        MMAS4_2 = @MMAS4_2,
+                //                        MMAS4_3 = @MMAS4_3,
+                //                        MMAS4_4 = @MMAS4_4,
+                //                        MMSA8_1 = @MMSA8_1,
+                //                        MMSA8_2 = @MMSA8_2,
+                //                        MMSA8_3 = @MMSA8_3,
+                //                        MMSA8_4 = @MMSA8_4,
+                //                        MMSAScore = @MMSAScore,
+                //                        EACRecievedVL = @EACRecievedVL,
+                //                        EACVL = @EACVL,
+                //                        EACVLConcerns = @EACVLConcerns,
+                //                        EACVLThoughts = @EACVLThoughts,
+                //                        EACWayForward = @EACWayForward,
+                //                        EACCognitiveBarrier = @EACCognitiveBarrier,
+                //                        EACBehaviouralBarrier_1 = @EACBehaviouralBarrier_1,
+                //                        EACBehaviouralBarrier_2 = @EACBehaviouralBarrier_2,
+                //                        EACBehaviouralBarrier_3 = @EACBehaviouralBarrier_3,
+                //                        EACBehaviouralBarrier_4 = @EACBehaviouralBarrier_4,
+                //                        EACBehaviouralBarrier_5 = @EACBehaviouralBarrier_5,
+                //                        EACEmotionalBarriers_1 = @EACEmotionalBarriers_1,
+                //                        EACEmotionalBarriers_2 = @EACEmotionalBarriers_2,
+                //                        EACEconBarrier_1 = @EACEconBarrier_1,
+                //                        EACEconBarrier_2 = @EACEconBarrier_2,
+                //                        EACEconBarrier_3 = @EACEconBarrier_3,
+                //                        EACEconBarrier_4 = @EACEconBarrier_4,
+                //                        EACEconBarrier_5 = @EACEconBarrier_5,
+                //                        EACEconBarrier_6 = @EACEconBarrier_6,
+                //                        EACEconBarrier_7 = @EACEconBarrier_7,
+                //                        EACEconBarrier_8 = @EACEconBarrier_8,
+                //                        EACReviewImprovement = @EACReviewImprovement,
+                //                        EACReviewMissedDoses = @EACReviewMissedDoses,
+                //                        EACReviewStrategy = @EACReviewStrategy,
+                //                        EACReferral = @EACReferral,
+                //                        EACReferralApp = @EACReferralApp,
+                //                        EACReferralExperience = @EACReferralExperience,
+                //                        EACHomevisit = @EACHomevisit,
+                //                        EACAdherencePlan = @EACAdherencePlan,
+                //                        EACFollowupDate = @EACFollowupDate,
+                //                        Date_Created = @Date_Created,
+                //                        DateLastModified = @DateLastModified,
+                //                        DateExtracted = @DateExtracted,
+                //                        Created = @Created,
+                //                        Updated = @Updated,
+                //                        Voided = @Voided                          
+
+                //                 WHERE   RecordUUID = @RecordUUID";
+
+                //        await connection.ExecuteAsync(sql, recordsToUpdate,transaction);
+                //                    transaction.Commit();
+                //                    break;
+                //                }
+                //                catch (SqlException ex)
+                //                {
+                //                    if (ex.Number == 1205)
+                //                    {
+
+                //                        await Task.Delay(100);
+                //                    }
+                //                    else
+                //                    {
+                //                        transaction.Rollback();
+                //                        throw;
+                //                    }
+                //                }
+                //            }
+                //        }
+                //    }
+         
+            //try
+            //{
+            //    //Update existing data
+            //    var stageDictionary = stageEnhancedAdherance
+            //             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID })
+            //             .ToDictionary(
+            //                 g => g.Key,
+            //                 g => g.OrderByDescending(x => x.Date_Created).FirstOrDefault()
+            //             );
+
+            //    var updateTasks = existingRecords.Select(async existingExtract =>
+            //    {
+            //        if (stageDictionary.TryGetValue(
+            //            new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
+            //            out var stageExtract)
+            //        )
+            //        {
+            //            _mapper.Map(stageExtract, existingExtract);
+            //        }
+            //    }).ToList();
+
+            //    await Task.WhenAll(updateTasks);
+
+            //     _context.Database.GetDbConnection().BulkUpdate(existingRecords);
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex);
+            //    throw;
+            //}
         }
 
         private async Task AssignAll(Guid manifestId, List<Guid> ids)
@@ -259,5 +400,42 @@ namespace PalladiumDwh.Infrastructure.Data.Repository.Stage
                 throw;
             }
         }
-    }
+
+        private async Task<int> StageData(Guid manifestId, List<Guid> ids)
+        {
+            var cons = _context.Database.GetConnectionString();
+            try
+            {
+                using var connection = new SqlConnection(cons);
+                await connection.OpenAsync();
+
+                var queryParameters = new
+                {
+                    manifestId,
+                    ids
+
+                };
+
+                var query = $@"
+                           
+                                    SELECT 1
+                                    FROM {_stageName} WITH (NOLOCK)
+                                    WHERE 
+                                        LiveSession = @manifestId 
+                                         AND Id IN @ids                                   
+                             
+                        ";
+
+                var result = await connection.QueryFirstOrDefaultAsync<int>(query, queryParameters);
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+        }   
+}
 }

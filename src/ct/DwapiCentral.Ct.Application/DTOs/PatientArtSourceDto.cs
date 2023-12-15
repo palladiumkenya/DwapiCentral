@@ -12,7 +12,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     {
         public Guid Id { get ; set ; }
         public string RecordUUID { get; set; }       
-        public DateTime LastARTDate { get; set; }        
+        public DateTime? LastARTDate { get; set; }        
         public DateTime? DOB { get ; set ; }
         public decimal? AgeEnrollment { get ; set ; }
         public decimal? AgeARTStart { get ; set ; }

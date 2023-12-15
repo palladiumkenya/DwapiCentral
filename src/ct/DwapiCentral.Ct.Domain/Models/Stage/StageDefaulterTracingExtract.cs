@@ -10,7 +10,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
     public class StageDefaulterTracingExtract : StageExtract, IDefaulterTracing
     {
         public int? VisitID { get ; set ; }
-        public DateTime VisitDate { get ; set ; }
+        public DateTime? VisitDate { get ; set ; }
         public string? FacilityName { get ; set ; }
         public int? EncounterId { get ; set ; }
         public string? TracingType { get ; set ; }

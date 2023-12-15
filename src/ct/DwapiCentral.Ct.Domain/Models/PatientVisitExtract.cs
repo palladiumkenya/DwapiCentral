@@ -10,8 +10,8 @@ namespace DwapiCentral.Ct.Domain.Models
         public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-        public int VisitId { get; set; }
-        public DateTime VisitDate { get; set; }
+        public int? VisitId { get; set; }
+        public DateTime? VisitDate { get; set; }
         public string? Service { get; set; }
         public string? VisitType { get; set; }
         public int? WHOStage { get; set; }
