@@ -137,8 +137,15 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
 
         public async Task Save(Manifest manifest)
         {
-            await _context.Manifests.AddAsync(manifest);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Manifests.AddAsync(manifest);
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception e)
+            {
+                Log.Error(e.Message);
+            }
         }
 
         public async Task Update(Manifest manifest)

@@ -54,7 +54,7 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
             try
             {
                 if (request.manifest.EmrSetup != EmrSetup.Community)
-                    _manifestRepository.ClearFacility(request.manifest.SiteCode);
+                    await _manifestRepository.ClearFacility(request.manifest.SiteCode);
             }
             catch (Exception e)
             {
@@ -64,7 +64,7 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
             try
             {               
                 if (request.manifest.EmrSetup== EmrSetup.Community)
-                    _manifestRepository.ClearFacility(request.manifest.SiteCode, "IRDO");
+                    await _manifestRepository.ClearFacility(request.manifest.SiteCode, "IRDO");
             }
             catch (Exception e)
             {

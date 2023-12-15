@@ -32,7 +32,8 @@ namespace DwapiCentral.Hts.Controllers
 
             try
             {
-                 var id = BackgroundJob.Enqueue(() => SaveClientTestsJob(client));
+                var id  = BackgroundJob.Schedule(() => SaveClientTestsJob(client), TimeSpan.FromSeconds(5));
+                //var id = BackgroundJob.Enqueue(() => SaveClientTestsJob(client));
                
                 var manifestId = await _manifestRepository.GetManifestId(client.ClientTests.FirstOrDefault().SiteCode);
 

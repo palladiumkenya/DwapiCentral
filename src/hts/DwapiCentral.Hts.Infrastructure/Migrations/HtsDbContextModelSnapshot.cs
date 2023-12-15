@@ -92,9 +92,6 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("HtsNumber")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("County")
                         .HasColumnType("nvarchar(max)");
 
@@ -123,6 +120,10 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HtsNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsRecencyId")
@@ -179,7 +180,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("Ward")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PatientPk", "SiteCode", "HtsNumber");
+                    b.HasKey("PatientPk", "SiteCode");
 
                     b.ToTable("HtsClients");
                 });
@@ -229,7 +230,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -257,7 +258,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("HtsClientLinkages");
                 });
@@ -315,7 +316,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsRiskCategory")
                         .HasColumnType("nvarchar(max)");
@@ -376,7 +377,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("HtsClientTests");
                 });
@@ -408,7 +409,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -436,7 +437,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("HtsClientTracing");
                 });
@@ -555,7 +556,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HtsRiskScore")
                         .HasColumnType("nvarchar(max)");
@@ -691,7 +692,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("HtsEligibilityExtract");
                 });
@@ -741,7 +742,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpvScreeningOutcome")
                         .HasColumnType("nvarchar(max)");
@@ -796,7 +797,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("HtsPartnerNotificationServices");
                 });
@@ -831,7 +832,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PartnerPersonId")
                         .HasColumnType("int");
@@ -862,7 +863,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("HtsPartnerTracings");
                 });
@@ -897,7 +898,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -943,7 +944,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "HtsNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("HtsTestKits");
                 });
@@ -1987,7 +1988,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
                         .WithMany("HtsClientLinkages")
-                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1996,7 +1997,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
                         .WithMany("HtsClientTestss")
-                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2005,7 +2006,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
                         .WithMany("HtsClientTracings")
-                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2014,7 +2015,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
                         .WithMany("HtsClientPartners")
-                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2023,7 +2024,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
                         .WithMany("HtsPartnerNotificationServicess")
-                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2032,7 +2033,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
                         .WithMany("HtsPartnerTracings")
-                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2041,7 +2042,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Hts.Domain.Model.HtsClient", null)
                         .WithMany("HtsTestKitss")
-                        .HasForeignKey("PatientPk", "SiteCode", "HtsNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

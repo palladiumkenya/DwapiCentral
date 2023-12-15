@@ -1,5 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using DwapiCentral.Hts.Application.Commands;
+using DwapiCentral.Hts.Domain.Exceptions;
+using DwapiCentral.Hts.Domain.Repository;
+using DwapiCentral.Shared.Domain.Enums;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -15,11 +18,14 @@ namespace DwapiCentral.Hts.Controllers
     {
 
         private readonly IMediator _mediator;
+        private readonly IManifestRepository _manifestRepository;
+        private readonly IFacilityRepository _facilityRepository;
 
-
-        public HtsController(IMediator mediator)
+        public HtsController(IMediator mediator, IManifestRepository manifestRepository, IFacilityRepository facilityRepository)
         {
             _mediator = mediator;
+            _manifestRepository = manifestRepository;
+            _facilityRepository = facilityRepository;
         }
 
         [HttpPost("api/Hts/verify")]
@@ -41,7 +47,7 @@ namespace DwapiCentral.Hts.Controllers
         }
 
         [HttpPost]
-        [Route("api/Handshake")]
+        [Route("api/Hts/Handshake")]
         public async Task<IActionResult> Post(Guid session)
         {
             try
@@ -76,19 +82,46 @@ namespace DwapiCentral.Hts.Controllers
             var validFacility = await _mediator.Send(new ValidateSiteCommand(manifest.manifest.SiteCode, manifest.manifest.Name));
             if (validFacility.IsSuccess)
             {
-                string json = manifest.manifest.Cargoes[1].Items;
+                if (manifest.manifest.Cargoes.Count > 1)
+                {
+                    string json = manifest.manifest.Cargoes[1].Items;
 
-                dynamic data = JsonConvert.DeserializeObject(json);
+                    dynamic data = JsonConvert.DeserializeObject(json);
 
-                manifest.manifest.EmrVersion = data.EmrVersion;
+                    manifest.manifest.EmrVersion = data.EmrVersion;
 
-                dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.manifest.Cargoes[2].Items);
+                    dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.manifest.Cargoes[2].Items);
 
-                manifest.manifest.DwapiVersion = dwapiVersiondata.Version;
-
+                    manifest.manifest.DwapiVersion = dwapiVersiondata.Version;
+                }
                 try
                 {
-                  BackgroundJob.Enqueue(() => SaveManifestJob(manifest));
+                    //var facility = await _facilityRepository.GetByCode(manifest.manifest.SiteCode);
+                    //if (null == facility)
+                    //    throw new SiteNotEnrolledException(manifest.manifest.SiteCode);
+
+                    //try
+                    //{
+                    //    if (manifest.manifest.EmrSetup != EmrSetup.Community)
+                    //      await  _manifestRepository.ClearFacility(manifest.manifest.SiteCode);
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Log.Error("Clear MANIFEST ERROR ", e);
+                    //}
+
+                    //try
+                    //{
+                    //    if (manifest.manifest.EmrSetup == EmrSetup.Community)
+                    //        _manifestRepository.ClearFacility(manifest.manifest.SiteCode, "IRDO");
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Log.Error("Clear COMMUNITY MANIFEST ERROR ", e);
+                    //}
+
+
+                    BackgroundJob.Enqueue(() => SaveManifestJob(manifest));
                  
                     return Ok();
                 }
