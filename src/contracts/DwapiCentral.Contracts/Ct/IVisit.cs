@@ -6,8 +6,8 @@ namespace DwapiCentral.Contracts.Ct
     public interface IVisit : IExtract
     {
         Guid Id { get; set; }
-        int VisitId { get; set; }
-        DateTime VisitDate { get; set; }
+        int? VisitId { get; set; }
+        DateTime? VisitDate { get; set; }
         string? Service { get; set; }
         string? VisitType { get; set; }
         int? WHOStage { get; set; }
@@ -35,10 +35,7 @@ namespace DwapiCentral.Contracts.Ct
         string? StabilityAssessment { get; set; }
         string? DifferentiatedCare { get; set; }
         string? PopulationType { get; set; }
-        string? KeyPopulationType { get; set; }
-        Guid PatientId { get; set; }
-        
-
+        string? KeyPopulationType { get; set; }        
         string? VisitBy { get; set; }
         decimal? Temp { get; set; }
         int? PulseRate { get; set; }
@@ -68,7 +65,10 @@ namespace DwapiCentral.Contracts.Ct
         string? CNS { get; set; }
         string? Genitourinary { get; set; }
         DateTime? RefillDate { get; set; }
+        public string? ZScore { get; set; }
+        public int? ZScoreAbsolute { get; set; }
+        public string? PaedsDisclosure { get; set; }
 
-      
+
     }
 }

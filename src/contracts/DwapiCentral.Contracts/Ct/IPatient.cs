@@ -4,12 +4,12 @@ namespace DwapiCentral.Contracts.Ct
 {
     public interface IPatient : IExtract
     {
-        string CccNumber { get; set; }
+        string? CccNumber { get; set; }
         string? Nupi { get; set; }
         string? MpiId { get; set; }
         string? Pkv { get; set; }
-        string Gender { get; set; }
-        DateTime DOB { get; set; }
+        string? Gender { get; set; }
+        DateTime? DOB { get; set; }
         DateTime? RegistrationDate { get; set; }
         DateTime? RegistrationAtCCC { get; set; }
         DateTime? RegistrationATPMTCT { get; set; }

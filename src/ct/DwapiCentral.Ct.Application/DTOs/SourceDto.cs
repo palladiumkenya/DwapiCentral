@@ -1,23 +1,22 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DwapiCentral.Ct.Application.DTOs
 {
     public abstract class SourceDto
     {
-        public Guid Id { get; set; }
+        
         public int SiteCode { get; set; }
-        public int PatientPK { get; set; }
-        public DateTime DateExtracted { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Updated { get; set; }
-        public Guid? PatientId { get; set; }
+        public int PatientPk { get; set; }
+        
 
         public virtual bool IsValid()
         {
             return SiteCode > 0 &&
-                   PatientPK > 0;
+                   PatientPk > 0;
         }
     }
 }

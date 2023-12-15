@@ -3,16 +3,18 @@ using System;
 
 namespace DwapiCentral.Contracts.Ct
 {
-     public interface ILab : IEntity
+     public interface ILab : IExtract
     {
-          int? VisitId { get; set; }
-          DateTime? OrderedByDate { get; set; }
-          DateTime? ReportedByDate { get; set; }
-          string TestName { get; set; }
-          int? EnrollmentTest { get; set; }
-          string TestResult { get; set; }
-          Guid PatientId { get; set; }
-          DateTime? DateSampleTaken { get; set; }
-          string SampleType { get; set; }
+        Guid Id { get; set; }
+        int? VisitId { get; set; }
+        DateTime? OrderedByDate { get; set; }
+        DateTime? ReportedByDate { get; set; }
+        string? TestName { get; set; }
+        int? EnrollmentTest { get; set; }
+        string? TestResult { get; set; }       
+        DateTime? DateSampleTaken { get; set; }
+        string? SampleType { get; set; }
+        string? Reason { get; set; }
+
     }
 }

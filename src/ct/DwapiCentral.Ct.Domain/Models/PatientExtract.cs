@@ -3,22 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Shared.Domain.Entities.Ct;
 
-namespace DwapiCentral.Ct.Domain.Models.Extracts
+namespace DwapiCentral.Ct.Domain.Models
 {
 
     public class PatientExtract : IPatient
     {
-        
-        public int PatientPk { get; set; }
-        
-        public int SiteCode { get; set; }
-        
-        public string CccNumber { get; set; }
+        public string RecordUUID { get; set; }
+        public int PatientPk { get; set; }        
+        public int SiteCode { get; set; }        
+        public string? CccNumber { get; set; }
         public string? Nupi { get; set; }
         public string? MpiId { get; set; }
         public string? Pkv { get; set; }
-        public string Gender { get; set; }
-        public DateTime DOB { get; set; }
+        public string? Gender { get; set; }
+        public DateTime? DOB { get; set; }
         public DateTime? RegistrationDate { get; set; }
         public DateTime? RegistrationAtCCC { get; set; }
         public DateTime? RegistrationATPMTCT { get; set; }
@@ -50,15 +48,37 @@ namespace DwapiCentral.Ct.Domain.Models.Extracts
         public string? PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
         public string? Occupation { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
 
-        public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         public DateTime? DateExtracted { get; set; }
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
+        public virtual bool Processed { get; set; }
         public bool? Voided { get; set; }
 
         public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
-
+        public virtual ICollection<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; } = new List<PatientPharmacyExtract>();
+        public virtual ICollection<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; } = new List<PatientLaboratoryExtract>();
+        public virtual ICollection<PatientArtExtract> PatientArtExtracts { get;set; }= new List<PatientArtExtract>();
+        public virtual ICollection<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; } = new List<AllergiesChronicIllnessExtract>();
+        public virtual ICollection<ContactListingExtract> ContactListingExtracts { get; set; } = new List<ContactListingExtract>();
+        public virtual ICollection<CovidExtract> CovidExtracts { get; set; } = new List<CovidExtract>();
+        public virtual ICollection<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtract>();
+        public virtual ICollection<DepressionScreeningExtract> DepressionScreeningExtracts { get; set; } = new List<DepressionScreeningExtract>();
+        public virtual ICollection<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; } = new List<DrugAlcoholScreeningExtract>();
+        public virtual ICollection<EnhancedAdherenceCounsellingExtract> EnhancedAdherenceCounsellingExtracts { get; set; } = new List<EnhancedAdherenceCounsellingExtract>();
+        public virtual ICollection<GbvScreeningExtract> GbvScreeningExtracts { get; set; } = new List<GbvScreeningExtract>();
+        public virtual ICollection<IptExtract> IptExtracts { get; set; } = new List<IptExtract>();
+        public virtual ICollection<OvcExtract> OvcExtracts { get; set; } = new List<OvcExtract>();
+        public virtual ICollection<OtzExtract> OtzExtracts { get; set; } = new List<OtzExtract>();
+        public virtual ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();
+        public virtual ICollection<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventExtract>();
+        public virtual ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
+        public virtual ICollection<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; } = new List<CervicalCancerScreeningExtract>();
+        public virtual ICollection<IITRiskScore> IITRiskScoresExtracts { get; set; } = new List<IITRiskScore>();
+        public virtual ICollection<ArtFastTrackExtract> ArtFastTrackExtracts { get; set; } = new List<ArtFastTrackExtract>();
+        public virtual ICollection<CancerScreeningExtract> CancerScreeningExtracts { get; set; } = new List<CancerScreeningExtract>();
     }
 }

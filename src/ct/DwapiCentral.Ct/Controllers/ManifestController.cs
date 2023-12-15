@@ -1,18 +1,25 @@
-﻿using DwapiCentral.Contracts.Manifest;
+﻿using CSharpFunctionalExtensions;
+using DwapiCentral.Contracts.Manifest;
 using DwapiCentral.Ct.Application.Commands;
+using DwapiCentral.Ct.Application.Commands.DifferentialCommands;
+using DwapiCentral.Ct.Application.DTOs.Source;
+using DwapiCentral.Ct.Application.Interfaces;
 using DwapiCentral.Ct.Domain.Models;
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Serilog;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace DwapiCentral.Ct.Controllers
 {
-    [Route("api/controller")]
-    [ApiController]
     public class ManifestController : Controller
     {
         private readonly IMediator _mediator;
+       
 
         public ManifestController(IMediator mediator)
         {
@@ -21,29 +28,128 @@ namespace DwapiCentral.Ct.Controllers
 
 
         [HttpPost]
-        public async Task<HttpResponseMessage> SaveManifest([FromBody] Manifest manifest)
+        [Route("api/v3/Spot")]
+        public async Task<IActionResult> Post([FromBody] FacilityManifest manifest)
         {
-           
-                if(manifest !=null)
+            
+
+            if (manifest !=null)
+                {
+                try
                 {
                     //validate site
-                    await _mediator.Send(new ValidateSiteCommand(manifest.SiteCode,manifest.Name));
+                    var validFacility = await _mediator.Send(new ValidateSiteCommand(manifest.SiteCode, manifest.Name));
 
-                   
-                    await _mediator.Send(new SaveManifestCommand(manifest));
-
-                    var response = new HttpResponseMessage(HttpStatusCode.OK)
+                    if (validFacility.IsSuccess)
                     {
-                        Content = new StringContent("Manifest saved successfully.")
-                    };
 
-                    return response;
+                        string json = manifest.FacMetrics[0].Metric;
+
+                        dynamic data = JsonConvert.DeserializeObject(json);
+
+                        manifest.EmrVersion = data.EmrVersion;
+
+                        dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.FacMetrics[1].Metric);
+
+                        manifest.DwapiVersion = dwapiVersiondata.Version;                       
+
+                        var jobId = BatchJob.StartNew(x => 
+                        { 
+                            x.Enqueue(() => Send($"{manifest.Info("Save")}", new SaveManifestCommand(manifest))); 
+                        },$"{manifest.Info("Save")}");
+
+
+                        var masterFacility = ManifestResponse.Create(manifest);
+                        masterFacility.JobId = jobId;
+
+                        return Ok(masterFacility);
+
+                    }
+                    else return BadRequest(validFacility.Error.ToString());
+                }
+
+                    catch(Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
 
                 }
-            return new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent($"The expected {new Manifest().GetType().Name} is null")
-            };
+            return BadRequest($"The expected {new Manifest().GetType().Name} is null");
+           
         }
+
+        [HttpPost]
+        [Route("api/Spot")]
+        public async Task<IActionResult> PostManifest([FromBody] FacilityManifest manifest)
+        {
+         
+            if(null != manifest)
+            {
+
+                //validate manifest
+                if (!manifest.IsValid())
+                {
+                    return BadRequest($"Invalid Manifest,Please ensure the SiteCode [{manifest.SiteCode}] is valid and there exists at least one (1) Patient record");
+                }
+                //validate site
+                Log.Debug("checking SiteCode...");
+                var validFacility = await _mediator.Send(new ValidateSiteCommand(manifest.SiteCode, manifest.Name));
+
+                if (validFacility.IsSuccess)
+                {
+                    try
+                    {
+                        string json = manifest.FacMetrics[0].Metric;
+
+                        dynamic data = JsonConvert.DeserializeObject(json);
+
+                        manifest.EmrVersion = data.EmrVersion;
+
+                        dynamic dwapiVersiondata = JsonConvert.DeserializeObject(manifest.FacMetrics[1].Metric);
+
+                        manifest.DwapiVersion = dwapiVersiondata.Version;
+
+                        var jobId = BatchJob.StartNew(x =>
+                        {
+                            x.Enqueue(() => Send($"{manifest.Info("Save")}", new MergeDifferentialManifestCommand(manifest)));
+                        }, $"{manifest.Info("Save")}");
+
+
+                        var masterFacility = ManifestResponse.Create(manifest);
+                       
+
+                        return Ok(masterFacility);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error("Clear Site Manifest Error", e);
+                    }
+                }
+                else return BadRequest(validFacility.Error.ToString());
+
+            }
+            return BadRequest($"The expected {new Manifest().GetType().Name} is null");
+
+        }
+
+       
+        [Queue("manifest")]        
+        [AutomaticRetry(Attempts = 3)]
+        [DisplayName("{0}")]
+        public async Task Send(string jobName, IRequest<Result> command)
+        {
+            try
+            {
+                await _mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                
+                Log.Error($"Error in job {jobName}: {ex}");
+               
+                throw;
+            }
+        }
+
     }
 }

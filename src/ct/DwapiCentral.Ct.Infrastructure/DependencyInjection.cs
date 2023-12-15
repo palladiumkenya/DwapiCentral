@@ -1,11 +1,15 @@
 using DwapiCentral.Ct.Application.Interfaces.Repository;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
 using DwapiCentral.Ct.Infrastructure.Persistence.Repository;
+using DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage;
+using DwapiCentral.Ct.Infrastructure.Tests.Persistence.Repository;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PalladiumDwh.Infrastructure.Data.Repository.Stage;
 using Serilog;
 using Z.Dapper.Plus;
 
@@ -37,7 +41,53 @@ public static class DependencyInjection
         services.AddScoped<IFacilityRepository, FacilityRepository>();
         services.AddScoped<IManifestRepository, ManifestRepository>();
         services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
-        services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>(); 
+        services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
+        services.AddScoped<IPatientPharmacyRepository, PatientPharmacyRepository>();
+        services.AddScoped<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>();
+        services.AddScoped<IPatientArtExtractRepository, PatientArtExtractRepository>();
+        services.AddScoped<IAllergiesChronicIllnessRepository,AllergiesChronicIllnessRepository>();
+        services.AddScoped<IContactListingRepository, ContactListingRepository>();
+        services.AddScoped<ICovidRepository, CovidRepository>();
+        services.AddScoped<IDefaulterTracingRepository, DefaulterTracingRepository>();
+        services.AddScoped<IDepressionScreeningRepository, DepressionScreeningRepository>();
+        services.AddScoped<IDrugAlcoholScreeningRepository, DrugAlcoholScreeningRepository>();
+        services.AddScoped<IEnhancedAdherenceCounsellingRepository, EnhancedAdherenceCounsellingRepository>();
+        services.AddScoped<IGbvScreeningRepository, GbvScreeningRepository>();
+        services.AddScoped<IIptRepository, IptRepository>();
+        services.AddScoped<IOvcRepository, OvcRepository>();
+        services.AddScoped<IOtzRepository, OtzRepository>();
+        services.AddScoped<IPatientAdverseEventRepository, PatientAdverseEventRepository>();
+        services.AddScoped<IPatientBaseLinesRepository, PatientBaseLinesRepository>();
+        services.AddScoped<IPatientStatusRepository, PatientStatusRepository>();
+        services.AddScoped<ICervicalCancerScreeningRepository, CervicalCancerScreeningRepository>();
+        services.AddScoped<IIITRiskScoreRepository, IITRiskScoreRepository>();
+        services.AddScoped<IArtFastTrackRepository, ArtFastTrackRepository>();
+        services.AddScoped<ICancerScreeningRepository, CancerScreeningRepository>();
+
+
+        services.AddScoped<IStagePatientExtractRepository, StagePatientExtractRepository>();
+        services.AddScoped<IStageVisitExtractRepository, StageVisitExtractRepository>();
+        services.AddScoped<IStagePharmacyExtractRepository, StagePharmacyExtractRepository>();
+        services.AddScoped<IStageLaboratoryExtractRepository, StageLaboratoryExtractRepository>();
+        services.AddScoped<IStageArtExtractRepository, StageArtExtractRepository>();
+        services.AddScoped<IStageAllergiesChronicIllnessExtractRepository, StageAllergiesChronicIllnessExtractRepository>();
+        services.AddScoped<IStageContactListingExtractRepository, StageContactListingExtractRepository>();
+        services.AddScoped<IStageCovidExtractRepository, StageCovidExtractRepository>();
+        services.AddScoped<IStageDefaulterTracingExtractRepository, StageDefaulterTracingExtractRepository>();
+        services.AddScoped<IStageDepressionScreeningExtractRepository, StageDepressionScreeningExtractRepository>();
+        services.AddScoped<IStageDrugAlcoholScreeningExtractRepository, StageDrugAlcoholScreeningExtractRepository>();
+        services.AddScoped<IStageEnhancedAdherenceCounsellingExtractRepository, StageEnhancedAdherenceCounsellingExtractRepository>();
+        services.AddScoped<IStageGbvScreeningExtractRepository, StageGbvScreeningExtractRepository>();
+        services.AddScoped<IStageIptExtractRepository, StageIptExtractRepository>();
+        services.AddScoped<IStageOvcExtractRepository, StageOvcExtractRepository>();
+        services.AddScoped<IStageOtzExtractRepository, StageOtzExtractRepository>();
+        services.AddScoped<IStageAdverseEventExtractRepository, StageAdverseEventExtractRepository>();
+        services.AddScoped<IStageBaselineExtractRepository, StageBaselineExtractRepository>();
+        services.AddScoped<IStageStatusExtractRepository, StageStatusExtractRepository>();
+        services.AddScoped<IStageCervicalCancerScreeningExtractsRepository, StageCervicalCancerScreeningExtractsRepository>();
+        services.AddScoped<IStageIITRiskScoreRepository, StageIITRiskScoreRepository>();
+        services.AddScoped<IStageArtFastTrackExtractRepository, StageArtFastTrackRepository>();
+        services.AddScoped<IStageCancerScreeningExtractRepository, StageCancerScreeningExtractsRepository>();
 
 
         try

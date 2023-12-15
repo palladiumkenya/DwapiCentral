@@ -1,4 +1,5 @@
 using DwapiCentral.Ct.Infrastructure.Persistence.Context;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -11,14 +12,22 @@ public static class RegisterStartupMiddlewares
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(options =>
+            {
+                options.DefaultModelsExpandDepth(-1);
+            });
         }
 
         app.UseHttpsRedirection();
 
+        app.UseHangfireDashboard("/hangfire");
+
+
+
         app.UseAuthorization();
 
         app.MapControllers();
+
         Log.Debug("starting ct...");
         SeedData(app);
         return app;

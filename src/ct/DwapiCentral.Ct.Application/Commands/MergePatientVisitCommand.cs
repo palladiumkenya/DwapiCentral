@@ -1,7 +1,11 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
+using DwapiCentral.Ct.Application.DTOs.Source;
 using DwapiCentral.Ct.Application.Interfaces.Repository.Base;
-using DwapiCentral.Ct.Domain.Models.Extracts;
+using DwapiCentral.Ct.Domain.Models;
+using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
+using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,9 +17,9 @@ namespace DwapiCentral.Ct.Application.Commands;
 
 public class MergePatientVisitCommand : IRequest<Result>
 {
-    public PatientVisitExtract PatientVisits;
+    public PatientVisitSourceBag PatientVisits;
 
-    public MergePatientVisitCommand(PatientVisitExtract patientVisits)
+    public MergePatientVisitCommand(PatientVisitSourceBag patientVisits)
     {
         PatientVisits = patientVisits;
     }
@@ -25,46 +29,30 @@ public class MergePatientVisitCommand : IRequest<Result>
 
 public class MergePatientVisitCommandHandler : IRequestHandler<MergePatientVisitCommand, Result>
 {
-    private readonly IPatientVisitExtractRepository _patientVisitRepository;
+    private readonly IStageVisitExtractRepository _stageRepository;
+    private readonly IMapper _mapper;
 
-    public MergePatientVisitCommandHandler(IPatientVisitExtractRepository patientVisitExtractRepository)
+    public MergePatientVisitCommandHandler(IStageVisitExtractRepository patientVisitExtractRepository, IMapper mapper)
     {
-        _patientVisitRepository= patientVisitExtractRepository;
+        _stageRepository = patientVisitExtractRepository;
+        _mapper= mapper;
     }
 
     public async Task<Result> Handle(MergePatientVisitCommand request, CancellationToken cancellationToken)
     {
-        var patientVisit = await _patientVisitRepository
-            .GetByPatientDetails(request.PatientVisits.PatientPk, request.PatientVisits.SiteCode,request.PatientVisits.VisitId, request.PatientVisits.VisitDate);
-
-        if (patientVisit != null)
+        //await _patientVisitRepository.MergeAsync(request.PatientVisits);
+        var extracts = _mapper.Map<List<StageVisitExtract>>(request.PatientVisits.Extracts);
+        if (extracts.Any())
         {
-            //Update
-            patientVisit.VisitDate = DateTime.Now;
-            patientVisit.Weight= request.PatientVisits.Weight;
-            patientVisit.Height= request.PatientVisits.Height;
+            StandardizeClass<StageVisitExtract, PatientVisitSourceBag> standardizer = new(extracts, request.PatientVisits);
+            standardizer.StandardizeExtracts();
 
-            await _patientVisitRepository.MergeAsync((IEnumerable<PatientVisitExtract>)patientVisit);
         }
-        else
-        {
-            //Add a new Visit
-            var newpatientVisit = new PatientVisitExtract
-            {
-                Id = Guid.NewGuid(),
-                Weight= request.PatientVisits.Weight,
-                Height= request.PatientVisits.Height,
-                PatientPk= request.PatientVisits.PatientPk,
-                SiteCode= request.PatientVisits.SiteCode,
-                VisitDate= request.PatientVisits.VisitDate
-                
+        //stage
+        await _stageRepository.SyncStage(extracts, request.PatientVisits.ManifestId.Value);
 
-            };
 
-            await _patientVisitRepository.MergeAsync((IEnumerable<PatientVisitExtract>)newpatientVisit);
 
-            
-        }
         return Result.Success();
 
     }
