@@ -43,7 +43,7 @@ public static class RegisterStartupServices
 
         var queues = new List<string>
             {
-                 "manifest","patientprep", "prepadversevent", "prepbehaviour","prepcaretermination", "preplab","preppharmacy","prepvisit"
+                 "manifest","patientprep", "prepadversevent", "prepbehaviour","prepcaretermination", "preplab","preppharmacy","prepvisit","prepmonthlyrefills"
             };
         queues.ForEach(queue => ConfigureWorkers(builder.Configuration, builder.Services, new[] { queue.ToLower() }));
 

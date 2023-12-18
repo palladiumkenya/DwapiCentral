@@ -103,6 +103,7 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
                         EmrSetup = request.Manifest.EmrSetup,
                         EmrVersion = request.Manifest.EmrVersion,
                         DwapiVersion = request.Manifest.DwapiVersion,
+                        Session = request.Manifest.Session,
                         Metrics = request.Manifest.Cargoes
                     };
                     await _mediator.Publish(notification, cancellationToken);

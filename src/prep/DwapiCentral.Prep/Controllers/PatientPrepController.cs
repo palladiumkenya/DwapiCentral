@@ -33,6 +33,8 @@ namespace DwapiCentral.Prep.Controllers
             {
 
                 var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePatientPrepCommand(extract.PatientPrepExtracts)));
+               
+
                 var manifestId = await _manifestRepository.GetManifestId(extract.PatientPrepExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PatientPrepExtracts.Count, ManifestId = manifestId, SiteCode = extract.PatientPrepExtracts.First().SiteCode, ExtractName = "PatientPrepExtract" };
                 await _mediator.Publish(notification);

@@ -15,6 +15,7 @@ public class ManifestReceivedEvent : INotification
     public string EmrVersion { get; set; }
     public string DwapiVersion { get; set; }
     public string Status { get; set; }
+    public Guid Session { get; set; }
     public ICollection<Cargo> Metrics { get; set; }
 
 }
