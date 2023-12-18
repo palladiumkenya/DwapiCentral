@@ -31,8 +31,8 @@ namespace DwapiCentral.Prep.Controllers
             if (null == extract) return BadRequest();
             try
             {
-
-                var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepCareTerminationCommand(extract.PrepCareTerminationExtracts)));
+                var id = BackgroundJob.Schedule(() => ProcessExtractCommand(new MergePrepCareTerminationCommand(extract.PrepCareTerminationExtracts)), TimeSpan.FromSeconds(5));
+                //var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergePrepCareTerminationCommand(extract.PrepCareTerminationExtracts)));
                 var manifestId = await _manifestRepository.GetManifestId(extract.PrepCareTerminationExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.PrepCareTerminationExtracts.Count, ManifestId = manifestId, SiteCode = extract.PrepCareTerminationExtracts.First().SiteCode, ExtractName = "PrepCareTerminationExtract" };
                 await _mediator.Publish(notification);

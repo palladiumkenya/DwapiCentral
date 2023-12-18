@@ -57,5 +57,6 @@ namespace DwapiCentral.Prep.Domain.Models
         public virtual ICollection<PrepLab> PrepLabs { get; set; } = new List<PrepLab>();
         public virtual ICollection<PrepPharmacy> PrepPharmacies { get; set; } = new List<PrepPharmacy>();
         public virtual ICollection<PrepVisit> PrepVisits { get; set; } = new List<PrepVisit>();
+        public virtual ICollection<PrepMonthlyRefill> PrepMonthlyRefills { get; set; } = new List<PrepMonthlyRefill>();
     }
 }
