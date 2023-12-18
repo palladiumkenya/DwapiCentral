@@ -47,6 +47,7 @@ public static class DependencyInjection
         services.AddScoped<IStagePrepLabRepository, StagePrepLabRepository>();
         services.AddScoped<IStagePrepPharmacyRepository, StagePrepPharmacyRepository>();
         services.AddScoped<IStagePrepVisitRepository, StagePrepVisitRepository>();
+        services.AddScoped<IStagePrepMonthlyRefillRepository, StagePrepMonthlyRefillsRepository>();
 
         try
         {
