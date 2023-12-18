@@ -82,7 +82,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT PatientPK, SiteCode, PrepNumber, RecordUUID
+                                    SELECT DISTINCT PatientPK, SiteCode, PrepNumber, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         ManifestId = @manifestId 

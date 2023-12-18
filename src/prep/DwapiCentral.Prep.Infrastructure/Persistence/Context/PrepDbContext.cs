@@ -121,13 +121,13 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
                 .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber})
                 .Table($"{nameof(StagePrepPatients)}");
 
-            DapperPlusManager.Entity<PrepAdverseEvent>().Key(x => x.Id).Table($"{nameof(PrepAdverseEvents)}");
-            DapperPlusManager.Entity<PrepBehaviourRisk>().Key(x => x.Id).Table($"{nameof(PrepBehaviourRisks)}");
-            DapperPlusManager.Entity<PrepCareTermination>().Key(x => x.Id).Table($"{nameof(PrepCareTerminations)}");
-            DapperPlusManager.Entity<PrepLab>().Key(x => x.Id).Table($"{nameof(PrepLabs)}");
-            DapperPlusManager.Entity<PrepPharmacy>().Key(x => x.Id).Table($"{nameof(PrepPharmacys)}");
-            DapperPlusManager.Entity<PrepVisit>().Key(x => x.Id).Table($"{nameof(PrepVisits)}");
-            DapperPlusManager.Entity<PrepMonthlyRefill>().Key(x => x.Id).Table($"{nameof(PrepMonthlyRefills)}");
+            DapperPlusManager.Entity<PrepAdverseEvent>().Key(x => x.RecordUUID).Table($"{nameof(PrepAdverseEvents)}");
+            DapperPlusManager.Entity<PrepBehaviourRisk>().Key(x => x.RecordUUID).Table($"{nameof(PrepBehaviourRisks)}");
+            DapperPlusManager.Entity<PrepCareTermination>().Key(x => x.RecordUUID).Table($"{nameof(PrepCareTerminations)}");
+            DapperPlusManager.Entity<PrepLab>().Key(x => x.RecordUUID).Table($"{nameof(PrepLabs)}");
+            DapperPlusManager.Entity<PrepPharmacy>().Key(x => x.RecordUUID).Table($"{nameof(PrepPharmacys)}");
+            DapperPlusManager.Entity<PrepVisit>().Key(x => x.RecordUUID).Table($"{nameof(PrepVisits)}");
+            DapperPlusManager.Entity<PrepMonthlyRefill>().Key(x => x.RecordUUID).Table($"{nameof(PrepMonthlyRefills)}");
 
             //stage
             DapperPlusManager.Entity<StagePrepAdverseEvent>().Key(x => x.Id).Table($"{nameof(StagePrepAdverseEvents)}");
