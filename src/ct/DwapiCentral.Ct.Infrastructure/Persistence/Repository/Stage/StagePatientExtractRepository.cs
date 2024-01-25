@@ -211,7 +211,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 connection.Open();
 
                 var selectQuery = @"
-                                SELECT 
+                                SELECT DISTINCT
                                        *,GETDATE() Created FROM StagePatientExtracts WITH (NOLOCK)
                                 WHERE 
                                       LiveSession = @manifestId AND
