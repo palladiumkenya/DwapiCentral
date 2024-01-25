@@ -45,20 +45,26 @@ public static class RegisterStartupServices
                  "manifest","clients", "linkages", "clientpartner","clienttests", "clienttracings",
                   "pns", "partnertracing","testkits","eligibility"
             };
-        queues.ForEach(queue => ConfigureWorkers(builder.Configuration,builder.Services,new[] { queue.ToLower() }));
+        //queues.ForEach(queue => ConfigureWorkers(builder.Configuration,builder.Services,new[] { queue.ToLower() }));
+
+        queues.ForEach(queue =>
+        {
+            var workerCount = queue.Equals("clients", StringComparison.OrdinalIgnoreCase) ? 10 : 5; 
+            ConfigureWorkers(builder.Configuration, builder.Services, new[] { queue.ToLower() }, workerCount);
+        });
 
         builder.Services.RegisterCtApp(builder.Configuration);
             
             return builder;
         }
 
-    private static void ConfigureWorkers(IConfiguration configuration,IServiceCollection services, string[] queues)
+    private static void ConfigureWorkers(IConfiguration configuration,IServiceCollection services, string[] queues, int workerCount)
     {
 
         var hangfireQueueOptions = new BackgroundJobServerOptions
         {
             ServerName = $"{Environment.MachineName}:{queues[0].ToUpper()}",
-            WorkerCount = 5,
+            WorkerCount = workerCount,
             Queues = queues,
             ShutdownTimeout = TimeSpan.FromMinutes(2),
         };

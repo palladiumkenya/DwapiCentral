@@ -27,14 +27,14 @@ namespace DwapiCentral.Hts.Application.Mappings
 
 
             //stage => centralDb
-            CreateMap<StageHtsClient, HtsClient>();
-            CreateMap<StageHtsClientTest,HtsClientTest>();
-            CreateMap<StageHtsClientLinkage,HtsClientLinkage>();
-            CreateMap<StageHtsTestKit, HtsTestKit>();
-            CreateMap<StageHtsClientTracing, HtsClientTracing>();
-            CreateMap<StageHtsPartnerTracing, HtsPartnerTracing>();
-            CreateMap<StageHtsPartnerNotificationServices, HtsPartnerNotificationServices>();
-            CreateMap<StageHtsEligibilityScreening, HtsEligibilityScreening>();
+            CreateMap<StageHtsClient, HtsClient>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); ;
+            CreateMap<StageHtsClientTest,HtsClientTest>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); ;
+            CreateMap<StageHtsClientLinkage,HtsClientLinkage>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); ;
+            CreateMap<StageHtsTestKit, HtsTestKit>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); ;
+            CreateMap<StageHtsClientTracing, HtsClientTracing>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); ;
+            CreateMap<StageHtsPartnerTracing, HtsPartnerTracing>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); ;
+            CreateMap<StageHtsPartnerNotificationServices, HtsPartnerNotificationServices>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); ;
+            CreateMap<StageHtsEligibilityScreening, HtsEligibilityScreening>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid())); ;
 
         }
     }

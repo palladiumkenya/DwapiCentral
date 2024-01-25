@@ -129,7 +129,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
 
             var cons = _context.Database.GetConnectionString();
 
-            var sql = @"
+            var sql = $@"
                 UPDATE 
                     StageClients
                 SET 
@@ -137,7 +137,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository.Stage
                 WHERE 
                     ManifestId = @manifestId AND 
                     LiveStage = @livestage AND                                  
-                    RecordUUID = @recordUUIDs";
+                    RecordUUID IN @recordUUIDs";
 
 
             try

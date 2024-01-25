@@ -30,8 +30,8 @@ namespace DwapiCentral.Hts.Controllers
 
             try
             {
-                var id = BackgroundJob.Enqueue(() => SaveClientTracingJob(client));
-                
+                //var id = BackgroundJob.Enqueue(() => SaveClientTracingJob(client));
+                var id = BackgroundJob.Schedule(() => SaveClientTracingJob(client), TimeSpan.FromSeconds(5));
                 var manifestId = await _manifestRepository.GetManifestId(client.ClientTracing.FirstOrDefault().SiteCode);
 
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = client.ClientTracing.Count(), ManifestId = manifestId, SiteCode = client.ClientTracing.First().SiteCode, ExtractName = "HtsClientTracing" };
