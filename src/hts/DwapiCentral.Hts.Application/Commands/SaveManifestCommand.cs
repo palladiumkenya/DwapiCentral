@@ -84,9 +84,12 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
                 EmrSetup = request.manifest.EmrSetup,
                 EmrVersion = request.manifest.EmrVersion,
                 DwapiVersion = request.manifest.DwapiVersion,
-                Metrics = request.manifest.Cargoes
+                Metrics = request.manifest.Cargoes.Where(cargo => cargo.Type != 0).ToList()
             };
+
             await _mediator.Publish(notification, cancellationToken);
+
+            Console.WriteLine(notification);
 
             //notify spot => Hts metrics          
             var metricDtos = MetricDto.Generate(request.manifest);
