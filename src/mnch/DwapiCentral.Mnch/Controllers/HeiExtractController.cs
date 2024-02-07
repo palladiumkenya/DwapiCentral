@@ -31,7 +31,8 @@ namespace DwapiCentral.Mnch.Controllers
             try
             {
 
-                var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeHeiExtractCommand(extract.HeiExtracts)));
+               // var id = BackgroundJob.Enqueue(() => ProcessExtractCommand(new MergeHeiExtractCommand(extract.HeiExtracts)));
+                var id = BackgroundJob.Schedule(() => ProcessExtractCommand(new MergeHeiExtractCommand(extract.HeiExtracts)), TimeSpan.FromSeconds(5));
                 var manifestId = await _manifestRepository.GetManifestId(extract.HeiExtracts.FirstOrDefault().SiteCode);
                 var notification = new ExtractsReceivedEvent { TotalExtractsStaged = extract.HeiExtracts.Count, ManifestId = manifestId, SiteCode = extract.HeiExtracts.First().SiteCode, ExtractName = "HeiExtract" };
                 await _mediator.Publish(notification);

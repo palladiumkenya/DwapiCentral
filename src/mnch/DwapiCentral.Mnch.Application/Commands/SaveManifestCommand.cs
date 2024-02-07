@@ -57,21 +57,24 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
                 try
                 {
                     if (otherManifests)
-                       await _manifestRepository.ClearFacility(request.Manifest.SiteCode);
+                    {
+                        await _manifestRepository.ClearFacility(request.Manifest.SiteCode);
+
+                    }
+                    else if (communityManifests)
+                    {                       
+                            await _manifestRepository.ClearFacility(request.Manifest.SiteCode, "IRDO");
+                    }
+                    else
+                    {
+                        await _manifestRepository.ClearFacility(request.Manifest.SiteCode);
+                    }
                 }
                 catch (Exception e)
                 {
                     Log.Error("Clear MANIFEST ERROR ", e);
                 }
-                try
-                {
-                    if (communityManifests)
-                       await _manifestRepository.ClearFacility(request.Manifest.SiteCode, "IRDO");
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Clear COMMUNITY MANIFEST ERROR ", e);
-                }
+               
                     request.Manifest.Recieved = request.Manifest.Cargoes
                     .Where(cargo => cargo.Type == 0)
                     .SelectMany(cargo => cargo.Items.Split(','))
