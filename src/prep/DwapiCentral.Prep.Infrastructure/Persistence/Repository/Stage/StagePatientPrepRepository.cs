@@ -73,7 +73,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
                 connection.Open();
 
                 var selectQuery = @"
-                                SELECT 
+                                SELECT DISTINCT
                                        *,GETDATE() Created FROM StagePrepPatients WITH (NOLOCK)
                                 WHERE 
                                       ManifestId = @manifestId AND
