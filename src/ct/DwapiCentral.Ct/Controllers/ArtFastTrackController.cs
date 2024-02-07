@@ -55,7 +55,7 @@ namespace DwapiCentral.Ct.Controllers
                         }, $"{sourceBag}");
                     }
 
-                    var notification = new ExtractsReceivedEvent { TotalExtractsStaged = sourceBag.Extracts.Count, ManifestId = sourceBag.ManifestId, SiteCode = sourceBag.Extracts.First().SiteCode, ExtractName = "AllergiesChronicIllnessExtract" };
+                    var notification = new ExtractsReceivedEvent { TotalExtractsStaged = sourceBag.Extracts.Count, ManifestId = sourceBag.ManifestId, SiteCode = sourceBag.Extracts.First().SiteCode, ExtractName = "ArtFastTrackExtract" };
 
                     await _mediator.Publish(notification);
 
