@@ -41,10 +41,15 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
         {
             try
             {
-                // stage > Rest
-                _context.Database.GetDbConnection().BulkInsert(extracts);
-
                 var pks = extracts.Select(x => x.Id).ToList();
+
+                var result = await StageData(manifestId, pks);
+
+                if (result == 0)
+                {
+                    // stage > Rest
+                    _context.Database.GetDbConnection().BulkInsert(extracts);
+                }
 
                 // Merge
                 await MergeExtracts(manifestId, extracts);
@@ -171,7 +176,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                              g => g.FirstOrDefault()
                          );
 
-                foreach (var existingExtract in existingRecords)
+                var updateTasks = existingRecords.Select(async existingExtract =>
                 {
                     if (stageDictionary.TryGetValue(
                         new { existingExtract.PatientPk, existingExtract.SiteCode, existingExtract.RecordUUID },
@@ -180,37 +185,40 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
                     {
                         _mapper.Map(stageExtract, existingExtract);
                     }
-                }
-                _context.Database.GetDbConnection().BulkMerge(existingRecords);
-                //var cons = _context.Database.GetConnectionString();
-                //var sql = $@"
-                //           UPDATE 
-                //                     MnchLabs
+                }).ToList();
 
-                //               SET                                  
-                //                    DateExtracted = @DateExtracted,                                   
-                //                    FacilityName = @FacilityName,
-                //                    SatelliteName = @SatelliteName,
-                //                    VisitID = @VisitID,
-                //                    OrderedbyDate = @OrderedbyDate,
-                //                    ReportedbyDate = @ReportedbyDate,
-                //                    TestName = @TestName,
-                //                    TestResult = @TestResult,
-                //                    LabReason = @LabReason,
-                //                    Date_Created = @Date_Created,
-                //                    DateLastModified = @DateLastModified,
-                //                    Created = @Created,
-                //                    Updated = @Updated,
-                //                    Voided = @Voided   
+                await Task.WhenAll(updateTasks);
 
-                //             WHERE  PatientPk = @PatientPK
-                //                    AND SiteCode = @SiteCode
-                //                    AND RecordUUID = @RecordUUID";
+              
+                var cons = _context.Database.GetConnectionString();
+                var sql = $@"
+                           UPDATE 
+                                     MnchLabs
 
-                //using var connection = new SqlConnection(cons);
-                //if (connection.State != ConnectionState.Open)
-                //    connection.Open();
-                //await connection.ExecuteAsync(sql, existingRecords);
+                               SET                                  
+                                    DateExtracted = @DateExtracted,                                   
+                                    FacilityName = @FacilityName,
+                                    SatelliteName = @SatelliteName,
+                                    VisitID = @VisitID,
+                                    OrderedbyDate = @OrderedbyDate,
+                                    ReportedbyDate = @ReportedbyDate,
+                                    TestName = @TestName,
+                                    TestResult = @TestResult,
+                                    LabReason = @LabReason,
+                                    Date_Created = @Date_Created,
+                                    DateLastModified = @DateLastModified,
+                                    Created = @Created,
+                                    Updated = @Updated,
+                                    Voided = @Voided   
+
+                             WHERE  PatientPk = @PatientPK
+                                    AND SiteCode = @SiteCode
+                                    AND RecordUUID = @RecordUUID";
+
+                using var connection = new SqlConnection(cons);
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                await connection.ExecuteAsync(sql, existingRecords);
             }
             catch (Exception ex)
             {
@@ -252,6 +260,43 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository.Stage
             catch (Exception e)
             {
                 Log.Error(e);
+                throw;
+            }
+        }
+
+        private async Task<int> StageData(Guid manifestId, List<Guid> ids)
+        {
+            var cons = _context.Database.GetConnectionString();
+            try
+            {
+                using var connection = new SqlConnection(cons);
+                await connection.OpenAsync();
+
+                var queryParameters = new
+                {
+                    manifestId,
+                    ids
+
+                };
+
+                var query = $@"
+                           
+                                    SELECT 1
+                                    FROM {_stageName} WITH (NOLOCK)
+                                    WHERE 
+                                        ManifestId = @manifestId 
+                                        AND Id IN @ids                                   
+                             
+                        ";
+
+                var result = await connection.QueryFirstOrDefaultAsync<int>(query, queryParameters);
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
                 throw;
             }
         }
