@@ -38,6 +38,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository
         delete  from StagePrepLabs WHERE  SiteCode = @SiteCode;
         delete  from StagePrepPharmacys WHERE  SiteCode = @SiteCode;
         delete  from StagePrepVisits WHERE  SiteCode = @SiteCode;
+        delete  from Cargoes WHERE  SiteCode = @SiteCode;
      
         ";
             try
@@ -152,6 +153,18 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository
         {
             await _context.Manifests.AddAsync(manifest);
             await _context.SaveChangesAsync();
+        }
+        public async Task Save(Cargo cargo)
+        {
+            try
+            {
+                await _context.Cargoes.AddAsync(cargo);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+            }
         }
 
         public async Task Update(Manifest manifest)
