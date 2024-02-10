@@ -71,9 +71,25 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
                 Log.Error("Clear COMMUNITY MANIFEST ERROR ", e);
             }
 
+            // Extract cargoes from the manifest
+            List<Cargo> cargoes = request.manifest.Cargoes;
 
+            // Remove cargoes from the manifest
+            request.manifest.Cargoes = new List<Cargo>();
+
+            // Save the modified manifest
             await _manifestRepository.Save(request.manifest);
-           
+
+            // Save cargoes separately
+            foreach (var cargo in cargoes)
+            {
+                cargo.ManifestId = request.manifest.Id; 
+                cargo.DateCreated = DateTime.Now; 
+                cargo.SiteCode = request.manifest.SiteCode; 
+                await _manifestRepository.Save(cargo);
+            }
+
+
             // notify spot => manifest
             var notification = new ManifestReceivedEvent
             {

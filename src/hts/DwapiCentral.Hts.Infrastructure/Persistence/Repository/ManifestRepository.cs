@@ -40,7 +40,7 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
         delete  from StageHtsPartnerNotificationServices WHERE  SiteCode = @SiteCode;
         delete  from StageHtsPartnerTracings WHERE  SiteCode = @SiteCode;
         delete  from StageHtsTestKits WHERE  SiteCode = @SiteCode;
-        
+        delete  from Cargoes WHERE  SiteCode = @SiteCode;
 
         ";
             try
@@ -143,6 +143,19 @@ namespace DwapiCentral.Hts.Infrastructure.Persistence.Repository
                 await _context.SaveChangesAsync();
             }
             catch(Exception e)
+            {
+                Log.Error(e.Message);
+            }
+        }
+
+        public async Task Save(Cargo cargo)
+        {
+            try
+            {
+                await _context.Cargoes.AddAsync(cargo);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
             {
                 Log.Error(e.Message);
             }
