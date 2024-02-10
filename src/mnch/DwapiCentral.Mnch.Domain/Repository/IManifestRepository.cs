@@ -15,6 +15,7 @@ namespace DwapiCentral.Mnch.Domain.Repository
         Task<Guid> GetManifestId(int siteCode);
 
         Task Save(Manifest manifest);
+        Task Save(Cargo cargo);
         Task Update(Manifest manifest);
         Task ClearFacility(int siteCode);
         Task ClearFacility(int siteCode, string project);
