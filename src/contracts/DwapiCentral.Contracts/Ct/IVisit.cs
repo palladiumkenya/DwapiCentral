@@ -53,6 +53,7 @@ namespace DwapiCentral.Contracts.Ct
         string? HCWConcern { get; set; }
         string? TCAReason { get; set; }
         string? ClinicalNotes { get; set; }
+        string? WHOStagingOI { get; set; }
 
         string? GeneralExamination { get; set; }
         string? SystemExamination { get; set; }

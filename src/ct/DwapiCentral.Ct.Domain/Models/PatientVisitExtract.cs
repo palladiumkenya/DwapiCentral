@@ -79,5 +79,6 @@ namespace DwapiCentral.Ct.Domain.Models
         public string? ZScore { get; set; }
         public int? ZScoreAbsolute { get; set; }
         public string? PaedsDisclosure { get; set; }
+        public string? WHOStagingOI { get; set ; }
     }
 }

@@ -124,6 +124,7 @@ public class PatientVisitExtractRepository:IPatientVisitExtractRepository
                                     ClinicalNotes = @ClinicalNotes,
                                     GeneralExamination = @GeneralExamination,
                                     SystemExamination = @SystemExamination,
+                                    WHOStagingOI = @WHOStagingOI,
                                     Skin = @Skin,
                                     Eyes = @Eyes,
                                     ENT = @ENT,

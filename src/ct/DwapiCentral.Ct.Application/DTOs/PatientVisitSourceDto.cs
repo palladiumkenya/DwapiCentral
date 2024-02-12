@@ -83,6 +83,7 @@ namespace DwapiCentral.Ct.Application.DTOs
         public string? ZScore { get ; set ; }
         public int? ZScoreAbsolute { get ; set ; }
         public string? PaedsDisclosure { get ; set ; }
+        public string? WHOStagingOI { get; set; }
 
         public PatientVisitSourceDto()
         {
@@ -118,7 +119,8 @@ namespace DwapiCentral.Ct.Application.DTOs
             GestationAge = patientVisitExtract.GestationAge;
             NextAppointmentDate = patientVisitExtract.NextAppointmentDate;
             SiteCode = patientVisitExtract.SiteCode;
-           
+            WHOStagingOI = patientVisitExtract.WHOStagingOI;
+
             PatientPk = patientVisitExtract.PatientPk;
             StabilityAssessment = patientVisitExtract.StabilityAssessment;
             DifferentiatedCare = patientVisitExtract.DifferentiatedCare;
