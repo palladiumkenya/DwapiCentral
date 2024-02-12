@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Prep.Infrastructure.Migrations
 {
-    public partial class _initialPrepMigration : Migration
+    public partial class _InitialPrep : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

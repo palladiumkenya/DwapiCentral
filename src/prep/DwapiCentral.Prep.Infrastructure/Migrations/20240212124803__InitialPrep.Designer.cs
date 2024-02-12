@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Prep.Infrastructure.Migrations
 {
     [DbContext(typeof(PrepDbContext))]
-    [Migration("20240210105249__initialPrepMigration")]
-    partial class _initialPrepMigration
+    [Migration("20240212124803__InitialPrep")]
+    partial class _InitialPrep
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

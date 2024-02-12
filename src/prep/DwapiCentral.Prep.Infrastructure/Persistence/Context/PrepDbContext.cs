@@ -114,11 +114,11 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<Manifest>().Key(x => x.Id).Table($"{nameof(Manifests)}");
 
             DapperPlusManager.Entity<PatientPrepExtract>()
-               .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber})
+               .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber,x.RecordUUID})
                .Table($"{nameof(PrepPatients)}");
 
             DapperPlusManager.Entity<StagePatientPrep>()
-                .Key(x => x.Id)
+               .Key(x => new { x.PatientPk, x.SiteCode, x.PrepNumber,x.RecordUUID })
                 .Table($"{nameof(StagePrepPatients)}");
 
             DapperPlusManager.Entity<PrepAdverseEvent>().Key(x => x.RecordUUID).Table($"{nameof(PrepAdverseEvents)}");
