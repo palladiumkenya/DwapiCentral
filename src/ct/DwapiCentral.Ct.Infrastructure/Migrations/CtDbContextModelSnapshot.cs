@@ -2599,6 +2599,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int?>("WHOStage")
                         .HasColumnType("int");
 
+                    b.Property<string>("WHOStagingOI")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("Weight")
                         .HasColumnType("decimal(18,2)");
 
@@ -5682,6 +5685,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int?>("WHOStage")
                         .HasColumnType("int");
+
+                    b.Property<string>("WHOStagingOI")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Weight")
                         .HasColumnType("decimal(18,2)");

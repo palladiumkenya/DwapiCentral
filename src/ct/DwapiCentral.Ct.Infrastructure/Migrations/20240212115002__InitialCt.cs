@@ -1283,6 +1283,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
                     PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WHOStagingOI = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -2347,7 +2348,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Voided = table.Column<bool>(type: "bit", nullable: true),
                     ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
-                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WHOStagingOI = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
