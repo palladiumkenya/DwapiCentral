@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Hts.Infrastructure.Migrations
 {
     [DbContext(typeof(HtsDbContext))]
-    [Migration("20240207134734__initialHtsMigration")]
-    partial class _initialHtsMigration
+    [Migration("20240212114208__InitialHts")]
+    partial class _InitialHts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -756,6 +756,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("HtsNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IndexPatientPk")
+                        .HasColumnType("int");
 
                     b.Property<string>("IpvScreeningOutcome")
                         .HasColumnType("nvarchar(max)");
@@ -1747,6 +1750,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("HtsNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IndexPatientPk")
+                        .HasColumnType("int");
 
                     b.Property<string>("IpvScreeningOutcome")
                         .HasColumnType("nvarchar(max)");

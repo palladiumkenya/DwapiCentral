@@ -35,6 +35,8 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public string? FacilityLinkedTo { get ; set ; }
         public DateTime? Dob { get ; set ; }
         public string? MaritalStatus { get ; set ; }
+        public int? IndexPatientPk { get; set; }
+
         public DateTime? Date_Last_Modified { get ; set ; }
         public DateTime? Date_Created { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
@@ -45,5 +47,6 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
 
         public Guid? ManifestId { get; set; }
         public LiveStage LiveStage { get; set; }
+       
     }
 }
