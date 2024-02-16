@@ -188,9 +188,6 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<int>("SiteCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("PrepNumber")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ClientPreviouslyonPrep")
                         .HasColumnType("nvarchar(max)");
 
@@ -236,6 +233,9 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<string>("HtsNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Inschool")
                         .HasColumnType("nvarchar(max)");
 
@@ -259,6 +259,10 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<DateTime?>("PrepEnrollmentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PrepNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrevPrepReg")
                         .HasColumnType("nvarchar(max)");
@@ -297,7 +301,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<string>("Ward")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasKey("PatientPk", "SiteCode");
 
                     b.ToTable("PrepPatients");
                 });
@@ -355,7 +359,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("PrepNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
                         .IsRequired()
@@ -378,7 +382,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PrepAdverseEvents");
                 });
@@ -454,7 +458,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("PrepNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
                         .IsRequired()
@@ -489,7 +493,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PrepBehaviourRisks");
                 });
@@ -535,7 +539,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("PrepNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
                         .IsRequired()
@@ -552,7 +556,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PrepCareTerminations");
                 });
@@ -589,7 +593,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("PrepNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
@@ -624,7 +628,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PrepLabs");
                 });
@@ -694,7 +698,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("PrepNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrescribedPrepToday")
                         .HasColumnType("nvarchar(max)");
@@ -732,7 +736,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PrepMonthlyRefills");
                 });
@@ -775,7 +779,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("PrepNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
                         .IsRequired()
@@ -798,7 +802,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PrepPharmacys");
                 });
@@ -919,7 +923,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("PrepNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrepPrescribed")
                         .HasColumnType("nvarchar(max)");
@@ -990,21 +994,16 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasIndex("PatientPk", "SiteCode");
 
                     b.ToTable("PrepVisits");
                 });
 
             modelBuilder.Entity("DwapiCentral.Prep.Domain.Models.Stage.StagePatientPrep", b =>
                 {
-                    b.Property<int>("PatientPk")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SiteCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PrepNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ClientPreviouslyonPrep")
                         .HasColumnType("nvarchar(max)");
@@ -1051,9 +1050,6 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<string>("HtsNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Inschool")
                         .HasColumnType("nvarchar(max)");
 
@@ -1078,11 +1074,18 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<string>("NUPI")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PatientPk")
+                        .HasColumnType("int");
+
                     b.Property<string>("PopulationType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("PrepEnrollmentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PrepNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrevPrepReg")
                         .HasColumnType("nvarchar(max)");
@@ -1099,6 +1102,9 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
 
                     b.Property<string>("Sex")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
 
                     b.Property<string>("SubCounty")
                         .HasColumnType("nvarchar(max)");
@@ -1121,7 +1127,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     b.Property<string>("Ward")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PatientPk", "SiteCode", "PrepNumber");
+                    b.HasKey("Id");
 
                     b.ToTable("StagePrepPatients");
                 });
@@ -1875,7 +1881,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepAdverseEvents")
-                        .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1884,7 +1890,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepBehaviourRisks")
-                        .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1893,7 +1899,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepCareTerminations")
-                        .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1902,7 +1908,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepLabs")
-                        .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1911,7 +1917,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepMonthlyRefills")
-                        .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1920,7 +1926,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepPharmacies")
-                        .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1929,7 +1935,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     b.HasOne("DwapiCentral.Prep.Domain.Models.PatientPrepExtract", null)
                         .WithMany("PrepVisits")
-                        .HasForeignKey("PatientPk", "SiteCode", "PrepNumber")
+                        .HasForeignKey("PatientPk", "SiteCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
