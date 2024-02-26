@@ -31,5 +31,8 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
         public DateTime? Created { get; set; }
         public DateTime? Updated { get ; set ; }
         public bool? Voided { get ; set ; }
+        public DateTime? DatePromisedToCome { get; set; }
+        public string? ReasonForMissedAppointment { get; set; }
+        public DateTime? DateOfMissedAppointment { get; set; }
     }
 }
