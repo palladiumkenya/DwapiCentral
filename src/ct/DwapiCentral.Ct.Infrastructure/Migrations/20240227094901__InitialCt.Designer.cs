@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20240212115002__InitialCt")]
+    [Migration("20240227094901__InitialCt")]
     partial class _InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,6 +59,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ChronicOnsetDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Controlled")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
@@ -798,6 +801,12 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("DateLastModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateOfMissedAppointment")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DatePromisedToCome")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
@@ -815,6 +824,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
+
+                    b.Property<string>("ReasonForMissedAppointment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
                         .IsRequired()
@@ -2486,6 +2498,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Menopausal")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Mhash")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Muac")
                         .HasColumnType("int");
 
@@ -2807,6 +2822,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ChronicOnsetDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Controlled")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
@@ -3948,6 +3966,12 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("DateLastModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateOfMissedAppointment")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DatePromisedToCome")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Date_Created")
                         .HasColumnType("datetime2");
 
@@ -3985,6 +4009,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Project")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonForMissedAppointment")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
@@ -5566,6 +5593,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("Menopausal")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Mhash")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Muac")
                         .HasColumnType("int");

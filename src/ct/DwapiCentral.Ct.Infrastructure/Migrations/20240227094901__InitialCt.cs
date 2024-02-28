@@ -192,6 +192,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    Controlled = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -624,6 +625,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    DatePromisedToCome = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReasonForMissedAppointment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfMissedAppointment = table.Column<DateTime>(type: "datetime2", nullable: true),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1273,6 +1277,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     RefillDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
+                    Mhash = table.Column<int>(type: "int", nullable: false),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1354,7 +1359,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    Controlled = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1670,7 +1676,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    DatePromisedToCome = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReasonForMissedAppointment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfMissedAppointment = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2349,7 +2358,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
                     PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WHOStagingOI = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    WHOStagingOI = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mhash = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

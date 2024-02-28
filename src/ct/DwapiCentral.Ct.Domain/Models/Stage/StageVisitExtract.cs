@@ -68,6 +68,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
         public DateTime? RefillDate { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
+        public int Mhash { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
 
