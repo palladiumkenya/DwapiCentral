@@ -39,6 +39,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<IITRiskScoreSourceDto, IITRiskScore>();
             CreateMap<ArtFastTrackSourceDto, ArtFastTrackExtract>();
             CreateMap<CancerScreeningSourceDto, CancerScreeningExtract>();
+            CreateMap<RelationshipsSourceDto, RelationshipsExtract>();
 
             //stage >> Extract
             CreateMap<StagePatientExtract, PatientExtract>();
@@ -64,6 +65,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<StageIITRiskScore, IITRiskScore>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
             CreateMap<StageArtFastTrackExtract, ArtFastTrackExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
             CreateMap<StageCancerScreeningExtract, CancerScreeningExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+            CreateMap<StageRelationshipsExtract, RelationshipsExtract>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
 
 
             //DTO >> Stage
@@ -90,6 +92,7 @@ namespace DwapiCentral.Ct.Application.Mappings
             CreateMap<IITRiskScoreSourceDto, StageIITRiskScore>();
             CreateMap<ArtFastTrackSourceDto, StageArtFastTrackExtract>();
             CreateMap<CancerScreeningSourceDto, StageCancerScreeningExtract>();
+            CreateMap<RelationshipsSourceDto, StageRelationshipsExtract>();
 
         }
     }

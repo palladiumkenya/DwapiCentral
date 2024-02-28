@@ -18,7 +18,9 @@ namespace DwapiCentral.Contracts.Ct
         string? CauseOfDeath { get; set; }
         string? Comments { get; set; }
         DateTime? BookingDate { get; set; }
-       
+        DateTime? DatePromisedToCome { get; set; }
+        string? ReasonForMissedAppointment { get; set; }
+        DateTime? DateOfMissedAppointment { get; set; }
 
 
     }

@@ -53,6 +53,7 @@ namespace DwapiCentral.Contracts.Ct
         string? HCWConcern { get; set; }
         string? TCAReason { get; set; }
         string? ClinicalNotes { get; set; }
+        string? WHOStagingOI { get; set; }
 
         string? GeneralExamination { get; set; }
         string? SystemExamination { get; set; }
@@ -68,6 +69,7 @@ namespace DwapiCentral.Contracts.Ct
         public string? ZScore { get; set; }
         public int? ZScoreAbsolute { get; set; }
         public string? PaedsDisclosure { get; set; }
+        public int Mhash { get; set; }
 
 
     }

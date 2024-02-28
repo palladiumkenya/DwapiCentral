@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Dapper;
+using DwapiCentral.Contracts.Common;
 using DwapiCentral.Contracts.Ct;
 using DwapiCentral.Ct.Domain.Events;
 using DwapiCentral.Ct.Domain.Models;
@@ -135,7 +136,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 await AssignAll(manifestId, pks);
 
                 //create new patientrecords or update the existing patientRecords
-                await Merge(manifestId, pks);
+                await Merge(manifestId, extracts);
 
                 
                 await UpdateLivestage(manifestId, pks);
@@ -200,65 +201,121 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
             }
         }
 
-       
 
-        private async Task Merge(Guid manifestId, List<StagePatientExtract> stagePatients)
+
+        //private async Task Merge(Guid manifestId, List<StagePatientExtract> stagePatients)
+        //{
+        //    var connectionString = _context.Database.GetConnectionString();
+
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        connection.Open();
+
+        //        var selectQuery = @"
+        //                        SELECT DISTINCT
+        //                               *,GETDATE() Created FROM StagePatientExtracts WITH (NOLOCK)
+        //                        WHERE 
+        //                              LiveSession = @manifestId AND
+        //                              LiveStage = @livestage AND
+        //                              PatientPk = @patientPk AND
+        //                              SiteCode = @siteCode";
+
+        //        foreach (StagePatientExtract stagePatient in stagePatients)
+        //        {
+
+        //            // Step 1: Retrieve data from the stage table
+        //            List<StagePatientExtract> stageData = connection.Query<StagePatientExtract>(selectQuery,
+        //            new
+        //            {
+        //                manifestId,
+        //                livestage = LiveStage.Assigned,
+        //                patientPk = stagePatient.PatientPk,
+        //                siteCode = stagePatient.SiteCode
+        //            }).AsList();
+
+        //            // Step 2: Check if each record exists in the central table
+        //            List<PatientExtract> newRecords = new List<PatientExtract>();
+
+        //            foreach (StagePatientExtract stageRecord in stageData)
+        //            {
+        //                bool recordExists = CheckRecordExistence(connection, stageRecord);
+
+        //                if (recordExists)
+        //                {
+        //                    // Update existing record in the central table
+        //                   await UpdateRecordInCentral(connection, stageRecord,manifestId);
+        //                }
+        //                else
+        //                {
+        //                    // Insert new record into the central table
+        //                   await InsertRecordIntoCentral(connection, stageRecord,manifestId);
+        //                }
+        //            }
+        //        }
+
+        //        connection.Close();
+        //    }
+
+
+
+
+        //}
+
+        public async Task Merge(Guid manifestId, List<StagePatientExtract> stagePatient)
         {
-            var connectionString = _context.Database.GetConnectionString();
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                connection.Open();
+                int sitecode = stagePatient.First().SiteCode;
 
-                var selectQuery = @"
-                                SELECT DISTINCT
-                                       *,GETDATE() Created FROM StagePatientExtracts WITH (NOLOCK)
-                                WHERE 
-                                      LiveSession = @manifestId AND
-                                      LiveStage = @livestage AND
-                                      PatientPk = @patientPk AND
-                                      SiteCode = @siteCode";
+                var connectionString = _context.Database.GetConnectionString();
 
-                foreach (StagePatientExtract stagePatient in stagePatients)
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
+                    connection.Open();
 
-                    // Step 1: Retrieve data from the stage table
-                    List<StagePatientExtract> stageData = connection.Query<StagePatientExtract>(selectQuery,
-                    new
+                    var query = $"SELECT * FROM PatientExtract WITH (NOLOCK) WHERE SiteCode = {sitecode}";
+
+                    var existingRecords = await connection.QueryAsync<PatientExtract>(query);
+
+                    var existingRecordDictionary = existingRecords.ToDictionary(record => new { record.PatientPk, record.SiteCode });
+
+                    var recordsToInsert = new List<PatientExtract>();
+                    var recordsToUpdate = new List<PatientExtract>();
+
+                    foreach (var stageRecord in stagePatient)
                     {
-                        manifestId,
-                        livestage = LiveStage.Assigned,
-                        patientPk = stagePatient.PatientPk,
-                        siteCode = stagePatient.SiteCode
-                    }).AsList();
+                        var newRecord = _mapper.Map<PatientExtract>(stageRecord);
 
-                    // Step 2: Check if each record exists in the central table
-                    List<PatientExtract> newRecords = new List<PatientExtract>();
+                        var key = new { newRecord.PatientPk, newRecord.SiteCode };
 
-                    foreach (StagePatientExtract stageRecord in stageData)
-                    {
-                        bool recordExists = CheckRecordExistence(connection, stageRecord);
-
-                        if (recordExists)
+                        if (existingRecordDictionary.TryGetValue(key, out var existingRecord))
                         {
-                            // Update existing record in the central table
-                           await UpdateRecordInCentral(connection, stageRecord,manifestId);
+                            // Update existing record
+                            _mapper.Map(stageRecord, existingRecord);
+                            recordsToUpdate.Add(existingRecord);
                         }
                         else
                         {
-                            // Insert new record into the central table
-                           await InsertRecordIntoCentral(connection, stageRecord,manifestId);
+                            // Insert new record
+                            recordsToInsert.Add(newRecord);
+                            existingRecordDictionary.Add(key, newRecord);
                         }
                     }
+
+
+                    _context.Database.GetDbConnection().BulkInsert(recordsToInsert);
+
+
+                    _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
                 }
-                
-                connection.Close();
             }
-
-            
-
-            
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
         }
+
 
 
         private async Task UpdateLivestage(Guid manifestId, List<StagePatientExtract> pks)

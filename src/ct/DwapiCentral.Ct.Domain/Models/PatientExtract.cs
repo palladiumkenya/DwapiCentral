@@ -80,5 +80,6 @@ namespace DwapiCentral.Ct.Domain.Models
         public virtual ICollection<IITRiskScore> IITRiskScoresExtracts { get; set; } = new List<IITRiskScore>();
         public virtual ICollection<ArtFastTrackExtract> ArtFastTrackExtracts { get; set; } = new List<ArtFastTrackExtract>();
         public virtual ICollection<CancerScreeningExtract> CancerScreeningExtracts { get; set; } = new List<CancerScreeningExtract>();
+        public virtual ICollection<RelationshipsExtract> RelationshipsExtracts { get; set; } = new List<RelationshipsExtract>();
     }
 }
