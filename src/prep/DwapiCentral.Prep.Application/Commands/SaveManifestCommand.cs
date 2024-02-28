@@ -79,20 +79,25 @@ public class SaveManifestCommandHandler : IRequestHandler<SaveManifestCommand, R
 
                 try
                 {
-                    // Notify Spot
-                    //var metricDtos = MetricDto.Generate(request.Manifest);
-                    //if (metricDtos.Any())
-                    //{
-                    //    var metrics = new PrepMetricsEvent
-                    //    {
-                    //        PrepMetricExtracts = metricDtos,
+                    // Extract cargoes from the manifest
+                    List<Cargo> cargoes = request.Manifest.Cargoes;
 
-                    //    };
-                    //    await _mediator.Publish(metrics, cancellationToken);
-                    //}
+                    // Remove cargoes from the manifest
+                    request.Manifest.Cargoes = new List<Cargo>();
 
+                    // Save the modified manifest
                     await _manifestRepository.Save(request.Manifest);
 
+                    // Save cargoes separately
+                    foreach (var cargo in cargoes)
+                    {
+                        cargo.ManifestId = request.Manifest.Id;
+                        cargo.DateCreated = DateTime.Now;
+                        cargo.SiteCode = request.Manifest.SiteCode;
+                        await _manifestRepository.Save(cargo);
+                    }
+
+                
                     // notify spot => manifest
                     var notification = new ManifestReceivedEvent
                     {

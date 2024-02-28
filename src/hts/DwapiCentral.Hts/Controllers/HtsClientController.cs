@@ -37,13 +37,13 @@ namespace DwapiCentral.Hts.Controllers
 
                 //satge Data
 
-                
-                //var id = BatchJob.StartNew(x =>
-                //    {
-                //        x.Enqueue(() => SaveClientsJob(client));
-                //    });
 
-                var id = BackgroundJob.Enqueue(() => SaveClientsJob(client));
+                var id = BatchJob.StartNew(x =>
+                    {
+                        x.Enqueue(() => SaveClientsJob(client));
+                    });
+
+                //var id = BackgroundJob.Enqueue(() => SaveClientsJob(client));
 
                 var manifestId = await _manifestRepository.GetManifestId(client.Clients.FirstOrDefault().SiteCode);
 

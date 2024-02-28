@@ -46,6 +46,7 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository
         delete  from StageHeis WHERE  SiteCode = @SiteCode;
         delete  from StageMnchLabs WHERE  SiteCode = @SiteCode;
         delete  from StageMnchImmunizations WHERE  SiteCode = @SiteCode;
+        delete  from Cargoes WHERE  SiteCode = @SiteCode;
         
 
         ";
@@ -264,6 +265,18 @@ namespace DwapiCentral.Mnch.Infrastructure.Persistence.Repository
         {
             await _context.Manifests.AddAsync(manifest);
             await _context.SaveChangesAsync();
+        }
+        public async Task Save(Cargo cargo)
+        {
+            try
+            {
+                await _context.Cargoes.AddAsync(cargo);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+            }
         }
 
         public async Task Update(Manifest manifest)

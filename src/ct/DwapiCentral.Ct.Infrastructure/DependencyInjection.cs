@@ -63,6 +63,7 @@ public static class DependencyInjection
         services.AddScoped<IIITRiskScoreRepository, IITRiskScoreRepository>();
         services.AddScoped<IArtFastTrackRepository, ArtFastTrackRepository>();
         services.AddScoped<ICancerScreeningRepository, CancerScreeningRepository>();
+        services.AddScoped<IPatientRelationshipRepository, PatientRelationshipRepository>();
 
 
         services.AddScoped<IStagePatientExtractRepository, StagePatientExtractRepository>();
@@ -88,6 +89,7 @@ public static class DependencyInjection
         services.AddScoped<IStageIITRiskScoreRepository, StageIITRiskScoreRepository>();
         services.AddScoped<IStageArtFastTrackExtractRepository, StageArtFastTrackRepository>();
         services.AddScoped<IStageCancerScreeningExtractRepository, StageCancerScreeningExtractsRepository>();
+        services.AddScoped<IStageRelationshipExtractRepository, StageRelationshipExtractRepository>();
 
 
         try

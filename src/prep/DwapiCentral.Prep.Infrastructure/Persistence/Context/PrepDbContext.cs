@@ -56,52 +56,52 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<PatientPrepExtract>()
-                .HasKey(m => new { m.PatientPk, m.SiteCode, m.PrepNumber });
+                .HasKey(m => new { m.PatientPk, m.SiteCode });
 
             modelBuilder.Entity<StagePatientPrep>()
-                .HasKey(m => new { m.PatientPk, m.SiteCode, m.PrepNumber });
+                .HasKey(m => m.Id);
 
             modelBuilder.Entity<PatientPrepExtract>()
                 .HasMany(c => c.PrepAdverseEvents)
                 .WithOne()
-                .HasForeignKey(f => new { f.PatientPk, f.SiteCode ,f.PrepNumber})
+                .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                 .IsRequired();
 
 
             modelBuilder.Entity<PatientPrepExtract>()
                 .HasMany(c => c.PrepBehaviourRisks)
                 .WithOne()
-                .HasForeignKey(f => new { f.PatientPk, f.SiteCode,f.PrepNumber })
+                .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                 .IsRequired();
 
             modelBuilder.Entity<PatientPrepExtract>()
                .HasMany(c => c.PrepCareTerminations)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<PatientPrepExtract>()
                .HasMany(c => c.PrepLabs)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<PatientPrepExtract>()
                .HasMany(c => c.PrepPharmacies)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<PatientPrepExtract>()
                .HasMany(c => c.PrepVisits)
                .WithOne()
-               .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
+               .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
                .IsRequired();
 
             modelBuilder.Entity<PatientPrepExtract>()
            .HasMany(c => c.PrepMonthlyRefills)
            .WithOne()
-           .HasForeignKey(f => new { f.PatientPk, f.SiteCode, f.PrepNumber })
+           .HasForeignKey(f => new { f.PatientPk, f.SiteCode })
            .IsRequired();
 
 
@@ -114,20 +114,20 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Context
             DapperPlusManager.Entity<Manifest>().Key(x => x.Id).Table($"{nameof(Manifests)}");
 
             DapperPlusManager.Entity<PatientPrepExtract>()
-               .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber})
+               .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber,x.RecordUUID})
                .Table($"{nameof(PrepPatients)}");
 
             DapperPlusManager.Entity<StagePatientPrep>()
-                .Key(x => new { x.PatientPk, x.SiteCode ,x.PrepNumber})
+               .Key(x => x.Id)
                 .Table($"{nameof(StagePrepPatients)}");
 
-            DapperPlusManager.Entity<PrepAdverseEvent>().Key(x => x.RecordUUID).Table($"{nameof(PrepAdverseEvents)}");
-            DapperPlusManager.Entity<PrepBehaviourRisk>().Key(x => x.RecordUUID).Table($"{nameof(PrepBehaviourRisks)}");
-            DapperPlusManager.Entity<PrepCareTermination>().Key(x => x.RecordUUID).Table($"{nameof(PrepCareTerminations)}");
-            DapperPlusManager.Entity<PrepLab>().Key(x => x.RecordUUID).Table($"{nameof(PrepLabs)}");
-            DapperPlusManager.Entity<PrepPharmacy>().Key(x => x.RecordUUID).Table($"{nameof(PrepPharmacys)}");
-            DapperPlusManager.Entity<PrepVisit>().Key(x => x.RecordUUID).Table($"{nameof(PrepVisits)}");
-            DapperPlusManager.Entity<PrepMonthlyRefill>().Key(x => x.RecordUUID).Table($"{nameof(PrepMonthlyRefills)}");
+            DapperPlusManager.Entity<PrepAdverseEvent>().Key(x => new { x.SiteCode,x.PatientPk,x.RecordUUID }).Table($"{nameof(PrepAdverseEvents)}");
+            DapperPlusManager.Entity<PrepBehaviourRisk>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(PrepBehaviourRisks)}");
+            DapperPlusManager.Entity<PrepCareTermination>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(PrepCareTerminations)}");
+            DapperPlusManager.Entity<PrepLab>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(PrepLabs)}");
+            DapperPlusManager.Entity<PrepPharmacy>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(PrepPharmacys)}");
+            DapperPlusManager.Entity<PrepVisit>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(PrepVisits)}");
+            DapperPlusManager.Entity<PrepMonthlyRefill>().Key(x => new { x.SiteCode, x.PatientPk, x.RecordUUID }).Table($"{nameof(PrepMonthlyRefills)}");
 
             //stage
             DapperPlusManager.Entity<StagePrepAdverseEvent>().Key(x => x.Id).Table($"{nameof(StagePrepAdverseEvents)}");

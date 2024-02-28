@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.DTOs.Source;
+using DwapiCentral.Ct.Application.Hashing;
 using DwapiCentral.Ct.Application.Interfaces.Repository.Base;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
@@ -48,7 +49,15 @@ public class MergePatientVisitCommandHandler : IRequestHandler<MergePatientVisit
             standardizer.StandardizeExtracts();
 
         }
-        //stage
+
+        Parallel.ForEach(extracts, extract =>
+        {
+            var concatenatedData = $"{extract.VisitId}{extract.VisitDate}";
+            var checksumHash = VisitsHash.ComputeChecksumHash(concatenatedData);
+            extract.Mhash = Math.Abs(checksumHash);
+        });
+
+
         await _stageRepository.SyncStage(extracts, request.PatientVisits.ManifestId.Value);
 
 
@@ -56,4 +65,7 @@ public class MergePatientVisitCommandHandler : IRequestHandler<MergePatientVisit
         return Result.Success();
 
     }
+
+    
+    
 }

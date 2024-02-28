@@ -12,7 +12,7 @@ namespace DwapiCentral.Hts.Domain.Model
     {
         [Key]
         public Guid Id { get; set; }
-        public string? RecordUUID { get; set; }
+        public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string HtsNumber { get; set; }
@@ -42,5 +42,6 @@ namespace DwapiCentral.Hts.Domain.Model
         public DateTime? Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+        public int? IndexPatientPk { get; set ; }
     }
 }

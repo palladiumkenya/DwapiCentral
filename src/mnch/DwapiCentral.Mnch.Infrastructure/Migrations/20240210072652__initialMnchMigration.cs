@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Mnch.Infrastructure.Migrations
 {
-    public partial class _InitialMnch : Migration
+    public partial class _initialMnchMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -775,7 +775,9 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Items = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ManifestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ManifestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

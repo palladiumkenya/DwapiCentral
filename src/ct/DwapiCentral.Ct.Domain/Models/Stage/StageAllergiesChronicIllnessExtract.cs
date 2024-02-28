@@ -37,5 +37,6 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
         public DateTime? Created { get; set; } 
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
+        public string? Controlled { get; set; }
     }
 }

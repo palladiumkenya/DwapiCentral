@@ -12,12 +12,12 @@ namespace DwapiCentral.Hts.Domain.Model
     {
         [Key]
         public Guid Id { get; set; }
-        public string? RecordUUID { get; set; }
-        public string HtsNumber { get; set; }
+        public string RecordUUID { get; set; }
+        public string? HtsNumber { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public int? EncounterId { get; set; }
-        public string FacilityName { get; set; }
+        public string? FacilityName { get; set; }
         public string? TestKitName1 { get; set; }
         public string? TestKitLotNumber1 { get; set; }
         public string? TestKitExpiry1 { get; set; }

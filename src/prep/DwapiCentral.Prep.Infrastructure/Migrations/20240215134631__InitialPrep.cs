@@ -85,8 +85,9 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrepEnrollmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -124,7 +125,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PrepPatients", x => new { x.PatientPk, x.SiteCode, x.PrepNumber });
+                    table.PrimaryKey("PK_PrepPatients", x => new { x.PatientPk, x.SiteCode });
                 });
 
             migrationBuilder.CreateTable(
@@ -489,7 +490,9 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Items = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ManifestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ManifestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -510,7 +513,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdverseEvent = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdverseEventStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -534,10 +537,10 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PrepAdverseEvents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrepAdverseEvents_PrepPatients_PatientPk_SiteCode_PrepNumber",
-                        columns: x => new { x.PatientPk, x.SiteCode, x.PrepNumber },
+                        name: "FK_PrepAdverseEvents_PrepPatients_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PrepPatients",
-                        principalColumns: new[] { "PatientPk", "SiteCode", "PrepNumber" },
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -549,7 +552,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -583,10 +586,10 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PrepBehaviourRisks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrepBehaviourRisks_PrepPatients_PatientPk_SiteCode_PrepNumber",
-                        columns: x => new { x.PatientPk, x.SiteCode, x.PrepNumber },
+                        name: "FK_PrepBehaviourRisks_PrepPatients_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PrepPatients",
-                        principalColumns: new[] { "PatientPk", "SiteCode", "PrepNumber" },
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -598,7 +601,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -616,10 +619,10 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PrepCareTerminations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrepCareTerminations_PrepPatients_PatientPk_SiteCode_PrepNumber",
-                        columns: x => new { x.PatientPk, x.SiteCode, x.PrepNumber },
+                        name: "FK_PrepCareTerminations_PrepPatients_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PrepPatients",
-                        principalColumns: new[] { "PatientPk", "SiteCode", "PrepNumber" },
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -631,7 +634,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VisitID = table.Column<int>(type: "int", nullable: true),
@@ -652,10 +655,10 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PrepLabs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrepLabs_PrepPatients_PatientPk_SiteCode_PrepNumber",
-                        columns: x => new { x.PatientPk, x.SiteCode, x.PrepNumber },
+                        name: "FK_PrepLabs_PrepPatients_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PrepPatients",
-                        principalColumns: new[] { "PatientPk", "SiteCode", "PrepNumber" },
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -664,7 +667,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VisitID = table.Column<int>(type: "int", nullable: true),
@@ -700,10 +703,10 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PrepMonthlyRefills", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrepMonthlyRefills_PrepPatients_PatientPk_SiteCode_PrepNumber",
-                        columns: x => new { x.PatientPk, x.SiteCode, x.PrepNumber },
+                        name: "FK_PrepMonthlyRefills_PrepPatients_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PrepPatients",
-                        principalColumns: new[] { "PatientPk", "SiteCode", "PrepNumber" },
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -715,7 +718,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VisitID = table.Column<int>(type: "int", nullable: true),
@@ -734,10 +737,10 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PrepPharmacys", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrepPharmacys_PrepPatients_PatientPk_SiteCode_PrepNumber",
-                        columns: x => new { x.PatientPk, x.SiteCode, x.PrepNumber },
+                        name: "FK_PrepPharmacys_PrepPatients_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PrepPatients",
-                        principalColumns: new[] { "PatientPk", "SiteCode", "PrepNumber" },
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -749,7 +752,7 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrepNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrepNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HtsNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EncounterId = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -810,10 +813,10 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PrepVisits", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrepVisits_PrepPatients_PatientPk_SiteCode_PrepNumber",
-                        columns: x => new { x.PatientPk, x.SiteCode, x.PrepNumber },
+                        name: "FK_PrepVisits_PrepPatients_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PrepPatients",
-                        principalColumns: new[] { "PatientPk", "SiteCode", "PrepNumber" },
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -823,39 +826,39 @@ namespace DwapiCentral.Prep.Infrastructure.Migrations
                 column: "ManifestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrepAdverseEvents_PatientPk_SiteCode_PrepNumber",
+                name: "IX_PrepAdverseEvents_PatientPk_SiteCode",
                 table: "PrepAdverseEvents",
-                columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
+                columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrepBehaviourRisks_PatientPk_SiteCode_PrepNumber",
+                name: "IX_PrepBehaviourRisks_PatientPk_SiteCode",
                 table: "PrepBehaviourRisks",
-                columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
+                columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrepCareTerminations_PatientPk_SiteCode_PrepNumber",
+                name: "IX_PrepCareTerminations_PatientPk_SiteCode",
                 table: "PrepCareTerminations",
-                columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
+                columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrepLabs_PatientPk_SiteCode_PrepNumber",
+                name: "IX_PrepLabs_PatientPk_SiteCode",
                 table: "PrepLabs",
-                columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
+                columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrepMonthlyRefills_PatientPk_SiteCode_PrepNumber",
+                name: "IX_PrepMonthlyRefills_PatientPk_SiteCode",
                 table: "PrepMonthlyRefills",
-                columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
+                columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrepPharmacys_PatientPk_SiteCode_PrepNumber",
+                name: "IX_PrepPharmacys_PatientPk_SiteCode",
                 table: "PrepPharmacys",
-                columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
+                columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrepVisits_PatientPk_SiteCode_PrepNumber",
+                name: "IX_PrepVisits_PatientPk_SiteCode",
                 table: "PrepVisits",
-                columns: new[] { "PatientPk", "SiteCode", "PrepNumber" });
+                columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subscribers_DocketId",

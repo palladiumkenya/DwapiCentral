@@ -192,6 +192,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    Controlled = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -624,6 +625,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Voided = table.Column<bool>(type: "bit", nullable: true),
+                    DatePromisedToCome = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReasonForMissedAppointment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfMissedAppointment = table.Column<DateTime>(type: "datetime2", nullable: true),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1137,6 +1141,39 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StageRelationshipsExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RelationshipToPatient = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveSession = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LiveStage = table.Column<int>(type: "int", nullable: false),
+                    Generated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Emr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Project = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Processed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StageRelationshipsExtracts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StageStatusExtracts",
                 columns: table => new
                 {
@@ -1240,6 +1277,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     RefillDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
+                    Mhash = table.Column<int>(type: "int", nullable: false),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1250,6 +1288,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
                     PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WHOStagingOI = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrentPatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -1320,7 +1359,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    Controlled = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1456,17 +1496,18 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    PatientExtractPatientPk = table.Column<int>(type: "int", nullable: true),
+                    PatientExtractSiteCode = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CancerScreeningExtract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CancerScreeningExtract_PatientExtract_PatientPk_SiteCode",
-                        columns: x => new { x.PatientPk, x.SiteCode },
+                        name: "FK_CancerScreeningExtract_PatientExtract_PatientExtractPatientPk_PatientExtractSiteCode",
+                        columns: x => new { x.PatientExtractPatientPk, x.PatientExtractSiteCode },
                         principalTable: "PatientExtract",
-                        principalColumns: new[] { "PatientPk", "SiteCode" },
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumns: new[] { "PatientPk", "SiteCode" });
                 });
 
             migrationBuilder.CreateTable(
@@ -1635,7 +1676,10 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    DatePromisedToCome = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReasonForMissedAppointment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfMissedAppointment = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2313,13 +2357,46 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     Voided = table.Column<bool>(type: "bit", nullable: true),
                     ZScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
-                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WHOStagingOI = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mhash = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PatientVisitExtract", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PatientVisitExtract_PatientExtract_PatientPk_SiteCode",
+                        columns: x => new { x.PatientPk, x.SiteCode },
+                        principalTable: "PatientExtract",
+                        principalColumns: new[] { "PatientPk", "SiteCode" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RelationshipsExtract",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RelationshipToPatient = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PatientPk = table.Column<int>(type: "int", nullable: false),
+                    SiteCode = table.Column<int>(type: "int", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RelationshipsExtract", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RelationshipsExtract_PatientExtract_PatientPk_SiteCode",
                         columns: x => new { x.PatientPk, x.SiteCode },
                         principalTable: "PatientExtract",
                         principalColumns: new[] { "PatientPk", "SiteCode" },
@@ -2337,9 +2414,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: new[] { "PatientPk", "SiteCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CancerScreeningExtract_PatientPk_SiteCode",
+                name: "IX_CancerScreeningExtract_PatientExtractPatientPk_PatientExtractSiteCode",
                 table: "CancerScreeningExtract",
-                columns: new[] { "PatientPk", "SiteCode" });
+                columns: new[] { "PatientExtractPatientPk", "PatientExtractSiteCode" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CervicalCancerScreeningExtract_PatientPk_SiteCode",
@@ -2440,6 +2517,11 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 name: "IX_PatientVisitExtract_PatientPk_SiteCode",
                 table: "PatientVisitExtract",
                 columns: new[] { "PatientPk", "SiteCode" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RelationshipsExtract_PatientPk_SiteCode",
+                table: "RelationshipsExtract",
+                columns: new[] { "PatientPk", "SiteCode" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -2520,6 +2602,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 name: "PatientVisitExtract");
 
             migrationBuilder.DropTable(
+                name: "RelationshipsExtract");
+
+            migrationBuilder.DropTable(
                 name: "StageAdverseEventExtracts");
 
             migrationBuilder.DropTable(
@@ -2581,6 +2666,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "StagePharmacyExtracts");
+
+            migrationBuilder.DropTable(
+                name: "StageRelationshipsExtracts");
 
             migrationBuilder.DropTable(
                 name: "StageStatusExtracts");

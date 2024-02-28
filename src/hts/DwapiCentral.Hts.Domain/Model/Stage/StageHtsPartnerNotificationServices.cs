@@ -12,7 +12,7 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
     {
         
         public Guid Id { get; set; }
-        public string? RecordUUID { get; set; }
+        public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string HtsNumber { get ; set ; }
@@ -35,6 +35,8 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
         public string? FacilityLinkedTo { get ; set ; }
         public DateTime? Dob { get ; set ; }
         public string? MaritalStatus { get ; set ; }
+        public int? IndexPatientPk { get; set; }
+
         public DateTime? Date_Last_Modified { get ; set ; }
         public DateTime? Date_Created { get ; set ; }
         public DateTime? DateLastModified { get ; set ; }
@@ -45,5 +47,6 @@ namespace DwapiCentral.Hts.Domain.Model.Stage
 
         public Guid? ManifestId { get; set; }
         public LiveStage LiveStage { get; set; }
+       
     }
 }

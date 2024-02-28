@@ -14,6 +14,8 @@ namespace DwapiCentral.Mnch.Domain.Model
         public CargoType Type { get; set; }
         public string Items { get; set; }
         public Guid ManifestId { get; set; }
+        public DateTime DateCreated { get; set; }
+        public int SiteCode { get; set; }
 
         //contracts
         public Guid Id { get; set; }
