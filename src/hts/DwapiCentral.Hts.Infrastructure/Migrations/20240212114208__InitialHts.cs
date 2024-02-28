@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Hts.Infrastructure.Migrations
 {
-    public partial class _initialHtsMigration : Migration
+    public partial class _InitialHts : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -397,6 +397,7 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     FacilityLinkedTo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
                     MaritalStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IndexPatientPk = table.Column<int>(type: "int", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -751,7 +752,8 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     DateExtracted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Voided = table.Column<bool>(type: "bit", nullable: true)
+                    Voided = table.Column<bool>(type: "bit", nullable: true),
+                    IndexPatientPk = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

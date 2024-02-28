@@ -755,6 +755,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("IndexPatientPk")
+                        .HasColumnType("int");
+
                     b.Property<string>("IpvScreeningOutcome")
                         .HasColumnType("nvarchar(max)");
 
@@ -1745,6 +1748,9 @@ namespace DwapiCentral.Hts.Infrastructure.Migrations
                     b.Property<string>("HtsNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IndexPatientPk")
+                        .HasColumnType("int");
 
                     b.Property<string>("IpvScreeningOutcome")
                         .HasColumnType("nvarchar(max)");

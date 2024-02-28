@@ -31,5 +31,6 @@ namespace DwapiCentral.Contracts.Hts
         DateTime? Dob { get; set; }          
         string? MaritalStatus { get; set; }         
         DateTime? Date_Last_Modified { get; set; }
+        int? IndexPatientPk { get; set; }
     }
 }
