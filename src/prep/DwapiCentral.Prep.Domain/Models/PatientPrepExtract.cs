@@ -1,6 +1,7 @@
 ﻿using DwapiCentral.Contracts.Prep;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace DwapiCentral.Prep.Domain.Models
 {
     public class PatientPrepExtract : IPatientPrep
     {
+        [Key]
+        public Guid Id { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string RecordUUID { get; set; }

@@ -64,67 +64,128 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
             }
         }
 
-        private Task Merge(Guid manifestId, List<StagePatientPrep> stagePatientPrep)
+        //private Task Merge(Guid manifestId, List<StagePatientPrep> stagePatientPrep)
+        //{
+        //    var connectionString = _context.Database.GetConnectionString();
+
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        connection.Open();
+
+        //        var selectQuery = @"
+        //                        SELECT DISTINCT
+        //                               *,GETDATE() Created FROM StagePrepPatients WITH (NOLOCK)
+        //                        WHERE 
+        //                              ManifestId = @manifestId AND
+        //                              LiveStage = @livestage AND
+        //                              PatientPk = @patientPk AND
+        //                              SiteCode = @siteCode AND
+        //                              PrepNumber = @prepNumber AND 
+        //                              RecordUUID = @RecordUUID";
+
+
+        //        foreach (StagePatientPrep stagePatient in stagePatientPrep)
+        //        {
+
+        //            // Step 1: Retrieve data from the stage table
+        //            List<StagePatientPrep> stageData = connection.Query<StagePatientPrep>(selectQuery,
+        //            new
+        //            {
+        //                manifestId,
+        //                livestage = LiveStage.Rest,
+        //                patientPk = stagePatient.PatientPk,
+        //                siteCode = stagePatient.SiteCode,
+        //                prepNumber = stagePatient.PrepNumber,
+        //                recordUUID = stagePatient.RecordUUID,
+        //            }).AsList();
+
+        //            // Step 2: Check if each record exists in the central table
+        //            List<PatientPrepExtract> newRecords = new List<PatientPrepExtract>();
+
+        //            foreach (StagePatientPrep stageRecord in stageData)
+        //            {
+        //                bool recordExists = CheckRecordExistence(connection, stageRecord);
+
+        //                if (recordExists)
+        //                {
+        //                    // Update existing record in the central table
+        //                    UpdateRecordInCentral(connection, stageRecord);
+        //                }
+        //                else
+        //                {
+        //                    // Insert new record into the central table
+        //                    InsertRecordIntoCentral(connection, stageRecord);
+        //                }
+        //            }
+        //        }
+
+        //        connection.Close();
+        //    }
+
+
+
+        //    return Task.CompletedTask;
+        //}
+
+        public async Task Merge(Guid manifestId, List<StagePatientPrep> stagePatientPrep)
         {
-            var connectionString = _context.Database.GetConnectionString();
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                connection.Open();
+                var connectionString = _context.Database.GetConnectionString();
 
-                var selectQuery = @"
-                                SELECT DISTINCT
-                                       *,GETDATE() Created FROM StagePrepPatients WITH (NOLOCK)
-                                WHERE 
-                                      ManifestId = @manifestId AND
-                                      LiveStage = @livestage AND
-                                      PatientPk = @patientPk AND
-                                      SiteCode = @siteCode AND
-                                      PrepNumber = @prepNumber AND 
-                                      RecordUUID = @RecordUUID";
-
-
-                foreach (StagePatientPrep stagePatient in stagePatientPrep)
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
+                    connection.Open();
 
-                    // Step 1: Retrieve data from the stage table
-                    List<StagePatientPrep> stageData = connection.Query<StagePatientPrep>(selectQuery,
-                    new
+                    var existingRecords = await connection.QueryAsync<PatientPrepExtract>("SELECT * FROM PrepPatients  WITH (NOLOCK)");
+
+                    var existingRecordDictionary = existingRecords.ToDictionary(record => new { record.PatientPk, record.SiteCode });
+
+                    var recordsToInsert = new List<PatientPrepExtract>();
+                    var recordsToUpdate = new List<PatientPrepExtract>();
+
+                    foreach (var stageRecord in stagePatientPrep)
                     {
-                        manifestId,
-                        livestage = LiveStage.Rest,
-                        patientPk = stagePatient.PatientPk,
-                        siteCode = stagePatient.SiteCode,
-                        prepNumber = stagePatient.PrepNumber,
-                        recordUUID = stagePatient.RecordUUID,
-                    }).AsList();
+                        var newRecord = _mapper.Map<PatientPrepExtract>(stageRecord);
 
-                    // Step 2: Check if each record exists in the central table
-                    List<PatientPrepExtract> newRecords = new List<PatientPrepExtract>();
+                        var key = new { newRecord.PatientPk, newRecord.SiteCode };
 
-                    foreach (StagePatientPrep stageRecord in stageData)
-                    {
-                        bool recordExists = CheckRecordExistence(connection, stageRecord);
-
-                        if (recordExists)
+                        if (existingRecordDictionary.TryGetValue(key, out var existingRecord))
                         {
-                            // Update existing record in the central table
-                            UpdateRecordInCentral(connection, stageRecord);
+                            // Update existing record
+                            _mapper.Map(stageRecord, existingRecord);
+                            recordsToUpdate.Add(existingRecord);
                         }
                         else
                         {
-                            // Insert new record into the central table
-                            InsertRecordIntoCentral(connection, stageRecord);
+                            // Insert new record
+                            recordsToInsert.Add(newRecord);
+                            existingRecordDictionary.Add(key, newRecord);
                         }
                     }
+
+                 
+                     _context.Database.GetDbConnection().BulkInsert(recordsToInsert);
+
+                   
+                    _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
                 }
-
-                connection.Close();
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+        }
 
+        private async Task BulkInsertRecordsAsync(SqlConnection connection, List<StagePatientPrep> records)
+        {
+            _context.Database.GetDbConnection().BulkInsert(records);
+        }
 
-
-            return Task.CompletedTask;
+        private async Task BulkUpdateRecordsAsync(SqlConnection connection, List<StagePatientPrep> records)
+        {
+            _context.Database.GetDbConnection().BulkUpdate(records);
         }
 
 
@@ -179,9 +240,26 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
 
         private bool CheckRecordExistence(SqlConnection connection, StagePatientPrep stageRecord)
         {
-            string selectQuery = "SELECT COUNT(*) FROM PrepPatients WHERE PatientPk = @PatientPk AND SiteCode = @SiteCode AND PrepNumber = @PrepNumber AND RecordUUID = @RecordUUID ";
+            string selectQuery = @"
+                                    SELECT
+                                            COUNT(*)
+                                    FROM 
+                                            PrepPatients
+                                    WHERE 
+                                            PatientPk = @PatientPk
+                                            AND SiteCode = @SiteCode
+                                            AND PrepNumber = @PrepNumber
+                                            AND RecordUUID = @RecordUUID";
 
-            int count = connection.ExecuteScalar<int>(selectQuery, stageRecord);
+            int count = connection.ExecuteScalar<int>(selectQuery, new
+            {
+                stageRecord.PatientPk,
+                stageRecord.SiteCode,
+                stageRecord.PrepNumber,
+                stageRecord.RecordUUID
+            });
+
+            // If count is greater than 0, record exists; otherwise, it doesn't exist
             return count > 0;
         }
         private void UpdateRecordInCentral(SqlConnection connection, StagePatientPrep stageRecord)
@@ -193,9 +271,11 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository.Stage
 
         private void InsertRecordIntoCentral(SqlConnection connection, StagePatientPrep stageRecord)
         {
-            PatientPrepExtract newRecord = _mapper.Map<PatientPrepExtract>(stageRecord);
-
-            _context.Database.GetDbConnection().BulkInsert(newRecord);
+            if (!CheckRecordExistence(connection, stageRecord))
+            {
+                PatientPrepExtract newRecord = _mapper.Map<PatientPrepExtract>(stageRecord);
+                _context.Database.GetDbConnection().BulkInsert(newRecord);
+            }
         }
     }
 }
