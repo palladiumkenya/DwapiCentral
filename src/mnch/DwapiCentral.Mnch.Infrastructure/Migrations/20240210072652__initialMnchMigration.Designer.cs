@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Mnch.Infrastructure.Migrations
 {
     [DbContext(typeof(MnchDbContext))]
-    [Migration("20230907114141__InitialMnch")]
-    partial class _InitialMnch
+    [Migration("20240210072652__initialMnchMigration")]
+    partial class _initialMnchMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -279,12 +279,18 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Items")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ManifestId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SiteCode")
+                        .HasColumnType("int");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
