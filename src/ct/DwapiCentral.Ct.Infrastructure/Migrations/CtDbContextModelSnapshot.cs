@@ -2196,6 +2196,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int?>("EnrollmentTest")
                         .HasColumnType("int");
 
+                    b.Property<int>("Mhash")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("OrderedByDate")
                         .HasColumnType("datetime2");
 
@@ -4787,6 +4790,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Mhash")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("OrderedByDate")

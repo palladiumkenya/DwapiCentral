@@ -923,6 +923,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Mhash = table.Column<int>(type: "int", nullable: false),
                     VisitId = table.Column<int>(type: "int", nullable: true),
                     OrderedByDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ReportedByDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -2176,6 +2177,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
+                    Mhash = table.Column<int>(type: "int", nullable: false),
                     VisitId = table.Column<int>(type: "int", nullable: true),
                     OrderedByDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ReportedByDate = table.Column<DateTime>(type: "datetime2", nullable: true),

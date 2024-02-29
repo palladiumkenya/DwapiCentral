@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.DTOs.Source;
+using DwapiCentral.Ct.Application.Hashing;
 using DwapiCentral.Ct.Domain.Models;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository;
@@ -48,6 +49,13 @@ public class MergePatientLabsCommandHandler : IRequestHandler<MergePatientLabsCo
             standardizer.StandardizeExtracts();
 
         }
+
+        Parallel.ForEach(extracts, extract =>
+        {
+            var concatenatedData = $"{extract.VisitId}{extract.OrderedByDate}{extract.TestResult}{extract.TestName}";
+            var checksumHash = VisitsHash.ComputeChecksumHash(concatenatedData);
+            extract.Mhash = Math.Abs(checksumHash);
+        });
 
         //stage
         await _stageRepository.SyncStage(extracts, request.PatientLabsSourceBag.ManifestId.Value);

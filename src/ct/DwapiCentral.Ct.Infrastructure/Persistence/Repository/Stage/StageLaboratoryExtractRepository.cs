@@ -83,16 +83,17 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
+                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID, Mhash
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode,RecordUUID
+                                    GROUP BY PatientPK, SiteCode,RecordUUID,Mhash
                                 ) s
                                 WHERE p.PatientPk = s.PatientPK
                                     AND p.SiteCode = s.SiteCode
-                                    AND p.RecordUUID = s.RecordUUID                                   
+                                    AND p.RecordUUID = s.RecordUUID  
+                                    AND p.Mhash = s.Mhash
                                                                    
                             )
                         ";
@@ -101,14 +102,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<PatientLaboratoryExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID, int Mhash)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageLab
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageLab, existingRecords,manifestId);
@@ -138,7 +139,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
+                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}_{extract.Mhash}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -165,19 +166,27 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     var centraldata = stageLab.Select(_mapper.Map<StageLaboratoryExtract, PatientLaboratoryExtract>).ToList();
 
-                    centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+                centraldata = centraldata
+                             .GroupBy(x => new { x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash })
+                             .Select(g => g.First())
+                             .ToList();
 
-                    var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+                var existingIds = existingRecords
+                                .Select(x => new { x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash })
+                                .ToHashSet();
 
-                    var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
+                var recordsToUpdate = centraldata
+                                .Where(x => existingIds.Contains(new { x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash }))
+                                .ToList();
 
 
-                    const int maxRetries = 3;
+                const int maxRetries = 3;
 
                     for (var retry = 0; retry < maxRetries; retry++)
                     {
                         try
                         {
+                                 _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
                         }
                         catch (SqlException ex)
                         {

@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace DwapiCentral.Ct.Application.Hashing
 {
 
-        public class VisitsHash
-        {
+public class VisitsHash
+    {
         public static int ComputeChecksumHash(string data)
         {
             using (var sha256 = SHA256.Create())

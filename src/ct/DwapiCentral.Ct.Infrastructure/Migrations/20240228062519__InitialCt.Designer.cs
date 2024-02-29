@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20240227094901__InitialCt")]
+    [Migration("20240228062519__InitialCt")]
     partial class _InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2196,6 +2196,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("EnrollmentTest")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Mhash")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("OrderedByDate")
@@ -4789,6 +4792,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("LiveStage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Mhash")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("OrderedByDate")
