@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Mnch.Infrastructure.Migrations
 {
     [DbContext(typeof(MnchDbContext))]
-    [Migration("20240210072652__initialMnchMigration")]
-    partial class _initialMnchMigration
+    [Migration("20240229084206__InitialMnch")]
+    partial class _InitialMnch
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1066,7 +1066,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientMnchID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -1076,7 +1075,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("RegistrationAtCCC")
@@ -2692,7 +2690,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientMnchID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -2702,7 +2699,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("RegistrationAtCCC")
