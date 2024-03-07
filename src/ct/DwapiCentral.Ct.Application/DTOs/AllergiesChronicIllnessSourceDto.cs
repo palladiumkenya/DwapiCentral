@@ -40,6 +40,7 @@ namespace DwapiCentral.Ct.Application.DTOs
         public DateTime? Updated { get; set; }
         public bool? Voided { get; set; }
         public string? Controlled { get; set; }
+        public ulong Mhash { get; set; }
 
         public AllergiesChronicIllnessSourceDto()
         {

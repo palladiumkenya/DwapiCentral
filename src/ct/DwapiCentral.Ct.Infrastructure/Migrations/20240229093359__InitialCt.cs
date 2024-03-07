@@ -923,7 +923,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Mhash = table.Column<int>(type: "int", nullable: false),
+                    Mhash = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     VisitId = table.Column<int>(type: "int", nullable: true),
                     OrderedByDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ReportedByDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1278,7 +1278,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     RefillDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    Mhash = table.Column<int>(type: "int", nullable: false),
+                    Mhash = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Date_Created = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -2177,7 +2177,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    Mhash = table.Column<int>(type: "int", nullable: false),
+                    Mhash = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     VisitId = table.Column<int>(type: "int", nullable: true),
                     OrderedByDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ReportedByDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -2361,7 +2361,7 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     ZScoreAbsolute = table.Column<int>(type: "int", nullable: true),
                     PaedsDisclosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WHOStagingOI = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Mhash = table.Column<int>(type: "int", nullable: false)
+                    Mhash = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {

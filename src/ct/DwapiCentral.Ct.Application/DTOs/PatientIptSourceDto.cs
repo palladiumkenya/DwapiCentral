@@ -11,6 +11,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class PatientIptSourceDto : IIpt
     {
         public Guid Id { get; set; }
+        public ulong Mhash { get; set; }
         public string RecordUUID { get; set; }
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }

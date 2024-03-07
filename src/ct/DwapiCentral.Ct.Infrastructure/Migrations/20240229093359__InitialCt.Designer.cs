@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20240228062519__InitialCt")]
+    [Migration("20240229093359__InitialCt")]
     partial class _InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2198,8 +2198,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int?>("EnrollmentTest")
                         .HasColumnType("int");
 
-                    b.Property<int>("Mhash")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<DateTime?>("OrderedByDate")
                         .HasColumnType("datetime2");
@@ -2501,8 +2501,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Menopausal")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Mhash")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int?>("Muac")
                         .HasColumnType("int");
@@ -4794,8 +4794,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
-                    b.Property<int>("Mhash")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<DateTime?>("OrderedByDate")
                         .HasColumnType("datetime2");
@@ -5600,8 +5600,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Menopausal")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Mhash")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int?>("Muac")
                         .HasColumnType("int");

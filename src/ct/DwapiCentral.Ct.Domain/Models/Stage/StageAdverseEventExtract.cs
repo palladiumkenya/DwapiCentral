@@ -10,6 +10,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageAdverseEventExtract : StageExtract,  IPatientAdverse
     {
+        public ulong Mhash { get; set; }
         public DateTime? VisitDate { get; set; }
         public string? AdverseEvent { get; set; }
         public DateTime? AdverseEventStartDate { get; set; }

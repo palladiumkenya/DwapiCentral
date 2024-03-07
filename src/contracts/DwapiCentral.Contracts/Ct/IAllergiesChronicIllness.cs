@@ -30,6 +30,8 @@ namespace DwapiCentral.Contracts.Ct
         string? Genitourinary { get; set; }
         string? Controlled { get; set; }
 
+        ulong Mhash { get; set; }
+
 
 
     }

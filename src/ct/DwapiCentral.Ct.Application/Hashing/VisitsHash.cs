@@ -11,12 +11,13 @@ namespace DwapiCentral.Ct.Application.Hashing
 
 public class VisitsHash
     {
-        public static int ComputeChecksumHash(string data)
+        public static ulong ComputeChecksumHash(string data)
         {
             using (var sha256 = SHA256.Create())
             {
                 var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(data));
-                return (int)BitConverter.ToUInt32(hashBytes, 0);
+               
+                return BitConverter.ToUInt64(hashBytes, 0);
             }
         }
     }   

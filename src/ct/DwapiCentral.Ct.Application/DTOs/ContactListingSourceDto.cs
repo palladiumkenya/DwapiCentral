@@ -11,6 +11,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class ContactListingSourceDto : IContactListing
     {
         public Guid Id { get ; set ; }
+        public ulong Mhash { get; set; }
         public string RecordUUID { get; set; }
         public string? FacilityName { get ; set ; }
         public int? PartnerPersonID { get ; set ; }

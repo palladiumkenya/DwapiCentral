@@ -6,6 +6,7 @@ namespace DwapiCentral.Contracts.Ct
      public interface IOtz : IExtract
     {
           Guid Id { get; set; }
+          ulong Mhash { get; set; }
           string? FacilityName { get; set; }
           int? VisitID { get; set; }
           DateTime? VisitDate { get; set; }

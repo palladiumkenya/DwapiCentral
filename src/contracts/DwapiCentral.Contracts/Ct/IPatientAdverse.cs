@@ -10,6 +10,7 @@ namespace DwapiCentral.Contracts.Ct
      public interface IPatientAdverse : IExtract
     {
           Guid Id { get; set; }
+          ulong Mhash { get; set; }
           DateTime? VisitDate { get; set; }
           string? AdverseEvent { get; set; }
           DateTime? AdverseEventStartDate { get; set; }

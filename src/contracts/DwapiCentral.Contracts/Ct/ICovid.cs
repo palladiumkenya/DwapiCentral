@@ -6,6 +6,7 @@ namespace DwapiCentral.Contracts.Ct
      public interface ICovid : IExtract
     {
           Guid Id { get; set; }
+          ulong Mhash { get; set; }
           string? FacilityName { get; set; }
           int? VisitID { get; set; }
           DateTime? Covid19AssessmentDate { get; set; }

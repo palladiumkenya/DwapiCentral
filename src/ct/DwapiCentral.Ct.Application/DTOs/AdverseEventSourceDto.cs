@@ -8,6 +8,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class AdverseEventSourceDto : IPatientAdverse
     {
         public Guid Id { get; set; }
+        public ulong Mhash { get; set; }
         public string RecordUUID { get; set; }
         public DateTime? VisitDate { get; set; }
         public string? AdverseEvent { get; set; }

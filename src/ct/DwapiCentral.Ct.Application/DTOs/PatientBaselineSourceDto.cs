@@ -11,6 +11,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class PatientBaselineSourceDto : IPatientBaselines
     {
         public Guid Id { get ; set ; }
+        public ulong Mhash { get; set; }
         public string RecordUUID { get; set; }
         public int? bCD4 { get ; set ; }
         public DateTime? bCD4Date { get ; set ; }

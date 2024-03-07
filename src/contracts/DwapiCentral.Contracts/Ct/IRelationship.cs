@@ -11,6 +11,7 @@ namespace DwapiCentral.Contracts.Ct
     {
 
         Guid Id { get; set; }
+        ulong Mhash { get; set; }
         string? FacilityName { get; set; }
         string? RelationshipToPatient { get; set; }
         DateTime? StartDate { get; set; }

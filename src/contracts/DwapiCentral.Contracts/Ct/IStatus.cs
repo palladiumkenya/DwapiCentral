@@ -7,6 +7,7 @@ namespace DwapiCentral.Contracts.Ct
     {
 
           Guid Id { get; set; }
+          ulong Mhash { get; set; }
           string? ExitDescription { get; set; }
           DateTime? ExitDate { get; set; }
           string? ExitReason { get; set; }                 

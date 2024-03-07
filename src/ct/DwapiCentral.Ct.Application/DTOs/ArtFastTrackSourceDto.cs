@@ -5,6 +5,7 @@ namespace DwapiCentral.Ct.Application.DTOs;
 public class ArtFastTrackSourceDto : IArtFastTrack
 {
     public Guid Id { get; set; }
+    public ulong Mhash { get; set; }
     public int PatientPk { get; set; }
     public int SiteCode { get; set; }
     public string RecordUUID { get; set; }

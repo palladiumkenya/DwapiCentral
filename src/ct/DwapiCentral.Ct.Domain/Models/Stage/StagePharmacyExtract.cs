@@ -7,6 +7,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StagePharmacyExtract : StageExtract, IPharmacy
     {
+        public ulong Mhash { get; set; }
         public int? VisitID { get ; set ; }
         public string? Drug { get ; set ; }
         public string? Provider { get ; set ; }

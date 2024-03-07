@@ -69,7 +69,7 @@ namespace DwapiCentral.Contracts.Ct
         string? ZScore { get; set; }
         int? ZScoreAbsolute { get; set; }
         string? PaedsDisclosure { get; set; }
-        int Mhash { get; set; }
+        ulong Mhash { get; set; }
 
 
     }

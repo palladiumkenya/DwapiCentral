@@ -106,7 +106,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<PatientVisitExtract>(query, queryParameters);
                 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID,int Mhash)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash)));
+                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID,ulong Mhash)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash)));
 
                 if (existingRecordsSet.Any())               {                  
                                                    

@@ -54,7 +54,7 @@ public class MergePatientLabsCommandHandler : IRequestHandler<MergePatientLabsCo
         {
             var concatenatedData = $"{extract.VisitId}{extract.OrderedByDate}{extract.TestResult}{extract.TestName}";
             var checksumHash = VisitsHash.ComputeChecksumHash(concatenatedData);
-            extract.Mhash = Math.Abs(checksumHash);
+            extract.Mhash = checksumHash;
         });
 
         //stage

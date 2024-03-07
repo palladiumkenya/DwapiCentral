@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageCervicalCancerScreeningExtract : StageExtract, ICervicalCancerScreening
     {
+        public ulong Mhash { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public int? VisitID { get; set; }

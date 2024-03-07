@@ -80,6 +80,6 @@ namespace DwapiCentral.Ct.Domain.Models
         public int? ZScoreAbsolute { get; set; }
         public string? PaedsDisclosure { get; set; }
         public string? WHOStagingOI { get; set ; }
-        public int Mhash { get; set; }
+        public ulong Mhash { get; set; }
     }
 }

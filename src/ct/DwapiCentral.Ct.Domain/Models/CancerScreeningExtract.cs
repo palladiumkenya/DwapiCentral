@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models
 {
     public class CancerScreeningExtract : ICancerScreening
     {
+        public ulong Mhash { get; set; }
         public Guid Id { get; set; }
         public string? FacilityName { get; set; }
         public int? VisitID { get; set; }

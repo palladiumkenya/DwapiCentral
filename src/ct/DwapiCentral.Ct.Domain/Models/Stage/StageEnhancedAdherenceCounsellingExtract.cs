@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageEnhancedAdherenceCounsellingExtract : StageExtract, IEnhancedAdherenceCounselling
     {
+        public ulong Mhash { get; set; }
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
         public string? FacilityName { get; set; }

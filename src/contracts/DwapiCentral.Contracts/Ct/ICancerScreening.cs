@@ -9,6 +9,7 @@ namespace DwapiCentral.Contracts.Ct
 {
     public interface ICancerScreening : IExtract
     {
+        ulong Mhash { get; set; }
         string? FacilityName { get; set; }
         string? VisitType { get; set; }
         int? VisitID { get; set; }

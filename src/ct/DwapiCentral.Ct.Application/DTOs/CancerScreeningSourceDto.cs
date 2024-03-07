@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Application.DTOs
 {
     public class CancerScreeningSourceDto : ICancerScreening
     {
+        public ulong Mhash { get; set; }
         public Guid Id { get; set; }
         public string? FacilityName { get; set; }
         public string? VisitType { get; set; }
