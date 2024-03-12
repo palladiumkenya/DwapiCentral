@@ -52,7 +52,7 @@ public class MergePatientLabsCommandHandler : IRequestHandler<MergePatientLabsCo
 
         Parallel.ForEach(extracts, extract =>
         {
-            var concatenatedData = $"{extract.VisitId}{extract.OrderedByDate}{extract.TestResult}{extract.TestName}";
+            var concatenatedData = $"{extract.PatientPk}{extract.SiteCode}{extract.VisitId}{extract.OrderedByDate}{extract.TestResult}{extract.TestName}";
             var checksumHash = VisitsHash.ComputeChecksumHash(concatenatedData);
             extract.Mhash = checksumHash;
         });

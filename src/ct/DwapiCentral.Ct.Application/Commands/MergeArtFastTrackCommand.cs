@@ -2,6 +2,7 @@ using AutoMapper;
 using CSharpFunctionalExtensions;
 using DwapiCentral.Ct.Application.DTOs;
 using DwapiCentral.Ct.Application.DTOs.Source;
+using DwapiCentral.Ct.Application.Hashing;
 using DwapiCentral.Ct.Domain.Models.Stage;
 using DwapiCentral.Ct.Domain.Repository.Stage;
 using MediatR;
@@ -44,6 +45,13 @@ public class MergeArtFastTrackCommandHandler : IRequestHandler<MergeArtFastTrack
                 standardizer.StandardizeExtracts();
 
             }
+
+            Parallel.ForEach(extracts, extract =>
+            {
+                var concatenatedData = $"{extract.PatientPk}{extract.SiteCode}";
+                var checksumHash = VisitsHash.ComputeChecksumHash(concatenatedData);
+                extract.Mhash = checksumHash;
+            });
             //stage
             await _stageRepository.SyncStage(extracts, request.ArtFastTrackSourceBag.ManifestId.Value);
             return Result.Success();
