@@ -4,6 +4,7 @@ using Serilog;
 using Owin;
 using DwapiCentral.Shared.Domain.Model.Common;
 using MediatR;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace DwapiCentral.Ct.ServicesRegistration;
 
@@ -29,9 +30,14 @@ public static class RegisterStartupServices
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.Providers.Add<GzipCompressionProvider>();
+            options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/json" });
+        });
 
 
-            builder.Services.AddHangfire(configuration => configuration           
+        builder.Services.AddHangfire(configuration => configuration           
            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
            .UseSimpleAssemblyNameTypeSerializer()
            .UseRecommendedSerializerSettings()
