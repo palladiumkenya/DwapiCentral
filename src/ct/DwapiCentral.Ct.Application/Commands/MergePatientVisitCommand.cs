@@ -52,9 +52,9 @@ public class MergePatientVisitCommandHandler : IRequestHandler<MergePatientVisit
 
         Parallel.ForEach(extracts, extract =>
         {
-            var concatenatedData = $"{extract.VisitId}{extract.VisitDate}";
+            var concatenatedData = $"{extract.PatientPk}{extract.SiteCode}{extract.VisitId}{extract.VisitDate}";
             var checksumHash = VisitsHash.ComputeChecksumHash(concatenatedData);
-            extract.Mhash = Math.Abs(checksumHash);
+            extract.Mhash = checksumHash;
         });
 
 

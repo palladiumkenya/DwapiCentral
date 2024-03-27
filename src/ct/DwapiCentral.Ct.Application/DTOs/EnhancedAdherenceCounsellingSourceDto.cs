@@ -7,6 +7,7 @@ namespace DwapiCentral.Ct.Application.DTOs
 {
     public class EnhancedAdherenceCounselingSourceDto : IEnhancedAdherenceCounselling
     {
+        public ulong Mhash { get; set; }
         public Guid Id { get; set; }
         public string RecordUUID { get; set; }
         public int? VisitID { get; set; }

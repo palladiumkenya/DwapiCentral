@@ -88,16 +88,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID, Mhash
+                                    SELECT DISTINCT  RecordUUID, Mhash
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, RecordUUID, Mhash
+                                    GROUP BY  RecordUUID, Mhash
                                 ) s
-                                WHERE p.PatientPk = s.PatientPK
-                                    AND p.SiteCode = s.SiteCode
-                                    AND p.RecordUUID = s.RecordUUID  
+                                WHERE 
+                                     p.RecordUUID = s.RecordUUID  
                                     AND p.Mhash = s.Mhash 
                                                                      
                             )
@@ -106,12 +105,12 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<PatientVisitExtract>(query, queryParameters);
                 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID,int Mhash)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash)));
+                var existingRecordsSet = new HashSet<( string RecordUUID,ulong Mhash)>(existingRecords.Select(x => ( x.RecordUUID, x.Mhash)));
 
                 if (existingRecordsSet.Any())               {                  
                                                    
                     uniqueStageExtracts = stageVisits
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID,x.Mhash)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.RecordUUID,x.Mhash)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageVisits,existingRecords,manifestId);
@@ -142,7 +141,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}_{extract.Mhash}";
+                    var key = $"{extract.RecordUUID}_{extract.Mhash}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -172,16 +171,16 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                                 .ToList();
 
                 centraldata = centraldata
-                                .GroupBy(x => new { x.PatientPk, x.SiteCode,x.RecordUUID, x.Mhash })
+                                .GroupBy(x => new { x.RecordUUID, x.Mhash })
                                 .Select(g => g.First())
                                 .ToList();
 
                 var existingIds = existingRecords
-                                .Select(x => new { x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash })
+                                .Select(x => new { x.RecordUUID, x.Mhash })
                                 .ToHashSet();
 
                 var recordsToUpdate = centraldata
-                                .Where(x => existingIds.Contains(new { x.PatientPk, x.SiteCode, x.RecordUUID, x.Mhash }))
+                                .Where(x => existingIds.Contains(new { x.RecordUUID, x.Mhash }))
                                 .ToList();
 
 

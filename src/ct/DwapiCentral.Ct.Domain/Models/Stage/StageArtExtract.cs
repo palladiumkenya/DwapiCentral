@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageArtExtract : StageExtract,  IArt
     {
+        public ulong Mhash { get; set; }
         public DateTime? LastARTDate { get ; set ; }
         public DateTime? LastVisit { get ; set ; }
         public DateTime? DOB { get ; set ; }

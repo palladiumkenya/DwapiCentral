@@ -11,6 +11,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class PatientArtSourceDto : IArt
     {
         public Guid Id { get ; set ; }
+        public ulong Mhash { get; set ; }
         public string RecordUUID { get; set; }       
         public DateTime? LastARTDate { get; set; }        
         public DateTime? DOB { get ; set ; }

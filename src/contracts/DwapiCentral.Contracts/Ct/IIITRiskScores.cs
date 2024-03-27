@@ -9,6 +9,7 @@ namespace DwapiCentral.Contracts.Ct
 {
     public interface IIITRiskScores : IExtract
     {
+        ulong Mhash { get; set; }
         string FacilityName { get; set; }
         string SourceSysUUID { get; set; }
         string? RiskScore { get; set; }

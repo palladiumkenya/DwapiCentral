@@ -12,6 +12,7 @@ namespace DwapiCentral.Ct.Domain.Models
     {
         [Key]
         public Guid Id { get; set; }
+        public ulong Mhash { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string SourceSysUUID { get; set; }

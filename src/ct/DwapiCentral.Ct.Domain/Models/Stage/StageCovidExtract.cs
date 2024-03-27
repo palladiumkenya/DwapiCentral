@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageCovidExtract : StageExtract,  ICovid
     {
+        public ulong Mhash { get; set; }
         public string? FacilityName { get ; set ; }
         public int? VisitID { get ; set ; }
         public DateTime? Covid19AssessmentDate { get ; set ; }

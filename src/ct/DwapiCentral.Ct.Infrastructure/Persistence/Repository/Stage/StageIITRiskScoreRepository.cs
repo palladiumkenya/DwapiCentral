@@ -91,15 +91,15 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT DISTINCT PatientPK, SiteCode, SourceSysUUID
+                                    SELECT DISTINCT Mhash, SourceSysUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, SourceSysUUID
+                                    GROUP BY Mhash, SourceSysUUID
                                 ) s
-                                WHERE p.PatientPk = s.PatientPK
-                                    AND p.SiteCode = s.SiteCode                                    
+                                WHERE p.Mhash = s.Mhash
+                                                                       
                                     AND p.SourceSysUUID = s.SourceSysUUID
                                                                    
                             )
@@ -108,14 +108,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 var existingRecords = await connection.QueryAsync<IITRiskScore>(query, queryParameters);
 
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string SourceSysUUID, DateTime? Date_Created)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.SourceSysUUID, x.Date_Created)));
+                var existingRecordsSet = new HashSet<(ulong Mhash, string SourceSysUUID, DateTime? Date_Created)>(existingRecords.Select(x => (x.Mhash, x.SourceSysUUID, x.Date_Created)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates            
                     uniqueStageExtracts = stageIItRiskScore
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.SourceSysUUID,x.Date_Created)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.Mhash, x.SourceSysUUID,x.Date_Created)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageIItRiskScore, existingRecords,manifestId);
@@ -182,7 +182,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in uniqueStageExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.SourceSysUUID}";
+                    var key = $"{extract.Mhash}_{extract.SourceSysUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key) || extract.Date_Created > latestRecordsDict[key].Date_Created)
                     {
@@ -211,11 +211,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     var centraldata = stageAdverse.Select(_mapper.Map<StageIITRiskScore, IITRiskScore>).ToList();
 
 
-                    centraldata = centraldata.GroupBy(x => x.SourceSysUUID).Select(g => g.First()).ToList();
+                    centraldata = centraldata.GroupBy(x => x.Mhash).Select(g => g.First()).ToList();
 
-                    var existingIds = existingRecords.Select(x => x.SourceSysUUID).ToHashSet();
+                    var existingIds = existingRecords.Select(x => x.Mhash).ToHashSet();
 
-                    var recordsToUpdate = centraldata.Join(existingIds, x => x.SourceSysUUID, y => y, (x, y) => x).ToList();
+                    var recordsToUpdate = centraldata.Join(existingIds, x => x.Mhash, y => y, (x, y) => x).ToList();
 
 
                     const int maxRetries = 3;
@@ -224,6 +224,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     {
                         try
                         {
+                        _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
                         }
                         catch (SqlException ex)
                         {

@@ -8,6 +8,7 @@ namespace DwapiCentral.Ct.Application.DTOs
     public class StatusSourceDto : IStatus
     {
         public Guid Id { get; set; }
+        public ulong Mhash { get; set; }
         public string RecordUUID { get; set; }
         public string? ExitDescription { get; set; }
         public DateTime? ExitDate { get; set; }

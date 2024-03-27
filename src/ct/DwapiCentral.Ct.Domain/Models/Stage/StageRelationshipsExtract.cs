@@ -9,7 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageRelationshipsExtract : StageExtract,IRelationship
     {
-        
+        public ulong Mhash { get; set; }
         public string? FacilityName { get; set; }
         public string? RelationshipToPatient { get; set; }
         public DateTime? StartDate { get; set; }

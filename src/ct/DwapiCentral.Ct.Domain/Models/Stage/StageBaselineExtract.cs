@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageBaselineExtract : StageExtract,  IPatientBaselines
     {
+        public ulong Mhash { get; set; }
         public int? bCD4 { get ; set ; }
         public DateTime? bCD4Date { get ; set ; }
         public int? bWAB { get ; set ; }

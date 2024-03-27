@@ -20,13 +20,16 @@ public static class RegisterStartupMiddlewares
 
         app.UseHttpsRedirection();
 
+        app.UseResponseCompression();
+
+
         app.UseHangfireDashboard("/hangfire");
-
-
 
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.UseMiddleware<GzipDecompressionMiddleware>();
 
         Log.Debug("starting ct...");
         SeedData(app);

@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageContactListingExtract : StageExtract,  IContactListing
     {
+        public ulong Mhash { get; set; }
         public string? FacilityName { get ; set ; }
         public int? PartnerPersonID { get ; set ; }
         public string? ContactAge { get ; set ; }

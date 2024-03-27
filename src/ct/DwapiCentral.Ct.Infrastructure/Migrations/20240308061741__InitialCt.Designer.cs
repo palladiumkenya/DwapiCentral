@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DwapiCentral.Ct.Infrastructure.Migrations
 {
     [DbContext(typeof(CtDbContext))]
-    [Migration("20240227094901__InitialCt")]
+    [Migration("20240308061741__InitialCt")]
     partial class _InitialCt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,6 +89,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("Genitourinary")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -181,6 +184,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("GenitalSoreOrDischarge")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("MissedDoses")
                         .HasColumnType("nvarchar(max)");
@@ -303,6 +309,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("Imaging")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<DateTime?>("NextAppointmentDate")
                         .HasColumnType("datetime2");
@@ -489,6 +498,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<DateTime?>("NextAppointmentDate")
                         .HasColumnType("datetime2");
 
@@ -595,6 +607,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("KnowledgeOfHivStatus")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int?>("PartnerPersonID")
                         .HasColumnType("int");
@@ -715,6 +730,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("FirstDoseVaccineAdministered")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("MissedAppointmentDueToCOVID19")
                         .HasColumnType("nvarchar(max)");
 
@@ -822,6 +840,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("IsFinalTrace")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -889,6 +910,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("PHQ9_1")
                         .HasColumnType("nvarchar(max)");
@@ -978,6 +1002,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int?>("PatientPk")
                         .IsRequired()
@@ -1156,6 +1183,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("MMSAScore")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -1241,6 +1271,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("IPVRelationship")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -1299,6 +1332,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -1388,6 +1424,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("Lethargy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("NightSweats")
                         .HasColumnType("nvarchar(max)");
@@ -1589,6 +1628,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("ModulesCompletedToday")
                         .HasColumnType("nvarchar(max)");
 
@@ -1675,6 +1717,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<DateTime?>("OVCEnrollmentDate")
                         .HasColumnType("datetime2");
 
@@ -1760,6 +1805,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -1853,6 +1901,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<DateTime?>("LastVisit")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -1929,6 +1980,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("Date_Last_Modified")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -2198,6 +2252,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int?>("EnrollmentTest")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<DateTime?>("OrderedByDate")
                         .HasColumnType("datetime2");
 
@@ -2274,6 +2331,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ExpectedReturn")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -2363,6 +2423,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<string>("ExitReason")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -2498,8 +2561,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Menopausal")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Mhash")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int?>("Muac")
                         .HasColumnType("int");
@@ -2662,6 +2725,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("FacilityName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -2753,6 +2819,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -2870,6 +2939,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -2990,6 +3062,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -3126,6 +3201,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("MissedDoses")
                         .HasColumnType("nvarchar(max)");
 
@@ -3221,6 +3299,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -3401,6 +3482,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<DateTime?>("NextAppointmentDate")
                         .HasColumnType("datetime2");
@@ -3603,6 +3687,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<DateTime?>("NextAppointmentDate")
                         .HasColumnType("datetime2");
 
@@ -3731,6 +3818,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int?>("PartnerPersonID")
                         .HasColumnType("int");
@@ -3873,6 +3963,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("MissedAppointmentDueToCOVID19")
                         .HasColumnType("nvarchar(max)");
 
@@ -4002,6 +4095,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -4091,6 +4187,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("PHQ9_1")
                         .HasColumnType("nvarchar(max)");
@@ -4202,6 +4301,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int?>("PatientPk")
                         .HasColumnType("int");
@@ -4401,6 +4503,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("MMSAScore")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -4491,6 +4596,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -4571,6 +4679,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -4683,6 +4794,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("NightSweats")
                         .HasColumnType("nvarchar(max)");
 
@@ -4791,6 +4905,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<DateTime?>("OrderedByDate")
                         .HasColumnType("datetime2");
 
@@ -4880,6 +4997,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("ModulesCompletedToday")
                         .HasColumnType("nvarchar(max)");
@@ -4988,6 +5108,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<DateTime?>("OVCEnrollmentDate")
                         .HasColumnType("datetime2");
@@ -5249,6 +5372,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -5351,6 +5477,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
 
@@ -5437,6 +5566,9 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
 
                     b.Property<int>("LiveStage")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("PatientPk")
                         .HasColumnType("int");
@@ -5594,8 +5726,8 @@ namespace DwapiCentral.Ct.Infrastructure.Migrations
                     b.Property<string>("Menopausal")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Mhash")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Mhash")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int?>("Muac")
                         .HasColumnType("int");

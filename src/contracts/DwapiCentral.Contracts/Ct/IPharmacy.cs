@@ -6,6 +6,7 @@ namespace DwapiCentral.Contracts.Ct
      public interface IPharmacy : IExtract
     {
           Guid Id { get; set; }
+          ulong Mhash { get; set; }
           int? VisitID { get; set; }
           string? Drug { get; set; }
           string? Provider { get; set; }

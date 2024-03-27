@@ -6,6 +6,7 @@ namespace DwapiCentral.Contracts.Ct
     public interface IArt : IExtract
     {
         Guid Id { get; set; }
+        ulong Mhash { get; set; }
         DateTime? LastARTDate { get; set; }
         DateTime? LastVisit { get; set; }
         DateTime? DOB { get; set; }
@@ -30,7 +31,8 @@ namespace DwapiCentral.Contracts.Ct
         DateTime? ExitDate { get; set; }        
         string? PreviousARTUse { get; set; }
         string? PreviousARTPurpose { get; set; }
-        DateTime? DateLastUsed { get; set; }    
+        DateTime? DateLastUsed { get; set; }   
+        
 
                
         

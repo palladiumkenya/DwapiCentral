@@ -8,6 +8,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageStatusExtract : StageExtract, IStatus
     {
+        public ulong Mhash { get; set; }
         public string? ExitDescription { get ; set ; }
         public DateTime? ExitDate { get ; set ; }
         public string? ExitReason { get ; set ; }

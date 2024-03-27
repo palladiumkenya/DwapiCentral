@@ -90,15 +90,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID
+                                    SELECT DISTINCT Mhash, RecordUUID
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, RecordUUID
+                                    GROUP BY Mhash, RecordUUID
                                 ) s
-                                WHERE p.PatientPk = s.PatientPK
-                                    AND p.SiteCode = s.SiteCode
+                                WHERE p.Mhash = s.Mhash                                    
                                     AND p.RecordUUID = s.RecordUUID                                    
                                                                        
                             )
@@ -107,14 +106,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<DrugAlcoholScreeningExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int? PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
+                var existingRecordsSet = new HashSet<(ulong Mhash, string RecordUUID)>(existingRecords.Select(x => (x.Mhash, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageDrug
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.Mhash, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageDrug, existingRecords,manifestId);
@@ -145,7 +144,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
+                    var key = $"{extract.Mhash}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -175,11 +174,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     var centraldata = stageDrug.Select(_mapper.Map<StageDrugAlcoholScreeningExtract, DrugAlcoholScreeningExtract>).ToList();
 
-                    centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+                    centraldata = centraldata.GroupBy(x => x.Mhash).Select(g => g.First()).ToList();
 
-                    var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+                    var existingIds = existingRecords.Select(x => x.Mhash).ToHashSet();
 
-                    var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
+                    var recordsToUpdate = centraldata.Join(existingIds, x => x.Mhash, y => y, (x, y) => x).ToList();
 
 
                     const int maxRetries = 3;
@@ -188,6 +187,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     {
                         try
                         {
+                        _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
                         }
                         catch (SqlException ex)
                         {

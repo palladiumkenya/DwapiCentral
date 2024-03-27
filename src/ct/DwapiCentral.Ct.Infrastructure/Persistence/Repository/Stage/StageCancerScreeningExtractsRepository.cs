@@ -90,15 +90,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                             WHERE EXISTS (
                                 SELECT 1
                                 FROM (
-                                    SELECT DISTINCT PatientPK, SiteCode, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
+                                    SELECT DISTINCT Mhash, RecordUUID, MAX(Date_Created) AS MaxCreatedTime
                                     FROM {_stageName} WITH (NOLOCK)
                                     WHERE 
                                         LiveSession = @manifestId 
                                         AND LiveStage = @livestage
-                                    GROUP BY PatientPK, SiteCode, RecordUUID
+                                    GROUP BY Mhash, RecordUUID
                                 ) s
-                                WHERE p.PatientPk = s.PatientPK
-                                    AND p.SiteCode = s.SiteCode                                    
+                                WHERE p.Mhash = s.Mhash                                                                   
                                     AND p.RecordUUID = s.RecordUUID
                                     AND p.Date_Created = s.MaxCreatedTime                                    
                             )
@@ -107,14 +106,14 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 var existingRecords = await connection.QueryAsync<CancerScreeningExtract>(query, queryParameters);
 
                 // Convert existing records to HashSet for duplicate checking
-                var existingRecordsSet = new HashSet<(int PatientPK, int SiteCode, string RecordUUID)>(existingRecords.Select(x => (x.PatientPk, x.SiteCode, x.RecordUUID)));
+                var existingRecordsSet = new HashSet<(ulong Mhash, string RecordUUID)>(existingRecords.Select(x => (x.Mhash, x.RecordUUID)));
 
                 if (existingRecordsSet.Any())
                 {
 
                     // Filter out duplicates from stageExtracts               
                     uniqueStageExtracts = stageCancerScreening
-                        .Where(x => !existingRecordsSet.Contains((x.PatientPk, x.SiteCode, x.RecordUUID)) && x.LiveSession == manifestId)
+                        .Where(x => !existingRecordsSet.Contains((x.Mhash, x.RecordUUID)) && x.LiveSession == manifestId)
                         .ToList();
 
                     await UpdateCentralDataWithStagingData(stageCancerScreening, existingRecords,manifestId);
@@ -143,7 +142,7 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
 
                 foreach (var extract in sortedExtracts)
                 {
-                    var key = $"{extract.PatientPk}_{extract.SiteCode}_{extract.RecordUUID}";
+                    var key = $"{extract.Mhash}_{extract.RecordUUID}";
 
                     if (!latestRecordsDict.ContainsKey(key))
                     {
@@ -171,11 +170,11 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 {
                     var centraldata = stageCancerScreening.Select(_mapper.Map<StageCancerScreeningExtract, CancerScreeningExtract>).ToList();
 
-                    centraldata = centraldata.GroupBy(x => x.RecordUUID).Select(g => g.First()).ToList();
+                    centraldata = centraldata.GroupBy(x => x.Mhash).Select(g => g.First()).ToList();
 
-                    var existingIds = existingRecords.Select(x => x.RecordUUID).ToHashSet();
+                    var existingIds = existingRecords.Select(x => x.Mhash).ToHashSet();
 
-                    var recordsToUpdate = centraldata.Join(existingIds, x => x.RecordUUID, y => y, (x, y) => x).ToList();
+                    var recordsToUpdate = centraldata.Join(existingIds, x => x.Mhash, y => y, (x, y) => x).ToList();
 
 
                     const int maxRetries = 3;
@@ -184,7 +183,8 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                     {
                         try
                         {
-                        }
+                        _context.Database.GetDbConnection().BulkUpdate(recordsToUpdate);
+                    }
                         catch (SqlException ex)
                         {
                             if (ex.Number == 1205)
@@ -209,114 +209,6 @@ namespace DwapiCentral.Ct.Infrastructure.Persistence.Repository.Stage
                 }
 
 
-                //var cons = _context.Database.GetConnectionString();
-                //using (var connection = new SqlConnection(cons))
-                //{
-                //    await connection.OpenAsync();
-
-                //    using (var transaction = connection.BeginTransaction())
-                //    {
-                //        const int maxRetries = 3;
-
-                //        for (var retry = 0; retry < maxRetries; retry++)
-                //        {
-                //            try
-                //            {
-                //                var sql = $@"
-                //           UPDATE 
-                //                     CancerScreeningExtract
-
-                //               SET     
-
-                //                    FacilityName = @FacilityName,
-                //                    VisitID = @VisitID,
-                //                    VisitDate = @VisitDate,
-                //                    VisitType = @VisitType,
-                //                    ScreeningMethod = @ScreeningMethod,
-                //                    TreatmentToday = @TreatmentToday,
-                //                    ReferredOut = @ReferredOut,
-                //                    NextAppointmentDate = @NextAppointmentDate,
-                //                    ScreeningType = @ScreeningType,
-                //                    ScreeningResult = @ScreeningResult,
-                //                    PostTreatmentComplicationCause = @PostTreatmentComplicationCause,
-                //                    OtherPostTreatmentComplication = @OtherPostTreatmentComplication,
-                //                    ReferralReason = @ReferralReason,
-                //                    SmokesCigarette = @SmokesCigarette,
-                //                    NumberYearsSmoked = @NumberYearsSmoked,
-                //                    NumberCigarettesPerDay = @NumberCigarettesPerDay,
-                //                    OtherFormTobacco = @OtherFormTobacco,
-                //                    TakesAlcohol = @TakesAlcohol,
-                //                    HIVStatus = @HIVStatus,
-                //                    FamilyHistoryOfCa = @FamilyHistoryOfCa,
-                //                    PreviousCaTreatment = @PreviousCaTreatment,
-                //                    SymptomsCa = @SymptomsCa,
-                //                    CancerType = @CancerType,
-                //                    FecalOccultBloodTest = @FecalOccultBloodTest,
-                //                    TreatmentOccultBlood = @TreatmentOccultBlood,
-                //                    Colonoscopy = @Colonoscopy,
-                //                    TreatmentColonoscopy = @TreatmentColonoscopy,
-                //                    EUA = @EUA,
-                //                    TreatmentRetinoblastoma = @TreatmentRetinoblastoma,
-                //                    RetinoblastomaGene = @RetinoblastomaGene,
-                //                    TreatmentEUA = @TreatmentEUA,
-                //                    DRE = @DRE,
-                //                    TreatmentDRE = @TreatmentDRE,
-                //                    PSA = @PSA,
-                //                    TreatmentPSA = @TreatmentPSA,
-                //                    VisualExamination = @VisualExamination,
-                //                    TreatmentVE = @TreatmentVE,
-                //                    Cytology = @Cytology,
-                //                    TreatmentCytology = @TreatmentCytology,
-                //                    Imaging = @Imaging,
-                //                    TreatmentImaging = @TreatmentImaging,
-                //                    Biopsy = @Biopsy,
-                //                    TreatmentBiopsy = @TreatmentBiopsy,
-                //                    HPVScreeningResult = @HPVScreeningResult,
-                //                    TreatmentHPV = @TreatmentHPV,
-                //                    VIAVILIScreeningResult = @VIAVILIScreeningResult,
-                //                    PAPSmearScreeningResult = @PAPSmearScreeningResult,
-                //                    TreatmentPapSmear = @TreatmentPapSmear,
-                //                    ReferalOrdered = @ReferalOrdered,
-                //                    Colposcopy = @Colposcopy,
-                //                    TreatmentColposcopy = @TreatmentColposcopy,
-                //                    CBE = @CBE,
-                //                    TreatmentCBE = @TreatmentCBE,
-                //                    Ultrasound = @Ultrasound,
-                //                    TreatmentUltraSound = @TreatmentUltraSound,
-                //                    IfTissueDiagnosis = @IfTissueDiagnosis,
-                //                    DateTissueDiagnosis = @DateTissueDiagnosis,
-                //                    ReasonNotDone = @ReasonNotDone,
-                //                    Referred = @Referred,
-                //                    ReasonForReferral = @ReasonForReferral,                                   
-                //                    Date_Created = @Date_Created,
-                //                    DateLastModified = @DateLastModified,
-                //                    DateExtracted = @DateExtracted,
-                //                    Created = @Created,
-                //                    Updated = @Updated,
-                //                    Voided = @Voided                       
-
-                //             WHERE   RecordUUID = @RecordUUID";
-
-                //                await connection.ExecuteAsync(sql, recordsToUpdate, transaction);
-                //                transaction.Commit();
-                //                break;
-                //            }
-                //            catch (SqlException ex)
-                //            {
-                //                if (ex.Number == 1205)
-                //                {
-
-                //                    await Task.Delay(100);
-                //                }
-                //                else
-                //                {
-                //                    transaction.Rollback();
-                //                    throw;
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
            
         }
 

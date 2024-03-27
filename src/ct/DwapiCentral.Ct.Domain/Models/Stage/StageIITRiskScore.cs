@@ -9,6 +9,7 @@ namespace DwapiCentral.Ct.Domain.Models.Stage
 {
     public class StageIITRiskScore : StageExtract, IIITRiskScores
     {
+        public ulong Mhash { get; set; }
         public string? FacilityName { get; set; }
         public string SourceSysUUID { get; set; }
         public string? RiskScore { get; set; }

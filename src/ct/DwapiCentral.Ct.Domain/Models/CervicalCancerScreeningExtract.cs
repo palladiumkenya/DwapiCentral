@@ -10,6 +10,7 @@ namespace DwapiCentral.Ct.Domain.Models
     public class CervicalCancerScreeningExtract : ICervicalCancerScreening
     {
         public Guid Id { get; set; }
+        public ulong Mhash { get; set; }
         public string RecordUUID { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }

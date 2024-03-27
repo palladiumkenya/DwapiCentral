@@ -10,6 +10,7 @@ namespace DwapiCentral.Contracts.Ct
      public interface IPatientBaselines : IExtract
     {
           Guid Id { get; set; }
+          ulong Mhash { get; set; }
           int? bCD4 { get; set; }
           DateTime? bCD4Date { get; set; }
           int? bWAB { get; set; }

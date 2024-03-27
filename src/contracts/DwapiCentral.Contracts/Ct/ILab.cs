@@ -16,5 +16,8 @@ namespace DwapiCentral.Contracts.Ct
         string? SampleType { get; set; }
         string? Reason { get; set; }
 
+        ulong Mhash { get; set; }
+
+
     }
 }

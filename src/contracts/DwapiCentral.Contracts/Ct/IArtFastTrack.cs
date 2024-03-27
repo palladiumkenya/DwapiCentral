@@ -4,6 +4,7 @@ namespace DwapiCentral.Contracts.Ct;
 
 public interface IArtFastTrack : IExtract
 {
+    ulong Mhash { get; set; }
     string? ARTRefillModel  { get; set; }
     DateTime?  VisitDate  { get; set; }
     string? CTXDispensed  { get; set; }
