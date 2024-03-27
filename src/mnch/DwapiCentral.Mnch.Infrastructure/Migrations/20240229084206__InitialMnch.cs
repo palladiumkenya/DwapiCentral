@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DwapiCentral.Mnch.Infrastructure.Migrations
 {
-    public partial class _initialMnchMigration : Migration
+    public partial class _InitialMnch : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -443,9 +443,9 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Pkv = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PatientMnchID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PatientMnchID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientHeiID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegistrationAtCCC = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1137,9 +1137,9 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PatientPk = table.Column<int>(type: "int", nullable: false),
                     SiteCode = table.Column<int>(type: "int", nullable: false),
-                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecordUUID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Pkv = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PatientMnchID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PatientMnchID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PatientHeiID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FacilityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegistrationAtCCC = table.Column<DateTime>(type: "datetime2", nullable: true),

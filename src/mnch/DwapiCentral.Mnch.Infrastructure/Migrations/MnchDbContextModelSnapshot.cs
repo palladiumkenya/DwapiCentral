@@ -1064,7 +1064,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientMnchID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -1074,7 +1073,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("RegistrationAtCCC")
@@ -2690,7 +2688,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientMnchID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientPk")
@@ -2700,7 +2697,6 @@ namespace DwapiCentral.Mnch.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RecordUUID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("RegistrationAtCCC")
