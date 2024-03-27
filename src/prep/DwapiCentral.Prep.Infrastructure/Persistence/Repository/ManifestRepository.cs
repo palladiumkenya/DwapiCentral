@@ -38,6 +38,7 @@ namespace DwapiCentral.Prep.Infrastructure.Persistence.Repository
         delete  from StagePrepLabs WHERE  SiteCode = @SiteCode;
         delete  from StagePrepPharmacys WHERE  SiteCode = @SiteCode;
         delete  from StagePrepVisits WHERE  SiteCode = @SiteCode;
+        delete  from StagePrepMonthlyRefills WHERE  SiteCode = @SiteCode;
         delete  from Cargoes WHERE  SiteCode = @SiteCode;
      
         ";
